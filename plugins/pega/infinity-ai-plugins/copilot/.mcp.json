@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "pega-infinity-authoring": {
+      "tools": [
+        "*"
+      ],
+      "command": "java",
+      "args": [
+        "${PLUGIN_ROOT}/bootstrap/Bootstrap.java",
+        "--plugin-root=${PLUGIN_ROOT}",
+        "--client-mode=copilot-plugin",
+        "--bundled-jar=server/infinity-rules-mcp.jar",
+        "--bundled-skills=pega-skills"
+      ],
+      "env": {
+        "PEGA_CLIENT_MODE": "copilot-plugin"
+      }
+    }
+  }
+}

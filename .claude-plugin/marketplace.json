@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "pega-plugins",
+  "description": "Pega agent plugins for Claude Code.",
+  "owner": {
+    "name": "Pega"
+  },
+  "plugins": [
+    {
+      "name": "pega-infinity-authoring",
+      "source": "./plugins/pega/infinity-ai-plugins/claude",
+      "description": "Pega Infinity Authoring with bundled MCP tools and runtime skills.",
+      "version": "0.0.1",
+      "repository": "https://github.com/pegasystems/infinity-ai-plugins"
+    }
+  ]
+}

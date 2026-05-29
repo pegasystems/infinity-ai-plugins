@@ -1,0 +1,22 @@
+{
+  "pega-infinity-authoring": {
+    "type": "stdio",
+    "command": "java",
+    "args": [
+      "./bootstrap/Bootstrap.java",
+      "--plugin-root=.",
+      "--client-mode=codex-plugin",
+      "--bundled-jar=codex-runtime/server/infinity-rules-mcp.jar",
+      "--bundled-skills=codex-runtime/pega-skills"
+    ],
+    "cwd": "./",
+    "env_vars": [
+      "PEGA_BASE_URL",
+      "PEGA_OAUTH_CLIENT_ID",
+      "PEGA_OAUTH_REDIRECT_PORT",
+      "PEGA_WRITE_ENABLED"
+    ],
+    "startup_timeout_sec": 20,
+    "tool_timeout_sec": 120
+  }
+}

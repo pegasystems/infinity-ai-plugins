@@ -1,0 +1,18 @@
+{
+  "runtime": {
+    "name": "infinity-rules-mcp",
+    "version": "0.6.14",
+    "fileName": "infinity-rules-mcp-0.6.14.jar",
+    "sha256": "d981fac93a6f95b839f12416a0acaf57d78cd26764ff828d81b714f16dc5064f",
+    "downloadUrl": "http://localhost:28080/infinity-rules-mcp-0.6.14.jar",
+    "checksumUrl": "http://localhost:28080/infinity-rules-mcp-0.6.14.jar.sha256"
+  },
+  "skills": {
+    "name": "infinity-skills",
+    "version": "0.0.15",
+    "fileName": "infinity-skills-0.0.15.zip",
+    "sha256": "ec4e2bfcdf650ea52f2213856e443dc19adb0d08f292bdebdb8859a4f406e692",
+    "downloadUrl": "http://localhost:28080/infinity-skills-0.0.15.zip",
+    "checksumUrl": "http://localhost:28080/infinity-skills-0.0.15.zip.sha256"
+  }
+}

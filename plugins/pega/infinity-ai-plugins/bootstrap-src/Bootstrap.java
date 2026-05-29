@@ -1,0 +1,438 @@
+/*******************************************************************************
+ * Copyright (c) 2026 Pegasystems Inc. All rights reserved.
+ *******************************************************************************/
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
+import java.util.jar.JarFile;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+
+public class Bootstrap {
+    private static final String CACHE_LAYOUT_VERSION = "v1";
+
+    public static void main(String[] args) throws Exception {
+        Config config = Config.parse(args);
+        Path pluginRoot = Paths.get(config.pluginRoot()).toAbsolutePath().normalize();
+        Path bootstrapRoot = pluginRoot.resolve("bootstrap");
+        ArtifactManifest manifest = ArtifactManifest.load(bootstrapRoot.resolve("artifacts.lock.json"));
+        LockFile runtimeLock = manifest.runtime();
+        LockFile skillsLock = manifest.skills();
+
+        Payload payload = resolvePayload(pluginRoot, config, runtimeLock, skillsLock);
+        launchServer(pluginRoot, payload, config.clientMode(), config.serverArgs());
+    }
+
+    private static Payload resolvePayload(Path pluginRoot, Config config, LockFile runtimeLock, LockFile skillsLock) throws Exception {
+        Path bundledJar = config.bundledJarRelativePath() == null ? null : pluginRoot.resolve(config.bundledJarRelativePath()).normalize();
+        Path bundledSkills = config.bundledSkillsRelativePath() == null ? null : pluginRoot.resolve(config.bundledSkillsRelativePath()).normalize();
+        if (isUsableJar(bundledJar) && isUsableSkillsDir(bundledSkills)) {
+            info("Using bundled runtime payload from " + pluginRoot);
+            return new Payload(bundledJar, bundledSkills);
+        }
+
+        Path installRoot = ensureInstalledPayload(runtimeLock, skillsLock);
+        return new Payload(installRoot.resolve("server").resolve("infinity-rules-mcp.jar"), installRoot.resolve("pega-skills"));
+    }
+
+    private static Path ensureInstalledPayload(LockFile runtimeLock, LockFile skillsLock) throws Exception {
+        Path cacheBase = cacheBaseDir()
+                .resolve("pega-agent-plugins")
+                .resolve("infinity-rules-mcp")
+                .resolve(CACHE_LAYOUT_VERSION);
+        Files.createDirectories(cacheBase);
+
+        String runtimeFingerprint = runtimeLock.version() + "-" + shortFingerprint(runtimeLock.sha256());
+        String skillsFingerprint = skillsLock.version() + "-" + shortFingerprint(skillsLock.sha256());
+        String versionKey = "runtime-" + sanitize(runtimeFingerprint) + "__skills-" + sanitize(skillsFingerprint);
+        Path lockPath = cacheBase.resolve(versionKey + ".lock");
+
+        try (FileChannel channel = FileChannel.open(lockPath, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+             FileLock ignored = channel.lock()) {
+            Path existingInstallRoot = findUsableInstallRoot(cacheBase, versionKey);
+            if (existingInstallRoot != null) {
+                return existingInstallRoot;
+            }
+
+            Path installRoot = nextInstallRoot(cacheBase, versionKey);
+            Path stagingRoot = cacheBase.resolve(versionKey + ".staging-" + UUID.randomUUID());
+            try {
+                Files.createDirectories(stagingRoot.resolve("server"));
+                Files.createDirectories(stagingRoot.resolve("downloads"));
+
+                Path stagedJar = stagingRoot.resolve("server").resolve("infinity-rules-mcp.jar");
+                Path stagedSkillsArchive = stagingRoot.resolve("downloads").resolve(skillsLock.artifactFileName());
+                Path stagedSkillsExtract = stagingRoot.resolve("downloads").resolve("skills-extracted");
+                Path stagedSkills = stagingRoot.resolve("pega-skills");
+
+                download(runtimeLock.downloadUrl(), stagedJar);
+                verifySha256(stagedJar, runtimeLock.sha256());
+                if (!isUsableJar(stagedJar)) {
+                    fail("Downloaded runtime is not a valid JAR: " + stagedJar);
+                }
+
+                download(skillsLock.downloadUrl(), stagedSkillsArchive);
+                verifySha256(stagedSkillsArchive, skillsLock.sha256());
+                extractZip(stagedSkillsArchive, stagedSkillsExtract);
+                Path skillsPayload = locateSkillsPayload(stagedSkillsExtract);
+                copyTree(skillsPayload, stagedSkills);
+                if (!isUsableSkillsDir(stagedSkills)) {
+                    fail("Downloaded skills archive does not contain a valid manifest.json");
+                }
+
+                Files.writeString(
+                        stagingRoot.resolve(".complete"),
+                        "runtime.version=" + runtimeLock.version() + System.lineSeparator()
+                                + "runtime.sha256=" + runtimeLock.sha256() + System.lineSeparator()
+                                + "runtime.downloadUrl=" + runtimeLock.downloadUrl() + System.lineSeparator()
+                                + "skills.version=" + skillsLock.version() + System.lineSeparator()
+                                + "skills.sha256=" + skillsLock.sha256() + System.lineSeparator()
+                                + "skills.downloadUrl=" + skillsLock.downloadUrl() + System.lineSeparator(),
+                        StandardCharsets.UTF_8,
+                        StandardOpenOption.CREATE,
+                        StandardOpenOption.TRUNCATE_EXISTING,
+                        StandardOpenOption.WRITE
+                );
+                Files.move(stagingRoot, installRoot);
+                return installRoot;
+            } finally {
+                deleteRecursively(stagingRoot);
+            }
+        }
+    }
+
+    private static Path findUsableInstallRoot(Path cacheBase, String versionKey) throws Exception {
+        try (Stream<Path> stream = Files.list(cacheBase)) {
+            return stream
+                    .filter(Files::isDirectory)
+                    .filter(path -> isVersionInstallDir(path.getFileName().toString(), versionKey))
+                    .filter(Bootstrap::isUsableInstallRoot)
+                    .sorted()
+                    .findFirst()
+                    .orElse(null);
+        }
+    }
+
+    private static Path nextInstallRoot(Path cacheBase, String versionKey) throws Exception {
+        Path preferredRoot = cacheBase.resolve(versionKey);
+        if (!Files.exists(preferredRoot)) {
+            return preferredRoot;
+        }
+
+        Path candidate;
+        do {
+            candidate = cacheBase.resolve(versionKey + ".retry-" + UUID.randomUUID());
+        } while (Files.exists(candidate));
+        return candidate;
+    }
+
+    private static boolean isVersionInstallDir(String fileName, String versionKey) {
+        return fileName.equals(versionKey) || fileName.startsWith(versionKey + ".retry-");
+    }
+
+    private static boolean isUsableInstallRoot(Path installRoot) {
+        return Files.exists(installRoot.resolve(".complete"))
+                && isUsableJar(installRoot.resolve("server").resolve("infinity-rules-mcp.jar"))
+                && isUsableSkillsDir(installRoot.resolve("pega-skills"));
+    }
+
+    private static void launchServer(Path pluginRoot, Payload payload, String clientMode, List<String> serverArgs) throws Exception {
+        List<String> command = new ArrayList<>();
+        command.add("java");
+        command.add("-jar");
+        command.add(payload.jarPath().toString());
+        command.add("--spring.profiles.active=stdio");
+        command.addAll(serverArgs);
+
+        ProcessBuilder processBuilder = new ProcessBuilder(command);
+        processBuilder.directory(pluginRoot.toFile());
+        processBuilder.inheritIO();
+        Map<String, String> env = processBuilder.environment();
+        env.put("PEGA_SKILLS_PATH", payload.skillsPath().toString());
+        env.putIfAbsent("PEGA_CLIENT_MODE", clientMode);
+
+        Process process = processBuilder.start();
+        System.exit(process.waitFor());
+    }
+
+    private static void download(String url, Path destination) throws Exception {
+        info("Downloading " + url);
+        Files.createDirectories(destination.getParent());
+
+        HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();
+        HttpRequest request = HttpRequest.newBuilder(URI.create(url)).GET().build();
+        HttpResponse<Path> response = client.send(request, HttpResponse.BodyHandlers.ofFile(destination));
+        if (response.statusCode() < 200 || response.statusCode() >= 300) {
+            throw new IOException("Download failed with HTTP " + response.statusCode() + " for " + url);
+        }
+    }
+
+    private static void verifySha256(Path file, String expected) throws Exception {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        try (InputStream inputStream = Files.newInputStream(file); DigestInputStream stream = new DigestInputStream(inputStream, digest)) {
+            stream.transferTo(OutputStream.nullOutputStream());
+        }
+
+        String actual = hex(digest.digest());
+        if (!actual.equalsIgnoreCase(expected)) {
+            fail("Checksum mismatch for " + file + ": expected " + expected + ", got " + actual);
+        }
+    }
+
+    private static void extractZip(Path archive, Path destination) throws Exception {
+        Files.createDirectories(destination);
+        try (InputStream fileStream = Files.newInputStream(archive); ZipInputStream zipStream = new ZipInputStream(fileStream)) {
+            ZipEntry entry;
+            while ((entry = zipStream.getNextEntry()) != null) {
+                Path target = destination.resolve(entry.getName()).normalize();
+                if (!target.startsWith(destination)) {
+                    fail("Refusing to extract suspicious zip entry: " + entry.getName());
+                }
+                if (entry.isDirectory()) {
+                    Files.createDirectories(target);
+                } else {
+                    Files.createDirectories(target.getParent());
+                    Files.copy(zipStream, target, StandardCopyOption.REPLACE_EXISTING);
+                }
+                zipStream.closeEntry();
+            }
+        }
+    }
+
+    private static Path locateSkillsPayload(Path extractedRoot) throws Exception {
+        try (Stream<Path> stream = Files.walk(extractedRoot)) {
+            Path manifestDir = stream
+                    .filter(path -> Files.isRegularFile(path) && path.getFileName().toString().equals("manifest.json"))
+                    .map(Path::getParent)
+                    .findFirst()
+                    .orElse(null);
+            if (manifestDir != null) {
+                return manifestDir;
+            }
+        }
+
+        try (Stream<Path> stream = Files.list(extractedRoot)) {
+            List<Path> directories = stream.filter(Files::isDirectory).toList();
+            if (directories.size() == 1) {
+                return directories.get(0);
+            }
+        }
+
+        return extractedRoot;
+    }
+
+    private static boolean isUsableJar(Path jarPath) {
+        if (jarPath == null || !Files.isRegularFile(jarPath)) {
+            return false;
+        }
+        try (JarFile ignored = new JarFile(jarPath.toFile())) {
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    private static boolean isUsableSkillsDir(Path skillsPath) {
+        return skillsPath != null && Files.isRegularFile(skillsPath.resolve("manifest.json"));
+    }
+
+    private static Path cacheBaseDir() {
+        String os = System.getProperty("os.name", "").toLowerCase(Locale.ROOT);
+        String home = System.getProperty("user.home");
+        if (os.contains("win")) {
+            String localAppData = System.getenv("LOCALAPPDATA");
+            return localAppData != null && !localAppData.isBlank()
+                    ? Paths.get(localAppData)
+                    : Paths.get(home, "AppData", "Local");
+        }
+        if (os.contains("mac")) {
+            return Paths.get(home, "Library", "Caches");
+        }
+        String xdgCacheHome = System.getenv("XDG_CACHE_HOME");
+        return xdgCacheHome != null && !xdgCacheHome.isBlank()
+                ? Paths.get(xdgCacheHome)
+                : Paths.get(home, ".cache");
+    }
+
+    private static void copyTree(Path source, Path destination) throws Exception {
+        Files.createDirectories(destination);
+        try (Stream<Path> stream = Files.walk(source)) {
+            for (Path path : (Iterable<Path>) stream::iterator) {
+                Path relative = source.relativize(path);
+                Path target = destination.resolve(relative.toString());
+                if (Files.isDirectory(path)) {
+                    Files.createDirectories(target);
+                } else {
+                    Files.createDirectories(target.getParent());
+                    Files.copy(path, target, StandardCopyOption.REPLACE_EXISTING);
+                }
+            }
+        }
+    }
+
+    private static void deleteRecursively(Path path) throws Exception {
+        if (path == null || Files.notExists(path)) {
+            return;
+        }
+        Files.walk(path)
+                .sorted(Comparator.reverseOrder())
+                .forEach(current -> {
+                    try {
+                        Files.deleteIfExists(current);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+    }
+
+    private static String sanitize(String value) {
+        return value.replaceAll("[^A-Za-z0-9._-]", "_");
+    }
+
+    private static String shortFingerprint(String value) {
+        if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException("Artifact fingerprint cannot be empty");
+        }
+        return value.length() <= 12 ? value : value.substring(0, 12);
+    }
+
+    private static String hex(byte[] bytes) {
+        StringBuilder builder = new StringBuilder(bytes.length * 2);
+        for (byte b : bytes) {
+            builder.append(String.format("%02x", b));
+        }
+        return builder.toString();
+    }
+
+    private static void info(String message) {
+        System.err.println("[info] " + message);
+    }
+
+    private static void fail(String message) {
+        throw new IllegalStateException(message);
+    }
+
+    private record Payload(Path jarPath, Path skillsPath) {
+    }
+
+    private record Config(String pluginRoot, String clientMode, String bundledJarRelativePath,
+                          String bundledSkillsRelativePath, List<String> serverArgs) {
+        private static Config parse(String[] args) {
+            String pluginRoot = null;
+            String clientMode = "unknown-plugin";
+            String bundledJar = null;
+            String bundledSkills = null;
+            List<String> serverArgs = new ArrayList<>();
+            boolean passthrough = false;
+
+            for (String arg : args) {
+                if (passthrough) {
+                    serverArgs.add(arg);
+                    continue;
+                }
+                if ("--".equals(arg)) {
+                    passthrough = true;
+                    continue;
+                }
+                if (arg.startsWith("--plugin-root=")) {
+                    pluginRoot = arg.substring("--plugin-root=".length());
+                } else if (arg.startsWith("--client-mode=")) {
+                    clientMode = arg.substring("--client-mode=".length());
+                } else if (arg.startsWith("--bundled-jar=")) {
+                    bundledJar = arg.substring("--bundled-jar=".length());
+                } else if (arg.startsWith("--bundled-skills=")) {
+                    bundledSkills = arg.substring("--bundled-skills=".length());
+                } else {
+                    throw new IllegalArgumentException("Unknown bootstrap argument: " + arg);
+                }
+            }
+
+            if (pluginRoot == null || pluginRoot.isBlank()) {
+                throw new IllegalArgumentException("Missing required --plugin-root argument");
+            }
+
+            return new Config(pluginRoot, clientMode, bundledJar, bundledSkills, List.copyOf(serverArgs));
+        }
+    }
+
+    private record ArtifactManifest(LockFile runtime, LockFile skills) {
+        private static ArtifactManifest load(Path path) throws Exception {
+            String json = Files.readString(path, StandardCharsets.UTF_8);
+            return new ArtifactManifest(
+                    LockFile.fromSection(json, "runtime"),
+                    LockFile.fromSection(json, "skills")
+            );
+        }
+    }
+
+    private record LockFile(String version, String artifactFileName, String sha256, String downloadUrl) {
+        private static LockFile fromSection(String json, String sectionName) {
+            String section = extractJsonObject(json, sectionName);
+            return new LockFile(
+                    extractJsonString(section, "version"),
+                    extractJsonString(section, "fileName"),
+                    extractJsonString(section, "sha256"),
+                    extractJsonString(section, "downloadUrl")
+            );
+        }
+    }
+
+    private static String extractJsonObject(String json, String key) {
+        String marker = "\"" + key + "\"";
+        int keyIndex = json.indexOf(marker);
+        if (keyIndex < 0) {
+            throw new IllegalArgumentException("Missing JSON object field: " + key);
+        }
+
+        int openBrace = json.indexOf('{', keyIndex);
+        if (openBrace < 0) {
+            throw new IllegalArgumentException("Missing object body for field: " + key);
+        }
+
+        int depth = 0;
+        for (int i = openBrace; i < json.length(); i++) {
+            char current = json.charAt(i);
+            if (current == '{') {
+                depth++;
+            } else if (current == '}') {
+                depth--;
+                if (depth == 0) {
+                    return json.substring(openBrace, i + 1);
+                }
+            }
+        }
+
+        throw new IllegalArgumentException("Unterminated JSON object for field: " + key);
+    }
+
+    private static String extractJsonString(String json, String key) {
+        var matcher = Pattern.compile("\\\"" + Pattern.quote(key) + "\\\"\\s*:\\s*\\\"([^\\\"]*)\\\"").matcher(json);
+        if (!matcher.find()) {
+            throw new IllegalArgumentException("Missing JSON string field: " + key);
+        }
+        return matcher.group(1);
+    }
+}

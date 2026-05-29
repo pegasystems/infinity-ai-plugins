@@ -1,0 +1,31 @@
+{
+  "name": "pega-infinity-authoring",
+  "description": "Pega Infinity Authoring with bundled MCP tools and runtime skills.",
+  "version": "0.0.1",
+  "author": {
+    "name": "Pegasystems",
+    "url": "https://github.com/pegasystems"
+  },
+  "repository": "https://github.com/pegasystems/infinity-ai-plugins",
+  "skills": "./claude-skills/",
+  "mcpServers": "./.mcp.json",
+  "userConfig": {
+    "pega_base_url": {
+      "type": "string",
+      "title": "Pega base URL",
+      "description": "Base URL of your Pega Infinity environment"
+    },
+    "pega_oauth_client_id": {
+      "type": "string",
+      "title": "OAuth client ID",
+      "description": "OAuth client ID for environments that do not use the default value",
+      "default": "34233104330833666523"
+    },
+    "pega_write_enabled": {
+      "type": "boolean",
+      "title": "Enable write tools",
+      "description": "Allow create and update tools through the ChangeRequest workflow (true/false)",
+      "default": false
+    }
+  }
+}

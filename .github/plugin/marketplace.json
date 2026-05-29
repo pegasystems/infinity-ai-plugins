@@ -1,0 +1,18 @@
+{
+  "name": "Pega",
+  "metadata": {
+    "description": "Pega GitHub Copilot plugins.",
+    "pluginRoot": "./plugins/pega"
+  },
+  "owner": {
+    "name": "Pega"
+  },
+  "plugins": [
+    {
+      "name": "pega-infinity-authoring",
+      "source": "infinity-ai-plugins/copilot",
+      "description": "Pega Infinity Authoring with bundled MCP tools and runtime skills.",
+      "repository": "https://github.com/pegasystems/infinity-ai-plugins"
+    }
+  ]
+}

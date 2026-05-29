@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "Pega Infinity Authoring": {
+      "command": "java",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/bootstrap/Bootstrap.java",
+        "--plugin-root=${CLAUDE_PLUGIN_ROOT}",
+        "--client-mode=claude-plugin",
+        "--bundled-jar=server/infinity-rules-mcp.jar",
+        "--bundled-skills=pega-skills"
+      ],
+      "env": {
+        "PEGA_CLIENT_MODE": "claude-plugin",
+        "CLAUDE_PLUGIN_OPTION_pega_base_url": "${user_config.pega_base_url}",
+        "CLAUDE_PLUGIN_OPTION_pega_oauth_client_id": "${user_config.pega_oauth_client_id}",
+        "CLAUDE_PLUGIN_OPTION_pega_write_enabled": "${user_config.pega_write_enabled}"
+      }
+    }
+  }
+}
