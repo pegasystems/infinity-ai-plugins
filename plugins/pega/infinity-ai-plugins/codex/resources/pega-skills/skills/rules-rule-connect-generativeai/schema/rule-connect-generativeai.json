@@ -1,0 +1,213 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-connect-generativeai.json",
+  "title": "Rule-Connect-GenerativeAI",
+  "description": "JSON schema for creating or updating a Pega GenerativeAI connector rule (Rule-Connect-GenerativeAI). Defines model configuration, prompt references, response mappings, and parameters. Built from 27 real Pega 26 rules spanning v1 (08-24) and v2 (08-25+) structural eras. Only authored and identity fields are included; system-managed fields (pxCreateDateTime, pxUpdateOperator, pzInsKey, etc.) are omitted.",
+  "type": "object",
+  "required": [
+    "pyLabel",
+    "pyClassName",
+    "pyServiceName",
+    "pyExpectedResponseEntity",
+    "pyResponseFields"
+  ],
+  "properties": {
+    "pxObjClass": {
+      "type": "string",
+      "const": "Rule-Connect-GenerativeAI",
+      "description": "Rule type class — always 'Rule-Connect-GenerativeAI'.",
+      "x-pega-autoFill": "Rule-Connect-GenerativeAI"
+    },
+    "pyLabel": {
+      "type": "string",
+      "description": "Human-readable display label for the connector."
+    },
+    "pyClassName": {
+      "type": "string",
+      "description": "The Pega class this connector is defined on (e.g., '@baseclass', 'MyOrg-MyApp-Work-MyCase', 'Work-')."
+    },
+    "pyServiceName": {
+      "type": "string",
+      "description": "Service endpoint name — must match pyRuleName."
+    },
+    "pyRuleName": {
+      "type": "string",
+      "description": "Internal rule name (PascalCase or camelCase). Auto-filled from pyServiceName.",
+      "x-pega-autoFill": "{pyServiceName}"
+    },
+    "pyRuleSet": {
+      "type": "string",
+      "description": "Ruleset the connector is saved to."
+    },
+    "pyRuleSetVersion": {
+      "type": "string",
+      "pattern": "^\\d{2}-\\d{2}-\\d{2}$",
+      "description": "Ruleset version in MM-mm-pp format (e.g., '01-01-01')."
+    },
+    "pyRuleAvailable": {
+      "type": "string",
+      "enum": ["Yes", "No", "Blocked", "Final", "Withdrawn"],
+      "description": "Availability status. 'Yes' for active rules",
+      "x-pega-autoFill": "Yes"
+    },
+    "pyDescription": {
+      "type": "string",
+      "description": "Optional free-text description of the connector's purpose."
+    },
+    "pyUsage": {
+      "type": "string",
+      "description": "Optional usage note for developers."
+    },
+    "pyExpectedResponseEntity": {
+      "type": "string",
+      "enum": ["Custom", "Single", "List"],
+      "description": "How the AI response is parsed. 'Custom' for text/JSON output, 'Single' for single-entity extraction, 'List' for list output with pyListName."
+    },
+    "pyListName": {
+      "type": "string",
+      "pattern": "^\\.[A-Za-z][A-Za-z0-9_]*$",
+      "description": "Required when pyExpectedResponseEntity='List'; omit or leave empty for 'Custom' and 'Single'. Dot-prefixed property path for the list (e.g., '.pyCucumberScenarios', '.pyStages')."
+    },
+    "pyCustomizeSystemPrompt": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Whether a custom system prompt overrides the default. Always set to 'false' to use the default system prompt.",
+      "x-pega-autoFill": "false"
+    },
+    "pyImprovePrivacy": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Whether privacy improvement processing is applied. 'true' to enable PII redaction and related features."
+    },
+
+    "pyDisplayMode": {
+      "type": "string",
+      "enum": ["clone", "basic", "specialize", ""],
+      "description": "'clone' for rules derived from template (most common), 'basic' for hand-authored, 'specialize' for specialized overrides.",
+      "x-pega-autoFill": "clone"
+    },
+    "pyMethodStatus": {
+      "type": "string",
+      "enum": ["API", "Deprecated", "Extension", "Internal", "Template", ""],
+      "description": "Optional status marker. 'Internal' for platform-internal connectors, 'Deprecated' for retired ones."
+    },
+    "pyPromptName": {
+      "type": "string",
+      "description": "User-prompt FieldValue name. Always use the default value 'pyGenerativeAIPromptTemplate'. Do NOT generate custom prompt names.",
+      "x-pega-autoFill": "pyGenerativeAIPromptTemplate"
+    },
+    "pySystemPromptName": {
+      "type": "string",
+      "description": "System-prompt FieldValue name. Always use the default value 'pzDefaultSystemPrompt'. Do NOT generate custom system prompt names.",
+      "x-pega-autoFill": "pzDefaultSystemPrompt"
+    },
+    "pyUseCase": {
+      "type": "string",
+      "enum": ["qa", "custom", ""],
+      "description": "Top-level use-case field. 'qa' for Q&A tasks, 'custom' for structured/JSON output. On v2 rules the server also maintains an authoritative copy inside the server-managed pyGenAIDef page; only the top-level field is authored in create payloads."
+    },
+    "pyUseOpLocaleForResponse": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "v1 locale flag. Whether AI response should use the operator's locale. Equivalent to pyGenAILocale on v2 rules."
+    },
+    "pyMemo": {
+      "type": "string",
+      "description": "Developer memo/notes about the rule."
+    },
+    "pyDeleteMemo": {
+      "type": "string",
+      "description": "Memo captured when a version of this rule was deleted."
+    },
+
+    "pyGenAIProvConfig": {
+      "$ref": "#/$defs/GenAIProvConfig",
+      "description": "Provider configuration (Data-GenerativeAI-Provider-*) — the only provider/config block authored in create payloads. On v2 rules the server additionally materializes server-managed pyGenAIDef and pyGenAIConfig pages from this input; do NOT author those v2 pages."
+    },
+    "pyResponseFields": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Response field mappings — where the AI output is written on the clipboard. At least one entry required.",
+      "items": { "$ref": "#/$defs/ResponseField" },
+      "x-pega-autoFill": [{"pxObjClass": "Embed-Fields"}]
+    },
+    "pyCustomFields": {
+      "type": "object",
+      "description": "Named page group for custom field metadata (e.g., pyUsageMode). Present when pyIsCustomFieldExists='true'.",
+      "additionalProperties": { "$ref": "#/$defs/CustomField" }
+    }
+  },
+  "$defs": {
+    "GenAIProvConfig": {
+      "type": "object",
+      "required": [
+        "pyTemperature"
+      ],
+      "description": "Provider configuration (Data-GenerativeAI-Provider-*). The only provider/config block authored on a create payload. Contains direct provider endpoint details; on v2 rules the server materializes server-managed pyGenAIDef and pyGenAIConfig pages from this input.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "description": "Provider class. 'Data-GenerativeAI-Provider-Pega-Azure-Chat' for Pega gateway",
+          "x-pega-autoFill": "Data-GenerativeAI-Provider-Pega-Azure-Chat"
+        },
+        "pyTemperature": {
+          "type": "string",
+          "description": "Temperature value as string (e.g., '0.2', '1.0'). Model temperature override at the connector level."
+        }
+      }
+    },
+    "ResponseField": {
+      "type": "object",
+      "description": "A response field mapping (Embed-Fields) — maps AI output to a clipboard property.",
+      "required": ["pyFieldName"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-Fields",
+          "description": "Always 'Embed-Fields'.",
+          "x-pega-autoFill": "Embed-Fields"
+        },
+        "pyFieldName": {
+          "type": "string",
+          "description": "Dot-prefixed clipboard property path where the AI output is written (e.g., '.pyResponseData', '.pyJsonData', '.pyMessage')."
+        }
+      }
+    },
+    "CustomField": {
+      "type": "object",
+      "description": "A custom field entry (Embed-CustomFieldsList) — metadata tag on the connector.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-CustomFieldsList",
+          "description": "Always 'Embed-CustomFieldsList'.",
+          "x-pega-autoFill": "Embed-CustomFieldsList"
+        },
+        "pxSubscript": {
+          "type": "string",
+          "description": "Key name of the custom field (e.g., 'pyUsageMode').",
+          "x-pega-autoFill": "pyUsageMode"
+        },
+        "pyCFieldName": {
+          "type": "string",
+          "description": "Custom field property name (e.g., 'pyUsageMode').",
+          "x-pega-autoFill": "pyUsageMode"
+        },
+        "pyCFieldType": {
+          "type": "string",
+          "description": "Field type (e.g., 'Text').",
+          "x-pega-autoFill": "Text"
+        },
+        "pyCFieldValue": {
+          "type": "string",
+          "description": "Field value. For pyUsageMode: 'Runtime' for connectors called at runtime, 'Design time' for design-assistant connectors.",
+          "x-pega-autoFill": "Design time"
+        },
+        "pyNote": {
+          "type": "string",
+          "description": "Additional note on the custom field (e.g., 'Text'). Mirrors pyCFieldType on observed rules."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,663 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-obj-when.json",
+  "title": "Rule-Obj-When",
+  "description": "JSON schema for creating or updating a Pega When rule (Rule-Obj-When). When rules evaluate boolean conditions using one or more condition clauses combined with AND/OR logic. Used by flows (decision shapes), validate rules, activities, and UI visibility conditions.",
+  "type": "object",
+  "required": [
+    "pxObjClass",
+    "pyClassName",
+    "pyRuleName",
+    "pyBlockName",
+    "pyLabel",
+    "pyLogic",
+    "pyCondition"
+  ],
+  "properties": {
+    "pxObjClass": {
+      "type": "string",
+      "const": "Rule-Obj-When",
+      "description": "Rule type class \u2014 always 'Rule-Obj-When'.",
+      "x-pega-autoFill": "Rule-Obj-When"
+    },
+    "pyClassName": {
+      "type": "string",
+      "description": "Target class the When rule applies to (e.g., 'MyOrg-MyApp-Work-MyCase')."
+    },
+    "pyRuleName": {
+      "type": "string",
+      "description": "Rule name (PascalCase). Forms part of the rule's identity key."
+    },
+    "pyBlockName": {
+      "type": "string",
+      "description": "Internal block name; must match pyRuleName. Auto-derived from pyRuleName when omitted.",
+      "x-pega-autoFill": "{pyRuleName}"
+    },
+    "pyLabel": {
+      "type": "string",
+      "description": "Human-readable display label shown in Dev Studio and rule references."
+    },
+    "pyDescription": {
+      "type": "string",
+      "description": "Developer-facing description of what the When rule evaluates."
+    },
+    "pyRuleSet": {
+      "type": "string",
+      "description": "Target ruleset name."
+    },
+    "pyRuleSetVersion": {
+      "type": "string",
+      "description": "Target ruleset version (e.g., '01-01-02')."
+    },
+    "pyRuleAvailable": {
+      "type": "string",
+      "enum": [
+        "Yes",
+        "No",
+        "Withdrawn",
+        "Final",
+        "Blocked"
+      ],
+      "description": "Whether the rule is active. CRITICAL: must be 'No' during create (circular reference workaround), then set to 'Yes' via update-rule.",
+      "x-pega-autoFill": "Yes"
+    },
+    "pyMethodStatus": {
+      "type": "string",
+      "enum": ["API", "Deprecated", "Extension", "Internal", "Template", ""],
+      "description": "Always 'Internal' in observed instances.",
+      "x-pega-autoFill": ""
+    },
+    "pyLogic": {
+      "type": "string",
+      "description": "Boolean combinator referencing condition labels declared in pyCondition. Single condition: 'A'. Multiple: 'A AND B', 'A OR B', '(A AND B) OR C'. Must reference pyConditionLabel values, not property expressions."
+    },
+    "pySimpleCondition": {
+      "type": "string",
+      "enum": [
+        "true",
+        "false",
+        ""
+      ],
+      "description": "'true' for single-condition rules, 'false' for multi-condition."
+    },
+    "pyDisplayPropertyLabels": {
+      "type": "string",
+      "enum": [
+        "true",
+        "false",
+        ""
+      ],
+      "description": "When this checkbox is selected, the system substitutes the property's name (e.g., .pxCreateDateTime) with its descriptive label (e.g., \"Create Date/Time\")."
+    },
+    "pyCondition": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/WhenCondition"
+      },
+      "description": "Condition clauses \u2014 array of Embed-WhenConditions. Each entry defines one boolean condition.",
+      "x-pega-autoFill": [
+        {
+          "pxObjClass": "Embed-WhenConditions"
+        }
+      ]
+    },
+    "pyPagesAndClasses": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/PageAndClass"
+      },
+      "description": "Named pages used by condition expressions."
+    },
+    "pyParameters": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/RuleParameter"
+      },
+      "description": "Rule-level Parameters tab. Declares typed input parameters that callers pass into this When rule (e.g., `Param.threshold`, `Param.region`). Each entry is an `Embed-MethodParams` row with a name, a Pega data type (Text/Date/DateTime/Integer/Decimal/TimeofDay/TrueFalse/Double/Page), an optional description, default value, direction, and required flag. NOTE: this is NOT the same shape used inside `pyCondition[].pyFunctionData.pyParameters` \u2014 those are function-call slots (see `MethodParam`)."
+    },
+    "pyAllowedFunctions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/FunctionAlias"
+      },
+      "description": "Array of supported function aliases (Rule-Alias-Function) available for When rule conditions. Each entry defines a function's pyPurpose (used as pyConditionValue1Purpose), pyPatternText (used as pyEcho), and optional pyCity (FirstInList grouping key). Populated from pyFunctionAliasList."
+    },
+    "pySkipBackwardChaining": {
+      "type": "string",
+      "enum": [
+        "true",
+        "false",
+        ""
+      ],
+      "description": "Whether to skip backward chaining evaluation."
+    },
+    "pyBaseRule": {
+      "type": "string",
+      "description": "'true' if this rule is the base rule of a circumstance set."
+    },
+    "pyCircumstanceProp": {
+      "type": "string",
+      "description": "Property used for circumstancing. Blank for no circumstancing."
+    },
+    "pyCircumstanceDateProp": {
+      "type": "string",
+      "description": "Property holding the circumstance date."
+    },
+    "pyValueChanged": {
+      "type": "string",
+      "description": "Tracks whether the rule's value has changed since last save."
+    }
+  },
+  "$defs": {
+    "FunctionAliasName": {
+      "type": "string",
+      "enum": [
+        "pyCollectionEvalReturnNumber",
+        "isInThePastDate",
+        "pxDateTimeisPastOrFuture",
+        "isInThePastDateTime",
+        "pxAssignedToMyStaff",
+        "WithinDaysOfNow",
+        "1FreeFormExpressionBoolean",
+        "CompareDatesInDays",
+        "CompareDateTimes",
+        "CompareDates",
+        "CompareTwoDateTimes",
+        "CompareTwoNumbers",
+        "MathGreaterThan",
+        "MathGreaterThanEqualTo",
+        "compareTwoStrings",
+        "StringNotEqualsIgnoreCase",
+        "StringEqualsIgnoreCase",
+        "CompareTwoValues",
+        "pxIsInListOfValuesWCBInPageList",
+        "pxHasPagesCountInPageListWhen",
+        "pxValueIsInPageList",
+        "pxIsInPageListWhen",
+        "pxValueIsNotInPageList",
+        "PropertyHasValue",
+        "pzContainsIgnoreCase",
+        "contains",
+        "MathLessThan",
+        "MathLessThanEqualTo",
+        "StringEquals",
+        "pxIsInListOfValuesInPageList",
+        "pxIsNotInListOfValuesInPageList",
+        "pxIsNotInListOfValuesWCBInPageList",
+        "pxIsNotInListOfValuesWCB",
+        "pxIsInListOfValues",
+        "pxIsInListOfValuesWCB",
+        "pxIsNotInListOfValues",
+        "pxIsAttachmentOfCategoryInCase",
+        "allEntriesSatisfyCondition",
+        "anyEntrySatisfiesCondition",
+        "pxCallWhenUsingPage",
+        "pxCompareDateTimeToSymbolicDate",
+        "pxCompareDateTimes",
+        "CreatedRecently",
+        "pzIsToggleEnabled",
+        "pxPageListLengthCompare",
+        "PropertyExistsAndHasValue",
+        "pzCompareADateTimeToASymbolicDateWrapper",
+        "pzCompareMultiValues",
+        "pzCompareTwoDateTimesWrapper",
+        "pzCheckBatchStopRequest",
+        "ResolvedRecently",
+        "pyCollectionEvalReturnDate",
+        "pyCollectionEvalReturnString",
+        "pyCollectionHasReturnValue",
+        "pyCollectionEvalReturnBoolean",
+        "pzRule-Obj-Whenfalse",
+        "Rule-Obj-When",
+        "Satisfaction",
+        "Language",
+        "RootCause",
+        "StatusResolved",
+        "Status",
+        "Urgency",
+        "invokeValidate",
+        "LocalEvaluateProperty"
+      ],
+      "description": "Supported When-rule function alias names. Each value corresponds to a file in library-function-builder/examples/<alias>.md which defines its pyCallParams and pyFunctionData shape."
+    },
+    "WhenCondition": {
+      "type": "object",
+      "required": [
+        "pxObjClass",
+        "pyConditionLabel"
+      ],
+      "allOf": [
+        {
+          "description": "G2: When pyConditionValue1Purpose is non-empty, the condition must also supply pyFunctionData (full library template) and pyConditionValue1 (compiled expression). Sending only purpose+pyCallParams produces silently corrupt rules with empty pyFunctionData and the server returns 500 'Please specify a when condition' on pyConditionValue1.",
+          "if": {
+            "required": ["pyConditionValue1Purpose"],
+            "properties": {
+              "pyConditionValue1Purpose": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "then": {
+            "required": ["pyFunctionData", "pyConditionValue1"]
+          }
+        }
+      ],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-WhenConditions",
+          "description": "Embedded class \u2014 always 'Embed-WhenConditions'.",
+          "x-pega-autoFill": "Embed-WhenConditions"
+        },
+        "pyConditionLabel": {
+          "type": "string",
+          "description": "Label used in pyLogic \u2014 'A', 'B', 'C', etc."
+        },
+        "pyConditionFieldName": {
+          "type": "string",
+          "description": "Property reference (dot-prefixed, e.g., '.Priority', '.CapacityScore')."
+        },
+        "pyConditionOperation": {
+          "type": "string",
+          "enum": [
+            ">",
+            ">=",
+            "<",
+            "<=",
+            "=",
+            "!=",
+            "Equals",
+            "IsTrue",
+            ""
+          ],
+          "description": "Comparison operator."
+        },
+        "pyConditionValue1": {
+          "type": "string",
+          "description": "Comparison value or expression. String literals must be double-quoted within the string (e.g., '\"High\"'). Numeric values are unquoted (e.g., '80')."
+        },
+        "pyConditionValue1Purpose": {
+          "description": "Function alias (pyPurpose from Rule-Alias-Function) that determines how the condition is evaluated. Restricted to the When-rule supported subset of library-function-builder. Empty string allowed for placeholder/stub conditions. See library-function-builder/examples/ for each alias's pyCallParams and pyFunctionData shape.",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/FunctionAliasName"
+            },
+            {
+              "type": "string",
+              "const": ""
+            }
+          ]
+        },
+        "pyConditionValue1String": {
+          "type": "string",
+          "description": "Human-readable template (e.g., '[property reference] has a value'). Auto-derived by the server."
+        },
+        "pyConditionValue1StringLabel": {
+          "type": "string",
+          "description": "Populated template with actual values (e.g., '.Priority Equals \"High\"'). Auto-derived by the server."
+        },
+        "pyCondValueCategory": {
+          "type": "string",
+          "enum": [
+            "",
+            "AND",
+            "OR"
+          ],
+          "description": "Logical combinator with the previous condition: '' (none/first clause), 'AND', 'OR'."
+        },
+        "pyClassName": {
+          "type": "string",
+          "description": "Class context for this condition. Usually matches the rule's pyClassName."
+        },
+        "pyUsage": {
+          "type": "string",
+          "enum": [
+            "java",
+            ""
+          ],
+          "description": "Execution language \u2014 typically 'java'."
+        },
+        "pyFunctionData": {
+          "$ref": "#/$defs/UserFunction",
+          "description": "Function metadata \u2014 Embed-UserFunction. Auto-populated based on pyConditionValue1Purpose."
+        },
+        "pyCallParams": {
+          "type": "object",
+          "description": "Named parameters for the function call (varies by pyConditionValue1Purpose).",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "pyTempText": {
+          "type": "string",
+          "description": "Temporary text used during condition editing."
+        },
+        "pyTemplateInputBox": {
+          "type": "string",
+          "description": "Template reference for input rendering."
+        }
+      }
+    },
+    "UserFunction": {
+      "type": "object",
+      "allOf": [
+        {
+          "description": "G3: When pyParameters has at least one entry, pyUIParameters must also have at least one entry. Empty pyUIParameters silently blanks pyConditionValue1String / pyConditionValue1StringLabel / pyFunctionData.pyLabel and renders the condition invisible in the form designer even though the underlying expression compiles correctly.",
+          "if": {
+            "required": ["pyParameters"],
+            "properties": {
+              "pyParameters": {
+                "type": "array",
+                "minItems": 1
+              }
+            }
+          },
+          "then": {
+            "required": ["pyUIParameters"],
+            "properties": {
+              "pyUIParameters": {
+                "type": "array",
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-UserFunction",
+          "description": "Embedded class \u2014 always 'Embed-UserFunction'.",
+          "x-pega-autoFill": "Embed-UserFunction"
+        },
+        "pyName": {
+          "$ref": "#/$defs/FunctionAliasName",
+          "description": "Function name matching pyConditionValue1Purpose. See library-function-builder/examples/<alias>.md for the corresponding pyFunctionData template."
+        },
+        "pyCity": {
+          "type": "string",
+          "description": "Grouping key. For CompareTwoValues this is 'FirstInList'. For other functions this often mirrors the function name (e.g., '1FreeFormExpressionBoolean', 'StringEqualsIgnoreCase'). Can also be empty."
+        },
+        "pySignature": {
+          "type": "string",
+          "description": "Function signature template (e.g., '@(Pega-RULES:ExpressionEvaluators).compareTwoValues({lValue}, \"{comparator}\", {rValue})'). Populated from the Rule-Alias-Function. Used as pySig in pyFunctionData."
+        },
+        "pyEcho": {
+          "type": "string",
+          "description": "Display echo text / pattern template (e.g., '[first value] [relation] [second value]'). Populated from the Rule-Alias-Function pyPatternText."
+        },
+        "pyLabel": {
+          "type": "string",
+          "description": "Populated display label."
+        },
+        "pyReturnType": {
+          "type": "string",
+          "description": "Return type \u2014 typically 'boolean'."
+        },
+        "pyRuleSet": {
+          "type": "string",
+          "description": "RuleSet containing the function (e.g., 'Pega-RULES')."
+        },
+        "pyActivityClass": {
+          "type": "string",
+          "description": "Always 'Rule-Alias-Function'."
+        },
+        "pyActivityName": {
+          "type": "string",
+          "description": "Function loader name."
+        },
+        "pyBaseClass": {
+          "type": "string",
+          "description": "Usually 'Rule-Obj-When' for When rule conditions."
+        },
+        "pyClassName": {
+          "type": "string",
+          "description": "Class context."
+        },
+        "pyDescription": {
+          "type": "string",
+          "description": "Function description."
+        },
+        "pyDisplayFunctionDesc": {
+          "type": "string",
+          "description": "Display description."
+        },
+        "pyExpanded": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false",
+            ""
+          ],
+          "description": "Whether the function details are expanded in the UI."
+        },
+        "pyLevel": {
+          "type": "string",
+          "description": "Level."
+        },
+        "pyReference": {
+          "type": "string",
+          "description": "Reference."
+        },
+        "pySmartPromptClass": {
+          "type": "string",
+          "description": "Smart prompt class \u2014 used to scope property auto-complete to a specific class."
+        },
+        "pyUsage": {
+          "type": "string",
+          "enum": [
+            "java",
+            ""
+          ],
+          "description": "Execution language \u2014 typically 'java'."
+        },
+        "pyCallParams": {
+          "type": "object",
+          "description": "Call parameters for the function.",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "pyNewMessage": {
+          "type": "string",
+          "description": "New message text (typically empty)."
+        },
+        "pyParameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/MethodParam"
+          },
+          "description": "Function parameter definitions."
+        },
+        "pyUIParameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/MethodParam"
+          },
+          "description": "UI rendering of parameters."
+        }
+      }
+    },
+    "MethodParam": {
+      "type": "object",
+      "description": "Function-call parameter slot (Context A). Used inside `pyCondition[].pyFunctionData.pyParameters`, `pyUIParameters`, and `pyCallParams` to wire a single argument slot of a function alias. `pyParametersParamType` here is a UI-rendering hint (Freeform / Values / HTMLProperty / Label / Alias / Textbox / Read / None), NOT a Pega data type. For the rule-level Parameters tab, use `RuleParameter` instead.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-MethodParams",
+          "description": "Embedded class \u2014 always 'Embed-MethodParams'.",
+          "x-pega-autoFill": "Embed-MethodParams"
+        },
+        "pyParametersParamName": {
+          "type": "string",
+          "description": "Parameter name (e.g., 'lValue', 'comparator', 'rValue')."
+        },
+        "pyParametersParamType": {
+          "type": "string",
+          "enum": [
+            "Freeform",
+            "Values",
+            "HTMLProperty",
+            "Label",
+            "Alias",
+            "None",
+            "Textbox",
+            "Read",
+            ""
+          ],
+          "description": "UI-rendering hint for a function-call parameter slot (Context A: inside `pyCondition[].pyFunctionData.pyParameters` / `pyUIParameters` / `pyCallParams`). NOT a data type \u2014 see `RuleParameter.pyParametersParamType` for the rule-level Parameters-tab data-type enum. 'Freeform' allows free text entry. 'Values' restricts to a dropdown list. 'HTMLProperty' is used for expression builder inputs. 'Label' is a display-only label between parameters (static UI text in `pyUIParameters`). 'Alias' is used for date/time property inputs that resolve via alias. 'None' is used for hidden/auto-filled parameters. 'Textbox' is used for free-text inputs without property auto-complete. 'Read' is used for read-only parameters with pre-set values."
+        },
+        "pyParametersParamValue": {
+          "type": "string",
+          "description": "Actual parameter value (e.g., '.pyReceiverProtocol', '=', '\"imap\"')."
+        },
+        "pyParametersParamDesc": {
+          "type": "string",
+          "description": "Parameter description displayed as placeholder text (e.g., 'first value', 'relation', 'second value')."
+        },
+        "pyParametersParamDefaultValue": {
+          "type": "string",
+          "description": "Default value for the parameter."
+        },
+        "pyParametersParamDropdownValues": {
+          "type": "string",
+          "enum": [
+            "Property",
+            "OptionsList",
+            ""
+          ],
+          "description": "Controls the dropdown auto-complete type for this parameter. 'Property' enables property name auto-complete. 'OptionsList' uses pyParametersParamIntelliValidateAs as a pipe-delimited options list."
+        },
+        "pyParametersParamIntelliValidateAs": {
+          "type": "string",
+          "description": "Validation constraint for the parameter. Numeric values (e.g., '30') indicate max character length. Prefixed values (e.g., 'primary.pySymbolComparators') reference a data page or property for dropdown values list.",
+          "examples": [
+            "30",
+            "primary.pySymbolComparators"
+          ]
+        },
+        "pyParametersDataType": {
+          "type": "string",
+          "description": "Data type constraint for the parameter value. Typically empty for string parameters."
+        },
+        "pyIsFunction": {
+          "type": "string",
+          "description": "Whether this parameter is a function reference."
+        },
+        "pyIsOptional": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false",
+            ""
+          ],
+          "description": "'false' = parameter is required, 'true' = parameter is optional."
+        },
+
+        "pyReference": {
+          "type": "string",
+          "description": "Positional reference index (e.g., '1', '2', '3'). Used in pyUIParameters."
+        },
+        "pyNodeCaption": {
+          "type": "string",
+          "description": "Node caption for UI rendering. Typically matches the positional index."
+        }
+      }
+    },
+    "RuleParameter": {
+      "type": "object",
+      "description": "Rule-level Parameters tab entry (Context B). Used by the top-level `pyParameters` array on Rule-Obj-When to declare typed input parameters callers pass into the rule (referenced at runtime as `Param.<name>`). Each entry is an `Embed-MethodParams` row, but `pyParametersParamType` here is a Pega data type \u2014 NOT the UI-render hint used by `MethodParam`. Carries only the rule-parameter fields (name / type / description / default / direction / required) and does not use `pyParametersParamValue`, dropdown config, `pyReference`, or `pyNodeCaption`.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-MethodParams",
+          "description": "Embedded class \u2014 always 'Embed-MethodParams'.",
+          "x-pega-autoFill": "Embed-MethodParams"
+        },
+        "pyParametersParamName": {
+          "type": "string",
+          "description": "Parameter name (referenced at runtime as `Param.<name>`)."
+        },
+        "pyParametersParamType": {
+          "type": "string",
+          "enum": [
+            "Text",
+            "Date",
+            "DateTime",
+            "Integer",
+            "Decimal",
+            "TimeofDay",
+            "TrueFalse",
+            "Double",
+            "Page",
+            ""
+          ],
+          "description": "Pega data type of the rule-level parameter. Stored in the Pretty form used by Rule-Obj-When / Rule-Declare-Expression instances (not the uppercase Rule-Obj-Activity form like STRING/INTEGER). 'Page' requires that the page's class be declared in `pyPagesAndClasses`."
+        },
+        "pyParametersParamDesc": {
+          "type": "string",
+          "description": "Human-readable description of the parameter, shown on the Parameters tab."
+        }
+      }
+    },
+    "FunctionAlias": {
+      "type": "object",
+      "description": "A supported function alias from the pyFunctionAliasList (Rule-Alias-Function). Defines a condition evaluation function available in When rules.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "enum": [
+            "Rule-Alias-Function",
+            "Embed-Restrictions-AllowedFunctions"
+          ],
+          "description": "'Rule-Alias-Function' for function alias entries populated from pyFunctionAliasList; 'Embed-Restrictions-AllowedFunctions' for restriction entries that limit which functions are available.",
+          "x-pega-autoFill": "Rule-Alias-Function"
+        },
+        "pyPurpose": {
+          "$ref": "#/$defs/FunctionAliasName",
+          "description": "Function identifier \u2014 used as pyConditionValue1Purpose in condition clauses and pyName in pyFunctionData. Restricted to the When-rule supported subset. See library-function-builder/examples/."
+        },
+        "pyPatternText": {
+          "type": "string",
+          "description": "Human-readable pattern template displayed in the UI (e.g., '[first value] [relation] [second value]'). Used as pyEcho in pyFunctionData."
+        },
+        "pyCity": {
+          "type": "string",
+          "description": "Grouping key. Only 'FirstInList' for CompareTwoValues; other functions use their own name or empty."
+        },
+        "pxListSubscript": {
+          "type": "integer",
+          "description": "Position in the pyFunctionAliasList array (1-based)."
+        },
+        "pyFunctionName": {
+          "type": "string",
+          "description": "Function name for Embed-Restrictions-AllowedFunctions entries. Used to specify which function is allowed/restricted."
+        }
+      }
+    },
+    "PageAndClass": {
+      "type": "object",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-PagesAndClasses",
+          "description": "Embedded class.",
+          "x-pega-autoFill": "Embed-PagesAndClasses"
+        },
+        "pyPagesAndClassesPage": {
+          "type": "string",
+          "description": "Page name (e.g., 'pyWorkPage')."
+        },
+        "pyPagesAndClassesClass": {
+          "type": "string",
+          "description": "Class of the page."
+        },
+        "pyPagesAndClassesMode": {
+          "type": "string",
+          "description": "Page mode (usually blank)."
+        }
+      }
+    }
+  }
+}

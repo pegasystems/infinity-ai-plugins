@@ -1,0 +1,197 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-obj-attachmentcategory.json",
+  "title": "Rule-Obj-AttachmentCategory",
+  "description": "JSON schema for Pega attachment category rules (Rule-Obj-AttachmentCategory). An attachment category is a named grouping that controls which attachment types (files, URLs, notes, correspondence, screenshots, scanned documents) are permitted on cases of a given class.",
+  "type": "object",
+  "required": [
+    "pxObjClass",
+    "pyClassName",
+    "pyCategoryName",
+    "pyLabel"
+  ],
+  "properties": {
+    "pxObjClass": {
+      "type": "string",
+      "const": "Rule-Obj-AttachmentCategory",
+      "description": "Rule type class -- always 'Rule-Obj-AttachmentCategory'.",
+      "x-pega-autoFill": "Rule-Obj-AttachmentCategory"
+    },
+    "pyClassName": {
+      "type": "string",
+      "description": "Fully qualified Pega class this attachment category applies to (e.g., 'Work-', 'Data-', 'MyOrg-MyApp-Work-MyCase'). Determines which cases or data instances can use this category for attachments."
+    },
+    "pyCategoryName": {
+      "type": "string",
+      "description": "Unique identifier name for this attachment category within its applies-to class (e.g., 'File', 'URL', 'Note', 'Evidence'). Used as the key when referencing this category programmatically."
+    },
+    "pyLabel": {
+      "type": "string",
+      "description": "Human-readable display name shown in the UI when users select or view this attachment category (e.g., 'Supporting Documents', 'Evidence Files')."
+    },
+    "pyRuleName": {
+      "type": "string",
+      "description": "Rule resolution name. Must match pyCategoryName exactly.",
+      "x-pega-autoFill": "{pyCategoryName}"
+    },
+    "pyRuleSet": {
+      "type": "string",
+      "description": "Name of the ruleset this rule belongs to (e.g., 'MyApp', 'MyAppInt')."
+    },
+    "pyRuleSetVersion": {
+      "type": "string",
+      "description": "Three-part major-minor-patch version of the ruleset (e.g., '01-01-01')."
+    },
+    "pyAvailableForFile": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "Flag indicating file uploads (documents, images, spreadsheets, PDFs) are a permitted attachment type under this category. (Default: 'true')"
+    },
+    "pyAvailableForUrl": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "Flag indicating URL links are a permitted attachment type under this category. (Default: 'true')"
+    },
+    "pyAvailableForNote": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "Flag indicating text notes are a permitted attachment type under this category. (Default: 'true')"
+    },
+    "pyAvailableForCorr": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "Flag indicating correspondence (generated emails, letters) are a permitted attachment type under this category. (Default: 'false')"
+    },
+    "pyAvailableForScreenshot": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "Flag indicating screen captures are a permitted attachment type under this category. (Default: 'true')"
+    },
+    "pyAvailableForScannedDocument": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "Flag indicating scanned documents are a permitted attachment type under this category. (Default: 'true')"
+    },
+    "pyEnableAttachmentLevelSecurity": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "Flag that activates per-action security on attachments in this category. When 'true', access to create, view, edit, and delete operations is governed by the entries in pyActionPrivilegeList and pyActionWhensList. Those entries reference existing privileges and when rules; this rule type does not create security dependencies on the fly."
+    },
+    "pyDescription": {
+      "type": "string",
+      "description": "Free-text explanation of this attachment category's intent and scope, visible to developers in Dev Studio."
+    },
+    "pyUsage": {
+      "type": "string",
+      "description": "Free-text notes indicating where and how this attachment category is referenced within the application (e.g., which flows, sections, or case types use it)."
+    },
+    "pyRuleAvailable": {
+      "type": "string",
+      "enum": ["Yes", "No", "Final", "Withdrawn", "Blocked"],
+      "description": "Availability status governing whether this rule participates in rule resolution. 'Yes' = active, 'No' = draft/inactive, 'Final' = locked from further changes, 'Withdrawn' = deprecated, 'Blocked' = explicitly excluded from resolution.",
+      "x-pega-autoFill": "Yes"
+    },
+    "pyMethodStatus": {
+      "type": "string",
+      "enum": ["", "Internal", "API", "Deprecated", "Extension", "Template"],
+      "description": "Classification of the rule's intended consumption scope. Empty string for standard application rules. 'API' = public interface, 'Internal' = not for external use, 'Extension' = designed to be overridden.",
+      "x-pega-autoFill": ""
+    },
+    "pyActionPrivilegeList": {
+      "type": "array",
+      "description": "List of privilege-based security entries, each mapping an existing Rule-Access-Privilege to the set of attachment operations (create, view, edit, delete) it grants. The privilege must already exist and resolve from the attachment category's pyClassName and ruleset prerequisites; creation fails for missing or invalid privilege names. For work-class attachments, common existing Work- privileges include ActionAddAttachments, ActionEditAttachment, DeleteAnyAttachment, and DeleteOnlyOwnAttachments.",
+      "items": { "$ref": "#/$defs/AttachmentSecurityPrivilege" },
+      "x-pega-autoFill": []
+    },
+    "pyActionWhensList": {
+      "type": "array",
+      "description": "List of when-condition-based security entries, each mapping an existing Rule-Obj-When to the set of attachment operations (create, view, edit, delete) it grants. The when rule must already exist and resolve from the attachment category's pyClassName and ruleset prerequisites; creation fails for missing or invalid when names. Use @baseclass Always only when the operation should be granted unconditionally.",
+      "items": { "$ref": "#/$defs/AttachmentSecurityWhens" },
+      "x-pega-autoFill": []
+    }
+  },
+  "$defs": {
+    "AttachmentSecurityPrivilege": {
+      "type": "object",
+      "description": "A single privilege-to-operations mapping that defines which attachment actions an existing privilege grants. The privilege is referenced only; it is not created by the attachment category rule.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-Rule-AttachmentSecurity-Privilege",
+          "description": "Embedded object class identifier — always 'Embed-Rule-AttachmentSecurity-Privilege'.",
+          "x-pega-autoFill": "Embed-Rule-AttachmentSecurity-Privilege"
+        },
+        "pyPrivilegeName": {
+          "type": "string",
+          "description": "Name of an existing Pega Rule-Access-Privilege that this entry evaluates. The operator must hold this privilege for the associated operations to be permitted. Do not invent privilege names; verify the privilege exists and resolves for the target class. For work-class attachment categories, common existing names include ActionAddAttachments, ActionEditAttachment, DeleteAnyAttachment, and DeleteOnlyOwnAttachments."
+        },
+        "pyAllowCreate": {
+          "type": "string",
+          "enum": ["true", "false"],
+          "description": "Flag granting the create-attachment operation to holders of this privilege. (Default: 'false')"
+        },
+        "pyAllowViewAll": {
+          "type": "string",
+          "enum": ["true", "false"],
+          "description": "Flag granting the view-all-attachments operation to holders of this privilege. (Default: 'false')"
+        },
+        "pyAllowEditAll": {
+          "type": "string",
+          "enum": ["true", "false"],
+          "description": "Flag granting the edit-all-attachments operation to holders of this privilege. (Default: 'false')"
+        },
+        "pyAllowDeleteAll": {
+          "type": "string",
+          "enum": ["true", "false"],
+          "description": "Flag granting the delete-all-attachments operation to holders of this privilege. (Default: 'false')"
+        },
+        "pyAllowDeleteOwn": {
+          "type": "string",
+          "enum": ["true", "false"],
+          "description": "Flag granting the delete-own-attachments operation (attachments created by the current operator) to holders of this privilege. (Default: 'false')"
+        }
+      }
+    },
+    "AttachmentSecurityWhens": {
+      "type": "object",
+      "description": "A single when-condition-to-operations mapping that defines which attachment actions are granted when an existing when rule evaluates to true. The when rule is referenced only; it is not created by the attachment category rule.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-Rule-AttachmentSecurity-Whens",
+          "description": "Embedded object class identifier — always 'Embed-Rule-AttachmentSecurity-Whens'.",
+          "x-pega-autoFill": "Embed-Rule-AttachmentSecurity-Whens"
+        },
+        "pyWhenName": {
+          "type": "string",
+          "description": "Name of an existing Pega Rule-Obj-When that this entry evaluates. The when rule must resolve for the target class and evaluate to true for the associated operations to be permitted. Do not invent when names; @baseclass Always is a broad option when an operation should be granted unconditionally."
+        },
+        "pyAllowCreate": {
+          "type": "string",
+          "enum": ["true", "false"],
+          "description": "Flag granting the create-attachment operation when the when rule evaluates to true. (Default: 'false')"
+        },
+        "pyAllowViewAll": {
+          "type": "string",
+          "enum": ["true", "false"],
+          "description": "Flag granting the view-all-attachments operation when the when rule evaluates to true. (Default: 'false')"
+        },
+        "pyAllowEditAll": {
+          "type": "string",
+          "enum": ["true", "false"],
+          "description": "Flag granting the edit-all-attachments operation when the when rule evaluates to true. (Default: 'false')"
+        },
+        "pyAllowDeleteAll": {
+          "type": "string",
+          "enum": ["true", "false"],
+          "description": "Flag granting the delete-all-attachments operation when the when rule evaluates to true. (Default: 'false')"
+        },
+        "pyAllowDeleteOwn": {
+          "type": "string",
+          "enum": ["true", "false"],
+          "description": "Flag granting the delete-own-attachments operation (attachments created by the current operator) when the when rule evaluates to true. (Default: 'false')"
+        }
+      }
+    }
+  }
+}

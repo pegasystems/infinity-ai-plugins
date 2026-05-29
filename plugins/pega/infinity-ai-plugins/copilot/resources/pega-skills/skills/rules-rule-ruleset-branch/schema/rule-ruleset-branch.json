@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-ruleset-branch.json",
+  "title": "Rule-RuleSet-Branch",
+  "description": "JSON schema for a Pega rule branch. This is an infrastructure rule type.",
+  "type": "object",
+  "required": [
+    "pxObjClass",
+    "pyBranchID",
+    "pyLabel"
+  ],
+  "properties": {
+    "pxObjClass": {
+      "type": "string",
+      "const": "Rule-RuleSet-Branch",
+      "description": "Rule type class — always 'Rule-RuleSet-Branch'.",
+      "x-pega-autoFill": "Rule-RuleSet-Branch"
+    },
+    "pyBranchID": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 16,
+      "not": {
+        "pattern": "^[pP][xXyYzZ]"
+      },
+      "description": "The branch identifier (unique across the application). Must be 3-16 characters and must not start with 'px', 'py', or 'pz'."
+    },
+    "pyLabel": {
+      "type": "string",
+      "description": "Display label shown in Dev Studio and App Studio. Defaults to pyBranchID if not provided.",
+      "x-pega-autoFill": "{pyBranchID}"
+    },
+    "pyBaseRule": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "'true' for some branch records. Observed as 'false' on all 70 validated server records."
+    },
+    "pyRuleName": {
+      "type": "string",
+      "description": "Lowercase branch name. Set by the platform on save."
+    },
+    "pyRuleSet": {
+      "type": "string",
+      "description": "Branch ruleset name. Matches pyBranchID (the lowercase branch name) in all observed server records."
+    }
+  }
+}

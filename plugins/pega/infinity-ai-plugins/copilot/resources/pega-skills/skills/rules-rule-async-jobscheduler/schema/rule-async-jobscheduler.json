@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-async-jobscheduler.json",
+  "title": "Rule-Async-JobScheduler",
+  "description": "JSON schema for creating or updating a Pega Job Scheduler rule (Rule-Async-JobScheduler). Only authored and identity fields are included; system-managed fields are omitted.",
+  "type": "object",
+  "required": [
+    "pxObjClass",
+    "pyLabel",
+    "pyPurpose",
+    "pyActivityName",
+    "pyNodeTypes",
+    "pyRecurringFrequency",
+    "pyApplicableTo",
+    "pyAccessGroup"
+  ],
+  "properties": {
+    "pxObjClass": {
+      "type": "string",
+      "const": "Rule-Async-JobScheduler",
+      "description": "Rule type class — always 'Rule-Async-JobScheduler'.",
+      "x-pega-autoFill": "Rule-Async-JobScheduler"
+    },
+    "pyLabel": {
+      "type": "string",
+      "description": "Human-readable display label."
+    },
+    "pyRuleName": {
+      "type": "string",
+      "description": "Internal rule name. Server-derived from pyPurpose — do not set directly.",
+      "x-pega-autoDerived": true,
+      "x-pega-deriveFrom": "pyPurpose"
+    },
+    "pyPurpose": {
+      "type": "string",
+      "description": "Rule identifier and class key; unique, case-insensitive. Ask the user for the rule name and use it here. The server uses this to populate pyRuleName."
+    },
+    "pyBaseClass": {
+      "type": "string",
+      "description": "Class the rule applies to. Use '@baseclass' for global (class-agnostic) scope.",
+      "x-pega-autoFill": "@baseclass"
+    },
+    "pyRuleSet": {
+      "type": "string",
+      "description": "Ruleset name the rule is saved into."
+    },
+    "pyRuleSetVersion": {
+      "type": "string",
+      "pattern": "^\\d{2}-\\d{2}-\\d{2}$",
+      "description": "Ruleset version string, e.g. '01-01-01'."
+    },
+    "pyActivityName": {
+      "type": "string",
+      "description": "Name of the activity to execute on each scheduled run."
+    },
+    "pyNodeTypes": {
+      "type": "object",
+      "description": "Map of node type keys the JS is eligible to run on. Never use node IDs. Use 'BackgroundProcessing' for standard background nodes.",
+      "default": {
+        "BackgroundProcessing": {
+          "pxObjClass": "Embed-Rule-FutureQueue-nodeInfo",
+          "pxSubscript": "BackgroundProcessing",
+          "pyNodeType": "BackgroundProcessing"
+        }
+      },
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "required": ["pxObjClass", "pxSubscript", "pyNodeType"],
+        "properties": {
+          "pxObjClass": { "type": "string", "const": "Embed-Rule-FutureQueue-nodeInfo", "x-pega-autoFill": "Embed-Rule-FutureQueue-nodeInfo" },
+          "pxSubscript": { "type": "string" },
+          "pyNodeType": { "type": "string" }
+        }
+      }
+    },
+    "pyRecurringFrequency": {
+      "type": "string",
+      "enum": ["Startup", "Multiple times a day", "Daily", "Weekly", "Monthly", "Yearly"],
+      "description": "Schedule type. 'Startup' runs once on node start and suits per-node initialisation. 'Multiple times a day' minimum interval is 1 minute. 'Daily', 'Weekly', 'Monthly', 'Yearly' run on a calendar schedule."
+    },
+    "pyApplicableTo": {
+      "type": "string",
+      "enum": ["Cluster", "Associated node"],
+      "description": "'Cluster' — one node wins the distributed lock and runs the JS exactly once per cluster. Use for archival, aggregation, and dispatch jobs. 'Associated node' — every qualifying node runs the JS independently. Use only for per-node initialisation or monitoring; never for jobs that acquire cross-cluster DB locks."
+    },
+    "pyAccessGroupContext": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "'true' — activity resolves against the SRC application stack (default). 'false' — activity runs under the named pyAccessGroup. Use 'false' when CDH or rule-specific context is needed and a named access group should be used instead of SRC."
+    },
+    "pyAccessGroup": {
+      "type": "string",
+      "description": "Access group for activity execution. Always required — server returns 'Value cannot be blank' if omitted. Set pyAccessGroupContext to 'false' and provide a named access group (e.g. 'MyOrg-MyApp:Administrators')."
+    },
+    "pyRecurrencePattern": {
+      "type": "object",
+      "description": "Schedule timing configuration. Required when pyRecurringFrequency is not 'Startup'. CAUTION: never include pyRecurrencePattern in an update-rule payload unless you explicitly intend to change the schedule — deep merge will overwrite the existing pyStartTime.",
+      "required": ["pyStartTime"],
+      "properties": {
+        "pyStartTime": {
+          "type": "string",
+          "pattern": "^\\d{6}$",
+          "description": "Time at which the schedule starts, expressed in the timezone named by pyUseTimeZone — NOT in UTC. Format: HHmmss (6 digits, no separators, no timezone suffix), e.g. '170000' for 17:00:00 local time. The server stores the value normalised to UTC internally, but you must supply the wall-clock time in the target timezone. Do NOT pre-convert to UTC before sending — that will cause the job to fire at the wrong local time. Server rejects 'HH:MM:SS GMT' strings as invalid."
+        },
+        "pyUseTimeZone": {
+          "type": "string",
+          "description": "IANA timezone ID for the schedule. Use 'GMT' for UTC. Examples: 'GMT', 'America/New_York', 'Europe/London'. Defaults to 'GMT' when pySystemDefaultTimeZone is false. Do NOT use display names or offset strings."
+        },
+        "pyDailyInterval": {
+          "type": "string",
+          "description": "Number of days between runs. Required when pyRecurringFrequency is 'Daily', e.g. '1' for every day."
+        }
+      }
+    },
+    "pyIsEnabled": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Set 'false' to disable the JS without deleting it."
+    }
+  },
+  "if": {
+    "properties": {
+      "pyRecurringFrequency": {
+        "enum": ["Daily", "Weekly", "Monthly", "Yearly", "Multiple times a day"]
+      }
+    },
+    "required": ["pyRecurringFrequency"]
+  },
+  "then": {
+    "required": ["pyRecurrencePattern"]
+  }
+}

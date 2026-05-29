@@ -1,0 +1,813 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-obj-activity.json",
+  "title": "Rule-Obj-Activity",
+  "description": "JSON schema for creating or updating a Pega activity rule (Rule-Obj-Activity). Only authored and identity fields are included; system-managed and versioning fields are omitted.",
+  "type": "object",
+  "required": [
+    "pxObjClass",
+    "pyActivityName",
+    "pyLabel",
+    "pyClassName",
+    "pyActivityType",
+    "pyJavaGenerateAPIVersion",
+    "pySteps"
+  ],
+  "properties": {
+    "pxObjClass": {
+      "type": "string",
+      "const": "Rule-Obj-Activity",
+      "description": "Rule type class — always 'Rule-Obj-Activity'.",
+      "x-pega-autoFill": "Rule-Obj-Activity"
+    },
+    "pyActivityName": {
+      "type": "string",
+      "description": "Internal name of the activity (PascalCase or camelCase, no spaces)."
+    },
+    "pyLabel": {
+      "type": "string",
+      "description": "Human-readable display label."
+    },
+    "pyClassName": {
+      "type": "string",
+      "description": "The Pega class this activity belongs to (e.g., 'MyOrg-MyApp-Work-Case')."
+    },
+    "pyActivityType": {
+      "type": "string",
+      "enum": [
+        "ACTIVITY",
+        "ASSEMBLER",
+        "ASSIGN",
+        "ASYNCHRONOUS",
+        "LOADDECLARATIVEPAGE",
+        "NOTIFY",
+        "ONCHANGE",
+        "ROUTE",
+        "RULECONNECT",
+        "TRIGGER",
+        "UTILITY",
+        "VALIDATE",
+        "LOCATE"
+      ],
+      "description": "Type of activity. 12 supported values from the pyActivityType prompt list (Pega-RULES 08-01-01): ACTIVITY (standard step list — default for new authoring), ASSEMBLER (assembler activity), ASSIGN (assignment-creating activity), ASYNCHRONOUS (queued/async execution), LOADDECLARATIVEPAGE (data-page load activity), NOTIFY (correspondence/notification — e.g. NotifyAssignee), ONCHANGE (declarative on-change handler), ROUTE (assignment router — e.g. ToWorkbasket, ToDecisionTable, ToInitialAssignee), RULECONNECT (activity invoking a Connect-* rule), TRIGGER (Declare-Trigger handler), UTILITY (flow utility — e.g. Work-.UpdateStatus, ReassignToWorkBasket), VALIDATE (Obj-Validate validation activity). AUTOMATION is NOT supported for authoring — do not use. LOCATE is a legacy value removed by BUG-379512 — accepted for round-trip preservation but should not be authored. Default for new activities is ACTIVITY.",
+      "x-pega-autoFill": "ACTIVITY"
+    },
+    "pyOldActivityType": {
+      "type": "string",
+      "description": "Legacy/original activity type classification preserved on round-trip. Mirrors a prior value of pyActivityType. Server-managed; agents should not set this explicitly."
+    },
+    "pyDescription": {
+      "type": "string",
+      "description": "Developer-facing description of the activity's purpose."
+    },
+    "pyAuthenticatedOnly": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "True to require an authenticated session to invoke this activity. Pega represents booleans as strings.",
+      "x-pega-autoFill": "true"
+    },
+    "pyInputMayStart": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "True to allow this activity to start a new case/flow when invoked. Pega represents booleans as strings."
+    },
+    "pyDisplayMode": {
+      "type": "string",
+      "enum": ["clone", "basic", "specialize", ""],
+      "description": "Activity rule-form display mode. Server typically sets the default ('clone' for newly cloned rules); agents should generally omit this field unless replicating a specific form layout. Cosmetic — does not affect runtime behavior."
+    },
+    "pyRuleSet": {
+      "type": "string",
+      "description": "Rule set the activity is saved to."
+    },
+    "pyRuleSetVersion": {
+      "type": "string",
+      "pattern": "^\\d{2}-\\d{2}-\\d{2}$",
+      "description": "Rule set version (e.g., '01-01-02')."
+    },
+    "pyRuleAvailable": {
+      "type": "string",
+      "enum": ["Yes", "No", "Withdrawn", "Final", "Blocked"],
+      "description": "Availability status.",
+      "x-pega-autoFill": "Yes"
+    },
+    "pyJavaGenerateAPIVersion": {
+      "type": "string",
+      "const": "03-02",
+      "description": "Java API version — must be '03-02' for current Infinity versions. Omitting causes 'legacy API' error.",
+      "x-pega-autoFill": "03-02"
+    },
+    "pyCategory": {
+      "type": "string",
+      "enum": ["Create", "Other", "Read", "Write", "Delete", "Query", "Change stage"],
+      "description": "Categorizes the activity's purpose. Optional — some activities use this for UI grouping."
+    },
+    "pyCircumstanceProp": {
+      "type": "string",
+      "description": "Property used for circumstancing (variant resolution). Blank for no circumstancing."
+    },
+    "pySteps": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Ordered list of steps that make up the activity body.",
+      "items": { "$ref": "#/$defs/ActivityStep" },
+      "x-pega-autoFill": [{"pxObjClass": "Embed-ActivitySteps"}]
+    },
+    "pyParameters": {
+      "type": "array",
+      "description": "Declared input/output parameters visible to callers.",
+      "items": { "$ref": "#/$defs/MethodParam" }
+    },
+    "pyLocalParameters": {
+      "type": "array",
+      "description": "Local variables scoped only to this activity (not visible to callers). Use Java types, not Pega parameter types.",
+      "items": { "$ref": "#/$defs/LocalParam" }
+    },
+    "pySystemParameters": {
+      "type": "array",
+      "description": "Auto-injected system parameters available inside the activity (typically FLOW-context: flowName, flowType, ReferencePageName, ReferenceClass, ReferenceInsKey, pyDraftMode). Pega populates this list automatically — agents should NOT author or modify entries. Reference these names directly in expressions (e.g. `param.flowName`) without declaring them in pyParameters.",
+      "items": { "$ref": "#/$defs/SystemParameter" }
+    },
+    "pyPagesAndClasses": {
+      "type": "array",
+      "description": "Named pages used by this activity, with their classes and modes.",
+      "items": { "$ref": "#/$defs/PageAndClass" }
+    },
+    "pyActivityRolesList": {
+      "type": "array",
+      "description": "Role-based security — list of roles allowed to execute this activity.",
+      "items": { "type": "object" }
+    },
+    "pyActivityPrivilegeList": {
+      "type": "array",
+      "description": "Privilege-based security — list of privileges required.",
+      "items": { "type": "object" }
+    },
+    "pyUsage": {
+      "type": "string",
+      "description": "When the Activity is used or how it is used."
+    }
+  },
+  "$defs": {
+    "ActivityStep": {
+      "type": "object",
+      "description": "A single step in the activity (Embed-ActivitySteps).",
+      "required": ["pxObjClass", "pyStepsActivityName"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-ActivitySteps",
+          "description": "Always 'Embed-ActivitySteps'.",
+          "x-pega-autoFill": "Embed-ActivitySteps"
+        },
+        "pyStepsActivityName": {
+          "type": "string",
+          "anyOf": [
+            { "pattern": "^[Jj][Aa][Vv][Aa]$" },
+            { "pattern": "^[Aa][Cc][Tt][Ii][Vv][Ii][Tt][Yy]-[Cc][Ll][Ee][Aa][Rr]-[Ss][Tt][Aa][Tt][Uu][Ss]$" },
+            { "pattern": "^[Aa][Cc][Tt][Ii][Vv][Ii][Tt][Yy]-[Ee][Nn][Dd]$" },
+            { "pattern": "^[Aa][Cc][Tt][Ii][Vv][Ii][Tt][Yy]-[Ll][Ii][Ss][Tt]-[Aa][Dd][Dd]$" },
+            { "pattern": "^[Aa][Cc][Tt][Ii][Vv][Ii][Tt][Yy]-[Ss][Ee][Tt]-[Ss][Tt][Aa][Tt][Uu][Ss]$" },
+            { "pattern": "^[Aa][Pp][Pp][Ll][Yy]-[Dd][Aa][Tt][Aa][Tt][Rr][Aa][Nn][Ss][Ff][Oo][Rr][Mm]$" },
+            { "pattern": "^[Aa][Pp][Pp][Ll][Yy]-[Pp][Aa][Rr][Ss][Ee]-[Dd][Ee][Ll][Ii][Mm][Ii][Tt][Ee][Dd]$" },
+            { "pattern": "^[Aa][Pp][Pp][Ll][Yy]-[Pp][Aa][Rr][Ss][Ee]-[Ss][Tt][Rr][Uu][Cc][Tt][Uu][Rr][Ee][Dd]$" },
+            { "pattern": "^[Aa][Pp][Pp][Ll][Yy]-[Pp][Aa][Rr][Ss][Ee]-[Xx][Mm][Ll]$" },
+            { "pattern": "^[Aa][Ss][Ss][Ee][Rr][Tt]-[Nn][Oo]-[Ii][Nn][Vv][Oo][Cc][Aa][Tt][Ii][Oo][Nn]$" },
+            { "pattern": "^[Aa][Ss][Ss][Ii][Gg][Nn]-[Dd][Ee][Ll][Ee][Tt][Ee]$" },
+            { "pattern": "^[Cc][Aa][Ll][Ll]-[Aa][Ss][Yy][Nn][Cc]-[Aa][Cc][Tt][Ii][Vv][Ii][Tt][Yy]$" },
+            { "pattern": "^[Cc][Aa][Ll][Ll]-[Ff][Uu][Nn][Cc][Tt][Ii][Oo][Nn]$" },
+            { "pattern": "^[Cc][Oo][Mm][Mm][Ii][Tt]$" },
+            { "pattern": "^[Cc][Oo][Nn][Nn][Ee][Cc][Tt]-[Cc][Aa][Ss][Ss][Aa][Nn][Dd][Rr][Aa]$" },
+            { "pattern": "^[Cc][Oo][Nn][Nn][Ee][Cc][Tt]-[Cc][Mm][Ii][Ss]$" },
+            { "pattern": "^[Cc][Oo][Nn][Nn][Ee][Cc][Tt]-[Ff][Tt][Pp]$" },
+            { "pattern": "^[Cc][Oo][Nn][Nn][Ee][Cc][Tt]-[Hh][Bb][Aa][Ss][Ee]$" },
+            { "pattern": "^[Cc][Oo][Nn][Nn][Ee][Cc][Tt]-[Jj][Mm][Ss]$" },
+            { "pattern": "^[Cc][Oo][Nn][Nn][Ee][Cc][Tt]-[Mm][Qq]$" },
+            { "pattern": "^[Cc][Oo][Nn][Nn][Ee][Cc][Tt]-[Rr][Ee][Ss][Tt]$" },
+            { "pattern": "^[Cc][Oo][Nn][Nn][Ee][Cc][Tt]-[Ss][Aa][Pp]$" },
+            { "pattern": "^[Cc][Oo][Nn][Nn][Ee][Cc][Tt]-[Ss][Oo][Aa][Pp]$" },
+            { "pattern": "^[Cc][Oo][Nn][Nn][Ee][Cc][Tt]-[Ww][Aa][Ii][Tt]$" },
+            { "pattern": "^[Dd][Aa][Tt][Aa][Ff][Ll][Oo][Ww]-[Ee][Xx][Ee][Cc][Uu][Tt][Ee]$" },
+            { "pattern": "^[Dd][Aa][Tt][Aa][Ss][Ee][Tt]-[Ee][Xx][Ee][Cc][Uu][Tt][Ee]$" },
+            { "pattern": "^[Ee][Nn][Dd]-[Vv][Aa][Ll][Ii][Dd][Aa][Tt][Ee]$" },
+            { "pattern": "^[Ee][Xx][Ii][Tt]-[Aa][Cc][Tt][Ii][Vv][Ii][Tt][Yy]$" },
+            { "pattern": "^[Ff][Ll][Oo][Ww]-[Ee][Nn][Dd]$" },
+            { "pattern": "^[Ff][Ll][Oo][Ww]-[Nn][Ee][Ww]$" },
+            { "pattern": "^[Hh][Ii][Ss][Tt][Oo][Rr][Yy]-[Aa][Dd][Dd]$" },
+            { "pattern": "^[Hh][Ii][Ss][Tt][Oo][Rr][Yy]-[Ll][Ii][Ss][Tt]$" },
+            { "pattern": "^[Ii][Nn][Dd][Ee][Xx]-[Ff][Ii][Nn][Ii][Ss][Hh]$" },
+            { "pattern": "^[Ll][Ii][Nn][Kk]-[Oo][Bb][Jj][Ee][Cc][Tt][Ss]$" },
+            { "pattern": "^[Ll][Oo][Aa][Dd]-[Dd][Aa][Tt][Aa][Pp][Aa][Gg][Ee]$" },
+            { "pattern": "^[Ll][Oo][Gg]-[Mm][Ee][Ss][Ss][Aa][Gg][Ee]$" },
+            { "pattern": "^[Mm][Aa][Pp]-[Ss][Tt][Rr][Uu][Cc][Tt][Uu][Rr][Ee][Dd]$" },
+            { "pattern": "^[Oo][Bb][Jj]-[Bb][Rr][Oo][Ww][Ss][Ee]$" },
+            { "pattern": "^[Oo][Bb][Jj]-[Dd][Ee][Ll][Ee][Tt][Ee]$" },
+            { "pattern": "^[Oo][Bb][Jj]-[Dd][Ee][Ll][Ee][Tt][Ee]-[Bb][Yy]-[Hh][Aa][Nn][Dd][Ll][Ee]$" },
+            { "pattern": "^[Oo][Bb][Jj]-[Ff][Ii][Ll][Tt][Ee][Rr]$" },
+            { "pattern": "^[Oo][Bb][Jj]-[Ll][Ii][Ss][Tt]-[Vv][Ii][Ee][Ww]$" },
+            { "pattern": "^[Oo][Bb][Jj]-[Oo][Pp][Ee][Nn]$" },
+            { "pattern": "^[Oo][Bb][Jj]-[Oo][Pp][Ee][Nn]-[Bb][Yy]-[Hh][Aa][Nn][Dd][Ll][Ee]$" },
+            { "pattern": "^[Oo][Bb][Jj]-[Rr][Ee][Ff][Rr][Ee][Ss][Hh]-[Aa][Nn][Dd]-[Ll][Oo][Cc][Kk]$" },
+            { "pattern": "^[Oo][Bb][Jj]-[Ss][Aa][Vv][Ee]$" },
+            { "pattern": "^[Oo][Bb][Jj]-[Ss][Aa][Vv][Ee]-[Cc][Aa][Nn][Cc][Ee][Ll]$" },
+            { "pattern": "^[Oo][Bb][Jj]-[Ss][Oo][Rr][Tt]$" },
+            { "pattern": "^[Oo][Bb][Jj]-[Vv][Aa][Ll][Ii][Dd][Aa][Tt][Ee]$" },
+            { "pattern": "^[Pp][Aa][Gg][Ee]-[Cc][Hh][Aa][Nn][Gg][Ee]-[Cc][Ll][Aa][Ss][Ss]$" },
+            { "pattern": "^[Pp][Aa][Gg][Ee]-[Cc][Ll][Ee][Aa][Rr]-[Mm][Ee][Ss][Ss][Aa][Gg][Ee][Ss]$" },
+            { "pattern": "^[Pp][Aa][Gg][Ee]-[Cc][Oo][Pp][Yy]$" },
+            { "pattern": "^[Pp][Aa][Gg][Ee]-[Mm][Ee][Rr][Gg][Ee]-[Ii][Nn][Tt][Oo]$" },
+            { "pattern": "^[Pp][Aa][Gg][Ee]-[Nn][Ee][Ww]$" },
+            { "pattern": "^[Pp][Aa][Gg][Ee]-[Rr][Ee][Mm][Oo][Vv][Ee]$" },
+            { "pattern": "^[Pp][Aa][Gg][Ee]-[Rr][Ee][Nn][Aa][Mm][Ee]$" },
+            { "pattern": "^[Pp][Aa][Gg][Ee]-[Ss][Ee][Tt]-[Mm][Ee][Ss][Ss][Aa][Gg][Ee][Ss]$" },
+            { "pattern": "^[Pp][Aa][Gg][Ee]-[Uu][Nn][Ll][Oo][Cc][Kk]$" },
+            { "pattern": "^[Pp][Aa][Gg][Ee]-[Vv][Aa][Ll][Ii][Dd][Aa][Tt][Ee]$" },
+            { "pattern": "^[Pp][Rr][Ii][Vv][Ii][Ll][Ee][Gg][Ee]-[Cc][Hh][Ee][Cc][Kk]$" },
+            { "pattern": "^[Pp][Rr][Oo][Pp][Ee][Rr][Tt][Yy]-[Mm][Aa][Pp]-[Dd][Ee][Cc][Ii][Ss][Ii][Oo][Nn][Tt][Aa][Bb][Ll][Ee]$" },
+            { "pattern": "^[Pp][Rr][Oo][Pp][Ee][Rr][Tt][Yy]-[Mm][Aa][Pp]-[Dd][Ee][Cc][Ii][Ss][Ii][Oo][Nn][Tt][Rr][Ee][Ee]$" },
+            { "pattern": "^[Pp][Rr][Oo][Pp][Ee][Rr][Tt][Yy]-[Mm][Aa][Pp]-[Vv][Aa][Ll][Uu][Ee]$" },
+            { "pattern": "^[Pp][Rr][Oo][Pp][Ee][Rr][Tt][Yy]-[Mm][Aa][Pp]-[Vv][Aa][Ll][Uu][Ee][Pp][Aa][Ii][Rr]$" },
+            { "pattern": "^[Pp][Rr][Oo][Pp][Ee][Rr][Tt][Yy]-[Rr][Ee][Ff]$" },
+            { "pattern": "^[Pp][Rr][Oo][Pp][Ee][Rr][Tt][Yy]-[Rr][Ee][Mm][Oo][Vv][Ee]$" },
+            { "pattern": "^[Pp][Rr][Oo][Pp][Ee][Rr][Tt][Yy]-[Ss][Ee][Ee][Kk]-[Vv][Aa][Ll][Uu][Ee]$" },
+            { "pattern": "^[Pp][Rr][Oo][Pp][Ee][Rr][Tt][Yy]-[Ss][Ee][Tt]$" },
+            { "pattern": "^[Pp][Rr][Oo][Pp][Ee][Rr][Tt][Yy]-[Ss][Ee][Tt]-[Cc][Oo][Rr][Rr]$" },
+            { "pattern": "^[Pp][Rr][Oo][Pp][Ee][Rr][Tt][Yy]-[Ss][Ee][Tt]-[Hh][Tt][Mm][Ll]$" },
+            { "pattern": "^[Pp][Rr][Oo][Pp][Ee][Rr][Tt][Yy]-[Ss][Ee][Tt]-[Mm][Ee][Ss][Ss][Aa][Gg][Ee][Ss]$" },
+            { "pattern": "^[Pp][Rr][Oo][Pp][Ee][Rr][Tt][Yy]-[Ss][Ee][Tt]-[Ss][Pp][Ee][Cc][Ii][Aa][Ll]$" },
+            { "pattern": "^[Pp][Rr][Oo][Pp][Ee][Rr][Tt][Yy]-[Ss][Ee][Tt]-[Ss][Tt][Rr][Ee][Aa][Mm]$" },
+            { "pattern": "^[Pp][Rr][Oo][Pp][Ee][Rr][Tt][Yy]-[Ss][Ee][Tt]-[Xx][Mm][Ll]$" },
+            { "pattern": "^[Pp][Rr][Oo][Pp][Ee][Rr][Tt][Yy]-[Vv][Aa][Ll][Ii][Dd][Aa][Tt][Ee]$" },
+            { "pattern": "^[Pp][Uu][Bb][Ll][Ii][Ss][Hh]-[Nn][Oo][Tt][Ii][Ff][Ii][Cc][Aa][Tt][Ii][Oo][Nn][Ss]$" },
+            { "pattern": "^[Qq][Uu][Ee][Uu][Ee]-[Ff][Oo][Rr]-[Aa][Gg][Ee][Nn][Tt]$" },
+            { "pattern": "^[Qq][Uu][Ee][Uu][Ee]-[Ff][Oo][Rr]-[Pp][Rr][Oo][Cc][Ee][Ss][Ss][Ii][Nn][Gg]$" },
+            { "pattern": "^[Rr][Dd][Bb]-[Dd][Ee][Ll][Ee][Tt][Ee]$" },
+            { "pattern": "^[Rr][Dd][Bb]-[Ll][Ii][Ss][Tt]$" },
+            { "pattern": "^[Rr][Dd][Bb]-[Oo][Pp][Ee][Nn]$" },
+            { "pattern": "^[Rr][Dd][Bb]-[Ss][Aa][Vv][Ee]$" },
+            { "pattern": "^[Rr][Ee][Qq][Uu][Ee][Ss][Tt][Oo][Rr]-[Ss][Tt][Oo][Pp]$" },
+            { "pattern": "^[Rr][Oo][Ll][Ll][Bb][Aa][Cc][Kk]$" },
+            { "pattern": "^[Ss][Hh][Oo][Ww]-[Aa][Pp][Pp][Ll][Ee][Tt]$" },
+            { "pattern": "^[Ss][Hh][Oo][Ww]-[Aa][Pp][Pp][Ll][Ee][Tt]-[Dd][Aa][Tt][Aa]$" },
+            { "pattern": "^[Ss][Hh][Oo][Ww]-[Hh][Aa][Rr][Nn][Ee][Ss][Ss]$" },
+            { "pattern": "^[Ss][Hh][Oo][Ww]-[Hh][Tt][Mm][Ll]$" },
+            { "pattern": "^[Ss][Hh][Oo][Ww]-[Pp][Aa][Gg][Ee]$" },
+            { "pattern": "^[Ss][Hh][Oo][Ww]-[Pp][Rr][Oo][Pp][Ee][Rr][Tt][Yy]$" },
+            { "pattern": "^[Ss][Hh][Oo][Ww]-[Ss][Tt][Rr][Ee][Aa][Mm]$" },
+            { "pattern": "^[Ss][Tt][Aa][Rr][Tt]-[Vv][Aa][Ll][Ii][Dd][Aa][Tt][Ee]$" },
+            { "pattern": "^[Ss][Tt][Rr][Ii][Nn][Gg][Bb][Uu][Ff][Ff][Ee][Rr]-[Aa][Pp][Pp][Ee][Nn][Dd]$" },
+            { "pattern": "^[Ss][Tt][Rr][Ii][Nn][Gg][Bb][Uu][Ff][Ff][Ee][Rr]-[Ii][Nn][Ss][Ee][Rr][Tt]$" },
+            { "pattern": "^[Ss][Tt][Rr][Ii][Nn][Gg][Bb][Uu][Ff][Ff][Ee][Rr]-[Rr][Ee][Ss][Ee][Tt]$" },
+            { "pattern": "^[Tt][Aa][Ss][Kk][Ss][Tt][Aa][Tt][Uu][Ss]-[Ss][Ee][Tt]$" },
+            { "pattern": "^[Tt][Ee][Xx][Tt]-[Ii][Nn][Ff][Ee][Rr]$" },
+            { "pattern": "^[Tt][Ee][Xx][Tt]-[Nn][Oo][Rr][Mm][Aa][Ll][Ii][Zz][Ee]$" },
+            { "pattern": "^[Tt][Hh][Rr][Ee][Aa][Dd]-[Cc][Ll][Ee][Aa][Rr]$" },
+            { "pattern": "^[Tt][Hh][Rr][Ee][Aa][Dd]-[Ss][Tt][Oo][Pp]$" },
+            { "pattern": "^[Ww][Aa][Ii][Tt]$" },
+            { "pattern": "^[Ww][Aa][Ii][Tt]-[Ff][Oo][Rr]-[Rr][Ee][Qq][Uu][Ee][Ss][Tt][Oo][Rr]$" },
+            { "pattern": "^[Cc][Aa][Ll][Ll] .+$" },
+            { "pattern": "^[Bb][Rr][Aa][Nn][Cc][Hh] .+$" },
+            { "pattern": "^[Qq][Uu][Ee][Uu][Ee] .+$" },
+            { "pattern": "^[Cc][Oo][Ll][Ll][Ee][Cc][Tt] .+$" }
+          ],
+          "description": "The method to invoke. Fixed method names (e.g. 'Log-Message', 'Page-New') or composite format for Call/Branch/Queue/Collect: 'Call <ActivityName>', 'Call <Class>.<Activity>', 'Branch <ActivityName>', etc. The composite keywords MUST include the target activity name after a space — bare 'Call' or 'Branch' is rejected by the server. See references/method-catalog.md for the full categorized catalog.",
+          "x-pega-autoFill": ""
+        },
+        "pyStepsDescription": {
+          "type": "string",
+          "description": "Developer-written description of what this step does."
+        },
+        "pyStepsObjectName": {
+          "type": "string",
+          "description": "The clipboard page (or page-like reference) this step operates on. Accepts several forms:\n\n1. **Literal page name** — a top-level clipboard page declared in `pyPagesAndClasses` (e.g. `MyCase`, `ClassToValidate`, `pyWorkPage`, `AccessGroups`). Most common form.\n\n2. **Property reference (dot-prefixed)** — a path on the *primary* page resolving to an embedded page or PageList. Used by EMBEDDED loops (`pyStepsRepeatDefHasRepeat='EMBEDDED'`) to identify the iterable: e.g. `.pyKeyDefList`, `.pyDisplayModelsList.pyContextReference`, `Top.pzPredictionHolder.pyStageReference`. Also valid for non-loop steps that operate on an embedded page (e.g. Property-Set on `.pyDefaultModels`).\n\n3. **Data page result list** — a path beginning with a `D_` prefixed data page, typically `.pxResults`: `D_pzRelevantRecordTypes.pxResults`, `D_OperatorList.pxResults`. Used by EMBEDDED loops over data-page results.\n\n4. **Local variable reference** — `local.<varName>` to use a local variable (declared in `pyLocalParameters`) as a dynamic page name resolved at runtime. Compound forms like `local.<varName>.pxResults` are also accepted for EMBEDDED loops over a local-variable-named page's result list.\n\n5. **Special / runtime-context pages** — `Primary` (the activity's primary page), `pyTempModalPage`, `pxThread.pxSecuritySnapshot`, and similar Pega-managed pages. These do not need to appear in `pyPagesAndClasses`.\n\n**Pairing notes:**\n- For EMBEDDED loops the iterating class must be declared in `pyStepsRepeatDef.pyForEachValidClasses[].pyForEachClass`.\n- Property and data-page paths work because the runtime resolves the path against the step page (Primary by default) and treats the addressed embedded page / list element as the step page for the duration of the step.\n- Empty string (`\"\"`) is valid and means the step inherits the previous step's page context (or operates with no page context for parameter-only methods like Property-Map-Value)."
+        },
+        "pyStepsJavaSource": {
+          "type": "string",
+          "description": "Inline Java code — only used when pyStepsActivityName = 'Java'."
+        },
+        "pyStepsCallParams": {
+          "type": "object",
+          "description": "Key-value pairs of method-specific parameters (varies per method).",
+          "additionalProperties": true
+        },
+        "pyParamArray": {
+          "type": "array",
+          "description": "Additional parameters passed as an array of Embed-MethodParams.",
+          "items": { "$ref": "#/$defs/MethodParam" }
+        },
+        "pyStepsPreCondition": {
+          "type": "string",
+          "enum": ["", "true", "false"],
+          "description": "Boolean string flag enabling per-step preconditions — the rows shown as 'When' conditions in the Activity step UI (evaluated BEFORE the step body runs). Set to 'true' AND populate pyStepsPreCondParams rows to make the step conditional. Setting only one without the other has no runtime effect."
+        },
+        "pyStepsPreCondParams": {
+          "type": "array",
+          "description": "Pre-step 'When' condition rows (Embed-ActivityPreConditions) — evaluated BEFORE the step runs. Multiple rows are evaluated in array order; each row's WhenTrue/WhenFalse action determines whether to evaluate the next row, execute the step, skip the step, jump to a block, exit the iteration, or exit the activity. Same metadata shape as pyStepsTransParams (post-step 'Jump' rows); the only enum difference is that '4' Exit Iteration is exposed here but not on transitions. See ActivityPreCondition definition.",
+          "items": { "$ref": "#/$defs/ActivityPreCondition" }
+        },
+        "pyStepsTransition": {
+          "type": "string",
+          "description": "Tri/quad-state flag enabling per-step transitions — the rows shown as 'Jump' conditions in the Activity step UI (evaluated AFTER the step body runs). Observed values: '' (no transitions / inactive), 'true' (transition rows active in pyStepsTransParams), 'false' (rows present but disabled), '0' (legacy form of '' — observed on DisplayAndRunReport step 2), '-1' (legacy form indicating transition exists but only fires on non-default path — observed on DisplayAndRunReport steps 1, 3). New authoring should use '', 'true', or 'false'. The '0' / '-1' values are legacy artifacts written by older rule-form versions — preserve verbatim on round-trip; do NOT normalize them to '' or 'true'. Pre-step 'When' conditions and post-step 'Jump' conditions share the same metadata row shape; the difference is purely position in the step lifecycle (before vs after) and UI label."
+        },
+        "pyStepsTransParams": {
+          "type": "array",
+          "description": "Post-step 'Jump' condition rows (Embed-ActivityTransitions) — evaluated AFTER the step runs. Multiple rows are evaluated in array order; each row decides where to go next (continue to next step, jump to a named block, skip remaining whens, exit activity). Same metadata shape as pyStepsPreCondParams (pre-step 'When' rows) except code '4' Exit Iteration is preconditions-only. See ActivityTransition definition.",
+          "items": { "$ref": "#/$defs/ActivityTransition" }
+        },
+        "pyStepsRepeatDef": {
+          "$ref": "#/$defs/ActivityRepeat",
+          "description": "Loop/repeat definition for this step."
+        },
+        "pyStepsPageAliases": {
+          "type": "object",
+          "description": "Page alias mappings for this step."
+        },
+        "pyStepsBlockName": {
+          "type": "string",
+          "description": "Block name for grouping steps (blank = no block). Must be unique across all steps in the activity; duplicates cause a DuplicateSteplabel validation error. Common conventions: 'ERR' / 'END' / 'RESP' for error/exit blocks, '//' for comment/divider blocks (step body is typically a no-op)."
+        },
+        "pyOnException": {
+          "type": "string",
+          "description": "Block name (matches some step's pyStepsBlockName) to jump to when this step throws an exception. NOT a step number and NOT an activity name. Common values: 'ERR', 'Error', 'END', 'PR', 'RESP', 'ODF'. Use on risky steps (data page loads, connector calls) to route to a fallback/error-handling block. IMPORTANT: pyStepsTransition must be set to 'true' on the same step for pyOnException to take effect — pyOnException lives in the transition/jump popup and is only evaluated when transitions are active."
+        },
+        "pyPassCurrentParameterPage": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "True to forward this activity's parameter page to the called step. Blank means false."
+        },
+        "pySteps": {
+          "type": "array",
+          "description": "Nested sub-steps (used inside blocks or loops).",
+          "items": { "$ref": "#/$defs/ActivityStep" }
+        },
+        "pyStepsCallParamsList": {
+          "type": "array",
+          "description": "Call-Function UI metadata — one entry per function in pyParamArray. Each entry contains pyFunctionData with the function's signature, parameters, and UI layout nodes. Required for the function grid to render in the Pega designer. The server does NOT auto-generate this via API. See call-function.md for the full structure and mapping from library-function-builder aliases.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "pxObjClass": { "type": "string", "const": "Embed-ActivitySteps" },
+              "pyDescription": { "type": "string", "description": "Human-readable description of the function call with actual argument values." },
+              "pyFunctionData": {
+                "type": "object",
+                "description": "Function metadata from the library-function-builder alias. Maps pyPurpose→pyCity/pyName, pySignature→pySignature, pyPatternText→pyEcho, pyPattern→pyLabel, pyOutputType→pyReturnType, pyLibraryRuleSet→pyRuleSet.",
+                "properties": {
+                  "pxObjClass": { "type": "string", "const": "Embed-UserFunction" },
+                  "pyBaseClass": { "type": "string" },
+                  "pyCity": { "type": "string", "description": "Function purpose name (from alias pyPurpose)." },
+                  "pyClassName": { "type": "string" },
+                  "pyDataType": { "type": "string" },
+                  "pyDescription": { "type": "string" },
+                  "pyEcho": { "type": "string", "description": "Pattern text with [] brackets (from alias pyPatternText)." },
+                  "pyExpanded": { "type": "string" },
+                  "pyLabel": { "type": "string", "description": "Pattern with [] brackets, no spaces around brackets (from alias pyPattern)." },
+                  "pyName": { "type": "string", "description": "Same as pyCity." },
+                  "pyReturnType": { "type": "string", "description": "Return type (from alias pyOutputType): boolean, String, integer, etc." },
+                  "pyReturnValue": { "type": "string", "description": "Property/param to capture return value (maps to pyParamArray PropertiesName)." },
+                  "pyRuleSet": { "type": "string", "description": "Library ruleset (from alias pyLibraryRuleSet)." },
+                  "pyShowReturnValue": { "type": "string" },
+                  "pySignature": { "type": "string", "description": "Full signature with {param} placeholders (from alias pySignature)." },
+                  "pySmartPromptClass": { "type": "string" },
+                  "pyUsage": { "type": "string" },
+                  "pyParameters": {
+                    "type": "array",
+                    "description": "Resolved parameters with actual argument values.",
+                    "items": { "$ref": "#/$defs/MethodParam" }
+                  },
+                  "pyUIParameters": {
+                    "type": "array",
+                    "description": "UI layout nodes — input fields for {N} placeholders and Label separators for text between.",
+                    "items": { "$ref": "#/$defs/MethodParam" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "if": {
+        "properties": {
+          "pyStepsActivityName": { "const": "Queue-For-Processing" }
+        },
+        "required": ["pyStepsActivityName"]
+      },
+      "then": {
+        "required": ["pyStepsCallParams"],
+        "properties": {
+          "pyStepsCallParams": {
+            "required": ["QueueName"],
+            "properties": {
+              "QueueName": {
+                "type": "string",
+                "description": "Name of the Queue Processor rule to dispatch to."
+              },
+              "QueueType": {
+                "type": "string",
+                "const": "DEDICATED",
+                "description": "Always 'DEDICATED' for Queue-For-Processing."
+              },
+              "WriteNow": {
+                "type": "string",
+                "enum": ["true", "false", ""],
+                "description": "Set 'true' to write to Kafka immediately, before the caller's DB transaction commits. Default defers to commit time — a rollback loses the message."
+              },
+              "EnqueueUsingQueueSnapshot": {
+                "type": "string",
+                "enum": ["true", "false", ""],
+                "description": "Set 'true' to freeze page state at enqueue time. Later clipboard changes are ignored."
+              },
+              "Delay": {
+                "type": "string",
+                "description": "For Delayed QPs only. Property reference resolving to delay in milliseconds, e.g. '.pyFollowUpDelayMs'. If 0 or blank, dispatches immediately."
+              },
+              "OperatorId": {
+                "type": "string",
+                "description": "Execution operator for the QP activity. Use when a downstream system requires a specific caller identity."
+              },
+              "UseCurrentOperatorId": {
+                "type": "string",
+                "enum": ["true", "false", ""],
+                "description": "Set 'false' when supplying an explicit OperatorId."
+              },
+              "RunInSRC": {
+                "type": "string",
+                "enum": ["true", "false", ""],
+                "description": "Set 'false' to skip SRC context. Required when using explicit OperatorId. Do not use 'false' when CDH or Adaptive models are involved."
+              },
+              "AccessGroup": {
+                "type": "string",
+                "description": "Access group for activity execution when running as a specific operator."
+              }
+            }
+          }
+        }
+      }
+    },
+    "MethodParam": {
+      "type": "object",
+      "description": "A parameter entry (Embed-MethodParams).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "enum": ["Embed-MethodParams", "@baseclass"],
+          "x-pega-autoFill": "Embed-MethodParams"
+        },
+        "pyParametersParamName": {
+          "type": "string",
+          "description": "Parameter name. Cannot be 'pyStepsParamUI' (case-insensitive)."
+        },
+        "pyParametersParamDesc": {
+          "type": "string",
+          "description": "Description."
+        },
+        "pyParametersParamType": {
+          "type": "string",
+          "enum": ["STRING", "BOOLEAN", "Date", "DateTime", "Decimal", "Double", "INTEGER", "JAVAOBJECT", "PAGE", "TimeOfDay", "TrueFalse", ""],
+          "x-pega-hints": {
+            "String": "STRING",
+            "Boolean": "BOOLEAN",
+            "Integer": "INTEGER",
+            "Java Object": "JAVAOBJECT",
+            "Page": "PAGE"
+          },
+          "description": "Parameter data type for `pyParameters` rows. Canonical 11-value enum is a mixed casing: uppercase for the primitive-style types (STRING, BOOLEAN, INTEGER, JAVAOBJECT, PAGE) and PascalCase for the compound types (Date, DateTime, Decimal, Double, TimeOfDay, TrueFalse). Use exactly these forms — do not normalize to spaced labels or all-lowercase."
+        },
+        "pyParametersParamInOut": {
+          "type": "string",
+          "enum": ["IN", "OUT", ""],
+          "x-pega-hints": {
+            "In": "IN",
+            "Out": "OUT"
+          },
+          "description": "Parameter direction. Canonical stored values are uppercase 'IN' (input) or 'OUT' (output). The rule form displays these as 'In' / 'Out'. There is no bidirectional value — parameters are either input or output."
+        },
+        "pyParametersParamReq": {
+          "type": "string",
+          "enum": ["0", "-1", ""],
+          "x-pega-hints": {
+            "No": "0",
+            "no": "0",
+            "false": "0",
+            "False": "0",
+            "Yes": "-1",
+            "yes": "-1",
+            "true": "-1",
+            "True": "-1"
+          },
+          "description": "Required flag. Exactly two stored values: '0' (No / optional) and '-1' (Yes / required). Empty string is treated as unspecified."
+        },
+        "pyParametersParamDefaultValue": {
+          "type": "string",
+          "description": "Default value expression."
+        },
+        "pyParametersParamTypeUI": {
+          "type": "string",
+          "enum": ["String", "Boolean", "Integer", "DropDown", "PROPERTY", "RULEKEY", ""],
+          "description": "Rule-form UI affordance kind for the parameter input field. Independent of the storage type 'pyParametersParamType': this controls what edit widget the Activity rule form renders. 'DropDown' renders an enumerated picker — must be paired with 'pyParametersParamDropdownValues'. 'PROPERTY' / 'RULEKEY' enable SmartPrompt against a property reference or a rule key — pair with the IntelliPrompt fields. Sourced from the Embed-MethodParams.pyParametersParamTypeUI prompt list."
+        },
+        "pyParametersParamDropdownValues": {
+          "type": "string",
+          "description": "Pipe-delimited 'value|label|value|label|...' enumeration of options for DropDown-rendered parameters. Example: 'Run|Run|RunInParallel|RunInParallel|Queue|Queue'. Required when pyParametersParamTypeUI='DropDown'; ignored otherwise."
+        },
+        "pyParametersParamSize": {
+          "type": "string",
+          "description": "Display size hint for the parameter input field in the Activity rule form (numeric string, e.g. '40'). Cosmetic only — does not affect runtime parameter handling."
+        },
+        "pyParametersParamSmartPrompt": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Enable SmartPrompt autocompletion for this parameter in the Activity step UI. When 'true', pair with pyParametersParamSmartPromptRule and (optionally) pyParametersParamSmartPromptDataNode."
+        },
+        "pyParametersParamSmartPromptRule": {
+          "type": "string",
+          "enum": ["RULEKEY", "PROPERTY", ""],
+          "description": "SmartPrompt source kind. 'RULEKEY' suggests existing rule keys (e.g., a Rule-Connect-REST name); 'PROPERTY' suggests property references. Set when pyParametersParamSmartPrompt='true'."
+        },
+        "pyParametersParamSmartPromptDataNode": {
+          "type": "string",
+          "description": "SmartPrompt data-node filter. Example: '&pyFieldName=pyStatusWork' to scope a Field-Value prompt to a specific field. Used when SmartPrompt should narrow the candidate list."
+        },
+        "pyParametersParamIntelliBaseClass": {
+          "type": "string",
+          "description": "IntelliPrompt base class — the Pega class against which the prompt resolves. Often 'PageClass' to use the step page's class at edit time. Used when pyParametersParamTypeUI is 'PROPERTY' or 'RULEKEY'."
+        },
+        "pyParametersParamIntelliRule": {
+          "type": "string",
+          "description": "IntelliPrompt rule type — the Pega rule type the prompt should suggest. Examples: 'Rule-Obj-Property', 'Rule-Connect-REST', 'Rule-Obj-MapValue'. Used when pyParametersParamTypeUI='RULEKEY'."
+        },
+        "pyParametersParamIntelliValidateAs": {
+          "type": "string",
+          "description": "IntelliPrompt validation rule type — restricts accepted values to instances of this rule type. Often the same value as pyParametersParamIntelliRule; set independently when validation should differ from suggestion scope."
+        },
+        "PropertiesName": {
+          "type": "string",
+          "description": "For Property-Set steps: property name (e.g., '.ApprovalStatus'). For Call-Function: property/param to capture the return value."
+        },
+        "PropertiesValue": {
+          "type": "string",
+          "description": "For Property-Set steps: value or expression. For Call-Function: the full @(RuleSet:Library).functionName(args) signature."
+        },
+        "pyTempPlaceHolder": {
+          "type": "string",
+          "const": "TempPlaceHolder",
+          "description": "Placeholder marker for Call-Function pyParamArray entries. All entries should have this set to 'TempPlaceHolder'."
+        },
+        "pyStepsCallParams": {
+          "type": "object",
+          "description": "For Call-Function pyParamArray entries: nearly empty object with just pxObjClass=''.",
+          "properties": {
+            "pxObjClass": { "type": "string" }
+          }
+        },
+        "pyIsFunction": {
+          "type": "string",
+          "description": "Empty string marker on pyFunctionData.pyParameters entries."
+        },
+        "pyParametersParamValue": {
+          "type": "string",
+          "description": "Actual argument value for pyFunctionData.pyParameters (e.g. '.pyLabel', '\"Active\"', '50'). Empty for pyUIParameters entries."
+        },
+        "pyNodeCaption": {
+          "type": "string",
+          "description": "Sequential input field number in pyUIParameters (1, 2, 3...)."
+        },
+        "pyReference": {
+          "type": "string",
+          "description": "1-indexed position in pyUIParameters array counting both input fields and Labels."
+        }
+      }
+    },
+    "PageAndClass": {
+      "type": "object",
+      "description": "A named page declaration (Embed-PagesAndClasses).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-PagesAndClasses",
+          "x-pega-autoFill": "Embed-PagesAndClasses"
+        },
+        "pyPagesAndClassesPage": {
+          "type": "string",
+          "description": "Clipboard page name. Accepts several forms:\n- Simple top-level page name: `pyWorkPage`, `AccessGroups`, `Results`.\n- Compound path: `pxThread.pxSecuritySnapshot`, `AccessGroups.pxResults` — navigates into nested pages.\n- `local.<varName>` — a page name resolved at runtime from a local variable.\n- Empty string — a placeholder row (e.g. the required first row when no pages are declared yet)."
+        },
+        "pyPagesAndClassesClass": {
+          "type": "string",
+          "description": "Class of the page. Accepts:\n- A concrete Pega class: `MyOrg-MyApp-Work-Order`, `Data-Admin-Operator-AccessGroup`, `Code-Pega-List`.\n- An `Embed-*` class: `Embed-PagesAndClasses`, `Embed-ActivitySteps` — for embedded scratch pages.\n- `$ANY` — wildcard pseudo-class meaning \"accept any class for this page\". Used when the page's class is not known at design time or is intentionally polymorphic (e.g. `RulePage` that holds different rule types depending on the flow).\n- `$None` — explicitly marks this page as having no class constraint.\n- Empty string — unspecified (Pega treats as no class check)."
+        },
+        "pyPagesAndClassesMode": {
+          "type": "string",
+          "description": "Page mode (usually blank)."
+        }
+      }
+    },
+    "LocalParam": {
+      "type": "object",
+      "description": "A local variable entry (Embed-MethodParams) scoped to this activity. Uses Java types, not Pega parameter types.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-MethodParams",
+          "x-pega-autoFill": "Embed-MethodParams"
+        },
+        "pyParametersParamName": {
+          "type": "string",
+          "description": "Local variable name."
+        },
+        "pyParametersParamDesc": {
+          "type": "string",
+          "description": "Description."
+        },
+        "pyParametersParamType": {
+          "type": "string",
+          "enum": ["String", "Boolean", "char", "double", "int", "Decimal", "Object", "StringBuffer"],
+          "x-pega-hints": {
+            "Integer": "int",
+            "BigDecimal": "Decimal"
+          },
+          "description": "Java type for the local variable. Exactly 8 supported values. Primitive types: 'char', 'double', 'int' (displayed as 'Integer'). Class types: 'String' (default), 'Boolean', 'Decimal' (renders java.math.BigDecimal), 'Object', 'StringBuffer'. Use the Pega rule-parameter type enum on `MethodParam.pyParametersParamType` instead for activity parameters — local variables use Java types, not Pega parameter types."
+        }
+      }
+    },
+    "SystemParameter": {
+      "type": "object",
+      "description": "An auto-injected system parameter entry (Embed-MethodParams) that Pega populates on the activity's pySystemParameters list. Agents should NOT author these — they are written by Pega based on the calling context (typically FLOW). Documented here so the schema round-trips and agents understand what `param.flowName` / `param.ReferencePageName` etc. resolve to. Standard FLOW set: flowName, flowType, ReferencePageName, ReferenceClass, ReferenceInsKey, pyDraftMode.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-MethodParams",
+          "x-pega-autoFill": "Embed-MethodParams"
+        },
+        "pyParametersParamName": {
+          "type": "string",
+          "description": "System parameter name. Standard FLOW values: 'flowName', 'flowType', 'ReferencePageName', 'ReferenceClass', 'ReferenceInsKey', 'pyDraftMode'."
+        },
+        "pyParametersParamDesc": {
+          "type": "string",
+          "description": "Description text written by Pega (e.g. 'subscript to the pxFlow page', 'class of the work object')."
+        },
+        "pyParametersParamType": {
+          "type": "string",
+          "enum": ["String", "TrueFalse", "Integer", "Decimal", "Date", "DateTime", "TimeOfDay", ""],
+          "description": "Data type for the system parameter. Note: pySystemParameters uses the mixed-case form ('String', 'TrueFalse', etc.), distinct from the uppercase form used for `pyParameters` (`STRING`, `TRUEFALSE`). The standard FLOW set uses 'String' for the five string-valued names and 'TrueFalse' for `pyDraftMode`."
+        },
+        "pyUsage": {
+          "type": "string",
+          "enum": ["FLOW", ""],
+          "description": "Source/context tag for why this system parameter is injected. 'FLOW' = injected because the activity runs in a flow context (the universal case). Empty if Pega has not categorized the source."
+        }
+      }
+    },
+    "ActivityTransition": {
+      "type": "object",
+      "description": "A post-step conditional transition row (Embed-ActivityTransitions). Multiple rows on the same step form an evaluation chain — each row's WhenTrue/WhenFalse code decides whether routing continues to the next row, jumps to a block, skips remaining whens, or exits the activity. Code '4' (Exit Iteration) is NOT valid in transitions — use it only in preconditions.",
+      "required": ["pyStepsTransParamsWhenTrue", "pyStepsTransParamsWhenFalse"],
+      "properties": {
+        "pyStepsTransParamsWhen": {
+          "type": "string",
+          "description": "When rule name (e.g. 'StepStatusFail', 'stepstatusgood', 'hasMessages', 'Always', a custom When rule, or an inline expression like '=Lib(Pega-RULES:Default).hasMessages(myStepPage)'). Blank typically pairs with WhenTrue='' (no-op row). Case is significant for some standard When rules — both 'StepStatusFail' and 'stepStatusFail' have been observed."
+        },
+        "pyStepsTransParamsWhenTrue": {
+          "type": "string",
+          "enum": ["", "1", "2", "3", "4", "5", "6"],
+          "description": "Action code when the When expression returns true. The metadata accepts the full 7-value action-code set shared with preconditions: '' (no action), '1' Jump to Later Step (block name in pyStepsTransParamsWhenTruePrms), '2' Continue Whens (evaluate next transition row), '3' Skip Step, '4' Exit Iteration (loops only), '5' Skip Whens, '6' Exit Activity. Note: the Pega-RULES 08-01-01 transition prompt list (UI dropdown) omits '4' because Exit-Iteration semantics typically apply before-step; the underlying row metadata is identical to preconditions and the runtime accepts '4' here as well.",
+          "x-pega-hints": {
+            "no action": "",
+            "Jump to Later Step": "1",
+            "Continue Whens": "2",
+            "Skip Step": "3",
+            "Exit Iteration": "4",
+            "Skip Whens": "5",
+            "Exit Activity": "6"
+          }
+        },
+        "pyStepsTransParamsWhenTruePrms": {
+          "type": "string",
+          "description": "Companion to pyStepsTransParamsWhenTrue. When the action code is '1' (Jump to Later Step), this holds the target block name (matching some step's pyStepsBlockName). Blank for all other action codes."
+        },
+        "pyStepsTransParamsWhenFalse": {
+          "type": "string",
+          "enum": ["", "1", "2", "3", "4", "5", "6"],
+          "description": "Action code when the When expression returns false. Same 7-value enum as pyStepsTransParamsWhenTrue: '' (no action), '1' Jump to Later Step, '2' Continue Whens, '3' Skip Step, '4' Exit Iteration (loops only), '5' Skip Whens, '6' Exit Activity.",
+          "x-pega-hints": {
+            "no action": "",
+            "Jump to Later Step": "1",
+            "Continue Whens": "2",
+            "Skip Step": "3",
+            "Exit Iteration": "4",
+            "Skip Whens": "5",
+            "Exit Activity": "6"
+          }
+        },
+        "pyStepsTransParamsWhenFalsePrms": {
+          "type": "string",
+          "description": "Companion to pyStepsTransParamsWhenFalse. Holds the target block name when the action code is '1'; blank otherwise."
+        }
+      }
+    },
+    "ActivityPreCondition": {
+      "type": "object",
+      "description": "A pre-step precondition row (Embed-ActivityPreConditions). Multiple rows on the same step form an evaluation chain — each row's WhenTrue/WhenFalse code decides whether to continue to the next precondition, execute the step, skip the step, jump to a block, exit the iteration, or exit the activity. Common patterns: AND-chained gating (each true → '2' Continue Whens, each false → '3' Skip Step) and switch-case dispatch (multiple rows each true → '1' Jump to Later Step with different block targets).",
+      "required": ["pyStepsPreCondParamsWhenTrue", "pyStepsPreCondParamsWhenFalse"],
+      "properties": {
+        "pyStepsPreCondParamsWhen": {
+          "type": "string",
+          "description": "When rule name or inline expression evaluated before the step runs (e.g. '@isPrimaryPageNull(tools)', '.pyStatusWork==\"Open\"', a custom When rule name, or 'pzToggle_<FeatureName>' for feature-toggle gating)."
+        },
+        "pyStepsPreCondParamsWhenTrue": {
+          "type": "string",
+          "enum": ["", "1", "2", "3", "4", "5", "6"],
+          "description": "Action code when the When expression returns true. Canonical 7 values from the pyStepsPreCondParamsWhenTrue prompt list (Pega-RULES 08-01-01): '' (no action), '1' Jump to Later Step (block name in pyStepsPreCondParamsWhenTruePrms), '2' Continue Whens (evaluate next precondition row), '3' Skip Step, '4' Exit Iteration (loops only), '5' Skip Whens (skip remaining preconditions; execute step), '6' Exit Activity.",
+          "x-pega-hints": {
+            "no action": "",
+            "Jump to Later Step": "1",
+            "Continue Whens": "2",
+            "Skip Step": "3",
+            "Exit Iteration": "4",
+            "Skip Whens": "5",
+            "Exit Activity": "6"
+          }
+        },
+        "pyStepsPreCondParamsWhenTruePrms": {
+          "type": "string",
+          "description": "Companion to pyStepsPreCondParamsWhenTrue. Holds the target block name when the action code is '1' (Jump to Later Step); blank otherwise."
+        },
+        "pyStepsPreCondParamsWhenFalse": {
+          "type": "string",
+          "enum": ["", "1", "2", "3", "4", "5", "6"],
+          "description": "Action code when the When expression returns false. Same 7-value enum as pyStepsPreCondParamsWhenTrue.",
+          "x-pega-hints": {
+            "no action": "",
+            "Jump to Later Step": "1",
+            "Continue Whens": "2",
+            "Skip Step": "3",
+            "Exit Iteration": "4",
+            "Skip Whens": "5",
+            "Exit Activity": "6"
+          }
+        },
+        "pyStepsPreCondParamsWhenFalsePrms": {
+          "type": "string",
+          "description": "Companion to pyStepsPreCondParamsWhenFalse. Holds the target block name when the action code is '1'; blank otherwise."
+        }
+      }
+    },
+    "ActivityRepeat": {
+      "type": "object",
+      "description": "Loop/repeat definition for an activity step (Embed-ActivityRepeat). The 'type' of loop is selected via pyStepsRepeatDefHasRepeat; each loop type requires a specific companion field set. The iterating-class table pyForEachValidClasses[] is nested INSIDE this object (not a sibling at the step level). During iteration, param.pyForEachCount gives the 1-based loop counter.",
+      "properties": {
+        "pyStepsRepeatDefHasRepeat": {
+          "type": "string",
+          "enum": ["", "PAGE", "EMBEDDED", "PROPERTYLIST", "PROPERTYGROUP", "REPEAT"],
+          "description": "Loop-type selector. Each value triggers a different set of required companion fields:\n- '' (blank) — no loop; the step runs once.\n- 'PAGE' — For each top-level page; iterates over named clipboard pages whose class matches pyForEachValidClasses[].pyForEachClass.\n- 'EMBEDDED' — For each embedded page; iterates over a PageList/PageGroup. The list path is supplied via the step's pyStepsObjectName; the iterating class is given by pyForEachValidClasses[].pyForEachClass.\n- 'PROPERTYLIST' — For each element in a value list. Required: pyForEachProperty (path to the value list).\n- 'PROPERTYGROUP' — For each element in a value group. Required: pyForEachProperty (path to the value group).\n- 'REPEAT' — Numeric for-loop. Required: pyStepsRepeatDefStart, pyStepsRepeatDefIteration, pyStepsRepeatDefLimit.\nLegacy payloads may also show 'true' (treat as EMBEDDED for round-trip).",
+          "x-pega-hints": {
+            "no loop": "",
+            "For each top level page": "PAGE",
+            "For each embedded page": "EMBEDDED",
+            "For each element in value list": "PROPERTYLIST",
+            "For each element in value group": "PROPERTYGROUP",
+            "For loop": "REPEAT"
+          }
+        },
+        "pyStepsRepeatDefStart": {
+          "type": "string",
+          "description": "REPEAT loops only. Java expression / numeric string for the loop start index (typically '1')."
+        },
+        "pyStepsRepeatDefStop": {
+          "type": "string",
+          "description": "Optional loop stop condition (string expression). Rarely set explicitly; pyStepsRepeatDefLimit is the usual stop control."
+        },
+        "pyStepsRepeatDefIteration": {
+          "type": "string",
+          "description": "REPEAT loops only. Java expression / numeric string for the increment per iteration (typically '1')."
+        },
+        "pyStepsRepeatDefLimit": {
+          "type": "string",
+          "description": "REPEAT loops only. Java expression / numeric string for the maximum iteration count or upper bound."
+        },
+        "pyForEachProperty": {
+          "type": "string",
+          "description": "PROPERTYLIST and PROPERTYGROUP loops only. Property path of the value list or value group being iterated, e.g. '.pyKeywords', '.pyTagsGroup'. Not used for PAGE/EMBEDDED or REPEAT."
+        },
+        "pyForEachValidClasses": {
+          "type": "array",
+          "description": "Iterating-class table for loop steps. Required when pyStepsRepeatDefHasRepeat is 'PAGE' or 'EMBEDDED' — each row identifies the class of pages this step iterates over. For other loop types, typically a single empty-class placeholder row. Pega auto-emits this on every step as a single row with pyForEachClass: ''.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "pxObjClass": {
+                "type": "string",
+                "const": "Embed-ActivityForEachClasses",
+                "description": "Always 'Embed-ActivityForEachClasses'.",
+                "x-pega-autoFill": "Embed-ActivityForEachClasses"
+              },
+              "pyForEachClass": {
+                "type": "string",
+                "description": "Class name of the pages to iterate over (e.g. 'Data-Customer', 'Embed-MyEmbedPage')."
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

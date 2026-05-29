@@ -1,0 +1,1796 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-obj-report-definition.json",
+  "title": "Rule-Obj-Report-Definition",
+  "description": "JSON schema for creating or updating a Pega Report Definition rule (Rule-Obj-Report-Definition). Covers list and summary reports with columns, filters, parameters, pagination, sub-reports, and source configuration.",
+  "type": "object",
+  "required": [
+    "pyStreamName",
+    "pyRuleName",
+    "pyLabel",
+    "pyClassName",
+    "pyContent"
+  ],
+  "properties": {
+    "pxObjClass": {
+      "type": "string",
+      "const": "Rule-Obj-Report-Definition",
+      "description": "Rule type class — always 'Rule-Obj-Report-Definition'.",
+      "x-pega-autoFill": "Rule-Obj-Report-Definition"
+    },
+    "pyRuleName": {
+      "type": "string",
+      "description": "Internal name of the report (PascalCase or camelCase, no spaces).",
+      "x-pega-autoFill": "{pyStreamName}"
+    },
+    "pyStreamName": {
+      "type": "string",
+      "description": "Stream name — always matches pyRuleName."
+    },
+    "pyLabel": {
+      "type": "string",
+      "description": "Human-readable display label shown in the report viewer."
+    },
+    "pyReportTitle": {
+      "type": "string",
+      "description": "Title shown at the top of the report viewer. Auto-defaults to pyLabel if empty.",
+      "x-pega-autoFill": "{pyLabel}"
+    },
+    "pyDescription": {
+      "type": "string",
+      "description": "Developer-facing description of the report's purpose."
+    },
+    "pyClassName": {
+      "type": "string",
+      "description": "The Pega class being queried — the base class for the report's FROM clause."
+    },
+    "pyMethodStatus": {
+      "type": "string",
+      "enum": ["API", "Deprecated", "Extension", "Internal", "Template", ""],
+      "description": "Always 'Internal' in observed instances.",
+      "x-pega-autoFill": ""
+    },
+    "pyRuleSet": {
+      "type": "string",
+      "description": "Rule set the report is saved to."
+    },
+    "pyRuleSetVersion": {
+      "type": "string",
+      "pattern": "^\\d{2}-\\d{2}-\\d{2}$",
+      "description": "Rule set version (e.g., '01-01-02')."
+    },
+    "pyRuleAvailable": {
+      "type": "string",
+      "enum": ["Yes", "No", "Final", "Withdrawn", "Blocked"],
+      "description": "Availability status.",
+      "x-pega-autoFill": "Yes"
+    },
+    "pyUsage": {
+      "type": "string",
+      "description": "Usage notes (optional; rarely set)."
+    },
+    "pyMemo": {
+      "type": "string",
+      "description": "Developer change memo saved with the rule."
+    },
+    "pyContent": {
+      "$ref": "#/$defs/ReportContent",
+      "description": "Core query definition — the authoritative source for how the report executes."
+    },
+    "pyPagesAndClasses": {
+      "type": "array",
+      "description": "Named page declarations for filter binding.",
+      "items": { "$ref": "#/$defs/PageAndClass" }
+    },
+    "pyParameters": {
+      "type": "array",
+      "description": "Report parameters — named inputs passed to filter values at runtime.",
+      "items": { "$ref": "#/$defs/ReportParameter" }
+    },
+    "pyUI": {
+      "$ref": "#/$defs/ReportUI",
+      "description": "Display and rendering configuration for the report viewer.",
+      "x-pega-autoFill": {
+        "pzIsSummary": "false"
+      }
+    },
+    "pyReportMetaData": {
+      "$ref": "#/$defs/ReportMetaData",
+      "description": "Report metadata — contains pxIsSummary flag."
+    },
+    "pyDrillDown": {
+      "$ref": "#/$defs/ReportDrillDown",
+      "description": "Drill-down configuration."
+    },
+    "pyContentSource": {
+      "type": "object",
+      "description": "Summary-specific content sourcing parameters (Embed-SummaryParams).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-SummaryParams",
+          "x-pega-autoFill": "Embed-SummaryParams"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "ReportContent": {
+      "type": "object",
+      "description": "Core query definition (Embed-ReportContent). Contains fields, filters, source, and paging.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-ReportContent",
+          "x-pega-autoFill": "Embed-ReportContent"
+        },
+        "pxIsSummary": {
+          "type": "string",
+          "enum": ["true", "false"],
+          "description": "'false' = list report, 'true' = summary/aggregate report."
+        },
+        "pyClassName": {
+          "type": "string",
+          "description": "The applies-to class (same as top-level pyClassName)."
+        },
+        "pyMaxRecords": {
+          "type": "string",
+          "description": "Max rows to return. '' means unlimited. Default is '500'. Only effective when pyPagingEnabled is 'false' — enabling paging disables this limit."
+        },
+        "pyQueryTimeoutValue": {
+          "type": "string",
+          "description": "Query timeout in seconds."
+        },
+        "pyQueryTimeoutInterval": {
+          "type": "string",
+          "description": "Also query timeout (sometimes both are present)."
+        },
+        "pyGetDistinctRows": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "'true' to add DISTINCT to the query."
+        },
+        "pyGetCachedDistinctValues": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Use cached distinct values for filter dropdowns."
+        },
+        "pyDoNotUseSortOrderForGrouping": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Skip sort-order-based grouping."
+        },
+        "pyIsOrdered": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "'true' when any column has a sort order defined."
+        },
+        "pyIsProcessed": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Internal processing flag."
+        },
+        "pyFilterOnApplicationContext": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "'true' to restrict results to current app's rule instances."
+        },
+        "pyRuleResolveInstances": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "'true' to apply rule resolution when filtering."
+        },
+        "pyReportContainsRank": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "'true' when the report uses a RANK() window function."
+        },
+        "pyContentPageName": {
+          "type": "string",
+          "description": "Always 'pyReportContentPage'.",
+          "x-pega-autoFill": "pyReportContentPage"
+        },
+        "pyReportContentPageName": {
+          "type": "string",
+          "description": "Always 'pyReportContentPage'.",
+          "x-pega-autoFill": "pyReportContentPage"
+        },
+        "pxSchemaName": {
+          "type": "string",
+          "description": "Database schema name override. Blank = use default."
+        },
+        "pyDatabaseName": {
+          "type": "string",
+          "description": "Database name. 'PegaRULES' is the standard Pega DB."
+        },
+        "pyDatabaseType": {
+          "type": "string",
+          "enum": ["ORACLE", "POSTGRESQL", "MSSQL", "DB2", ""],
+          "description": "Database platform."
+        },
+        "pyProductType": {
+          "type": "string",
+          "enum": ["POSTGRESQL", "ORACLE", "MSSQL", "DB2", ""],
+          "description": "Product type for newer instances."
+        },
+        "pyBaseTablePrefix": {
+          "type": "string",
+          "description": "SQL table prefix (quoted string literal within a string)."
+        },
+        "pyFields": {
+          "$ref": "#/$defs/ReportFields",
+          "description": "Column definitions — list fields, group-by, and aggregates."
+        },
+        "pyFilters": {
+          "$ref": "#/$defs/ReportFilters",
+          "description": "WHERE clause filters."
+        },
+        "pyHavingFilters": {
+          "$ref": "#/$defs/ReportHavingFilters",
+          "description": "HAVING clause filters for aggregate-level filtering."
+        },
+        "pyParameters": {
+          "type": "array",
+          "description": "Report parameters — named inputs passed to filters.",
+          "items": { "$ref": "#/$defs/ReportParameter" }
+        },
+        "pyPaging": {
+          "$ref": "#/$defs/ReportPaging",
+          "description": "Pagination configuration."
+        },
+        "pySource": {
+          "$ref": "#/$defs/ReportSource",
+          "description": "Data source configuration.",
+          "x-pega-autoFill": {
+            "pyUseAlternateDB": "false",
+            "pyForceUseStandardDB": "true",
+            "pyReportDBType": "Standard",
+            "pyRowKeyInfo": {
+              "pyGetRowKey": "true",
+              "pyRowKeys": [".pzInsKey"]
+            }
+          }
+        },
+        "pyPagesAndClasses": {
+          "type": "array",
+          "description": "Named page declarations for filter binding.",
+          "items": { "$ref": "#/$defs/PageAndClass" }
+        },
+        "pyReportRank": {
+          "type": "object",
+          "description": "Ranking/windowing configuration (Embed-ReportRank).",
+          "properties": {
+            "pxObjClass": {
+              "type": "string",
+              "const": "Embed-ReportRank",
+              "x-pega-autoFill": "Embed-ReportRank"
+            },
+            "pyRankType": {
+              "type": "string",
+              "enum": ["TopRanked", "BottomRanked", ""],
+              "description": "Top-N or Bottom-N selection."
+            },
+            "pyPartitionType": {
+              "type": "string",
+              "enum": ["Grouping", "All", ""],
+              "description": "'Grouping' partitions by group-by columns; 'All' ranks across the whole dataset."
+            },
+            "pyRows": {
+              "type": "string",
+              "description": "Number of ranked rows to return (e.g. '1' for top-1)."
+            },
+            "pyRankField": {
+              "$ref": "#/$defs/ListField",
+              "description": "Field to rank by (Embed-ReportListFields)."
+            }
+          }
+        },
+        "pyReportStatsInfo": {
+          "type": "object",
+          "description": "Report statistics metadata (Embed-ReportStatisticsInfo)."
+        },
+        "pyInsertInfo": {
+          "type": "object",
+          "description": "Insert-level configuration including security."
+        },
+        "pySecurity": {
+          "$ref": "#/$defs/ReportSecurity",
+          "description": "Security configuration (Embed-ReportSecurity)."
+        },
+        "pyAppContextInfo": {
+          "$ref": "#/$defs/AppContextInfo",
+          "description": "Application context info for multi-app filtering."
+        },
+        "ValidationMap": {
+          "type": "string",
+          "description": "Serialized Java HashMap — MUST be cleared to '' on every update to avoid deserialization errors."
+        }
+      }
+    },
+    "ReportFields": {
+      "type": "object",
+      "description": "Column definitions (Embed-ReportFields). Contains list fields for list reports, or group-by/aggregate for summary reports.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-ReportFields",
+          "x-pega-autoFill": "Embed-ReportFields"
+        },
+        "pyListFields": {
+          "type": "array",
+          "description": "List report columns. Each entry is an Embed-ReportListFields page.",
+          "items": { "$ref": "#/$defs/ListField" }
+        },
+        "pyGroupBy": {
+          "type": "array",
+          "description": "Summary report GROUP BY dimensions.",
+          "items": { "$ref": "#/$defs/GroupBy" }
+        },
+        "pyAggregate": {
+          "type": "array",
+          "description": "Summary report aggregate columns.",
+          "items": { "$ref": "#/$defs/Aggregate" }
+        },
+        "pyOrderByTagsForList": {
+          "type": "object",
+          "description": "Map of sort-order tags to sort expressions.",
+          "additionalProperties": { "type": "string" }
+        },
+        "pyPartitionByTags": {
+          "type": "object",
+          "description": "Map of partition tags to SQL column references.",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "ListField": {
+      "type": "object",
+      "description": "A single output column (Embed-ReportListFields). Same shape is used for pyListFields entries, the inner pyGroupByField/pyAggregateField, and rank fields.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-ReportListFields",
+          "x-pega-autoFill": "Embed-ReportListFields"
+        },
+        "pyFieldName": {
+          "type": "string",
+          "description": "Property reference (dot prefix, e.g., '.pyID'), join-prefixed reference (e.g. 'OP.Number_of_Operators'), or SQL function expression ('@@pxMultiply(...)')."
+        },
+        "pyFieldLabel": {
+          "type": "string",
+          "description": "Column header displayed in the report viewer."
+        },
+        "pySortOrder": {
+          "type": "string",
+          "description": "Sort priority. '1', '2', etc. for sorted columns. Omit entirely for unsorted columns (the save activity auto-fills '99999' server-side)."
+        },
+        "pySortType": {
+          "type": "string",
+          "enum": ["ASC", "DESC", ""],
+          "description": "Sort direction. Only present when the field is sorted."
+        },
+        "pySummaryFunction": {
+          "type": "string",
+          "enum": ["COUNT", "SUM", "AVG", "MAX", "MIN", "COUNTDISTINCT", ""],
+          "description": "Optional inline summary function on a list field (rare on list reports)."
+        },
+        "pyACIsAssoc": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Association-column flag."
+        },
+        "pyACAssocName": {
+          "type": "string",
+          "description": "Association alias (often = join prefix)."
+        },
+        "pyACAssocClass": {
+          "type": "string",
+          "description": "Class of the associated table."
+        },
+        "pyIsFunction": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "'true' when this column is a SQL function expression."
+        },
+        "pyFunction": {
+          "type": "string",
+          "description": "Aggregate function name on summary-report grouped column (mirror of pyAggregateFunction)."
+        },
+        "pyGroupOrder": {
+          "type": "string",
+          "description": "Order within a multi-column GROUP BY (e.g. '1', '2')."
+        },
+        "pyHide": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Hide column from the rendered grid."
+        },
+        "pySelected": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "UI selection flag."
+        },
+        "pyDisplayValues": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Show display-values for field-value props."
+        },
+        "pyDataType": {
+          "type": "string",
+          "description": "Data type of the field (Text, Identifier, Integer, Decimal, Double, DateTime, Date, TrueFalse, True-False)."
+        },
+        "pyEchoFieldName": {
+          "type": "string",
+          "description": "Client-side echo of the field name (usually equals pyFieldName)."
+        },
+        "pyFieldFormat": {
+          "$ref": "#/$defs/ReportHtmlProp",
+          "description": "Per-column format / control-rule binding (Embed-ReportHtmlProp)."
+        },
+        "pySQLFunction": {
+          "$ref": "#/$defs/UserFunction",
+          "description": "SQL function descriptor (always present as placeholder; populated when pyIsFunction='true')."
+        }
+      }
+    },
+    "GroupBy": {
+      "type": "object",
+      "description": "A GROUP BY column (Embed-ReportGroupBy).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-ReportGroupBy",
+          "x-pega-autoFill": "Embed-ReportGroupBy"
+        },
+        "pyDisplayLayout": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Whether to use layout display for grouped values."
+        },
+        "pyGroupByField": {
+          "$ref": "#/$defs/ListField",
+          "description": "The field to group by — same structure as a list field."
+        }
+      }
+    },
+    "Aggregate": {
+      "type": "object",
+      "description": "An aggregate column (Embed-ReportAggregate).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-ReportAggregate",
+          "x-pega-autoFill": "Embed-ReportAggregate"
+        },
+        "pyAggregateFunction": {
+          "type": "string",
+          "enum": ["AVG", "SUM", "COUNT", "COUNTDISTINCT", "MAX", "MIN", ""],
+          "description": "Aggregate function to apply."
+        },
+        "pyAggregateField": {
+          "$ref": "#/$defs/ListField",
+          "description": "The field being aggregated — same structure as a list field."
+        }
+      }
+    },
+    "ReportFilters": {
+      "type": "object",
+      "description": "WHERE clause filter container (Embed-ReportFilters).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-ReportFilters",
+          "x-pega-autoFill": "Embed-ReportFilters"
+        },
+        "pyFilterLogic": {
+          "type": "string",
+          "description": "Boolean expression combining filter labels (e.g., 'A AND B AND C'). All filter labels must appear here."
+        },
+        "pyFilter": {
+          "type": "array",
+          "description": "Individual filter conditions.",
+          "items": { "$ref": "#/$defs/Filter" }
+        },
+        "pyFilterOnApplicationContext": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "App context filter flag."
+        },
+        "pyRuleResolveInstances": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Rule resolution filter flag."
+        },
+        "pyAutomaticFilteringOptions": {
+          "type": "string",
+          "enum": ["AppCentric", "None", ""],
+          "description": "'AppCentric' for application-context filtering, 'None' to disable."
+        },
+        "pyAutomaticFilteringOptionsList": {
+          "type": "string",
+          "enum": ["AppCentric", "None", ""],
+          "description": "Per-list-mode automatic filtering option."
+        },
+        "pyAutomaticFilteringOptionsSummary": {
+          "type": "string",
+          "enum": ["AppCentric", "None", ""],
+          "description": "Per-summary-mode automatic filtering option."
+        },
+        "pyGetDistinctRows": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Distinct rows flag at filter level."
+        },
+        "pyShowLabels": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Show filter labels in report viewer."
+        },
+        "pyResolveOnClass": {
+          "type": "string",
+          "description": "Class to use as the rule-resolution scope when pyRuleResolveInstances='true'."
+        },
+        "pyAppContextInfo": {
+          "$ref": "#/$defs/AppContextInfo",
+          "description": "Application context info."
+        }
+      }
+    },
+    "ReportHavingFilters": {
+      "type": "object",
+      "description": "HAVING clause filter container (Embed-ReportFilters-Having).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-ReportFilters-Having",
+          "x-pega-autoFill": "Embed-ReportFilters-Having"
+        },
+        "pyFilter": {
+          "type": "array",
+          "description": "HAVING clause conditions — same structure as WHERE filters.",
+          "items": { "$ref": "#/$defs/Filter" }
+        }
+      }
+    },
+    "Filter": {
+      "type": "object",
+      "description": "An individual filter condition (Embed-ReportFilter).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-ReportFilter",
+          "x-pega-autoFill": "Embed-ReportFilter"
+        },
+        "pyFilterName": {
+          "type": "string",
+          "description": "Property being filtered (dot prefix, e.g., '.pxCreateOperator')."
+        },
+        "pyFieldLabel": {
+          "type": "string",
+          "description": "Display label for this filter condition."
+        },
+        "pyFilterOperation": {
+          "type": "string",
+          "enum": ["=", "!=", "IS NOT NULL", "IS NULL", "StartsWith", "NotStartsWith", "Contains", "NotContain", "IsTrue", "IsFalse", ">", "<", ">=", "<=", "IN", "NOT IN", "EndsWith","NotEndsWith", ""],
+          "description": "Comparison operator. 'IsTrue'/'IsFalse' are boolean-coerced and need no pyFilterValue."
+        },
+        "pyFilterValue": {
+          "type": "string",
+          "description": "Right-hand value: literal (often quote-escaped like \"\\\"Final\\\"\"), Param.Name, page reference, joined alias (e.g. SAR.pzAppName), or property."
+        },
+        "pyDataType": {
+          "type": "string",
+          "enum": ["Text", "Identifier", "DateTime", "Date", "Decimal", "Double", "TrueFalse", "True-False", "double", "Integer", "integer", "@baseclass", ""],
+          "description": "Data type of the filter field. 'True-False' (hyphenated) is a UI-side variant of TrueFalse. '@baseclass' is a sentinel used on join self-class filters."
+        },
+        "pyClassName": {
+          "type": "string",
+          "description": "Optional class context for the filter; on join filters may be '@baseclass'."
+        },
+        "pyLogicLabel": {
+          "type": "string",
+          "description": "Label used in pyFilterLogic (e.g., 'A', 'B', 'F1'). Must be unique per filter."
+        },
+        "pyFilterUICaption": {
+          "type": "string",
+          "description": "Optional UI caption override for this filter row."
+        },
+        "pySelectValueSearch": {
+          "type": "string",
+          "description": "Class hint used by the value-search dropdown picker."
+        },
+        "pyPromptType": {
+          "type": "string",
+          "enum": ["AllAccess", "NoAccess", "ReadOnly", ""],
+          "description": "'AllAccess' = visible to user, 'NoAccess' = hidden server-side filter, 'ReadOnly' = drilldown-locked."
+        },
+        "pyCaseInsensitive": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "'true' for case-insensitive string comparison."
+        },
+        "pyACIsAssoc": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "'true' if this is an association-based filter."
+        },
+        "pyACAssocName": {
+          "type": "string",
+          "description": "Association alias prefix (often matches a join's pyPrefix, e.g. 'W', 'OP')."
+        },
+        "pyACAssocClass": {
+          "type": "string",
+          "description": "Class of the association target. Sentinel '!!!' has been observed."
+        },
+        "pyIsLeftOperandAFunction": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Left side is a function expression."
+        },
+        "pyIsRightOperandAFunction": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Right side is a function expression."
+        },
+        "pyLeftOperandFunction": {
+          "$ref": "#/$defs/UserFunction",
+          "description": "Function-as-LHS descriptor when pyIsLeftOperandAFunction='true'."
+        },
+        "pyRightOperandFunction": {
+          "$ref": "#/$defs/UserFunction",
+          "description": "Function-as-RHS descriptor when pyIsRightOperandAFunction='true' (e.g. @@pxUpperCase(.pyAccessGroup))."
+        },
+        "pyIsStandardized": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Marker that filter has been validated/standardized by platform."
+        },
+        "pySkipValidation": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Skip validation on this filter."
+        },
+        "pyUseNullIfEmpty": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Treat empty param value as NULL (don't add filter)."
+        },
+        "pyEchoFilterName": {
+          "type": "string",
+          "description": "Display label for the filtered property (e.g. 'Case ID') when used in a sub-report filter row. Holds the human-readable label, NOT a field reference."
+        },
+        "pyEchoFilterValue": {
+          "type": "string",
+          "description": "Echo of the filter value (used by sub-report parameter binding)."
+        }
+      }
+    },
+    "ReportParameter": {
+      "type": "object",
+      "description": "A report parameter (Embed-MethodParams).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "enum": ["Embed-MethodParams", "@baseclass"],
+          "x-pega-autoFill": "Embed-MethodParams"
+        },
+        "pyParametersParamName": {
+          "type": "string",
+          "description": "Parameter name — referenced in filter values as Param.{Name}."
+        },
+        "pyParametersParamType": {
+          "type": "string",
+          "enum": ["Text","Date" , "DateTime", "Integer", "Decimal","TimeofDay", "TrueFalse", "Double","Page",""],
+          "description": "Data type. Report definitions commonly use display-text values (Text, DateTime, etc.)."
+        },
+        "pyParametersParamDesc": {
+          "type": "string",
+          "description": "Description (optional)."
+        },
+        "pyParametersParamDefaultValue": {
+          "type": "string",
+          "description": "Default value (optional)."
+        }
+      }
+    },
+    "ReportPaging": {
+      "type": "object",
+      "description": "Pagination configuration (Embed-ReportPaging).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-ReportPaging",
+          "x-pega-autoFill": "Embed-ReportPaging"
+        },
+        "pyPagingEnabled": {
+          "type": "string",
+          "enum": ["true", "false"],
+          "description": "'true' to enable pagination. When enabled, pyMaxRecords is ignored — to limit results to a specific number of rows, set this to 'false' and use pyMaxRecords instead."
+        },
+        "pyPageSize": {
+          "type": "string",
+          "description": "Rows per page."
+        },
+        "pyPageMode": {
+          "type": "string",
+          "enum": ["Numeric", ""],
+          "description": "Pagination style — always 'Numeric'."
+        },
+        "pyPageIndex": {
+          "type": "string",
+          "description": "Current page (runtime)."
+        },
+        "pyPosition": {
+          "type": "string",
+          "enum": ["Top", "Bottom", "Both", ""],
+          "description": "Paging control position."
+        },
+        "pyAlignment": {
+          "type": "string",
+          "enum": ["Right", "Left", "Center", ""],
+          "description": "Paging control alignment."
+        },
+        "pySortMode": {
+          "type": "string",
+          "enum": ["dataset", ""],
+          "description": "Sort mode — always 'dataset'."
+        },
+        "pyWindowSize": {
+          "type": "string",
+          "description": "Number of page links shown."
+        },
+        "pyReturnTotalResultCount": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "'true' to retrieve total row count for pagination."
+        }
+      }
+    },
+    "ReportSource": {
+      "type": "object",
+      "description": "Data source configuration (Embed-ReportSource).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-ReportSource",
+          "x-pega-autoFill": "Embed-ReportSource"
+        },
+        "pyUseAlternateDB": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "'true' to query the alternate/reporting database."
+        },
+        "pyUseImplementationClass": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "'true' to query the implementation class."
+        },
+        "pyIncludeAllDescendantclasses": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "'true' to include rows from all descendant classes."
+        },
+        "pyAllowApproximation": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "'true' to allow approximate counts."
+        },
+        "pyForceUseStandardDB": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "'true' to force the standard DB."
+        },
+        "pyReportDBType": {
+          "type": "string",
+          "enum": ["Standard", "Alternate", ""],
+          "description": "Which DB is used."
+        },
+        "pyDataSource": {
+          "type": "string",
+          "description": "Custom data source name (blank = Pega default)."
+        },
+        "pyRowKeyInfo": {
+          "$ref": "#/$defs/RowKeyInfo",
+          "description": "Row key configuration."
+        },
+        "pySubReportInfo": {
+          "type": "array",
+          "description": "JOIN sub-reports.",
+          "items": { "$ref": "#/$defs/SubReportInfo" }
+        },
+        "pyAssociations": {
+          "type": "array",
+          "description": "Association joins (Embed-ReportAssociation entries). Each entry references a Rule-Obj-Association rule (by Applies-To class + purpose name) which defines the join path between two classes. The platform expands the association at runtime into one or more SQL JOINs (multi-step joins are supported via the association's pyJoinInfoMultiStep). In Dev Studio these appear in the 'Association Join' section of Data Access. Two ways to use associations in a Report Definition: (a) IMPLICIT — simply reference '<AssociationName>.<Property>' inside any pyListFields / pyAggregate / pyGroupBy / pyFilter (e.g. pyFieldName: 'AppointmentSchedulingReference.pyID'); the platform auto-resolves the association rule from the alias and adds it to pyAssociations on save, so no explicit entry is needed. (b) EXPLICIT — declare the entry up front so the join is preserved even if no field/filter currently references it (useful when the association seeds an aggregate or filter added later). Compared with pyJoinInfo / pyIndexInfo: associations carry NO ON-condition payload here (the join is defined in the Rule-Obj-Association), NO pyPrefix (the alias IS pyPurpose / the association name), and NO mandatory pyPagesAndClasses entry (auto-registered). DX-API write notes: (1) mirror the array in BOTH pyContent.pySource.pyAssociations[] and pyUI.pySource.pyAssociations[] when authoring explicit entries — the converters write to both layers. (2) Do NOT send server-managed fields (pzStatus, pxCreate*) on input. See examples/pyAssociations/explicit.md.",
+          "items": { "$ref": "#/$defs/ReportAssociation" }
+        },
+        "pyIndexInfo": {
+          "type": "array",
+          "description": "Declare-Index joins (Embed-ReportIndexInfo entries). Each entry expands into a SQL JOIN to an Index-* class that backs an aggregate (page list / page group) property on the Applies-To class. Unlike pyJoinInfo, the ON-condition is implicit: the platform binds by the index's parent key and supplies its own pyFilters at query time, so no pyFilters block is provided here. DX-API write quirks (mirror what pyJoinInfo does): (1) the array must be mirrored identically in BOTH pyContent.pySource.pyIndexInfo[] and pyUI.pySource.pyIndexInfo[] — sending it only in one location causes the row to be dropped or the payload to be rejected. (2) Each entry must be referenced by at least one pyListFields/pyAggregate/pyGroupBy/pyFilter using its pyPrefix, otherwise the save activity strips it as 'dead' (the same dead-join sweep that affects pyJoinInfo). (3) Add a matching pyPagesAndClasses entry where pyPagesAndClassesPage equals pyPrefix and pyPagesAndClassesClass equals pyIndexClassName, mirrored at both top-level pyPagesAndClasses and pyContent.pyPagesAndClasses (the platform also auto-registers the prefix from getHashedPrefixAndUpdateContent, but declaring the alias up front avoids 'page not declared' warnings). (4) Do NOT send server-managed fields (pzStatus, pxCreate*, etc.) on input — they are returned on read but rejected on write. See examples/pyIndexInfo/three-joins.md for a worked example with three index joins.",
+          "items": { "$ref": "#/$defs/ReportIndexInfo" }
+        },
+        "pyJoinInfo": {
+          "type": "array",
+          "description": "Direct table joins (Embed-ReportJoins entries). Each entry adds a JOIN with its own ON-condition filters. DX-API write quirks: (1) pyJoinInfo must be mirrored identically in both pyContent.pySource.pyJoinInfo[] and pyUI.pySource.pyJoinInfo[] — sending it only in pyUI.pySource causes HTTP 400 ('malformed syntax'). (2) Each join must be referenced by at least one pyListFields/pyAggregate/pyGroupBy/pyFilter entry using its pyPrefix, otherwise the save activity strips the row as 'dead' (most aggressive on LEFT OUTER). (3) For non-temporary joins, also add a matching pyPagesAndClasses entry where pyPagesAndClassesPage equals pyPrefix and pyPagesAndClassesClass equals pyJoinClassName, mirrored at both top-level pyPagesAndClasses and pyContent.pyPagesAndClasses.",
+          "items": { "$ref": "#/$defs/ReportJoins" }
+        },
+        "pySetQueries": {
+          "type": "object",
+          "description": "Set query definitions (UNION, etc.)."
+        },
+        "pySubReportFrom": {
+          "type": "object",
+          "description": "Sub-report FROM clause definition."
+        }
+      }
+    },
+    "RowKeyInfo": {
+      "type": "object",
+      "description": "Row key configuration (Embed-ReportRowKeyInfo).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-ReportRowKeyInfo",
+          "x-pega-autoFill": "Embed-ReportRowKeyInfo"
+        },
+        "pyGetRowKey": {
+          "type": "string",
+          "enum": ["true", "false"],
+          "description": "Whether to retrieve row key."
+        },
+        "pyRowKeys": {
+          "type": "array",
+          "description": "Property names used as the row key.",
+          "items": { "type": "string" }
+        },
+        "pxResults": {
+          "type": "array",
+          "description": "Row key result entries.",
+          "items": { "type": "object" }
+        }
+      }
+    },
+    "SubReportInfo": {
+      "type": "object",
+      "description": "A JOIN to another Report Definition (Embed-SubReportInfo) under pyContent.pySource.pySubReportInfo[]. DX-API write quirks (verified empirically): (1) Must be mirrored identically under pyUI.pySource.pySubReportInfo[] — payloads with the row only in pyContent are silently degraded. (2) BOTH pyClassName AND pySubClassName are required and should be set to the same value (the pyAppliesToClass of the referenced report); the server rejects with 'pySubClassName is required' if only pyClassName is set. (3) pyUsageInfo is required — omit it and the row is stripped. (4) Do NOT add the sub-report's class as a pyPagesAndClasses entry whose pyPagesAndClassesPage matches pyPrefix — the prefix auto-registers and a manual entry causes 'Subreport prefix is a duplicate'. (5) pyFilterValue must reference a DB-column-mapped parent property (BLOB-only properties are rejected). See examples/pySubReportInfo/left-outer-worked.md for the full worked example.",
+      "required": ["pyReportName", "pyClassName", "pySubClassName", "pyPrefix", "pyJoinType", "pyUsageInfo"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-SubReportInfo",
+          "x-pega-autoFill": "Embed-SubReportInfo"
+        },
+        "pyReportName": {
+          "type": "string",
+          "description": "pyRuleName of the sub-report (Rule-Obj-Report-Definition) to JOIN."
+        },
+        "pyClassName": {
+          "type": "string",
+          "description": "Applies-to class of the sub-report. Must equal pySubClassName."
+        },
+        "pySubClassName": {
+          "type": "string",
+          "description": "REQUIRED. Actual class to query — set to the same value as pyClassName. Server rejects the payload with 'pySubClassName is required' if omitted, even when pyClassName is set."
+        },
+        "pyPrefix": {
+          "type": "string",
+          "description": "Alias prefix for joined columns (e.g. 'OP', 'LR', 'S')."
+        },
+        "pyJoinType": {
+          "type": "string",
+          "enum": ["LEFT OUTER", "INNER", "RIGHT OUTER","none"],
+          "description": "Join type."
+        },
+        "pyAutoPopulateMatchingParams": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Auto-bind matching parameters by name from the parent."
+        },
+        "pyIgnoreOriginalFilters": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "If 'true', the sub-report runs without its own filters."
+        },
+        "pyReturnMultipleRows": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "'true' allows N rows returned; 'false' for single-row aggregates."
+        },
+        "pyColumns": {
+          "type": "array",
+          "description": "Columns to project from the sub-report.",
+          "items": { "$ref": "#/$defs/SubReportColumn" }
+        },
+        "pyFilters": {
+          "$ref": "#/$defs/ReportFilters",
+          "description": "Correlation conditions (parent-to-child); often uses pyEchoFilterName for binding."
+        },
+        "pyParameters": {
+          "type": "array",
+          "description": "Parameter mappings passed into the sub-report.",
+          "items": { "$ref": "#/$defs/ReportParameter" }
+        },
+        "pyUsageInfo": {
+          "type": "object",
+          "description": "REQUIRED PropertyGroup. Declares how the sub-report contributes to the outer query. Omitting this causes the sub-report row to be silently stripped on save. Set 'select: true' when projecting columns from the sub-report (the typical case); 'LHSFilter'/'RHSFilter' indicate the sub-report supplies left/right operand of a parent filter.",
+          "required": ["select", "LHSFilter", "RHSFilter"],
+          "properties": {
+            "LHSFilter": { "type": "string", "enum": ["true", "false", ""] },
+            "RHSFilter": { "type": "string", "enum": ["true", "false", ""] },
+            "select":    { "type": "string", "enum": ["true", "false", ""] }
+          }
+        }
+      }
+    },
+    "ReportAssociation": {
+      "type": "object",
+      "description": "An Association JOIN entry (Embed-ReportAssociation) under pyContent.pySource.pyAssociations[]. Each entry binds a Rule-Obj-Association by (pyClassName, pyPurpose); the association rule itself owns the join path (single- or multi-step) and ON conditions, so this entry has no pyPrefix, no pyFilters, and no pyJoinType. The association name (pyPurpose) doubles as the alias in field/filter references — write 'PurposeName.PropertyName' (e.g. 'AppointmentSchedulingReference.pyID'). Most reports never need to author this row by hand: simply use 'PurposeName.PropertyName' in pyListFields / pyFilter, and the rule-form save activity adds the matching pyAssociations entry automatically. Author it explicitly only when you want the association preserved without a current field/filter reference, or when round-tripping a payload that already contains it.",
+      "required": ["pyClassName", "pyPurpose", "pyAssociatedClass"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-ReportAssociation",
+          "x-pega-autoFill": "Embed-ReportAssociation"
+        },
+        "pyClassName": {
+          "type": "string",
+          "description": "Applies-To class of the Rule-Obj-Association — i.e. the LEFT side of the join, typically the report's pyAppliesToClass (e.g. 'MyOrg-MyApp-Work-Patient')."
+        },
+        "pyPurpose": {
+          "type": "string",
+          "description": "The pyRuleName / Purpose of the Rule-Obj-Association rule (e.g. 'AppointmentSchedulingReference'). This string is also the alias used in cross-table field/filter references — e.g. pyFieldName: 'AppointmentSchedulingReference.pyID'."
+        },
+        "pyAssociatedClass": {
+          "type": "string",
+          "description": "The associated (RIGHT-side) class that the association rule joins to (e.g. 'MyOrg-MyApp-Work-Appointment'). Must match the pyAssociatedClass of the underlying Rule-Obj-Association."
+        }
+      }
+    },
+    "ReportIndexInfo": {
+      "type": "object",
+      "description": "A Declare-Index JOIN entry (Embed-ReportIndexInfo) under pyContent.pySource.pyIndexInfo[]. Used to project from or filter against an Index-* class that backs an aggregate property (page list / page group) on the Applies-To class — for example Index-TrackStatus (pxTrackStatus on Work-), Index-WorkPartyUri (pxWorkParty), Index-DiscussionThread (pxThread), or any custom declare-index. The platform supplies the join's ON condition implicitly from the index's parent key, so no pyFilters block is needed (this is the structural difference from pyJoinInfo, which is a free-form table join). Must be mirrored identically in BOTH pyContent.pySource.pyIndexInfo[] and pyUI.pySource.pyIndexInfo[] when authoring via the DX API. The alias prefix must be referenced by at least one pyListFields/pyAggregate/pyGroupBy/pyFilter entry, otherwise the save activity strips the row as a dead join.",
+      "required": ["pyIndexClassName", "pyIndexName", "pyPrefix", "pyIndexType"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-ReportIndexInfo",
+          "x-pega-autoFill": "Embed-ReportIndexInfo"
+        },
+        "pyIndexClassName": {
+          "type": "string",
+          "description": "The Index-* class to join to (e.g. 'Index-TrackStatus', 'Index-WorkPartyUri', 'Index-DiscussionThread'). This must be the concrete declare-index class — not the parent Work/Data class."
+        },
+        "pyIndexName": {
+          "type": "string",
+          "description": "The aggregate property on the Applies-To (parent) class that materialises this index — e.g. 'pxTrackStatus' for Index-TrackStatus, 'pxWorkParty' for Index-WorkPartyUri. Acts as the join key from the parent side; the platform resolves it to the underlying index table via the Declare-Index rule."
+        },
+        "pyPrefix": {
+          "type": "string",
+          "description": "Short alias prefix used in field/filter references (e.g. 'B', 'WP', 'T'). Cross-table references in pyListFields / pyFilters are written as 'Prefix.PropertyName' with no leading dot (same convention as pyJoinInfo)."
+        },
+        "pyIndexType": {
+          "type": "string",
+          "enum": ["INNER", "LEFT OUTER", "RIGHT OUTER"],
+          "description": "Join type for the index join. INNER drops parent rows that have no matching index row; LEFT OUTER preserves them with NULLs. INNER is the default Dev Studio Report Designer choice for index joins."
+        }
+      }
+    },
+    "ReportJoins": {
+      "type": "object",
+      "description": "A direct table JOIN entry (Embed-ReportJoins) under pyContent.pySource.pyJoinInfo[]. Must also be mirrored under pyUI.pySource.pyJoinInfo[] when creating via the DX API — see pyJoinInfo description on ReportSource. For joins to a Declare-Index class backed by an aggregate property on the parent, prefer pyIndexInfo (Embed-ReportIndexInfo) instead — the platform supplies the ON condition implicitly there.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-ReportJoins",
+          "x-pega-autoFill": "Embed-ReportJoins"
+        },
+        "pyJoinClassName": {
+          "type": "string",
+          "description": "Joined Pega class (e.g. 'Index-Warning', 'Pega-Agile-Work-UserStory')."
+        },
+        "pyJoinType": {
+          "type": "string",
+          "enum": ["LEFT OUTER", "INNER", "RIGHT OUTER"],
+          "description": "Join type. DX-API write quirk for LEFT OUTER: the server-side save activity strips a join row whose alias prefix is not referenced by any pyListFields, pyAggregate, pyGroupBy, or pyFilter entry — the row is treated as 'dead' and silently removed. To make a LEFT OUTER join persist, include at least one field or filter that references the join's pyPrefix (e.g. pyFieldName: 'Appointment.pyID' when pyPrefix is 'Appointment'). INNER and RIGHT OUTER joins follow a more permissive code path and persist even without referencing fields, but referencing the join is still good practice."
+        },
+        "pyPrefix": {
+          "type": "string",
+          "description": "Alias prefix used in field/filter references (e.g. 'W', 'L', 'SAR')."
+        },
+        "pyTemporaryObject": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "'true' for joins to embedded/index classes that do not require their own page."
+        },
+        "pyFilters": {
+          "$ref": "#/$defs/ReportFilters",
+          "description": "ON conditions for the join — entries are full Embed-ReportFilter objects with cross-table operands."
+        }
+      }
+    },
+    "UserFunction": {
+      "type": "object",
+      "description": "A SQL/user function descriptor (Embed-UserFunction). Used in pyRightOperandFunction, pyLeftOperandFunction, and ListField.pySQLFunction.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-UserFunction",
+          "x-pega-autoFill": "Embed-UserFunction"
+        },
+        "pyName": {
+          "type": "string",
+          "description": "Function name (e.g. 'pxUpperCase', 'pxDivide', 'pxDay', 'CaseWhenNullText')."
+        },
+        "pyLabel": {
+          "type": "string",
+          "description": "Display label of the function."
+        },
+        "pyDescription": {
+          "type": "string",
+          "description": "Function description."
+        },
+        "pyReturnType": {
+          "type": "string",
+          "description": "Return data type (e.g. 'Text', 'integer', 'double')."
+        },
+        "pySQLFunction": {
+          "type": "string",
+          "description": "Raw SQL function name when distinct from pyName."
+        },
+        "pyParameters": {
+          "type": "array",
+          "description": "Function arguments. Each item is an Embed-MethodParams; nested pyFunction allows function composition.",
+          "items": { "type": "object" }
+        }
+      }
+    },
+    "ReportHtmlProp": {
+      "type": "object",
+      "description": "Per-column format / control-rule binding (Embed-ReportHtmlProp).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-ReportHtmlProp",
+          "x-pega-autoFill": "Embed-ReportHtmlProp"
+        },
+        "pyAutoHTML": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "When 'false', the explicit pyPropertyName control is used."
+        },
+        "pyLabel": {
+          "type": "string",
+          "description": "Display label of the chosen control."
+        },
+        "pyPropertyName": {
+          "type": "string",
+          "description": "Pega control rule name (e.g. 'pzRuleOpener', 'pzGetWarningSeverity', 'pxDateTime')."
+        },
+        "pyPropertyParameters": {
+          "type": "object",
+          "description": "Map of control-specific parameters (e.g. ellipsis, openObjClass, openInsKeyProperty, FieldName, FieldValueClassName).",
+          "additionalProperties": { "type": "string" }
+        },
+        "pyNumberFormat": {
+          "type": "string",
+          "enum": ["general", "decimal", "currency", "percent", ""],
+          "description": "Number format for numeric columns."
+        },
+        "pyModes": {
+          "type": "array",
+          "description": "Optional control-mode entries (Embed-Control-Mode).",
+          "items": { "type": "object" }
+        }
+      }
+    },
+    "SubReportColumn": {
+      "type": "object",
+      "description": "A column projected from a sub-report (Embed-SubReportColumns).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-SubReportColumns",
+          "x-pega-autoFill": "Embed-SubReportColumns"
+        },
+        "pyFieldName": {
+          "type": "string",
+          "description": "Field from the sub-report (may include nested join prefix, e.g. 'OP.ADDAG.pyAccessGroupAdditional')."
+        },
+        "pyAlias": {
+          "type": "string",
+          "description": "Output column alias used in the outer query."
+        },
+        "pyDataType": {
+          "type": "string",
+          "enum": ["Text", "Identifier", "DateTime", "Date", "Integer", "integer", "Double", "Decimal", "TrueFalse", ""],
+          "description": "Data type. Lowercase 'integer' appears when the column comes from a SQL function."
+        },
+        "pyEchoFieldName": {
+          "type": "string",
+          "description": "Display label for the projected column (e.g. 'Case ID'). Holds the human-readable label, NOT a field reference — opposite convention from Embed-ReportUIFields.pyEchoFieldName which holds the field reference."
+        },
+        "pyPrefix": {
+          "type": "string",
+          "description": "Owning sub-report prefix (matches parent pyPrefix)."
+        },
+        "pyAggregateFunction": {
+          "type": "string",
+          "enum": ["AVG", "SUM", "COUNT", "COUNTDISTINCT", "MAX", "MIN", ""],
+          "description": "Aggregate to apply when projecting this column."
+        }
+      }
+    },
+    "PageAndClass": {
+      "type": "object",
+      "description": "A named page declaration (Embed-PagesAndClasses).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-PagesAndClasses",
+          "x-pega-autoFill": "Embed-PagesAndClasses"
+        },
+        "pyPagesAndClassesClass": {
+          "type": "string",
+          "description": "Class of the named page."
+        },
+        "pyPagesAndClassesPage": {
+          "type": "string",
+          "description": "Named page reference."
+        }
+      }
+    },
+    "AppContextInfo": {
+      "type": "object",
+      "description": "Application context info for multi-app filtering (Embed-AppContextInfo).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-AppContextInfo",
+          "x-pega-autoFill": "Embed-AppContextInfo"
+        },
+        "pyApplicationContextMode": {
+          "type": "string",
+          "enum": ["AppOnly", "AppAll", "AppAllMinusPega", "AppList", "AppCentric", ""],
+          "description": "App context mode: 'AppOnly' = single app, 'AppAll' = all apps in stack, 'AppAllMinusPega' = stack minus Pega-supplied, 'AppList' = list of apps via pyApplicationList, 'AppCentric' = current app context."
+        },
+        "pyApplicationName": {
+          "type": "string",
+          "description": "Property/page reference to the application name (e.g. 'Application.pyProductName', 'Param.AppName')."
+        },
+        "pyApplicationVersion": {
+          "type": "string",
+          "description": "Property/page reference to the application version."
+        },
+        "pyApplicationList": {
+          "type": "string",
+          "description": "Used with AppList mode — typically a data-page list ref (e.g. 'D_pzGetScopingApplicationList.pxApplication')."
+        }
+      }
+    },
+    "ReportUI": {
+      "type": "object",
+      "description": "Display and rendering configuration (Embed-ReportUI). Mirrors pyContent for the presentation layer.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-ReportUI",
+          "x-pega-autoFill": "Embed-ReportUI"
+        },
+        "pyCategory": {
+          "type": "string",
+          "description": "Report category grouping (e.g., 'pyWorkMonitoring', 'pyMonitorAssignments')."
+        },
+        "pyIsCertified": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "'true' if this report is Pega-certified. Requires pyCategory when true."
+        },
+        "pyMaxRecords": {
+          "type": "string",
+          "description": "Max records shown in UI (mirrors pyContent.pyMaxRecords)."
+        },
+        "pyReportingDbDropdown": {
+          "type": "string",
+          "enum": ["Standard", "Alternate", ""],
+          "description": "Which DB option appears in the dropdown."
+        },
+        "pzIsSummary": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Mirrors pyContent.pxIsSummary."
+        },
+        "pyIgnoreFormattingExcelExport": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Ignore cell formatting on Excel export."
+        },
+        "pyIgnoreFormattingPDFExport": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Ignore formatting on PDF export."
+        },
+        "pyIgnoreSkinPDFExport": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Ignore skin/theme on PDF export."
+        },
+        "pySplitPDFExport": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Split PDF export by page."
+        },
+        "pySplitTableWithPageBreak": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Insert page breaks between groups in PDF."
+        },
+        "pyShowUnExposedProperties": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Show unexposed/hidden properties."
+        },
+        "pyUseAlternateDb": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Use alternate DB for rendering."
+        },
+        "pyBody": {
+          "$ref": "#/$defs/ReportBody",
+          "description": "Body layout and column display configuration (Embed-ReportBody).",
+          "x-pega-autoFill": {
+            "pyHeaderDisplay": "Default",
+            "pyReportRank": {
+              "pyRankType": "",
+              "pyRankUIField": {}
+            },
+            "pyUIFields": [],
+            "pyUIFilters": {
+              "pyFilterLogic": "",
+              "pyFilter": []
+            }
+          }
+        },
+        "pyChart": {
+          "$ref": "#/$defs/ReportGraph",
+          "description": "Chart configuration (Embed-ReportGraph). Always present even when pyEnableChart='false'.",
+          "x-pega-autoFill": {
+            "pyEnableChart": "false",
+            "pyGraphType": "Column"
+          }
+        },
+        "pyUserInteractions": {
+          "$ref": "#/$defs/ReportUserInteractions",
+          "description": "Viewer behavior configuration (Embed-ReportUserInteractions)."
+        },
+        "pyHeader": {
+          "$ref": "#/$defs/ReportHeader",
+          "description": "Toolbar buttons (Embed-ReportHeader)."
+        },
+        "pySmartInfo": {
+          "$ref": "#/$defs/ReportSmartInfo",
+          "description": "Single-click info panel configuration (Embed-ReportSmartInfo)."
+        },
+        "pySource": {
+          "$ref": "#/$defs/ReportSource",
+          "description": "UI-side source configuration (mirrors pyContent.pySource).",
+          "x-pega-autoFill": {
+            "pyRowKeyInfo": {
+              "pyGetRowKey": "true",
+              "pyRowKeys": [".pzInsKey"]
+            }
+          }
+        },
+        "pySecurity": {
+          "$ref": "#/$defs/ReportSecurity",
+          "description": "UI-side security configuration (mirrors pyContent.pySecurity)."
+        },
+        "pyPromptSectionParams": {
+          "$ref": "#/$defs/ReportPromptSection",
+          "description": "Filter prompt display config (Embed-ReportPromptSection)."
+        }
+      },
+      "additionalProperties": true
+    },
+    "ReportMetaData": {
+      "type": "object",
+      "description": "Report metadata (Embed-ReportMetaDataInfo).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-ReportMetaDataInfo",
+          "x-pega-autoFill": "Embed-ReportMetaDataInfo"
+        },
+        "pxIsSummary": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Report type flag — mirrors pyContent.pxIsSummary."
+        }
+      }
+    },
+    "ReportDrillDown": {
+      "type": "object",
+      "description": "Drill-down configuration (Embed-ReportDrillDown).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-ReportDrillDown",
+          "x-pega-autoFill": "Embed-ReportDrillDown"
+        },
+        "pzDrillDownFilters": {
+          "$ref": "#/$defs/ReportFilters",
+          "description": "Drill-down navigation filters."
+        }
+      }
+    },
+    "ReportSecurity": {
+      "type": "object",
+      "description": "Security configuration (Embed-ReportSecurity).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-ReportSecurity",
+          "x-pega-autoFill": "Embed-ReportSecurity"
+        },
+        "pyPrivilegeList": {
+          "type": "array",
+          "description": "Privilege requirements (Embed-Rule-PrivilegeSecurity entries).",
+          "items": { "type": "object" }
+        }
+      }
+    },
+    "ReportPromptSection": {
+      "type": "object",
+      "description": "Filter prompt display config (Embed-ReportPromptSection).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-ReportPromptSection",
+          "x-pega-autoFill": "Embed-ReportPromptSection"
+        },
+        "pzDisplayFilterPrompt": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Show the standard filter prompt (default true)."
+        }
+      }
+    },
+    "ReportSmartInfo": {
+      "type": "object",
+      "description": "Smart-info popover configuration (Embed-ReportSmartInfo).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-ReportSmartInfo",
+          "x-pega-autoFill": "Embed-ReportSmartInfo"
+        },
+        "pySingleClickSInfo": {
+          "type": "object",
+          "description": "Single-click smart-info config (Embed-ReportSingleClickInfo).",
+          "properties": {
+            "pxObjClass": {
+              "type": "string",
+              "const": "Embed-ReportSingleClickInfo",
+              "x-pega-autoFill": "Embed-ReportSingleClickInfo"
+            },
+            "pyEnabled": {
+              "type": "string",
+              "enum": ["true", "false", ""],
+              "description": "Enable single-click smart info."
+            },
+            "pySmartInfoHeader": {
+              "type": "string",
+              "description": "Popover header text (default 'Additional Information')."
+            }
+          }
+        }
+      }
+    },
+    "ReportHeader": {
+      "type": "object",
+      "description": "Report viewer toolbar (Embed-ReportHeader). Contains a constant 10-button list — the standard Save/Save As/Print/Column Summary/Append Column/RepTtitle/Chart/ExpExcel/ExpPDF/Filtering set.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-ReportHeader",
+          "x-pega-autoFill": "Embed-ReportHeader"
+        },
+        "pyButtons": {
+          "type": "object",
+          "description": "Embed-ReportButtons wrapper.",
+          "properties": {
+            "pxObjClass": {
+              "type": "string",
+              "const": "Embed-ReportButtons",
+              "x-pega-autoFill": "Embed-ReportButtons"
+            },
+            "pyButtonList": {
+              "type": "array",
+              "description": "Toolbar button entries (Embed-ReportButton).",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "pxObjClass":      { "type": "string", "const": "Embed-ReportButton", "x-pega-autoFill": "Embed-ReportButton" },
+                  "pyButtonCaption": { "type": "string" },
+                  "pyButtonToolTip": { "type": "string" },
+                  "pyFunction":      { "type": "string", "description": "JavaScript invocation, e.g. 'window.print()'." },
+                  "pyImage":         { "type": "string", "description": "Icon name, e.g. 'report_save', 'report_excel'." },
+                  "pyType":          { "type": "string", "enum": ["Icon", ""] },
+                  "pyLabel":         { "type": "string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "ReportUserInteractions": {
+      "type": "object",
+      "description": "Viewer behavior controls (Embed-ReportUserInteractions).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-ReportUserInteractions",
+          "x-pega-autoFill": "Embed-ReportUserInteractions"
+        },
+        "pyDesignModeActualResults": { "type": "string", "enum": ["true", "false", ""] },
+        "pyDisableDrillDown":        { "type": "string", "enum": ["true", "false", ""] },
+        "pyDrillDownReportName":     { "type": "string", "description": "Default 'pyDefaultReport'." },
+        "pyEnableAddFilters":        { "type": "string", "enum": ["true", "false", ""] },
+        "pyExpandAllGroupBy":        { "type": "string", "enum": ["true", "false", ""] },
+        "pyFixedHeader":             { "type": "string", "enum": ["true", "false", ""] },
+        "pyPromptForFilters":        { "type": "string", "enum": ["true", "false", ""] },
+        "pyShowDataOnly":            { "type": "string", "enum": ["true", "false", ""] },
+        "pyPagingParams": {
+          "$ref": "#/$defs/ReportPaging",
+          "description": "Mirror of pyContent.pyPaging."
+        },
+        "pyReportToolbarOptions": {
+          "type": "object",
+          "description": "Viewer-command visibility toggles (Embed-ReportViewerCommands). All boolean strings; defaults are 'true'.",
+          "properties": {
+            "pxObjClass":                  { "type": "string", "const": "Embed-ReportViewerCommands", "x-pega-autoFill": "Embed-ReportViewerCommands" },
+            "pyDisplayCommandMenu":        { "type": "string", "enum": ["true", "false", ""] },
+            "pyDisplayCommandRibbon":      { "type": "string", "enum": ["true", "false", ""] },
+            "pyDisplayReportHeader":       { "type": "string", "enum": ["true", "false", ""] },
+            "pyEnableAdvancedFiltering":   { "type": "string", "enum": ["true", "false", ""] },
+            "pyEnableAppendColumn":        { "type": "string", "enum": ["true", "false", ""] },
+            "pyEnableConvertToList":       { "type": "string", "enum": ["true", "false", ""] },
+            "pyEnableEditChart":           { "type": "string", "enum": ["true", "false", ""] },
+            "pyEnableEditColumns":         { "type": "string", "enum": ["true", "false", ""] },
+            "pyEnableEditing":             { "type": "string", "enum": ["true", "false", ""] },
+            "pyEnableEditReportTitle":     { "type": "string", "enum": ["true", "false", ""] },
+            "pyEnableExportToExcel":       { "type": "string", "enum": ["true", "false", ""] },
+            "pyEnableExportToPDF":         { "type": "string", "enum": ["true", "false", ""] },
+            "pyEnableFilters":             { "type": "string", "enum": ["true", "false", ""] },
+            "pyEnablePrint":               { "type": "string", "enum": ["true", "false", ""] },
+            "pyEnableSave":                { "type": "string", "enum": ["true", "false", ""] },
+            "pyEnableSaveAs":              { "type": "string", "enum": ["true", "false", ""] },
+            "pyEnableSummarize":           { "type": "string", "enum": ["true", "false", ""] }
+          }
+        }
+      }
+    },
+    "ReportBody": {
+      "type": "object",
+      "description": "Body layout, columns, ranking, and column-level filter mirrors (Embed-ReportBody).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-ReportBody",
+          "x-pega-autoFill": "Embed-ReportBody"
+        },
+        "pyCustomGroupingEnabled":    { "type": "string", "enum": ["true", "false", ""] },
+        "pyCustomRowEnabled":         { "type": "string", "enum": ["true", "false", ""] },
+        "pyCustomRowSection":         { "type": "string", "description": "Section rule name when pyCustomRowEnabled='true'." },
+        "pyExportGroupingToExcel":    { "type": "string", "enum": ["true", "false", ""] },
+        "pyGroupingEnabled":          { "type": "string", "enum": ["true", "false", ""] },
+        "pyGroupingSortNumber":       { "type": "string", "description": "Numeric string, default '1'." },
+        "pyHeaderDisplay":            { "type": "string", "enum": ["Default","Disabled","Both","SortSummaryOnly"] },
+        "pyIncludeCountColumn":       { "type": "string", "enum": ["true", "false", ""] },
+        "pySpreadSheetStyle":         { "type": "string", "enum": ["true", "false", ""] },
+        "pyCustomFiltering": {
+          "type": "object",
+          "description": "Custom prompt section settings (Embed-ReportCustomPrompt).",
+          "properties": {
+            "pxObjClass":              { "type": "string", "const": "Embed-ReportCustomPrompt", "x-pega-autoFill": "Embed-ReportCustomPrompt" },
+            "pyEnableCustomFiltering": { "type": "string", "enum": ["true", "false", ""] },
+            "pyEnableSectionInline":   { "type": "string", "enum": ["true", "false", ""] },
+            "pyPromptPageName":        { "type": "string", "description": "Default 'CustomFilter'." }
+          }
+        },
+        "pyReportRank": {
+          "type": "object",
+          "description": "UI-side rank config (Embed-ReportRank).",
+          "properties": {
+            "pxObjClass":      { "type": "string", "const": "Embed-ReportRank", "x-pega-autoFill": "Embed-ReportRank" },
+            "pyRankType":      { "type": "string", "enum": ["TopRanked", "BottomRanked", ""] },
+            "pyPartitionType": { "type": "string", "enum": ["Grouping", "All", ""] },
+            "pyRows":          { "type": "string" },
+            "pyRankUIField":   { "$ref": "#/$defs/ReportUIField" }
+          }
+        },
+        "pyRows": {
+          "type": "object",
+          "description": "Row-level events wrapper (Embed-ReportRows).",
+          "properties": {
+            "pxObjClass": { "type": "string", "const": "Embed-ReportRows", "x-pega-autoFill": "Embed-ReportRows" },
+            "pyEvents": {
+              "type": "object",
+              "properties": {
+                "pxObjClass":  { "type": "string", "const": "Embed-ReportEvents", "x-pega-autoFill": "Embed-ReportEvents" },
+                "pyEventList": { "type": "array", "items": { "type": "object" } }
+              }
+            }
+          }
+        },
+        "pyUIFields": {
+          "type": "array",
+          "description": "Visible columns rendered in the grid (Embed-ReportUIFields).",
+          "items": { "$ref": "#/$defs/ReportUIField" }
+        },
+        "pyUIFilters": {
+          "$ref": "#/$defs/ReportFilters",
+          "description": "UI-side mirror of pyContent.pyFilters."
+        },
+        "pyUIHavingFilters": {
+          "$ref": "#/$defs/ReportHavingFilters",
+          "description": "UI-side mirror of pyContent.pyHavingFilters."
+        }
+      }
+    },
+    "ReportUIField": {
+      "type": "object",
+      "description": "Display column (Embed-ReportUIFields). Mirrors a pyListFields entry with extra rendering metadata.",
+      "properties": {
+        "pxObjClass":              { "type": "string", "const": "Embed-ReportUIFields", "x-pega-autoFill": "Embed-ReportUIFields" },
+        "pyFieldName":             { "type": "string" },
+        "pyFieldLabel":            { "type": "string" },
+        "pyEchoFieldName":         { "type": "string" },
+        "pyDataType":              { "type": "string" },
+        "pySortOrder":             { "type": "string" },
+        "pySortType":              { "type": "string", "enum": ["ASC", "DESC", ""] },
+        "pyHide":                  { "type": "string", "enum": ["true", "false", ""] },
+        "pySelected":              { "type": "string", "enum": ["true", "false", ""] },
+        "pyDisplayValues":         { "type": "string", "enum": ["true", "false", ""] },
+        "pyColumnFilteringDropDown": { "type": "string", "enum": ["true", "false", ""] },
+        "pyACIsAssoc":             { "type": "string", "enum": ["true", "false", ""] },
+        "pyACAssocName":           { "type": "string" },
+        "pyACAssocClass":          { "type": "string" },
+        "pyIsFunction":            { "type": "string", "enum": ["true", "false", ""] },
+        "pyFunction":              { "type": "string", "description": "Aggregate function name on summary-report column (e.g. 'COUNT', 'SUM').","enum": ["COUNT", "COUNTDISTINCT", "SUM", "AVG", "MAX", "MIN", ""]  },
+        "pyGroupOrder":            { "type": "string" },
+        "pyFieldFormat":           { "$ref": "#/$defs/ReportHtmlProp" },
+        "pySQLFunction":           { "$ref": "#/$defs/UserFunction" }
+      }
+    },
+    "ReportGraph": {
+      "type": "object",
+      "description": "Chart configuration (Embed-ReportGraph). Always present even when pyEnableChart='false' — the engine populates a full default block. All numeric fields are string-encoded (e.g. '400', not 400).",
+      "properties": {
+        "pxObjClass":               { "type": "string", "const": "Embed-ReportGraph", "x-pega-autoFill": "Embed-ReportGraph" },
+        "pyClassName":              { "type": "string" },
+        "pyGraphType":              { "type": "string", "enum": ["Pie", "Column", "Bar", "Line", "Bubble", "Combo", "Area", "Gauge", ""], "x-pega-autoFill": "Column" },
+        "pySubType":                { "type": "string", "enum": ["Normal", "clustered", "stacked", "segment", "DualYAxisClustered", ""] },
+        "pyChartOutputType":        { "type": "string", "enum": ["Flash", "HTML5", ""], "description": "Legacy field; 'Flash' in observed corpus." },
+        "pyEnableChart":            { "type": "string", "enum": ["true", "false", ""], "x-pega-autoFill": "false" },
+        "pzChartAllowed":           { "type": "string", "enum": ["true", "false", ""] },
+        "pyDisableDrillDown":       { "type": "string", "enum": ["true", "false", ""] },
+        "pyIs3D":                   { "type": "string", "enum": ["true", "false", ""] },
+        "pyEnable2D3D":             { "type": "string", "enum": ["true", "false", ""] },
+        "pyUseFusionChart":         { "type": "string", "enum": ["true", "false", ""] },
+        "pyUseV6Chart":             { "type": "string", "enum": ["true", "false", ""] },
+        "pyUseJavaScript":          { "type": "string", "enum": ["true", "false", ""] },
+        "pyUseSolidColorsFor2D":    { "type": "string", "enum": ["true", "false", ""] },
+        "pyChartThemeNameFromSkin": { "type": "string" },
+        "pyTitle":                  { "type": "string" },
+        "pyTitleEnabled":           { "type": "string", "enum": ["true", "false", ""] },
+        "pyTitleFontSize":          { "type": "string" },
+        "pyTitleFontStyle":         { "type": "string", "enum": ["regular", "bold", "italic", "0", ""] },
+        "pyHeight":                 { "type": "string" },
+        "pyWidth":                  { "type": "string" },
+        "pySize":                   { "type": "string", "enum": ["Large", "Medium", "Small", "Custom", ""] },
+        "pyChartBorder":            { "type": "string", "enum": ["true", "false", ""] },
+        "pyCategoryHeader":         { "type": "string" },
+        "pyDataAxisHeader":         { "type": "string" },
+        "pyLegendEnable":           { "type": "string", "enum": ["true", "false", ""] },
+        "pyLegendDirection":        { "type": "string", "enum": ["horizontal", "vertical", ""] },
+        "pyLegendPlacement":        { "type": "string", "enum": ["bottom", "right", "top", "left", ""] },
+        "pyShowAllGridLines":       { "type": "string", "enum": ["true", "false", ""] },
+        "pyShowAllLabelsMS":        { "type": "string", "enum": ["true", "false", ""] },
+        "pyShowAllLabelsSS":        { "type": "string", "enum": ["true", "false", ""] },
+        "pyShowDataTips":           { "type": "string", "enum": ["true", "false", ""] },
+        "pyShowMaxButton":          { "type": "string", "enum": ["true", "false", ""] },
+        "pyShowNewWindow":          { "type": "string", "enum": ["true", "false", ""] },
+        "pyShowSVButton":           { "type": "string", "enum": ["true", "false", ""] },
+        "pyIsExpandLabels":         { "type": "string", "enum": ["true", "false", ""] },
+        "pyShowBubbleName":         { "type": "string", "enum": ["true", "false", ""] },
+        "pyLabel":                  { "type": "string" },
+        "pyLabelOrientation":       { "type": "string", "enum": ["slanted", "vertical", "horizontal", ""] },
+        "pyOptionsToEdit":          { "type": "string", "enum": ["Format", ""] },
+        "pySliderEnabled":          { "type": "string", "enum": ["true", "false", ""] },
+        "pySliderGroupCount":       { "type": "string" },
+        "pySliderTitle":            { "type": "string" },
+        "pySliderWidth":            { "type": "string" },
+        "pyMin":                    { "type": "string" },
+        "pyMax":                    { "type": "string" },
+        "pyMaxSubTypeIcons":        { "type": "string" },
+        "pySubChartIndex":          { "type": "string" },
+        "pyValueOfChart":           { "type": "string", "description": "Chart axis index pointer (e.g. '0', '2')." },
+        "pyTimeOut":                { "type": "string" },
+        "pyLimitValue":             { "type": "string" },
+        "pyTemporaryObject":        { "type": "string", "enum": ["true", "false", ""] },
+        "pzDesignMode":             { "type": "string", "enum": ["true", "false", ""] },
+        "pxResults": {
+          "type": "array",
+          "description": "Result-column descriptors (one per column in the chart's underlying query).",
+          "items": {
+            "type": "object",
+            "properties": {
+              "pxObjClass":      { "type": "string", "const": "Rule-Obj-Property", "x-pega-autoFill": "Rule-Obj-Property" },
+              "pxApplication":   { "type": "string", "description": "Aggregate function (when aggregated)." },
+              "pyLabel":         { "type": "string" },
+              "pySelected":      { "type": "string", "enum": ["true", "false", ""] },
+              "pyStringType":    { "type": "string", "description": "Decimal | Integer | Identifier | Text | Date | double" },
+              "pyTargetProperty":{ "type": "string", "description": "Property reference or function expression." },
+              "pzIndexCount":    { "type": "string", "description": "1-based column index." }
+            }
+          }
+        },
+        "pyCategoryAxis": {
+          "type": "array",
+          "description": "Group-by dimensions on the chart (Embed-ReportGraph-Axis).",
+          "items": { "$ref": "#/$defs/ReportGraphAxis" }
+        },
+        "pyDataAxis": {
+          "type": "array",
+          "description": "Measure axes (Embed-ReportGraph-Axis).",
+          "items": { "$ref": "#/$defs/ReportGraphAxis" }
+        },
+        "pySecDataAxis": {
+          "type": "array",
+          "description": "Secondary measure axes — only populated for Combo/DualY (Embed-ReportGraph-Axis).",
+          "items": { "$ref": "#/$defs/ReportGraphAxis" }
+        },
+        "pyBackgroundColor":         { "type": "array", "items": { "type": "object" } },
+        "pyForegroundColor":         { "type": "array", "items": { "type": "object" } },
+        "pyCondColorRange":          { "type": "array", "items": { "type": "object" } },
+        "pyCondForegroundColor":     { "type": "array", "items": { "type": "object" } },
+        "pyCondForegroundDataColor": { "type": "array", "items": { "type": "object" } },
+        "pyCondForegroundDataColorR":{ "type": "array", "items": { "type": "object" } },
+        "pyCondForegroundDataColorY":{ "type": "array", "items": { "type": "object" } },
+        "pxWarningsToDisplay":       { "type": "array", "items": { "type": "object" } },
+        "pyGauge": {
+          "type": "object",
+          "description": "Gauge-chart config (Embed-ReportGraph-Gauge). Carries number-format and tick fields.",
+          "additionalProperties": true
+        },
+        "pyPie": {
+          "type": "object",
+          "description": "Pie-chart config (Embed-ReportGraph-Pie).",
+          "additionalProperties": true,
+          "properties": {
+            "pxObjClass":     { "type": "string", "const": "Embed-ReportGraph-Pie", "x-pega-autoFill": "Embed-ReportGraph-Pie" },
+            "pyExplodeRadius":{ "type": "string" },
+            "pyInnerRadius":  { "type": "string" },
+            "pyLabelEnabled": { "type": "string", "enum": ["true", "false", ""] },
+            "pyLabelField":   { "type": "string" },
+            "pyLabelNameField":{ "type": "string" },
+            "pyLabelPercent": { "type": "string", "enum": ["true", "false", ""] },
+            "pyLabelPosition":{ "type": "string", "enum": ["outside", "inside", ""] },
+            "pyNameField":    { "type": "string" },
+            "pyField":        { "type": "string" },
+            "pyNameFormat":   { "type": "string" }
+          }
+        },
+        "pyXY": {
+          "type": "object",
+          "description": "Cartesian-chart config (Embed-ReportGraph-XY).",
+          "properties": {
+            "pxObjClass":          { "type": "string", "const": "Embed-ReportGraph-XY", "x-pega-autoFill": "Embed-ReportGraph-XY" },
+            "pyInterpolateValues": { "type": "string", "enum": ["true", "false", ""] },
+            "pySwapSeries":        { "type": "string", "enum": ["true", "false", ""] },
+            "pyTitleFontSize":     { "type": "string" },
+            "pyTitleFontStyle":    { "type": "string" },
+            "pyUniformMinor":      { "type": "string", "enum": ["true", "false", ""] },
+            "pyUseColorRanges":    { "type": "string", "enum": ["true", "false", ""] },
+            "pyArea":   { "type": "object", "additionalProperties": true },
+            "pyBar":    { "type": "object", "additionalProperties": true },
+            "pyBubble": { "type": "object", "additionalProperties": true },
+            "pyColumn": { "type": "object", "additionalProperties": true },
+            "pyLine":   { "type": "object", "additionalProperties": true },
+            "pyDataAxis": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/ReportGraphXYDataAxis" }
+            },
+            "pyGroupAxis": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/ReportGraphXYGroupAxis" }
+            },
+            "pySecDataAxis": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/ReportGraphXYDataAxis" }
+            }
+          }
+        }
+      }
+    },
+    "ReportGraphAxis": {
+      "type": "object",
+      "description": "A chart axis entry (Embed-ReportGraph-Axis). Used in pyCategoryAxis, pyDataAxis, pySecDataAxis.",
+      "properties": {
+        "pxObjClass":          { "type": "string", "const": "Embed-ReportGraph-Axis", "x-pega-autoFill": "Embed-ReportGraph-Axis" },
+        "pyDataType":          { "type": "string" },
+        "pyFunction":          { "type": "string", "description": "Aggregate function name (for measure axes)." },
+        "pyAvgCntPropertyName":{ "type": "string", "description": "Companion count property when pyFunction='AVG'." },
+        "pyChartOutputType":   { "type": "string", "description": "Per-axis renderer in Combo charts (e.g. 'Line', 'Bar')." },
+        "pyGroupOrder":        { "type": "string" },
+        "pyHeight":            { "type": "string", "description": "Drawing-order index for multi-level category axes." },
+        "pyLabel":             { "type": "string" },
+        "pyPropertyName":      { "type": "string", "description": "e.g. '.pySummaryValue(N)' or '.pySummaryCount(N)' for measures." },
+        "pyTargetProperty":    { "type": "string" },
+        "pySortOrder":         { "type": "string" },
+        "pySortType":          { "type": "string", "enum": ["ASC", "DESC", ""] },
+        "pyFieldFormat":       { "$ref": "#/$defs/ReportHtmlProp" }
+      }
+    },
+    "ReportGraphXYDataAxis": {
+      "type": "object",
+      "description": "Cartesian data-axis entry (Embed-ReportGraph-XY-DataAxis).",
+      "properties": {
+        "pxObjClass":              { "type": "string", "const": "Embed-ReportGraph-XY-DataAxis", "x-pega-autoFill": "Embed-ReportGraph-XY-DataAxis" },
+        "pyAxisCurrencySymbol":    { "type": "string" },
+        "pyAxisDateTimeFormat":    { "type": "string" },
+        "pyAxisDateTimeInput":     { "type": "string" },
+        "pyAxisDecimalSeperator":  { "type": "string" },
+        "pyAxisNegativeSign":      { "type": "string" },
+        "pyAxisPrecision":         { "type": "string" },
+        "pyAxisScale":             { "type": "string", "enum": ["Linear", "Category", "Datetime", "Logarithmic", ""] },
+        "pyAxisThouSeperator":     { "type": "string" },
+        "pyMissingsAsZero":        { "type": "string", "enum": ["true", "false", ""] },
+        "pyNumberFormat":          { "type": "string" },
+        "pyShowGridLines":         { "type": "string", "enum": ["true", "false", ""] },
+        "pyShowLabels":            { "type": "string", "enum": ["true", "false", ""] },
+        "pyTitle":                 { "type": "string" },
+        "pyDataAxisList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "pxObjClass":       { "type": "string", "const": "Embed-ReportGraph-XY-Axis", "x-pega-autoFill": "Embed-ReportGraph-XY-Axis" },
+              "pyDataType":       { "type": "string" },
+              "pyDisplayFieldName":{ "type": "string" },
+              "pyFieldIndex":     { "type": "string" },
+              "pyFieldName":      { "type": "string" }
+            }
+          }
+        },
+        "pyUIDataAxisList": { "type": "array", "items": { "type": "object" } }
+      }
+    },
+    "ReportGraphXYGroupAxis": {
+      "type": "object",
+      "description": "Cartesian group/category-axis entry (Embed-ReportGraph-XY-GroupAxis).",
+      "properties": {
+        "pxObjClass":           { "type": "string", "const": "Embed-ReportGraph-XY-GroupAxis", "x-pega-autoFill": "Embed-ReportGraph-XY-GroupAxis" },
+        "pyAxisScale":          { "type": "string", "enum": ["Category", "Datetime", "Linear", ""] },
+        "pyAxisDateTimeUnit":   { "type": "string", "enum": ["days", "hours", "minutes", "months", "years", ""] },
+        "pyDateCount":          { "type": "string" },
+        "pyShowGridLines":      { "type": "string", "enum": ["true", "false", ""] },
+        "pyShowLabels":         { "type": "string", "enum": ["true", "false", ""] },
+        "pyTitle":              { "type": "string" },
+        "pyGroupAxisList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "pxObjClass": { "type": "string", "const": "Embed-ReportGraph-XY-Axis", "x-pega-autoFill": "Embed-ReportGraph-XY-Axis" },
+              "pyDataType": { "type": "string" },
+              "pyFieldIndex":{ "type": "string" },
+              "pyFieldName":{ "type": "string" }
+            }
+          }
+        },
+        "pyUIGroupAxisList": { "type": "array", "items": { "type": "object" } }
+      }
+    }
+  }
+}

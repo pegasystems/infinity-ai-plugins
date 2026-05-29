@@ -1,0 +1,856 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-obj-flow.json",
+  "title": "Rule-Obj-Flow",
+  "description": "JSON schema for creating or updating a Pega flow rule (Rule-Obj-Flow). Only authored and identity fields are included; system-managed fields are omitted.",
+  "type": "object",
+  "required": [
+    "pxObjClass",
+    "pyRuleName",
+    "pyFlowType",
+    "pyLabel",
+    "pyClassName",
+    "pyWorkClass",
+    "pyCategory",
+    "pyCanCreateWorkObject",
+    "pyDraftModeON"
+  ],
+  "properties": {
+    "pxObjClass": {
+      "type": "string",
+      "const": "Rule-Obj-Flow",
+      "description": "Rule type class — always 'Rule-Obj-Flow'.",
+      "x-pega-autoFill": "Rule-Obj-Flow"
+    },
+    "pyRuleName": {
+      "type": "string",
+      "description": "Internal name of the flow (PascalCase or underscore-separated, no spaces, no hyphens).",
+      "x-pega-autoFill": "{pyFlowType}"
+    },
+    "pyFlowType": {
+      "type": "string",
+      "description": "Must always match pyRuleName exactly."
+    },
+    "pyLabel": {
+      "type": "string",
+      "description": "Human-readable display label shown in the UI."
+    },
+    "pyClassName": {
+      "type": "string",
+      "description": "The Pega work class this flow belongs to (case-sensitive)."
+    },
+    "pyWorkClass": {
+      "type": "string",
+      "description": "Must always match pyClassName exactly."
+    },
+    "pyCategory": {
+      "type": "string",
+      "enum": ["FlowStandard", "ScreenFlow", "ScreenFlowStandard", "ProcessFlow", ""],
+      "description": "Flow category: FlowStandard (standard workflow), ScreenFlow (form wizard), ProcessFlow (legacy)."
+    },
+    "pyStructureType": {
+      "type": "string",
+      "enum": ["Single", "Multi", "Case", "Approval", "Attachment", "Simple", "Complex", "Linear", "CompConversation", "SimpConversation", "ConversationFlow", ""],
+      "description": "Process structure type. Auto-regenerated on save but may be provided at create."
+    },
+    "pyStartActivity": {
+      "type": "string",
+      "description": "Name of the start shape: 'Start1' (FlowStandard) or 'Start62' (ScreenFlow). Auto-regenerated on save from pyModelProcess."
+    },
+    "pyDraftModeON": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "Draft mode flag. False for production flows; true only for platform/system flows in draft state.",
+      "x-pega-autoFill": "false"
+    },
+    "pyDescription": {
+      "type": "string",
+      "description": "Freeform description of the flow's purpose."
+    },
+    "pyUsage": {
+      "type": "string",
+      "description": "Usage notes appearing in the rule header."
+    },
+    "pyMemo": {
+      "type": "string",
+      "description": "Developer change memo checked in with the rule."
+    },
+    "pyRuleSet": {
+      "type": "string",
+      "description": "Rule set the flow is saved to."
+    },
+    "pyRuleSetVersion": {
+      "type": "string",
+      "pattern": "^\\d{2}-\\d{2}-\\d{2}$",
+      "description": "Rule set version (e.g., '01-01-01')."
+    },
+    "pyRuleAvailable": {
+      "type": "string",
+      "enum": ["Yes", "No", "Withdrawn", "Final", "Blocked", ""],
+      "description": "Availability status.",
+      "x-pega-autoFill": "Yes"
+    },
+    "pyWorkPartiesRule": {
+      "type": "string",
+      "description": "Work parties rule: 'Default' or 'pyCaseManagementDefault'."
+    },
+    "pyConfirmChoice": {
+      "type": "string",
+      "enum": ["Harness", ""],
+      "description": "Confirmation display type — always 'Harness'."
+    },
+    "pyConfirmHarness": {
+      "type": "string",
+      "description": "Harness rule for confirmations. Auto-derived on save."
+    },
+    "pyStartingHarness": {
+      "type": "string",
+      "description": "Harness shown when a new case is created (e.g., 'New', 'NewTask')."
+    },
+    "pySkipNewHarness": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "True to skip the New harness and go directly to the first assignment."
+    },
+    "pyNextAssignment": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "True to automatically route to the next assignment after completion."
+    },
+    "pyNextAssignmentAdhoc": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "True to allow ad-hoc routing to next assignment."
+    },
+    "pyNextAssignmentWorkBasket": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "True to route to a workbasket after each assignment."
+    },
+    "pyNextAssignmentWorkBasketAdhoc": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "True to allow ad-hoc workbasket routing."
+    },
+    "pyOverlayView": {
+      "type": "string",
+      "description": "Overlay view rule — 'None' for no overlay."
+    },
+    "pyCanCreateWorkObject": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "True for start-case flows that create a new work object. False for subprocess, assignment, and screen flows.",
+      "x-pega-autoFill": "false"
+    },
+    "pyCanStartInteractively": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "True if this flow can be launched directly."
+    },
+    "pySLAName": {
+      "type": "string",
+      "description": "SLA rule to apply to this flow (blank = no SLA)."
+    },
+    "pyScreenFlowHarness": {
+      "type": "string",
+      "description": "Harness used for screen flows (usually blank)."
+    },
+    "pyShowLikelihoods": {
+      "type": "string",
+      "enum": ["Hide", "Show", ""],
+      "description": "Display likelihood percentages on connectors in Process Modeler."
+    },
+    "pySubCategory": {
+      "type": "string",
+      "description": "Optional sub-category for grouping flows."
+    },
+    "pyAcceptConversion": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "True if an older flow format should be converted to the current format."
+    },
+    "pyAlphaSortLocalActions": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "True to sort local actions alphabetically."
+    },
+    "pyPlaceGlobalLocalsAtTop": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "True to place global local actions above step-specific ones."
+    },
+    "pyDoHarvesting": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Enables result harvesting from sub-flows; usually true."
+    },
+    "pyDeferErrors": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "When true, flow continues even if errors occur in shapes."
+    },
+    "pyDeferCommit": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "When true, defers database commit until flow completion."
+    },
+    "pyCreatesTemporaryObject": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "When true, work object is temporary and not permanently stored."
+    },
+    "pzHideCaseCreationSettings": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "When true, hides case creation settings in Case Designer."
+    },
+    "pyInterface": {
+      "type": "string",
+      "description": "Interface qualifier (usually blank)."
+    },
+    "pyModifiers": {
+      "type": "string",
+      "description": "Rule modifiers string (usually blank)."
+    },
+    "pyAssociatedImage": {
+      "type": "string",
+      "description": "Key of an image rule associated with this flow."
+    },
+    "pyPurpose": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Marks this as a purpose flow (usually false)."
+    },
+    "pyMethodStatus": {
+      "type": "string",
+      "enum": ["API", "Deprecated", "Extension", "Internal", "Template", ""],
+      "description": "Flow method status."
+    },
+    "pyEndingActivities": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Shape names that terminate the flow. Auto-regenerated on save from pyModelProcess."
+    },
+    "pyFromTasks": {
+      "type": "array",
+      "description": "Flow navigation map — shape connectivity entries. Auto-regenerated on save.",
+      "items": { "$ref": "#/$defs/FlowFromTask" }
+    },
+    "pyModelProcess": {
+      "type": "object",
+      "description": "Complete flow canvas: shapes, connectors, annotations.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-Rule-Obj-Flow-ProcessModel",
+          "x-pega-autoFill": "Embed-Rule-Obj-Flow-ProcessModel"
+        },
+        "pyShapes": {
+          "type": "object",
+          "description": "PageGroup of shapes keyed by pyMOId.",
+          "additionalProperties": { "$ref": "#/$defs/FlowShape" }
+        },
+        "pyConnectors": {
+          "type": "object",
+          "description": "PageGroup of connectors keyed by connector ID.",
+          "additionalProperties": { "$ref": "#/$defs/FlowConnector" }
+        },
+        "pyAnnotationShapes": {
+          "type": "object",
+          "description": "PageGroup of annotation shapes (text boxes, comments)."
+        },
+        "pyContexts": {
+          "type": "object",
+          "description": "Context definitions (usually empty)."
+        },
+        "pyModifiers": {
+          "type": "object",
+          "description": "Modifier definitions (usually empty)."
+        }
+      }
+    },
+    "pyParameters": {
+      "type": "array",
+      "description": "Declared input/output parameters (Embed-MethodParams).",
+      "items": { "$ref": "#/$defs/MethodParam" }
+    },
+    "pyPagesAndClasses": {
+      "type": "array",
+      "description": "Named pages used by this flow.",
+      "items": { "$ref": "#/$defs/PageAndClass" }
+    },
+    "pyLocalActions": {
+      "type": "array",
+      "description": "Local flow actions available in assignments (Embed-Pega-AssignAction).",
+      "items": { "$ref": "#/$defs/LocalAction" }
+    },
+    "pyPrivilegeList": {
+      "type": "array",
+      "description": "Access privileges required to execute this flow.",
+      "items": { "type": "object" }
+    },
+    "pyWhensList": {
+      "type": "array",
+      "description": "When conditions referenced by this flow.",
+      "items": { "type": "object" }
+    },
+    "pyStencils": {
+      "type": "array",
+      "description": "Stencil names available in Process Modeler.",
+      "items": { "type": "string" }
+    },
+    "pyPageOrientation": {
+      "type": "string",
+      "enum": ["Landscape", "Portrait", ""],
+      "description": "Canvas orientation in Process Modeler."
+    },
+    "pyCurrentViewMode": {
+      "type": "string",
+      "enum": ["modeler", "visio", ""],
+      "description": "Current view mode."
+    },
+    "pyModelerDefaultClickMode": {
+      "type": "string",
+      "enum": ["Pan", "Select", "pan", "select", ""],
+      "description": "Default mouse mode in Process Modeler."
+    },
+    "pyModelerGuideModeON": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Show guide lines in Process Modeler."
+    },
+    "pyModelerGridModeON": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Show dot grid in Process Modeler."
+    },
+    "pyShowGrid": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Show grid overlay."
+    },
+    "pyBaseRule": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Indicates whether this is a base (hiding) rule."
+    },
+    "pyBaseRuleHolder": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Companion flag for pyBaseRule indicating hiding rule status."
+    },
+    "pyCoveredByCount": {
+      "type": "string",
+      "description": "Number of test cases covering this flow rule."
+    },
+    "pyDisplayMode": {
+      "type": "string",
+      "description": "Authoring display mode: clone, basic, specialize, or empty."
+    },
+    "pyForecasterAvailable": {
+      "type": "string",
+      "description": "Forecaster availability status for the flow."
+    },
+    "pyHasCustomFields": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "True if the rule has custom fields defined."
+    },
+    "pyHideLockIcon": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "True to hide the lock icon in the authoring UI."
+    },
+    "pyHistoryObject": {
+      "type": "string",
+      "description": "Indicates whether the record being viewed is a history record."
+    },
+    "pyLabelOld": {
+      "type": "string",
+      "description": "Previous label value before the last rename."
+    },
+    "pyOriginalRFB": {
+      "type": "string",
+      "description": "Original ruleset/branch key for this flow."
+    },
+    "pyPostVisio2000Saved": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "True if flow was edited and saved with Visio 2002 or later."
+    },
+    "pyRefreshViewHint": {
+      "type": "string",
+      "description": "Hint flag to trigger view refresh in the authoring UI."
+    },
+    "pyReloadForm": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "When set, causes the rule form to reload."
+    },
+    "pySelected": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Selection state flag for list/select UI."
+    },
+    "pyShowROIcon": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "True to show the read-only icon in the authoring UI."
+    },
+    "pySortDateCircumWithinRSMajor": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "True to sort by date within the major ruleset version rather than by full version number."
+    },
+    "pySubProcessCategory": {
+      "type": "string",
+      "enum": ["ProcessFlow", "ScreenFlow", ""],
+      "description": "Rule-level subprocess category: ProcessFlow or ScreenFlow."
+    },
+    "pySystemFlow": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "True if this is a special system flow."
+    },
+    "pyTemplateDisplayText": {
+      "type": "string",
+      "description": "Display text for the ruleset template palette."
+    },
+    "pyValueChanged": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Flag indicating a value has changed on the rule form."
+    },
+    "pyVisioCompatFlag": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "True if there is a potential backward compatibility conflict in JPEG rendering."
+    },
+    "pyVisioRFB": {
+      "type": "string",
+      "description": "Ruleset/branch key associated with Visio rendering."
+    },
+    "pyVisioScaleFactor": {
+      "type": "string",
+      "description": "Scale factor for Visio JPEG rendering as a percentage."
+    }
+  },
+  "$defs": {
+    "FlowFromTask": {
+      "type": "object",
+      "description": "A single source shape entry in the flow navigation map (Embed-Rule-Obj-Flow-FromTasks).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-Rule-Obj-Flow-FromTasks",
+          "x-pega-autoFill": "Embed-Rule-Obj-Flow-FromTasks"
+        },
+        "pyFromTaskName": {
+          "type": "string",
+          "description": "Source shape name (must match a pyMOId in pyModelProcess.pyShapes)."
+        },
+        "pyToTasks": {
+          "type": "object",
+          "description": "PageGroup of outgoing transitions keyed by destination shape name.",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "pxObjClass": {
+                "type": "string",
+                "description": "ToTask entry class — always 'Embed-Rule-Obj-Flow-FromToTask'.",
+                "x-pega-autoFill": "Embed-Rule-Obj-Flow-FromToTask"
+              },
+              "pyID": {
+                "type": "string",
+                "description": "Connector ID (must match a connector in pyModelProcess.pyConnectors)."
+              },
+              "pyTaskStatusOrWhen": {
+                "type": "string",
+                "description": "Condition type: 'ALWAYS', 'STATUS', 'WHEN', 'ELSE', or a result value."
+              },
+              "pyTaskStatus": {
+                "type": "string",
+                "description": "FlowAction name (when pyTaskStatusOrWhen is 'STATUS')."
+              },
+              "pyTaskWhen": {
+                "type": "string",
+                "description": "When rule name (when pyTaskStatusOrWhen is 'WHEN')."
+              },
+              "pyLikelihood": {
+                "type": "string",
+                "description": "Probability percentage. ELSE branches use negative values."
+              },
+              "pxSubscript": {
+                "type": "string",
+                "description": "Destination shape name."
+              },
+              "pyHistoryText": {
+                "type": "string",
+                "description": "History text logged when this transition fires. Usually empty; can contain status labels or expressions on STATUS/WHEN/ELSE branches."
+              }
+            }
+          }
+        }
+      }
+    },
+    "FlowShape": {
+      "type": "object",
+      "description": "A single shape in the flow canvas (Data-MO-* class hierarchy).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "description": "Shape class: Data-MO-Event-Start, Data-MO-Event-End, Data-MO-Activity-Assignment, Data-MO-Activity-Utility, Data-MO-Activity-SubProcess, Data-MO-Gateway-Decision, etc."
+        },
+        "pyMOId": {
+          "type": "string",
+          "description": "Unique shape ID (matches PageGroup key)."
+        },
+        "pyMOName": {
+          "type": "string",
+          "description": "Display name shown on the canvas."
+        },
+        "pyFromMODefName": {
+          "type": "string",
+          "description": "Shape template type: Start, End, Assignment, AssignmentSF, Utility, SubProcess, Decision, GenerativeAI, Wait, SendAMessage, AskAQuestion."
+        },
+        "pyClassName": {
+          "type": "string",
+          "description": "Class context for the shape."
+        },
+        "pyImplementation": {
+          "type": "string",
+          "description": "What the shape executes: activity name (Utility), 'WorkList'/'WorkBasket' (Assignment), flow name (SubProcess), Decision Table/Tree/MapValue rule name (Decision with backing rule), bare property reference e.g. '.PropertyName' (Decision EXPRESSION — no function calls or operator expressions allowed)."
+        },
+        "pyCoordX": { "type": "string", "description": "Canvas X coordinate." },
+        "pyCoordY": { "type": "string", "description": "Canvas Y coordinate." },
+        "pyWidth": { "type": "string", "description": "Shape width." },
+        "pyHeight": { "type": "string", "description": "Shape height." },
+        "pyCallParams": {
+          "type": "object",
+          "description": "Shape-level parameter key-value pairs.",
+          "additionalProperties": true
+        },
+        "pyRouterProp": {
+          "type": "object",
+          "description": "Embedded routing configuration (Data-MO-Activity-Router).",
+          "properties": {
+            "pxObjClass": {
+              "type": "string",
+              "const": "Data-MO-Activity-Router",
+              "x-pega-autoFill": "Data-MO-Activity-Router"
+            },
+            "pyImplementation": {
+              "type": "string",
+              "description": "Router name: ToCurrentOperator, ToWorklist, ToWorkbasket, ToSkilledGroup."
+            },
+            "pyCallParams": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        },
+        "pyTicketShapes": {
+          "type": "array",
+          "description": "Exception event shapes.",
+          "items": { "type": "object" }
+        },
+        "pyLocalActionsPL": {
+          "type": "array",
+          "description": "Local actions on this assignment shape.",
+          "items": { "type": "object" }
+        },
+        "pyNotifyProp": {
+          "type": "object",
+          "description": "Notification configuration (Data-MO-Activity-Notify)."
+        },
+        "pzRuleParameters": {
+          "type": "array",
+          "description": "Parameter definitions for the shape.",
+          "items": { "$ref": "#/$defs/MethodParam" }
+        },
+        "pzRuleParamsHolder": {
+          "type": "object",
+          "description": "Parameter holder for smart shape UI pre-population.",
+          "additionalProperties": true
+        },
+        "pyRuleParamsStreamName": {
+          "type": "string",
+          "description": "Smart shape UI stream name for Process Modeler parameter editor."
+        },
+        "pyDecisionClass": {
+          "type": "string",
+          "description": "Decision gateway class: EXPRESSION, Rule-Declare-DecisionTable, Rule-Declare-DecisionTree, Data-MO-Gateway-DataXOR, Rule-Obj-MapValue, Rule-Decision-PredictiveModel, Rule-Decision-Scorecard."
+        },
+        "pyExpressionGadget": {
+          "type": "object",
+          "description": "Embedded expression builder (PegaGadget-ExpressionBuilder)."
+        },
+        "pyStoreProperty": {
+          "type": "string",
+          "description": "Property to store decision result."
+        },
+        "pyTaskInfo": {
+          "type": "object",
+          "description": "Decision task info (e.g., pyDecisionMapType, pyDecisionMap for Decision Trees)."
+        },
+        "pyFromTasks": {
+          "type": "array",
+          "description": "Embedded routing branches for Decision shapes.",
+          "items": { "type": "object" }
+        },
+        "pySubProcessCategory": {
+          "type": "string",
+          "description": "SubProcess category: 'ProcessFlow'."
+        },
+        "pyDefineFlowOn": {
+          "type": "string",
+          "description": "SubProcess target: 'Current' or other."
+        },
+        "pySpinOff": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "True to create a new work object (spin-off)."
+        },
+        "pyFlowAction": {
+          "type": "string",
+          "description": "FlowAction name (AssignmentSF shapes)."
+        },
+        "pyActivityType": {
+          "type": "string",
+          "enum": ["ACTIVITY", "AUTOMATION", "UTILITY", "ROUTE", ""],
+          "description": "Utility shape activity type."
+        },
+        "pyActivityTypeSelector": {
+          "type": "string",
+          "enum": ["ACTIVITY", "AUTOMATION", ""],
+          "description": "Activity type selector for Utility shapes."
+        },
+        "pyDisplayRouteTo": {
+          "type": "string",
+          "enum": ["USER", "WORKBASKET", ""],
+          "description": "Assignment routing target display."
+        },
+        "pyViewPolicy": {
+          "type": "string",
+          "enum": ["USE_CASE_POLICY", "CUSTOM", ""],
+          "description": "View policy for Assignment shapes."
+        },
+        "pyCategory": {
+          "type": "string",
+          "description": "Shape-level category (mirrors flow category)."
+        },
+        "pyBaseClass": {
+          "type": "string",
+          "description": "Applies-to class for Utility shapes."
+        },
+        "pyGenAIPage": {
+          "type": "object",
+          "description": "GenAI connector configuration (Rule-Connect-GenerativeAI).",
+          "properties": {
+            "pxObjClass": { "type": "string" },
+            "pyReferExisting": { "type": "string" },
+            "pyServiceName": { "type": "string" }
+          }
+        },
+        "pyWaitType": {
+          "type": "string",
+          "description": "Wait shape type: 'Timer', 'CaseStatus', 'DependentCase'."
+        },
+        "pyTimerType": {
+          "type": "string",
+          "description": "Timer type: 'TimeInterval', 'DateTime'."
+        },
+        "pySLA": {
+          "type": "string",
+          "description": "SLA rule name for Wait shapes."
+        },
+        "pyConfiguration": {
+          "type": "object",
+          "description": "Conversation shape configuration.",
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "FlowConnector": {
+      "type": "object",
+      "description": "A connector/transition between two shapes.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "description": "Connector class — must be 'Data-MO-Connector-Transition'. Required by the server to resolve the VALIDTRANSITIONS map value rule.",
+          "x-pega-autoFill": "Data-MO-Connector-Transition"
+        },
+        "pyMOId": {
+          "type": "string",
+          "description": "Unique connector ID (must match the PageGroup key). Required by the server."
+        },
+        "pyFrom": {
+          "type": "string",
+          "description": "Source shape ID."
+        },
+        "pyTo": {
+          "type": "string",
+          "description": "Target shape ID."
+        },
+        "pyConditionType": {
+          "type": "string",
+          "enum": ["Always", "Action", "When", "Else", "Status", ""],
+          "description": "Transition condition type."
+        },
+        "pyExpression": {
+          "type": "string",
+          "description": "When rule name (for When) or FlowAction name (for Action) or result value (for Status)."
+        },
+        "pyIsFork": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "True for decision branch connectors."
+        },
+        "pyModel": {
+          "type": "string",
+          "description": "Data Transform name applied on this transition."
+        },
+        "pyPropertiesOrModel": {
+          "type": "string",
+          "description": "'Set Properties' or 'Apply Data Transform'."
+        },
+        "pyLikelihood": {
+          "type": "string",
+          "description": "Probability percentage. ELSE branches use negative values."
+        },
+        "pyAuditNote": {
+          "type": "string",
+          "description": "History text logged when the transition fires."
+        },
+        "pyMOName": {
+          "type": "string",
+          "description": "Display label on the connector."
+        },
+        "pyConnectorPoints": {
+          "type": "array",
+          "description": "Visual waypoints for the connector path.",
+          "items": { "type": "object" }
+        },
+        "pyPropertyAssigns": {
+          "type": "array",
+          "description": "Property-set operations executed on this transition.",
+          "items": { "type": "object" }
+        },
+        "pyConnectorType": {
+          "type": "string",
+          "description": "Always 'Transition'."
+        },
+        "pyFromClass": {
+          "type": "string",
+          "description": "Source shape's pxObjClass."
+        }
+      },
+      "additionalProperties": true
+    },
+    "MethodParam": {
+      "type": "object",
+      "description": "A parameter entry (Embed-MethodParams).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "enum": ["Embed-MethodParams", "@baseclass"],
+          "x-pega-autoFill": "Embed-MethodParams"
+        },
+        "pyParametersParamName": {
+          "type": "string",
+          "description": "Parameter name."
+        },
+        "pyParametersParamDesc": {
+          "type": "string",
+          "description": "Description."
+        },
+        "pyParametersParamType": {
+          "type": "string",
+          "enum": ["STRING", "BOOLEAN", "INTEGER", "PAGE", "Double", "Decimal", "Page List", "TrueFalse", "String", "Boolean", "Integer", "Page", ""],
+          "description": "Data type. Values from pyLoadDataTypes data transform."
+        },
+        "pyParametersParamInOut": {
+          "type": "string",
+          "enum": ["IN", "OUT", "I", "O", ""],
+          "description": "Direction."
+        },
+        "pyParametersParamReq": {
+          "type": "string",
+          "enum": ["0", "-1", "", "N", "Y"],
+          "description": "Required: '0'/'N' = optional, '-1'/'Y' = required."
+        },
+        "pyParametersParamSize": {
+          "type": "string",
+          "description": "Maximum string size (usually blank)."
+        },
+        "pyParametersParamIntelliBaseClass": {
+          "type": "string",
+          "description": "IntelliSense base class (default 'PageClass')."
+        },
+        "pyParametersParamIntelliRule": {
+          "type": "string",
+          "description": "IntelliSense rule name (usually blank)."
+        },
+        "pyParametersParamIntelliValidateAs": {
+          "type": "string",
+          "description": "IntelliSense validation mode (usually blank)."
+        }
+      }
+    },
+    "PageAndClass": {
+      "type": "object",
+      "description": "A named page declaration (Embed-PagesAndClasses).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-PagesAndClasses",
+          "x-pega-autoFill": "Embed-PagesAndClasses"
+        },
+        "pyPagesAndClassesPage": {
+          "type": "string",
+          "description": "Clipboard page name."
+        },
+        "pyPagesAndClassesClass": {
+          "type": "string",
+          "description": "Class of the page."
+        },
+        "pyPagesAndClassesMode": {
+          "type": "string",
+          "description": "Page mode (usually blank)."
+        },
+        "pxSubscript": {
+          "type": "string",
+          "description": "Position subscript."
+        }
+      }
+    },
+    "LocalAction": {
+      "type": "object",
+      "description": "A local flow action entry (Embed-Pega-AssignAction).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-Pega-AssignAction",
+          "x-pega-autoFill": "Embed-Pega-AssignAction"
+        },
+        "pyActionName": {
+          "type": "string",
+          "description": "FlowAction rule name."
+        },
+        "pyUseCaseName": {
+          "type": "string",
+          "description": "Use case name."
+        },
+        "pyUseCaseApplication": {
+          "type": "string",
+          "description": "Application name for the use case."
+        },
+        "pyUseCaseWorkType": {
+          "type": "string",
+          "description": "Work type for the use case."
+        }
+      }
+    }
+  }
+}

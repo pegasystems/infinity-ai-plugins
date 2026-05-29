@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "Pega Infinity Authoring": {
+      "command": "java",
+      "args": [
+        "-jar",
+        "${CLAUDE_PLUGIN_ROOT}/resources/infinity-rules-mcp.jar",
+        "--spring.profiles.active=stdio"
+      ],
+      "env": {
+        "PEGA_SKILLS_PATH": "${CLAUDE_PLUGIN_ROOT}/resources/pega-skills",
+        "PEGA_CLIENT_MODE": "claude-plugin",
+        "PEGA_LOCAL_SKILLS_PATH": "${PEGA_LOCAL_SKILLS_PATH}",
+        "CLAUDE_PLUGIN_OPTION_pega_base_url": "${user_config.pega_base_url}",
+        "CLAUDE_PLUGIN_OPTION_pega_oauth_client_id": "${user_config.pega_oauth_client_id}"
+      }
+    }
+  }
+}

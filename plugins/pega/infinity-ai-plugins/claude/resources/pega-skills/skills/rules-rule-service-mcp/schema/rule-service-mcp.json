@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-service-mcp.json",
+  "title": "Rule-Service-MCP",
+  "description": "Validates Rule-Service-MCP payloads for Pega Infinity. An MCP Service rule defines a Model Context Protocol (MCP) endpoint that exposes application capabilities as tools to external AI agents and LLMs. This schema validates the rule's core metadata, service identity, MCP versioning, usage and description text, and the set of published tools (including case-type-derived and custom tools).",
+  "type": "object",
+  "required": [
+    "pyClassName",
+    "pyLabel",
+    "pyServiceName",
+    "pyMCPVersion",
+    "pyUsage",
+    "pyDescription"
+  ],
+  "properties": {
+    "pxObjClass": {
+      "type": "string",
+      "description": "Rule type class -- always 'Rule-Service-MCP'.",
+      "x-pega-autoFill": "Rule-Service-MCP"
+    },
+    "pyClassName": {
+      "type": "string",
+      "description": "The applies-to class for this MCP service rule. Typically '@baseclass' for application-wide services."
+    },
+    "pyLabel": {
+      "type": "string",
+      "description": "Human-readable display label for this MCP service."
+    },
+    "pyRuleName": {
+      "type": "string",
+      "description": "Auto-derived from pyServiceName (direct copy). Do not set manually.",
+      "x-pega-autoFill": "{pyServiceName}"
+    },
+    "pyServiceName": {
+      "type": "string",
+      "description": "The service name used for endpoint routing. Typically matches pyRuleName."
+    },
+    "pyDescription": {
+      "type": "string",
+      "description": "Developer-facing description of this MCP service's purpose and the tools it exposes."
+    },
+    "pyMCPVersion": {
+      "type": "string",
+      "description": "The MCP protocol version this service implements (e.g., '01-01-01').",
+      "x-pega-autoFill": "01-01-01"
+    },
+    "pyIsMCPServiceEnabled": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "Whether the MCP service is enabled and accepting connections. String boolean -- use \"true\" or \"false\", not JSON true/false.",
+      "x-pega-autoFill": "false"
+    },
+    "pyUsage": {
+      "type": "string",
+      "description": "Free-text usage notes describing how this service is consumed."
+    },
+    "pyRuleAvailable": {
+      "type": "string",
+      "enum": ["Yes", "No", "Final", "Withdrawn", "Blocked"],
+      "description": "Availability status of this rule.",
+      "x-pega-autoFill": "Yes"
+    },
+    "pyMethodStatus": {
+      "type": "string",
+      "enum": ["API", "Deprecated", "Extension", "Internal", "Template", ""],
+      "description": "Method status classification.",
+      "x-pega-autoFill": ""
+    },
+    "pzMCPTools": {
+      "type": "array",
+      "description": "List of non-case-type MCP tools configured on this service, where each entry references an existing Rule-AI-Tool whose pyCategory is not 'Rule-Obj-CaseType'.",
+      "items": {
+        "$ref": "#/$defs/RuleAITool"
+      }
+    },
+    "pzCaseTypeTools": {
+      "type": "array",
+      "description": "List of case-type MCP tools configured on this service, where each entry references an existing Rule-AI-Tool whose pyCategory is 'Rule-Obj-CaseType'.",
+      "items": {
+        "$ref": "#/$defs/RuleAITool"
+      }
+    }
+  },
+  "$defs": {
+    "RuleAITool": {
+      "type": "object",
+      "description": "An AI tool definition (Rule-AI-Tool) representing a single MCP tool exposed by the service. Each tool maps a purpose/name to an activity that executes when the tool is invoked.",
+      "required": [
+        "pyPurpose",
+        "pyCategory"
+      ],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Rule-AI-Tool",
+          "description": "Embedded object class -- always 'Rule-AI-Tool'.",
+          "x-pega-autoFill": "Rule-AI-Tool"
+        },
+        "pyPurpose": {
+          "type": "string",
+          "description": "The pyRuleName of an existing Rule-AI-Tool instance (e.g., 'pxGetCaseTypes', 'pxCreateCaseWithAssignmentDetails'). This value is exposed as the MCP tool name to clients. Must always reference an existing Rule-AI-Tool -- never use case type class IDs, labels, or arbitrary strings. Use list-rules with ruleType=Rule-AI-Tool to discover valid values."
+        },
+        "pyCategory": {
+          "type": "string",
+          "description": "Tool category. Must match the pyIntentActionPage.pyCategory value from the referenced Rule-AI-Tool instance (e.g., 'Rule-Obj-Activity', 'Data page', 'Rule-Obj-CaseType'). Do not use mapped labels like 'Automation'."
+        }
+      }
+    }
+  }
+}
