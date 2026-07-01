@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-obj-class.json",
+  "title": "Rule-Obj-Class",
+  "description": "JSON schema for creating or updating a Pega class definition (Rule-Obj-Class). Only authored and identity fields are included; system-managed fields are omitted.",
+  "type": "object",
+  "required": [
+    "pxObjClass",
+    "pyClassName",
+    "pyLabel",
+    "pyDescription",
+    "pyDerivesFrom",
+    "pyClassType",
+    "pyUsage",
+    "pyInitialVersion"
+  ],
+  "properties": {
+    "pxObjClass": {
+      "type": "string",
+      "const": "Rule-Obj-Class",
+      "description": "Rule type class — always 'Rule-Obj-Class'.",
+      "x-pega-autoFill": "Rule-Obj-Class"
+    },
+    "pyClassName": {
+      "type": "string",
+      "description": "The fully qualified class name being defined (e.g., 'MyOrg-MyApp-Work-MyCase')."
+    },
+    "pyLabel": {
+      "type": "string",
+      "description": "Display label shown in Dev Studio class browser."
+    },
+    "pyDescription": {
+      "type": "string",
+      "description": "Human-readable description of the class purpose. Required — Validate blocks save when empty."
+    },
+    "pyDerivesFrom": {
+      "type": "string",
+      "description": "Parent class — the class this class derives from. Required for all classes except @baseclass. Must reference an existing class. Inspect a sibling class with get-rule (detail='full') to find the correct value for the application."
+    },
+    "pyClassType": {
+      "type": "string",
+      "enum": ["Concrete", "Abstract", ""],
+      "description": "Class type. Required — Validate blocks save when empty. 'Concrete' for instantiable classes, 'Abstract' for base classes. Class names ending with '-' are forced to Abstract by the server.",
+      "x-pega-autoFill": "Concrete"
+    },
+    "pyClassGroup": {
+      "type": "string",
+      "description": "The class group this class belongs to. Required for work subclasses — set to the root work class of the family (e.g., 'MyOrg-MyApp-Work')."
+    },
+    "pyClassGroupIndicator": {
+      "type": "string",
+      "enum": ["HASCLASSGROUP", "ISCLASSGROUP", "NOCLASSGROUP", ""],
+      "description": "Indicates whether this class has a class group assignment. 'HASCLASSGROUP' when pyClassGroup references another class, 'ISCLASSGROUP' when this class IS the class group root, 'NOCLASSGROUP' for data classes with no class group."
+    },
+    "pyUsage": {
+      "type": "string",
+      "description": "Brief usage note. Required — omitting causes save failure."
+    },
+    "pyInitialVersion": {
+      "type": "string",
+      "const": "01-01-01",
+      "x-pega-autoDerived": true,
+      "description": "Initial ruleset version. Always '01-01-01'. Auto-derived by the builder — agents should not set this."
+    },
+    "pyPatternInheritance": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Enable pattern inheritance for this class."
+    },
+    "pyClassInheritance": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Enable class-based (directed) inheritance."
+    },
+    "pyRuleSet": {
+      "type": "string",
+      "description": "Ruleset to save into — typically the branch ruleset during development."
+    },
+    "pyRuleSetVersion": {
+      "type": "string",
+      "description": "Ruleset version. The Validate activity removes this field (BUG-702978), but the builder provides it. Inspect sibling classes to confirm the pattern."
+    },
+    "pyRuleAvailable": {
+      "type": "string",
+      "enum": ["Yes", "No", "Withdrawn", "Final", "Blocked"],
+      "description": "Availability status.",
+      "x-pega-autoFill": "Yes"
+    },
+    "pyCircumstanceProp": {
+      "type": "string",
+      "description": "Property used for circumstancing (variant resolution). Blank for no circumstancing."
+    },
+    "pyPreventSubClassing": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "When 'true', prevents other rulesets from creating subclasses of this class. Defaults to 'false'."
+    },
+    "pyExcludeFromFTIndex": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "When 'true', excludes instances of this class from the full-text search index. Defaults to 'false'."
+    },
+    "pyEncryptBLOB": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "When 'true', encrypts the BLOB column for instances of this class. Defaults to 'false'."
+    },
+    "pyCreateDedicatedTable": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "When 'true', Pega creates a dedicated database table for instances of this class instead of storing them in a shared table."
+    },
+    "pyFormType": {
+      "type": "string",
+      "enum": ["Harness", "Form", ""],
+      "description": "Controls which form layout Dev Studio uses to display the class rule. 'Harness' for most data/work classes, 'Form' for some admin classes."
+    },
+    "pyDisplayMode": {
+      "type": "string",
+      "enum": ["basic", "clone", ""],
+      "description": "Controls the rendering mode of the class rule form in Dev Studio."
+    },
+    "pyReloadForm": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "When 'true', Dev Studio reloads the class form after saving."
+    },
+    "pyHistoryObject": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "When 'true', enables history snapshot recording for instances of this class."
+    },
+    "pyDecisioningBaseClassName": {
+      "type": "string",
+      "description": "Base class name for decisioning framework classes. Auto-populated by the Decisioning framework — only applicable to decision-related classes."
+    },
+    "pyAutogeneratedKey": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "When 'true', Pega auto-generates key values for instances of this class. Only meaningful for Concrete classes without HASCLASSGROUP — the Validate activity forces this to 'false' for Abstract classes and HASCLASSGROUP classes."
+    },
+    "pyBaseRule": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "When 'true', marks this as a base rule in the ruleset stack."
+    },
+    "pyOrgDivision": {
+      "type": "string",
+      "description": "Organization division context for the class rule."
+    },
+    "pyKeyDefList": {
+      "type": "array",
+      "description": "Custom key definitions for concrete classes. Each entry defines a property that serves as a key column in the class's database table. Cleared automatically for abstract classes by Validate. Key properties must exist, must not be transient, and must not be pzInsKey, pxInsName, or pxObjClass.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "pxObjClass": {
+            "type": "string",
+            "const": "Embed-ClassKeys"
+          },
+          "pyKeyName": {
+            "type": "string",
+            "description": "Property name to use as a key (e.g., 'pxBelongsToApplication')."
+          },
+          "pyKeyCaption": {
+            "type": "string",
+            "description": "Display caption for the key (e.g., 'pzInsKey of Application')."
+          }
+        }
+      }
+    }
+  }
+}

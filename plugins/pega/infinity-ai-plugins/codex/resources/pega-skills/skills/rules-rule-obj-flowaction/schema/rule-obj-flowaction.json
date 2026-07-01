@@ -1,0 +1,1443 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-obj-flowaction.json",
+  "title": "Rule-Obj-FlowAction",
+  "description": "JSON schema for creating or updating a Pega flow action rule (Rule-Obj-FlowAction). Only authored and identity fields are included; system-managed and versioning fields are omitted.",
+  "type": "object",
+  "required": [
+    "pxObjClass",
+    "pyRuleName",
+    "pyActionName",
+    "pyLabel",
+    "pyClassName",
+    "pyUsedAs",
+    "pyOldStreamType",
+    "pyRuleAvailable"
+  ],
+  "properties": {
+    "pxObjClass": {
+      "type": "string",
+      "const": "Rule-Obj-FlowAction",
+      "description": "Rule type class — always 'Rule-Obj-FlowAction'.",
+      "x-pega-autoFill": "Rule-Obj-FlowAction"
+    },
+    "pyRuleName": {
+      "type": "string",
+      "description": "Internal rule name — auto-derived from pyActionName.",
+      "x-pega-autoDerived": true,
+      "x-pega-deriveFrom": "pyActionName"
+    },
+    "pyActionName": {
+      "type": "string",
+      "description": "Action name (PascalCase or camelCase, no spaces). Class key — the unique identifier within pyClassName."
+    },
+    "pyLabel": {
+      "type": "string",
+      "description": "Human-readable display label shown on the action button and dialog title."
+    },
+    "pyDescription": {
+      "type": "string",
+      "description": "Developer-facing description of the flow action's purpose."
+    },
+    "pyClassName": {
+      "type": "string",
+      "description": "The Pega work class this flow action belongs to (e.g., 'MyOrg-MyApp-Work-MyCase')."
+    },
+    "pyUsedAs": {
+      "type": "string",
+      "enum": ["LOCALACTION", "LOCALANDCONNECTOR", "CONNECTORACTION"],
+      "description": "How the flow action is invoked. LOCALACTION = action menu on assignments. LOCALANDCONNECTOR = also available as connector-level action in screen flows. CONNECTORACTION = flow connector only (not available as local action). Must be set explicitly — defaults to LOCALANDCONNECTOR if omitted."
+    },
+    "pyViewReference": {
+      "type": "string",
+      "description": "Name of the Rule-UI-View rendered inside the dialog. Required for Cosmos/Constellation apps (Pega 8.4+). Set this OR pySectionReference, not both."
+    },
+    "pySectionReference": {
+      "type": "string",
+      "description": "Name of the Rule-HTML-Section rendered inside the dialog. For traditional HTML UI only (pre-8.4). Set this OR pyViewReference, not both."
+    },
+    "pySectionReferencePassParamPage": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Pass the current parameter page to the referenced section. Must be 'true' for modern flow actions.",
+      "x-pega-autoFill": "true"
+    },
+    "pyOldStreamType": {
+      "type": "string",
+      "enum": ["Rule-HTML-Section", "Rule-Obj-FlowAction", "NO_UI", ""],
+      "description": "UI type. 'Rule-HTML-Section' = reference section (standard for new flow actions). 'Rule-Obj-FlowAction' = legacy flow actions with inline UI (pre-section-reference era). 'NO_UI' = no UI. '' = reference HTML (deprecated). Validate auto-sets to 'NO_UI' when pySectionReference is empty.",
+      "x-pega-autoFill": "Rule-HTML-Section"
+    },
+    "pyRuleSet": {
+      "type": "string",
+      "description": "Rule set the flow action is saved to."
+    },
+    "pyRuleSetVersion": {
+      "type": "string",
+      "pattern": "^\\d{2}-\\d{2}-\\d{2}$",
+      "description": "Rule set version (e.g., '01-01-02')."
+    },
+    "pyRuleAvailable": {
+      "type": "string",
+      "enum": ["Yes", "No", "Withdrawn", "Final", "Blocked"],
+      "description": "Availability status. Use 'Yes' for custom flow actions. 'Final' = locked/read-only.",
+      "x-pega-autoFill": "Yes"
+    },
+    "pyAuditActivity": {
+      "type": "string",
+      "description": "Activity that writes an audit trail entry. Almost always 'Audit'."
+    },
+    "pyClientValidation": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Enable client-side validation before submit. true is standard."
+    },
+    "pyNextAssignment": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "true to route automatically to the next assignment after submit."
+    },
+    "pyNextAssignmentFlow": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "true to route to the next assignment using flow routing.",
+      "x-pega-autoFill": "false"
+    },
+    "pyNextAssignmentCover": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "true to route to the next assignment in the cover case.",
+      "x-pega-autoFill": "false"
+    },
+    "pyNextAssignmentWorkBasket": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "true to route the next assignment to a workbasket.",
+      "x-pega-autoFill": "false"
+    },
+    "pyConfirmHarness": {
+      "type": "string",
+      "description": "Harness displayed after the action completes. Usually 'Confirm'."
+    },
+    "pyconfirmchoice": {
+      "type": "string",
+      "enum": ["ShowHarness", "GetNextWork", "GetNextWorkInCurrentWorkPool", "AutoClose", ""],
+      "description": "Display mode after submit. 'ShowHarness' = display confirmation harness. 'GetNextWork' = get next work item. 'GetNextWorkInCurrentWorkPool' = get next work in current work pool. 'AutoClose' = close the work object. Note lowercase 'c' in field name."
+    },
+    "pyContainerType": {
+      "type": "string",
+      "enum": ["NOHEADER", "NONE", "STANDARD", ""],
+      "description": "Layout container type for the dialog. NOHEADER is standard."
+    },
+    "pyPreProcessingActivity": {
+      "type": "string",
+      "description": "Activity to run before displaying the form. Blank = no pre-activity."
+    },
+    "pyPreProcessingTransformRule": {
+      "type": "string",
+      "description": "Data Transform applied before the form is shown. Blank = none."
+    },
+    "pyLocalActionActivity": {
+      "type": "string",
+      "description": "Post-processing activity — runs after submit and after pyActionTransformRule. Use this for post-submit logic like calling services or setting routing. Blank = none."
+    },
+    "pyActionTransformRule": {
+      "type": "string",
+      "description": "Post-processing Data Transform — the primary DT that runs after the user submits the form (after validation, before pyLocalActionActivity). This is the correct field for post-submit data transforms. Do NOT use pyAdditionalSubmitFieldsDataTransform for this purpose. Blank = none."
+    },
+    "pxFARefreshSettingsOfView": {
+      "type": "array",
+      "description": "Field-change refresh settings. Each entry maps a property change to a Data Transform that runs while the user is still on the form (live preview pattern).",
+      "items": {
+        "type": "object",
+        "required": ["pxObjClass", "pyPropertyName", "pyDataTransform"],
+        "properties": {
+          "pxObjClass": {
+            "type": "string",
+            "const": "Embed-FARefreshSettingsOfView"
+          },
+          "pyPropertyName": {
+            "type": "string",
+            "description": "Property whose change triggers the refresh, e.g. .Location or .GameDate. Cannot be blank."
+          },
+          "pyDataTransform": {
+            "type": "string",
+            "description": "Data Transform to run when the property changes. Cannot be blank."
+          },
+          "pyDataTransformCallParams": {
+            "type": "object",
+            "description": "Optional parameters passed to the data transform."
+          }
+        }
+      }
+    },
+    "pyValidateActivity": {
+      "type": "string",
+      "description": "Validate rule to run when the form is submitted. Blank = no validation. Required when pyUpdateStatus is true."
+    },
+    "pyAuditWhenName": {
+      "type": "string",
+      "description": "When rule that controls whether to audit. Blank = always audit."
+    },
+    "pyUpdateStatus": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "When true, the work status is updated when this action is submitted. Requires pyProposedStatus and pyValidateActivity.",
+      "x-pega-autoFill": "false"
+    },
+    "pyProposedStatus": {
+      "type": "string",
+      "description": "New status to set on the work object when pyUpdateStatus is true. Must be a valid pyStatusWork FieldValue."
+    },
+    "pyDisqualifyAction": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "When true, the flow action is hidden from the user (disqualified).",
+      "x-pega-autoFill": "true"
+    },
+    "pyReloadForm": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "When true, the form is reloaded after the action completes. Rarely used."
+    },
+    "pyShowFAButtons": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Show standard flow action navigation buttons (Submit/Cancel/Next/Previous). false = buttons handled by the Section/View.",
+      "x-pega-autoFill": "false"
+    },
+    "pyCustomizeFALabels": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Override the default Submit/Cancel/Next/Previous labels.",
+      "x-pega-autoFill": "false"
+    },
+    "pySubmitLabel": {
+      "type": "string",
+      "description": "Label for the Submit button (when pyShowFAButtons = true).",
+      "x-pega-autoFill": "Submit"
+    },
+    "pyCancelLabel": {
+      "type": "string",
+      "description": "Label for the Cancel button.",
+      "x-pega-autoFill": "Cancel"
+    },
+    "pyNextLabel": {
+      "type": "string",
+      "description": "Label for the Next button (screen flows).",
+      "x-pega-autoFill": "Next"
+    },
+    "pyPreviousLabel": {
+      "type": "string",
+      "description": "Label for the Previous button (screen flows).",
+      "x-pega-autoFill": "Previous"
+    },
+    "pySaveButtonVisibility": {
+      "type": "string",
+      "enum": ["Always", "Never", "When", ""],
+      "description": "When the Save button is shown. 'Always' = always visible. 'Never' = hidden. 'When' = conditional (use pyWhenToSkipSaveButton to name the when rule).",
+      "x-pega-autoFill": "Always"
+    },
+    "pySaveLabel": {
+      "type": "string",
+      "description": "Label for the Save button.",
+      "x-pega-autoFill": "Save for later"
+    },
+    "pyWhenToSkipSaveButton": {
+      "type": "string",
+      "description": "When rule name that controls when to hide the Save button."
+    },
+    "pyActionInstructions": {
+      "type": "string",
+      "description": "Free-text instructions displayed to the user inside the dialog."
+    },
+    "pyActionInstructionsCaption": {
+      "type": "string",
+      "description": "Caption heading for the instructions block.",
+      "x-pega-autoFill": "Instructions"
+    },
+    "pxLimitedAccess": {
+      "type": "string",
+      "enum": ["Dev", "Prod", ""],
+      "description": "Access restriction: 'Dev' = developer only, 'Prod' = production-accessible."
+    },
+    "pyCategory": {
+      "type": "string",
+      "description": "Category grouping for the action (usually blank)."
+    },
+    "pyCategoryDisplayName": {
+      "type": "string",
+      "description": "Display name of the category. 'None' when pyCategory is blank.",
+      "x-pega-autoFill": "None"
+    },
+    "pyMemo": {
+      "type": "string",
+      "description": "Developer change memo saved with the rule."
+    },
+    "pyUsage": {
+      "type": "string",
+      "description": "Usage notes (usually blank for custom actions)."
+    },
+    "pySystemAction": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "true marks this as a system-generated action.",
+      "x-pega-autoFill": "false"
+    },
+    "pyEditable": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "(rare) true when the flow action form is editable at runtime."
+    },
+    "pyBulkOnlyAction": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Restricts this action to bulk execution only.",
+      "x-pega-autoFill": "false"
+    },
+    "pyBulkPreProcessingDataTransform": {
+      "type": "string",
+      "description": "(rare) Data Transform applied before each case in bulk execution."
+    },
+    "pyBulkPreProcessingDataTransformParams": {
+      "type": "object",
+      "description": "(rare) Parameters passed to the bulk pre-processing data transform."
+    },
+    "pyPreProcessingActivityParams": {
+      "type": "object",
+      "description": "Parameters passed to pyPreProcessingActivity."
+    },
+    "pyLocalActionActivityParams": {
+      "type": "object",
+      "description": "Parameters passed to pyLocalActionActivity."
+    },
+    "pyPreProcessingTransformRuleParams": {
+      "type": "object",
+      "description": "Parameters passed to pyPreProcessingTransformRule."
+    },
+    "pyLocalActionTransformRuleParams": {
+      "type": "object",
+      "description": "(rare) Parameters passed to pyActionTransformRule."
+    },
+    "pyAuditActivityParams": {
+      "type": "object",
+      "description": "(rare) Parameters passed to the audit activity."
+    },
+    "pyParameters": {
+      "type": "array",
+      "description": "Input/output parameters (Embed-MethodParams).",
+      "items": { "$ref": "#/$defs/MethodParam" }
+    },
+    "pyActionWhensList": {
+      "type": "array",
+      "description": "When rules that guard availability of this action.",
+      "items": { "$ref": "#/$defs/WhenGuard" }
+    },
+    "pyActionPrivilegeList": {
+      "type": "array",
+      "description": "Privileges required to invoke this action.",
+      "items": { "$ref": "#/$defs/PrivilegeGuard" }
+    },
+    "pyPagesAndClasses": {
+      "type": "array",
+      "description": "Named pages used by this action.",
+      "items": { "$ref": "#/$defs/PageAndClass" }
+    },
+    "pyDefaultButton": {
+      "$ref": "#/$defs/HarnessButton",
+      "description": "Default action button configuration. Usually left empty for new custom actions."
+    },
+    "pyHTMLVersion": {
+      "type": "string",
+      "description": "HTML version number. Must be '1' for modern JSP code generation.",
+      "x-pega-autoFill": "1"
+    },
+    "pyAutoHTML": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Tells Pega to auto-generate the HTML stream. Must be 'true' for modern JSP code generation.",
+      "x-pega-autoFill": "true"
+    },
+    "pyHTMLReference": {
+      "type": "string",
+      "description": "Leave blank at create time. Auto-managed by pzAssemblePreProcess."
+    },
+    "pyStreamName": {
+      "type": "string",
+      "description": "Auto-set to pyActionName by pzAssemblePreProcess. Can be omitted.",
+      "x-pega-autoDerived": true,
+      "x-pega-deriveFrom": "pyActionName"
+    },
+    "pyStreamType": {
+      "type": "string",
+      "const": "Rule-Obj-FlowAction",
+      "description": "Always 'Rule-Obj-FlowAction'. Auto-set by pzAssemblePreProcess.",
+      "x-pega-autoFill": "Rule-Obj-FlowAction"
+    },
+    "pyJavaGenerateAPIVersion": {
+      "type": "string",
+      "enum": ["04-02", "03-02", ""],
+      "description": "Java code generation API version. '04-02' for current FlowAction rules. Controls whether pzAssemblePreProcess emits modern <%...%> JSP syntax (04-02) or legacy {%...%} syntax (03-02 or absent).",
+      "x-pega-autoFill": "04-02"
+    },
+    "pyClientRuntimeVersion": {
+      "type": "string",
+      "description": "Client runtime version. '05-03' for current FlowAction rules. Required for modern JSP code generation with offline template support and inspector integration.",
+      "x-pega-autoFill": "05-03"
+    },
+    "pyCircumstanceProp": {
+      "type": "string",
+      "description": "Property used for circumstancing. Blank for no circumstancing."
+    },
+    "pyCircumstanceVal": {
+      "type": "string",
+      "description": "Circumstance value to match."
+    },
+    "pyCircumstanceType": {
+      "type": "string",
+      "description": "Circumstance type."
+    },
+    "pyDeleteMemo": {
+      "type": "string",
+      "description": "(rare) Memo recorded when the rule is deleted."
+    },
+    "pyCheckInRuleSet": {
+      "type": "string",
+      "description": "(rare) Rule set name for check-in operations."
+    },
+    "pyTaskGroup": {
+      "type": "string",
+      "description": "(rare) Task group identifier for project management."
+    },
+    "pyPageName": {
+      "type": "string",
+      "description": "(rare) Clipboard page name for the flow action context."
+    },
+    "pyBrowserSupportLevel": {
+      "type": "string",
+      "description": "(rare) Browser support level (string-encoded number)."
+    },
+    "pyAccessibilityCount": {
+      "type": "string",
+      "description": "Number of accessibility features enabled (string-encoded number).",
+      "x-pega-autoFill": "0"
+    },
+    "pyAccessibilityLevel": {
+      "type": "string",
+      "description": "Accessibility compliance level (string-encoded number).",
+      "x-pega-autoFill": "0"
+    },
+    "pyDisplayMode": {
+      "type": "string",
+      "enum": ["", "clone", "basic", "specialize"],
+      "description": "Display mode for the form.",
+      "x-pega-autoFill": "basic"
+    },
+    "pyHelpType": {
+      "type": "string",
+      "enum": ["", "DEFINE"],
+      "description": "Type of help content. '' = reference HTML. 'DEFINE' = define help inline.",
+      "x-pega-autoFill": "DEFINE"
+    },
+    "pyHelpText": {
+      "type": "string",
+      "description": "(rare) Inline help text."
+    },
+    "pyIsUsingDesignTemplate": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Whether the flow action uses a design template layout. 'true' enables the default 1-column design template."
+    },
+    "pyDesignTemplateName": {
+      "type": "string",
+      "description": "Design template name. 'pzDesignTemplate1Column' is the standard default.",
+      "x-pega-autoFill": "pzDesignTemplate1Column"
+    },
+    "pyDesignTemplateInsName": {
+      "type": "string",
+      "description": "Design template instance name.",
+      "x-pega-autoFill": "@BASECLASS!PZDESIGNTEMPLATE1COLUMN"
+    },
+    "pyDesignTemplateLabel": {
+      "type": "string",
+      "description": "Design template display label.",
+      "x-pega-autoFill": "1 Column"
+    },
+    "pyDesignTemplateIcon": {
+      "type": "string",
+      "description": "Design template icon path.",
+      "x-pega-autoFill": "webwb/pzDesignTemplate1Column.svg"
+    },
+    "pyAllowRuntimeEdit": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Allow runtime editing of the form layout."
+    },
+    "pyRegions": {
+      "type": "array",
+      "description": "(rare) Named regions defined by the design template.",
+      "items": { "type": "object" }
+    },
+    "pyPreAutomationList": {
+      "type": "array",
+      "description": "(rare) Automation steps to run before the main action.",
+      "items": { "type": "object" }
+    },
+    "pyPostAutomationList": {
+      "type": "array",
+      "description": "(rare) Automation steps to run after the main action.",
+      "items": { "type": "object" }
+    },
+    "pySavableDataPageList": {
+      "type": "array",
+      "description": "(rare) Data pages to save when the flow action is submitted.",
+      "items": { "type": "object" }
+    },
+    "pySections": {
+      "type": "array",
+      "description": "Embedded section layout — auto-managed by pzAssemblePreProcess. Do not author directly. Always exactly 1 element. The structure wraps a single Embed-Harness-Section whose pySectionBody references the section rule named in pySectionReference or pyViewReference. When reading a flow action, the meaningful 'signal' fields are pyPromptClass, pyPageContext, and pySectionBody[].pyInclude; the rest is boilerplate defaults.",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": { "$ref": "#/$defs/HarnessSection" }
+    },
+    "pyValueChanged": {
+      "type": "string",
+      "description": "String-encoded boolean tracking value changes. Auto-managed."
+    },
+    "pyLabelOld": {
+      "type": "string",
+      "description": "Previous label. Auto-managed by StandardValidate."
+    },
+    "pyLocalized": {
+      "type": "string",
+      "description": "Localization flag.",
+      "x-pega-autoFill": "false"
+    },
+    "pySectionReferencePage": {
+      "type": "string",
+      "description": "Top-level mirror of pySections[0].pySectionBody[0].pyUsingPage. When pyPageContext is 'clipboard' or 'datapage', this holds the same clipboard page name as the sectionBody-level pyUsingPage. Empty when pyPageContext is 'none'. Auto-managed — set via the UI editor, not authored directly."
+    },
+    "pySectionReferenceParams": {
+      "type": "object",
+      "description": "(rare) Parameters passed to the referenced section."
+    },
+    "pyWindowTitle": {
+      "type": "string",
+      "description": "(rare) Browser window title when action opens in new window."
+    },
+    "pyFormPost": {
+      "type": "string",
+      "description": "(rare) Form submission method override."
+    },
+    "pyCompact": {
+      "type": "string",
+      "description": "Compact rendering mode. Must be 'true' for modern JSP code generation.",
+      "x-pega-autoFill": "true"
+    },
+    "pyBaseRule": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "(rare) true for platform-defined base rules."
+    },
+    "pyHistoryObject": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "(rare) true for historical/archived rule versions."
+    },
+    "pyAuditUse": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Audit usage tracking flag.",
+      "x-pega-autoFill": "false"
+    },
+    "pySortDateCircumWithinRSMajor": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Internal sort flag for circumstance resolution.",
+      "x-pega-autoFill": "true"
+    },
+    "pzInvalidateCss": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "(rare) CSS invalidation flag."
+    },
+    "pyExpressionCalculation": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Expression calculation flag.",
+      "x-pega-autoFill": "false"
+    },
+    "pyJSRCompliant": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "JSR compliance flag.",
+      "x-pega-autoFill": "false"
+    },
+    "pySourceStream": {
+      "type": "string",
+      "description": "Auto-generated JSP/HTML stream. Never author manually."
+    },
+    "pyCachingData": {
+      "type": "object",
+      "description": "Cached display metadata. Auto-managed."
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "pyUpdateStatus": { "const": "true" }
+        },
+        "required": ["pyUpdateStatus"]
+      },
+      "then": {
+        "x-pega-condition": "pyUpdateStatus is 'true'",
+        "properties": {
+          "pyProposedStatus": {
+            "minLength": 1
+          }
+        },
+        "required": ["pyProposedStatus"]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "pyViewReference": { "minLength": 1 }
+        },
+        "required": ["pyViewReference"]
+      },
+      "then": {
+        "x-pega-condition": "pyViewReference is non-empty — Cosmos/Constellation mode, pySectionReference must be blank",
+        "properties": {
+          "pySectionReference": { "maxLength": 0 }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "pySectionReference": { "minLength": 1 }
+        },
+        "required": ["pySectionReference"]
+      },
+      "then": {
+        "x-pega-condition": "pySectionReference is non-empty — traditional HTML mode, pyViewReference must be blank",
+        "properties": {
+          "pyViewReference": { "maxLength": 0 }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "pyNextAssignment": { "enum": ["false", ""] }
+        },
+        "required": ["pyNextAssignment"]
+      },
+      "then": {
+        "x-pega-condition": "pyNextAssignment is false or empty — routing sub-fields must be blank",
+        "properties": {
+          "pyNextAssignmentFlow": { "maxLength": 0 },
+          "pyNextAssignmentCover": { "maxLength": 0 },
+          "pyNextAssignmentWorkBasket": { "maxLength": 0 }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "MethodParam": {
+      "type": "object",
+      "description": "A parameter entry (Embed-MethodParams).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "enum": ["Embed-MethodParams", "@baseclass"],
+          "x-pega-autoFill": "Embed-MethodParams"
+        },
+        "pyParametersParamName": {
+          "type": "string",
+          "description": "Parameter name."
+        },
+        "pyParametersParamDesc": {
+          "type": "string",
+          "description": "Description."
+        },
+        "pyParametersParamType": {
+          "type": "string",
+          "enum": ["STRING", "BOOLEAN", "INTEGER", "Page", "Page List", "TrueFalse", "Decimal", "Date", "DateTime", ""],
+          "description": "Data type. UI dropdown offers STRING, BOOLEAN, INTEGER only. Other values observed in real rules."
+        },
+        "pyParametersParamInOut": {
+          "type": "string",
+          "enum": ["IN", "OUT", "INOUT", ""],
+          "description": "Direction."
+        },
+        "pyParametersParamReq": {
+          "type": "string",
+          "enum": ["0", "-1", "", "N", "Y"],
+          "description": "Required: '0' or 'N' = optional, '-1' or 'Y' = required, '' = unspecified."
+        },
+        "pyParametersParamDefaultValue": {
+          "type": "string",
+          "description": "Default value expression."
+        },
+        "pyParametersParamIntelliValidateAs": {
+          "type": "string",
+          "description": "Validation rule name."
+        },
+        "pyParametersParamIntelliRule": {
+          "type": "string",
+          "description": "Intellisense rule reference."
+        },
+        "pyParametersParamIntelliBaseClass": {
+          "type": "string",
+          "description": "Base class for intellisense."
+        }
+      }
+    },
+    "WhenGuard": {
+      "type": "object",
+      "description": "A when-rule guard entry (Embed-Rule-Whens).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-Rule-Whens",
+          "x-pega-autoFill": "Embed-Rule-Whens"
+        },
+        "pyWhenName": {
+          "type": "string",
+          "description": "Name of the When rule that guards this action's availability. Blank = no guard."
+        }
+      }
+    },
+    "PrivilegeGuard": {
+      "type": "object",
+      "description": "A privilege guard entry (Embed-Rule-PrivilegeSecurity).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-Rule-PrivilegeSecurity",
+          "x-pega-autoFill": "Embed-Rule-PrivilegeSecurity"
+        },
+        "pyPrivilegeName": {
+          "type": "string",
+          "description": "Name of the Privilege rule required to invoke this action."
+        },
+        "pyPrivilegeClass": {
+          "type": "string",
+          "description": "Class the privilege belongs to."
+        }
+      }
+    },
+    "PageAndClass": {
+      "type": "object",
+      "description": "A named page declaration (Embed-PagesAndClasses).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-PagesAndClasses",
+          "x-pega-autoFill": "Embed-PagesAndClasses"
+        },
+        "pyPagesAndClassesPage": {
+          "type": "string",
+          "description": "Clipboard page name."
+        },
+        "pyPagesAndClassesClass": {
+          "type": "string",
+          "description": "Class of the page."
+        },
+        "pyPagesAndClassesMode": {
+          "type": "string",
+          "description": "Page mode (usually blank)."
+        },
+        "pxSubscript": {
+          "type": "string",
+          "description": "Position/subscript in the array."
+        }
+      }
+    },
+    "HarnessButton": {
+      "type": "object",
+      "description": "Default button configuration (Embed-Harness-Button). Usually left empty.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-Harness-Button",
+          "x-pega-autoFill": "Embed-Harness-Button"
+        },
+        "pyAction": {
+          "type": "string",
+          "description": "Client action to invoke."
+        },
+        "pyCaption": {
+          "type": "string",
+          "description": "Button caption."
+        },
+        "pyButtonType": {
+          "type": "string",
+          "description": "Button type."
+        },
+        "pyStyle": {
+          "type": "string",
+          "description": "CSS style."
+        },
+        "pyPrivilege": {
+          "type": "string",
+          "description": "Privilege guard."
+        },
+        "pyVisibleWhen": {
+          "type": "string",
+          "description": "When condition for visibility."
+        },
+        "pyTooltip": {
+          "type": "string",
+          "description": "Hover tooltip."
+        },
+        "pyIsModalWindow": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Open in modal window."
+        },
+        "pyTargetName": {
+          "type": "string",
+          "description": "Target frame/window name."
+        },
+        "pyButtonPosition": {
+          "type": "string",
+          "description": "Position in the button bar."
+        },
+        "pyButtonId": {
+          "type": "string",
+          "description": "HTML element ID."
+        },
+        "pyNoFormSubmit": {
+          "type": "string",
+          "description": "Suppress form submission on click. String, not Boolean ('true'/'false')."
+        },
+        "pyWindowWidth": {
+          "type": "string",
+          "description": "Modal window width. String, not Number."
+        },
+        "pyWindowHeight": {
+          "type": "string",
+          "description": "Modal window height. String, not Number."
+        },
+        "pyActionComplete": {
+          "type": "string",
+          "description": "Action to run after button action completes."
+        },
+        "pyUseExistingFrame": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "true to reuse an existing frame."
+        },
+        "pyPassCurrentParameterPage": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "true to pass the current parameter page to the button action."
+        },
+        "pyLocalAction": {
+          "type": "string",
+          "description": "Local action to invoke from the button."
+        },
+        "pyActionParams": {
+          "type": "object",
+          "description": "Parameters passed to the button action.",
+          "additionalProperties": true
+        },
+        "pyWhenNotPrivilege": {
+          "type": "string",
+          "description": "When condition evaluated when the user lacks the required privilege."
+        }
+      }
+    },
+    "HarnessSection": {
+      "type": "object",
+      "description": "A section layout container (Embed-Harness-Section). Auto-managed by pzAssemblePreProcess. In flow actions, always exactly 1 element in pySections. The only fields that carry application-specific meaning are pyPromptClass, pyPageContext, and the pySectionBody[].pyInclude reference; the rest are layout defaults.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-Harness-Section",
+          "x-pega-autoFill": "Embed-Harness-Section"
+        },
+        "pyContainerType": {
+          "type": "string",
+          "enum": ["NOHEADER", "NONE", "STANDARD", ""],
+          "description": "Container type. Always NOHEADER for flow actions."
+        },
+        "pyContainerFormat": {
+          "type": "string",
+          "enum": ["NOHEADER", "DEFAULT", "STANDARD", "SUBHEADER", "SUBHEADER_A", "SUBHEADER_B", "SUBHEADER_C", "SUBHEADER_D", "NONE", "SUBHEADER_BLANK", "SIMPLEFA", "CUSTOM", "SUBHEADER_FIELDSET", "OTHER", ""],
+          "description": "Container format. Valid values from pyContainerFormat prompt list on Embed-Display-Table-Cell."
+        },
+        "pyContainerTypeUpgrade": {
+          "type": "string",
+          "enum": ["NO_HEADER", "BAR", "COLLAPSIBLE", "OUTLINE", ""],
+          "description": "Upgraded container type identifier."
+        },
+        "pyPromptClass": {
+          "type": "string",
+          "description": "The Pega class the section applies to. Always mirrors pyClassName of the parent flow action."
+        },
+        "pyPageContext": {
+          "type": "string",
+          "enum": ["none", "clipboard", "datapage", "property", ""],
+          "description": "Page context for the section. 'none' = use the current work object. 'clipboard' or 'datapage' = resolve the section against the page named in pySectionBody[].pyUsingPage. 'property' = resolve against a property reference (rare, not observed in sample). Usually 'none'."
+        },
+        "pyExpandable": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Whether the section is expandable/collapsible. Usually 'false'."
+        },
+        "pyExpanded": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Whether the section is initially expanded. Usually 'true'."
+        },
+        "pyFloatLayout": {
+          "type": "string",
+          "enum": ["None", "Left", "Right", ""],
+          "description": "Float direction. Always 'None' for flow actions."
+        },
+        "pyLayoutMode": {
+          "type": "string",
+          "enum": ["Inline-block", ""],
+          "description": "Layout display mode."
+        },
+        "pyLabelFormat": {
+          "type": "string",
+          "enum": ["Standard", ""],
+          "description": "Label display format. Always 'Standard'."
+        },
+        "pyTabAlignment": {
+          "type": "string",
+          "enum": ["Top", "Left", "Bottom", "Right", ""],
+          "description": "Tab alignment. Always 'Top'."
+        },
+        "pyTabNavigationType": {
+          "type": "string",
+          "enum": ["Menu", ""],
+          "description": "Tab navigation type. Always 'Menu'."
+        },
+        "pySelfClear": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Self-clear CSS floats. Always 'true'."
+        },
+        "pyRemoveSpacingTop": {
+          "type": "string",
+          "enum": ["None", ""],
+          "description": "Remove top spacing. Always 'None'."
+        },
+        "pyRemoveSpacingBottom": {
+          "type": "string",
+          "enum": ["None", ""],
+          "description": "Remove bottom spacing. Always 'None'."
+        },
+        "pyRemoveSpacingLeft": {
+          "type": "string",
+          "enum": ["None", ""],
+          "description": "Remove left spacing. Always 'None'."
+        },
+        "pyRemoveSpacingRight": {
+          "type": "string",
+          "enum": ["None", ""],
+          "description": "Remove right spacing. Always 'None'."
+        },
+        "pyLoadDeferred": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Defer loading of the section. Usually 'false'."
+        },
+        "pyIsClientWhen": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Client-side when evaluation. Always 'false'."
+        },
+        "pyIsClientActiveWhen": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Client-side active-when evaluation. Always 'false'."
+        },
+        "pyHeaderTable": {
+          "$ref": "#/$defs/DisplayTable",
+          "description": "Header layout table. Always a fixed 1x1 FREEFORM table with a single read-only cell (pyHeight 13, pyWidth 100). Auto-managed."
+        },
+        "pySectionBody": {
+          "type": "array",
+          "description": "Section body elements. Always exactly 1 element in flow actions.",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": { "$ref": "#/$defs/HarnessSectionBody" }
+        },
+        "pyStandardHeaderElements": {
+          "type": "array",
+          "description": "Standard header element defaults. Always 1 element with pyVisible=ALWAYS, all others empty.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "pxObjClass": {
+                "type": "string",
+                "const": "Embed-Harness-HeaderElements"
+              },
+              "pyVisible": {
+                "type": "string",
+                "enum": ["ALWAYS", ""]
+              }
+            }
+          }
+        },
+        "pyRefreshPreDataTransform": {
+          "type": "object",
+          "description": "Pre-refresh data transform. Auto-managed, always empty.",
+          "properties": {
+            "pxObjClass": { "type": "string", "const": "Embed-Invoke-DataTransform" },
+            "pyName": { "type": "string" }
+          }
+        },
+        "pyDeferLoadRetrievalActivityParams": {
+          "type": "object",
+          "description": "Parameters for deferred load activity. Placeholder only."
+        }
+      },
+      "if": {
+        "properties": {
+          "pyPageContext": { "enum": ["clipboard", "datapage", "property"] }
+        },
+        "required": ["pyPageContext"]
+      },
+      "then": {
+        "properties": {
+          "pySectionBody": {
+            "items": {
+              "properties": {
+                "pyUsingPage": { "minLength": 1 }
+              },
+              "required": ["pyUsingPage"]
+            }
+          }
+        }
+      }
+    },
+    "HarnessSectionBody": {
+      "type": "object",
+      "description": "A section body element (Embed-Harness-SectionBody). Contains the reference to the included section rule and the body layout table. In flow actions, pyBodyType is always INCLUDE and pyInclude holds the referenced section name.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-Harness-SectionBody",
+          "x-pega-autoFill": "Embed-Harness-SectionBody"
+        },
+        "pyBodyType": {
+          "type": "string",
+          "enum": ["INCLUDE", ""],
+          "description": "Body type. Always 'INCLUDE' for flow actions — the body references another section by name."
+        },
+        "pyInclude": {
+          "type": "string",
+          "description": "Name of the included section rule (Rule-HTML-Section or Rule-UI-View). This is the key 'signal' field — it names the section rendered in the flow action dialog. May be empty when pyViewReference on the parent flow action is used instead."
+        },
+        "pyUsingPage": {
+          "type": "string",
+          "description": "Clipboard page context for the included section. Usually empty; set when the section needs a specific page (e.g. 'pyAttachmentPage', 'TempChannelPage')."
+        },
+        "pyPassCurrentParameterPage": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Pass the current parameter page to the included section. Usually 'true' in modern rules."
+        },
+        "pySourceType": {
+          "type": "string",
+          "enum": ["Property", ""],
+          "description": "Source type. Always 'Property'."
+        },
+        "pyAllowRowUpdate": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Allow row updates in repeating layouts. Always 'true'."
+        },
+        "pyDisplayActionArea": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Show action area. Always 'true'."
+        },
+        "pyDisplayWhen": {
+          "type": "string",
+          "description": "When condition for displaying the section body."
+        },
+        "pyPreActivity": {
+          "type": "string",
+          "description": "Activity to run before rendering the body. Usually empty."
+        },
+        "pyRefreshWhen": {
+          "type": "string",
+          "description": "When condition for refreshing the section body."
+        },
+        "pyPrivilegeUpdate": {
+          "type": "string",
+          "description": "Privilege required for update access."
+        },
+        "pyPrivilegeView": {
+          "type": "string",
+          "description": "Privilege required for view access."
+        },
+        "pyDragDrop": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Enable drag-and-drop. Always 'false'."
+        },
+        "pyRowResizing": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Enable row resizing. Always 'false'."
+        },
+        "pyColumnResizing": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Enable column resizing. Always 'false'."
+        },
+        "pyRDLPageSize": {
+          "type": "string",
+          "description": "Repeating dynamic layout page size. Default '10'."
+        },
+        "pyRDLPageMode": {
+          "type": "string",
+          "enum": ["0", "None", ""],
+          "description": "Repeating dynamic layout page mode."
+        },
+        "pyRDName": {
+          "type": "string",
+          "description": "Report definition name (for data-bound layouts). Usually empty."
+        },
+        "pyDPName": {
+          "type": "string",
+          "description": "Data page name (for data-bound layouts). Usually empty."
+        },
+        "pyDPResultsClass": {
+          "type": "string",
+          "description": "Results class for the data page. Usually empty."
+        },
+        "pyPageListProperty": {
+          "type": "string",
+          "description": "Page list property (for repeating layouts). Usually empty."
+        },
+        "pyPageListPropertyClass": {
+          "type": "string",
+          "description": "Class of the page list property. Usually empty."
+        },
+        "pyIncludedRuleXML": {
+          "type": "object",
+          "description": "Embedded section XML. Usually a stub ({pxObjClass: 'Rule-HTML-Section'} with no content). In rare cases contains a full embedded Rule-HTML-Section with its own recursive pySections — maximum observed nesting depth is 2 levels. Auto-managed."
+        },
+        "pyTable": {
+          "$ref": "#/$defs/DisplayTable",
+          "description": "Body layout table. Modern rules use SIMPLELAYOUT (1 column, 1 row). Legacy rules (pre-8.4) use TEMPLATE or DOUBLE layouts with multiple columns (LABEL/FIELD/SEPARATOR pattern). Auto-managed."
+        },
+        "pySectionBodyElements": {
+          "type": "array",
+          "description": "Body element defaults. Always 1 element of class Embed-Harness-HeaderElements with all fields empty.",
+          "items": { "type": "object" }
+        },
+        "pySectionParams": {
+          "type": "object",
+          "description": "Parameters passed to the included section. Usually contains only pxObjClass='' and pyTempPlaceHolder='TempPlaceHolder'."
+        },
+        "pyPreDataTransform": {
+          "type": "object",
+          "description": "Pre-render data transform. Auto-managed, always empty.",
+          "properties": {
+            "pxObjClass": { "type": "string", "const": "Embed-Invoke-DataTransform" },
+            "pyName": { "type": "string" }
+          }
+        },
+        "pyDCPreDataTransform": {
+          "type": "object",
+          "description": "Data context pre-data transform. Auto-managed, always empty.",
+          "properties": {
+            "pxObjClass": { "type": "string", "const": "Embed-Invoke-DataTransform" },
+            "pyName": { "type": "string" }
+          }
+        },
+        "pyDeclareParams": {
+          "type": "object",
+          "description": "Declare parameters. Usually empty."
+        },
+        "pzSectionParamPage": {
+          "type": "object",
+          "description": "Section parameter page. Always {pxObjClass: 'PegaGadget'}.",
+          "properties": {
+            "pxObjClass": { "type": "string", "const": "PegaGadget" }
+          }
+        }
+      }
+    },
+    "DisplayTable": {
+      "type": "object",
+      "description": "A layout table (Embed-Display-Table). Used for both pyHeaderTable (FREEFORM, 1x1, read-only) and pyTable (SIMPLELAYOUT, 1x1 in modern rules). Contains rows of cells that define the grid layout. Auto-managed by the UI editor.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-Display-Table",
+          "x-pega-autoFill": "Embed-Display-Table"
+        },
+        "pyColumnCount": {
+          "type": "string",
+          "description": "Number of columns. '1' for modern rules; up to '5' in legacy TEMPLATE layouts."
+        },
+        "pyRowCount": {
+          "type": "string",
+          "description": "Number of rows. Usually '1'."
+        },
+        "pyLayoutFormat": {
+          "type": "string",
+          "enum": ["CUSTOM", "DOUBLE", ""],
+          "description": "Layout format. CUSTOM for pyHeaderTable, empty for modern pyTable, DOUBLE for legacy."
+        },
+        "pyLayoutFormatType": {
+          "type": "string",
+          "enum": ["FREEFORM", "SIMPLELAYOUT", "TEMPLATE", ""],
+          "description": "Layout format type. FREEFORM for pyHeaderTable, SIMPLELAYOUT for modern pyTable body, TEMPLATE for legacy."
+        },
+        "pyLayoutOtherFormat": {
+          "type": "string",
+          "description": "Custom layout format name. Always empty."
+        },
+        "pyUnit": {
+          "type": "string",
+          "enum": ["px", "%", "em", ""],
+          "description": "CSS unit for dimensions. Always 'px'."
+        },
+        "pyUnitHeight": {
+          "type": "string",
+          "enum": ["px", "%", "em", ""],
+          "description": "CSS unit for height. Present in pyTable but not pyHeaderTable in legacy rules."
+        },
+        "pyWidth": {
+          "type": "string",
+          "description": "Table width. Usually empty."
+        },
+        "pyHeight": {
+          "type": "string",
+          "description": "Table height. Usually empty."
+        },
+        "pyID": {
+          "type": "string",
+          "description": "HTML element ID. Usually empty."
+        },
+        "pyColumnDefaults": {
+          "type": "array",
+          "description": "Default settings per column (Embed-Display-Table-Restricted). Present in pyTable only. 1 element for modern SIMPLELAYOUT, N elements matching pyColumnCount for legacy TEMPLATE layouts.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "pxObjClass": { "type": "string", "const": "Embed-Display-Table-Restricted" },
+              "pyCellHeader": { "type": "string", "enum": ["true", "false", ""] },
+              "pyCellId": { "type": "string" },
+              "pyHeaderStyle": { "type": "string" },
+              "pyInlineStyle": { "type": "string" },
+              "pyRestrictedType": {
+                "type": "string",
+                "enum": ["NONE", "LABEL", "FIELD", "SEPARATOR", ""],
+                "description": "Column restricted type. NONE for modern; LABEL/FIELD/SEPARATOR for legacy TEMPLATE layouts."
+              }
+            }
+          }
+        },
+        "pyRows": {
+          "type": "array",
+          "description": "Table rows. Usually 1 row for modern rules.",
+          "items": { "$ref": "#/$defs/DisplayTableRow" }
+        }
+      }
+    },
+    "DisplayTableRow": {
+      "type": "object",
+      "description": "A table row (Embed-Display-Table-Row). Contains cells that hold field/label/section references.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-Display-Table-Row",
+          "x-pega-autoFill": "Embed-Display-Table-Row"
+        },
+        "pyCells": {
+          "type": "array",
+          "description": "Cells in this row.",
+          "items": { "$ref": "#/$defs/DisplayTableCell" }
+        },
+        "pyRowDefaults": {
+          "type": "object",
+          "description": "Default settings for cells in this row (Embed-Display-Table-Restricted). Present in pyTable rows, not pyHeaderTable rows.",
+          "properties": {
+            "pxObjClass": { "type": "string", "const": "Embed-Display-Table-Restricted" },
+            "pyCellHeader": { "type": "string" },
+            "pyCellId": { "type": "string" },
+            "pyHeaderStyle": { "type": "string" },
+            "pyInlineStyle": { "type": "string" },
+            "pyRestrictedType": { "type": "string", "enum": ["NONE", "LABEL", "FIELD", "SEPARATOR", ""] }
+          }
+        }
+      }
+    },
+    "DisplayTableCell": {
+      "type": "object",
+      "description": "A table cell (Embed-Display-Table-Cell). Header cells (in pyHeaderTable) are read-only with pyHeight=13, pyWidth=100. Body cells (in pyTable) have pyHeight=22, pyWidth=130 and include additional RDL fields (categorize, filter, sort). In legacy TEMPLATE layouts, pyType indicates the cell role (LABEL, FIELD, SEPARATOR, SUB_SECTION).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-Display-Table-Cell",
+          "x-pega-autoFill": "Embed-Display-Table-Cell"
+        },
+        "pyType": {
+          "type": "string",
+          "enum": ["", "LABEL", "FIELD", "SEPARATOR", "SUB_SECTION"],
+          "description": "Cell type. Empty for modern SIMPLELAYOUT. Legacy TEMPLATE uses LABEL/FIELD/SEPARATOR to define the column role."
+        },
+        "pyValue": {
+          "type": "string",
+          "description": "Cell value. Empty for most cells. SUB_SECTION cells hold the section rule name."
+        },
+        "pyHeight": {
+          "type": "string",
+          "description": "Cell height in pyUnit. '13' for header cells, '22' for body cells."
+        },
+        "pyHeightUse": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Whether to apply pyHeight. Usually 'true'."
+        },
+        "pyWidth": {
+          "type": "string",
+          "description": "Cell width in pyUnit. '100' for header cells, '130' for body cells."
+        },
+        "pyWidthUse": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Whether to apply pyWidth. Usually 'true'."
+        },
+        "pyReadOnly": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "'true' for header cells, empty for body cells."
+        },
+        "pyWrap": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "'false' for header cells, 'true' for body cells."
+        },
+        "pyRestricted": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "'false' for modern rules. 'true' in legacy TEMPLATE FIELD/SEPARATOR cells."
+        },
+        "pyIncludeLabel": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Include a label with the cell. Usually 'false'."
+        },
+        "pyLabelFormat": {
+          "type": "string",
+          "enum": ["Standard", ""],
+          "description": "Label format."
+        },
+        "pyFormat": {
+          "type": "string",
+          "description": "Display format. Usually empty."
+        },
+        "pyEditOptions": {
+          "type": "string",
+          "description": "Edit options. 'Auto' in legacy, empty in modern."
+        },
+        "pyColumnFiltering": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Enable column filtering. Body cells only. Usually 'true'."
+        },
+        "pyColumnSorting": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Enable column sorting. Body cells only. Usually 'true'."
+        },
+        "pyColumnCategorize": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Enable column categorization. Body cells only. Usually 'false'."
+        },
+        "pyCategorizeSortType": {
+          "type": "string",
+          "enum": ["ASC", "DESC", ""],
+          "description": "Sort direction for categorization. Body cells only. Default 'ASC'."
+        },
+        "pyShowFilterUIBy": {
+          "type": "string",
+          "enum": ["value", "format", ""],
+          "description": "Filter UI type. 'value' for modern, 'format' for legacy."
+        },
+        "pyAutoHTML": {
+          "type": "string",
+          "description": "Auto-generate HTML. Usually empty."
+        },
+        "pyInlineStyle": {
+          "type": "string",
+          "description": "Inline CSS style. Usually empty."
+        },
+        "pyReadOnlyStyle": {
+          "type": "string",
+          "description": "CSS class for read-only mode. Legacy may have 'dataLabelRead RL2'."
+        },
+        "pyReadWriteStyle": {
+          "type": "string",
+          "description": "CSS class for read-write mode. Legacy may have 'dataLabelWrite RL2'."
+        },
+        "pyTooltip": {
+          "type": "string",
+          "description": "Hover tooltip text."
+        },
+        "pyUserData": {
+          "type": "object",
+          "description": "Visibility and conditions for the cell. Class is Embed-Harness-HeaderElements (most cells) or Embed-Harness-UserData (legacy LABEL/SEPARATOR). Header cells have pyVisible=ALWAYS; body cells have pyVisible='' (empty).",
+          "properties": {
+            "pxObjClass": { "type": "string", "enum": ["Embed-Harness-HeaderElements", "Embed-Harness-UserData"] },
+            "pyVisible": { "type": "string", "enum": ["ALWAYS", ""] },
+            "pyCondition": { "type": "string" },
+            "pyReadOnly": { "type": "string" },
+            "pyReadOnlyCondition": { "type": "string" },
+            "pyRefreshWhen": { "type": "string" },
+            "pyRequired": { "type": "string" },
+            "pyDefaultValue": { "type": "string" },
+            "pyIsClientWhen": { "type": "string", "enum": ["true", "false", ""] },
+            "pyIsClientROWhen": { "type": "string", "enum": ["true", "false", ""] },
+            "pyIsVisibleWhenActive": { "type": "string", "enum": ["true", "false", ""] }
+          }
+        },
+        "pyModes": {
+          "type": "array",
+          "description": "Control modes. Header cells have 1 element; body cells have 2 (second adds pyHelperTextType='none').",
+          "items": {
+            "type": "object",
+            "properties": {
+              "pxObjClass": { "type": "string", "const": "Embed-Control-Mode" },
+              "pyDisplayAsComboBox": { "type": "string", "enum": ["true", "false", ""] },
+              "pyDisplayFullScreen": { "type": "string", "enum": ["true", "false", ""] },
+              "pyHelperTextType": { "type": "string", "enum": ["none", ""] }
+            }
+          }
+        },
+        "pyPreDataTransform": {
+          "type": "object",
+          "description": "Pre-render data transform for the cell. Auto-managed.",
+          "properties": {
+            "pxObjClass": { "type": "string", "const": "Embed-Invoke-DataTransform" }
+          }
+        },
+        "pzSectionParamPage": {
+          "type": "object",
+          "description": "Section parameter page. Always {pxObjClass: 'PegaGadget'}.",
+          "properties": {
+            "pxObjClass": { "type": "string", "const": "PegaGadget" }
+          }
+        }
+      }
+    }
+  }
+}

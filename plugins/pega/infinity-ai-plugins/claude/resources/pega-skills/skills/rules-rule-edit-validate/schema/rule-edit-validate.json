@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-edit-validate.json",
+  "title": "Rule-Edit-Validate",
+  "description": "JSON schema for creating or updating a Pega edit validate rule (Rule-Edit-Validate). Edit validate rules contain Java code that validates a single property value, returning true if valid or false (with an error message) if invalid.",
+  "type": "object",
+  "required": [
+    "pxObjClass",
+    "pyRuleName",
+    "pyLabel",
+    "pyValidateName",
+    "pyJavaCode"
+  ],
+  "properties": {
+    "pxObjClass": {
+      "type": "string",
+      "const": "Rule-Edit-Validate",
+      "description": "Rule type class -- always 'Rule-Edit-Validate'.",
+      "x-pega-autoDerived": true,
+      "x-pega-autoFill": "Rule-Edit-Validate"
+    },
+    "pyRuleName": {
+      "type": "string",
+      "description": "Internal rule key name, auto-derived from pyValidateName. PascalCase or camelCase, no spaces.",
+      "x-pega-autoFill": "{pyValidateName}"
+    },
+    "pyLabel": {
+      "type": "string",
+      "description": "Human-readable display label for the rule."
+    },
+    "pyValidateName": {
+      "type": "string",
+      "description": "The validate name used to reference this rule from property definitions. Set manually; PascalCase or camelCase, no spaces."
+    },
+    "pyClassName": {
+      "type": "string",
+      "description": "The applies-to class for this rule. Often empty for global edit validates; set to a specific class to scope the validation."
+    },
+    "pyDescription": {
+      "type": "string",
+      "description": "Developer-facing description of the validation's purpose."
+    },
+    "pyJavaCode": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Java source code implementing the validation logic. Has access to 'theValue' (String), 'theProperty' (ClipboardProperty), 'tools' (PublicAPI), and 'pega' (PegaAPI). Must return boolean -- true if valid, false if invalid. Call theProperty.addMessage() to set error messages before returning false."
+    },
+    "pyJavaStream": {
+      "type": "string",
+      "description": "Alternative Java stream content. Typically empty -- use pyJavaCode instead.",
+      "x-pega-autoFill": ""
+    },
+    "pyRuleAvailable": {
+      "type": "string",
+      "enum": ["Yes", "No", "Final", "Withdrawn", "Blocked"],
+      "description": "Availability status of the rule.",
+      "x-pega-autoFill": "Yes"
+    },
+    "pyMethodStatus": {
+      "type": "string",
+      "enum": ["API", "Deprecated", "Extension", "Internal", "Template", ""],
+      "description": "Method status controlling visibility and API classification.",
+      "x-pega-autoFill": ""
+    },
+    "pyMemo": {
+      "type": "string",
+      "description": "Check-in comment or change memo."
+    },
+    "pyUsage": {
+      "type": "string",
+      "description": "Usage notes for the rule."
+    },
+    "pyRuleSet": {
+      "type": "string",
+      "description": "RuleSet this rule belongs to.",
+      "x-pega-autoDerived": true
+    },
+    "pyRuleSetVersion": {
+      "type": "string",
+      "pattern": "^\\d{2}-\\d{2}-\\d{2}$",
+      "description": "Rule set version (e.g., '01-01-02')."
+    },
+    "pyCircumstanceProp": {
+      "type": "string",
+      "description": "Property reference for circumstance qualification."
+    },
+    "pyCircumstanceVal": {
+      "type": "string",
+      "description": "Value for circumstance qualification."
+    },
+    "pyCircumstanceDate": {
+      "type": "string",
+      "description": "Date/time for temporal circumstance qualification."
+    },
+    "pyCircumstanceDateProp": {
+      "type": "string",
+      "description": "Property reference for date-based circumstance qualification."
+    },
+    "pyCircumstanceTemplate": {
+      "type": "string",
+      "description": "Template name for template-based circumstance qualification."
+    },
+    "pyCircumstanceType": {
+      "type": "string",
+      "description": "Type of circumstancing applied to this rule."
+    },
+    "pyCircumstanceDefinition": {
+      "type": "string",
+      "description": "Circumstance definition reference."
+    }
+  }
+}

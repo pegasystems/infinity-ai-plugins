@@ -1,0 +1,866 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-ai-agent.json",
+  "title": "Rule-AI-Agent",
+  "description": "Validates Rule-AI-Agent payloads for Pega Infinity. Requires Pega Infinity 25+ (08-25-01+).",
+  "type": "object",
+  "required": ["pxObjClass", "pyClassName", "pyLabel", "pyRuleName", "pyDescription", "pyGenAIConfig"],
+  "properties": {
+    "pxObjClass": {
+      "type": "string",
+      "description": "Must be Rule-AI-Agent.",
+      "x-pega-autoFill": "Rule-AI-Agent"
+    },
+    "pyClassName": {
+      "type": "string",
+      "description": "Pega class that this agent rule applies to (e.g., MyApp-Work-). Determines the context in which the agent operates."
+    },
+    "pyLabel": {
+      "type": "string",
+      "description": "Display name for the agent rule, shown in Pega Dev Studio and UI pickers."
+    },
+    "pyRuleName": {
+      "type": "string",
+      "description": "Unique identifier name for the agent rule (e.g., ChatWithData). This is the purpose/identifier used programmatically."
+    },
+    "pyPurpose": {
+      "type": "string",
+      "description": "Programmatic purpose identifier for the agent. Used by Pega internals to reference this agent. Often matches pyRuleName or a system-generated name like pzChatWithYourData."
+    },
+    "pyRuleAvailable": {
+      "type": "string",
+      "enum": ["Yes", "No", "Final", "Withdrawn", "Blocked"],
+      "description": "Rule availability: Yes (available), No (inactive), Final (locked), Withdrawn (removed), Blocked (disabled). Controls whether the agent can be used.",
+      "x-pega-autoFill": "Yes"
+    },
+    "pyAgentVersion": {
+      "type": "string",
+      "description": "Version identifier for the agent rule (e.g., 1.0.0). Used to track iterations of the agent definition.",
+      "x-pega-autoFill": "1.0.0"
+    },
+    "pyDescription": {
+      "type": "string",
+      "description": "Required detailed description of what the agent does, its intended use cases, and any notes for developers."
+    },
+    "pyAgentScope": {
+      "type": "string",
+      "enum": ["Other", "Application", "CaseType", "Data"],
+      "description": "Scope that determines the class context for the agent: Application (applies to whole app), CaseType (applies to specific case type), Data (applies to data objects), Other (custom context)."
+    },
+    "pyUsage": {
+      "type": "string",
+      "description": "Optional notes about how and when to use this agent. Not displayed to end users; for developer reference."
+    },
+    "pyDisplayMode": {
+      "type": "string",
+      "enum": ["clone", "basic"],
+      "description": "Display mode in Dev Studio: 'basic' for hand-authored rules, 'clone' for rules copied from a template.",
+      "x-pega-autoFill": "basic"
+    },
+    "pyEnableExternalAccess": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "When true, allows this agent to be accessed from external systems outside the Pega application (e.g., via API calls from other applications)."
+    },
+    "pyTurnOffFeedback": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "When true, disables the feedback collection UI for this agent. Use when feedback is not needed or inappropriate for the use case."
+    },
+    "pyMethodStatus": {
+      "type": "string",
+      "enum": ["API", "Deprecated", "Extension", "Internal", "Template", ""],
+      "description": "Metadata status of the agent rule: Internal (Pega-authored), Deprecated (no longer recommended), Extension (custom override), Template (used as a pattern).",
+      "x-pega-autoFill": ""
+    },
+    "pyVersionNumber": {
+      "type": "string",
+      "enum": ["v1", "v2"],
+      "description": "Schema version of the agent rule format: v1 (legacy), v2 (current with enhanced capabilities)."
+    },
+    "pyPreviousApplicationName": {
+      "type": "string",
+      "description": "Name of the application where this agent was previously used before being moved or copied. Auto-populated during rule operations."
+    },
+    "pyInitialCreatedInVersionNumber": {
+      "type": "string",
+      "description": "Pega platform version when this agent rule was first created (e.g., 08-25-01). Auto-populated on creation."
+    },
+    "pyBaseRule": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "When true, this is a base rule that can be specialized via class inheritance. Base rules provide default behavior that can be overridden."
+    },
+    "pyValueChanged": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "Internal flag indicating whether the rule's content has been modified since last save. Auto-managed by Pega."
+    },
+    "pySortDateCircumWithinRSMajor": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "When true, circumstanced versions of this rule are sorted by date within the same major ruleset version. Internal Pega sorting flag."
+    },
+    "pyDeleteMemo": {
+      "type": "string",
+      "description": "Memo text recorded when this rule is deleted. Explains the reason for deletion."
+    },
+    "pyMemo": {
+      "type": "string",
+      "description": "Developer notes or comments about this rule. Not visible to end users; for documentation and maintenance purposes."
+    },
+    "pyRuleSet": {
+      "type": "string",
+      "x-pega-autoDerived": true,
+      "description": "Ruleset that owns this rule. Auto-derived from the context when creating or updating the rule."
+    },
+    "pyRuleSetVersion": {
+      "type": "string",
+      "x-pega-autoDerived": true,
+      "description": "Version of the ruleset (e.g., 01.01.01). Auto-derived from the context when creating or updating the rule."
+    },
+    "pySPRuleSetName": {
+      "type": "string",
+      "x-pega-autoDerived": true,
+      "description": "Branch ruleset name used during ChangeRequest workflow. Auto-derived from the ChangeRequest context when creating rules in a branch."
+    },
+    "pyGenAIConfig": {
+      "type": "object",
+      "description": "Configuration for the Generative AI model that powers this agent. Specifies which LLM to use and its settings.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "x-pega-autoFill": "Embed-GenAI-Config"
+        },
+        "pyModelConfiguration": {
+          "$ref": "#/$defs/Embed-GenAI-Model",
+          "description": "Reference to the LLM model configuration including provider, model ID, capabilities, and parameters. Before authoring or updating this object, execute `run-data-page` for `D_pxAIModelsForCoachOrAgent` with `dataPageType: \"list\"` and select the appropriate row from the response `data` array. Copy at minimum `pyModelId`, `pyModelName`, `pyProvider`, and `pyDescription` from the selected row. When present, also copy `pySupportedCapabilities.pyIsFunctionSupported`, `pySupportedCapabilities.pyIsJsonModeSupported`, `pySupportedCapabilities.pyIsMutlmodalSupported`, `pySupportedCapabilities.pyIsStreamingSupported`, `pySupportedCapabilities.pyIsparallelFunctionSupported`, and the full `pyModelParameters` list. Do not rely on repository reference markdown for the model catalog."
+        }
+      },
+      "required": ["pxObjClass", "pyModelConfiguration"]
+    },
+    "pyGenAIDef": {
+      "type": "object",
+      "description": "GenAI definition containing prompts that control agent behavior, restrictions, and response formatting.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "x-pega-autoFill": "Embed-GenAI-Definition"
+        },
+        "pySystemPrompt": {
+          "type": "string",
+          "description": "Primary instruction prompt that defines the agent's role, capabilities, and core behavior. This is the main prompt sent to the LLM to guide how it should operate and respond to user queries."
+        },
+        "pyGuardrailsPrompt": {
+          "type": "string",
+          "description": "Safety and compliance prompt that specifies restrictions, prohibited actions, and behavioral boundaries. Use this to prevent the agent from performing unauthorized operations or accessing sensitive data inappropriately."
+        },
+        "pyResponseStylePrompt": {
+          "type": "string",
+          "description": "Formatting and tone prompt that controls how the agent structures its responses. Specify output format (JSON, markdown, etc.), tone (formal, casual), level of detail, and any stylistic conventions."
+        },
+        "pyUserPrompt": {
+          "type": "string",
+          "description": "User prompt displayed when pyIntroductionMessageMode is 'Opening'. This is the initial message or question presented to the user to start the conversation."
+        },
+        "pyExamples": {
+          "type": "array",
+          "description": "Example queries with instructions that demonstrate how to use this agent. These help the LLM understand expected inputs and outputs. Required when pySuggestionSource is 'Static' - can be empty, but any items added must have pyExample populated (empty items are not acceptable).",
+          "items": {
+            "$ref": "#/$defs/Embed-GenAI-Assistant-Example"
+          }
+        }
+      },
+      "required": ["pxObjClass"]
+    },
+    "pzActionTools": {
+      "type": "array",
+      "description": "Action tools that perform operations (create, update, delete, etc.). Contains Rule-AI-Tool instances with pyCategory 'Automation' (backing: Rule-Obj-Activity, pyActivityType='AUTOMATION') or 'Flow action' (backing: Rule-Obj-FlowAction).",
+      "items": {
+        "$ref": "#/$defs/Rule-AI-Tool"
+      }
+    },
+    "pzAgentTools": {
+      "type": "array",
+      "description": "Agent tools that delegate to other AI agents. Contains Rule-AI-Tool instances with pyCategory set to 'Agent'. Treat pyCategory as the primary display label. In inspected live rules, pyIntentActionPage.pyCategory was not a reliable discriminator for agent-tool rows, so inspect sibling rules in your application before relying on that field alone.",
+      "items": {
+        "$ref": "#/$defs/Rule-AI-Tool"
+      }
+    },
+    "pzAIDataSources": {
+      "type": "array",
+      "description": "Data sources for the agent. Ask the user whether they want to configure data sources. If yes, fetch the Rule-Declare-Pages list and prompt the user to select which data pages to configure. Multiple data sources can be configured. Each entry references a data page with optional parameters and a data transform for post-processing.",
+      "items": {
+        "$ref": "#/$defs/Embed-DataPage"
+      }
+    },
+    "pzCaseTypeTools": {
+      "type": "array",
+      "description": "Case type tools that allow the agent to create or interact with case types. Contains Rule-AI-Tool instances with pyCategory set to 'Case type'. The example in this skill shows the intended row shape; verify against sibling rules in your application when possible.",
+      "items": {
+        "$ref": "#/$defs/Rule-AI-Tool"
+      }
+    },
+    "pzExternalAgents": {
+      "type": "array",
+      "description": "External A2A (Agent-to-Agent) agent connections. Contains Rule-AI-Tool instances with pyCategory 'Rule-AI-Agent' where pyEnableExternalAccess is enabled on the referenced agent. Each entry is a Rule-Connect-Agent instance (pxObjClass: Rule-Connect-Agent) that defines a connection to an external Pega AI Agent or A2A-compatible agent.",
+      "items": {
+        "$ref": "#/$defs/Rule-Connect-Agent"
+      }
+    },
+    "pzKnowledgeTools": {
+      "type": "array",
+      "description": "Knowledge tools that allow the agent to search and retrieve information (e.g., knowledge base articles, documentation). Contains Rule-AI-Tool instances with pyCategory 'Data page', 'Buddy', or 'Section'. Treat pyCategory as the primary display label. In inspected live rules, pyIntentActionPage.pyCategory was not a reliable discriminator for knowledge-tool rows, so inspect sibling rules in your application before relying on that field alone.",
+      "items": {
+        "$ref": "#/$defs/Rule-AI-Tool"
+      }
+    },
+    "pzMCPClients": {
+      "type": "array",
+      "description": "MCP (Model Context Protocol) client connections that allow the agent to access external MCP servers for additional tools and capabilities. Each entry is a Rule-Connect-MCP instance (pxObjClass: Rule-Connect-MCP) that defines a connection to an MCP server. Key fields: pyServiceName (service identifier for the MCP connection), pyHandlerFlow (error handling flow, typically 'ConnectionProblem'), pyResourceNameResolution (JNDI name resolution method, typically 'JNDIName'), pyRuleAvailable (availability status), pySSLProtocolVersion (TLS version, e.g., 'TLSv1.2'), and pyActionData (runtime action data).",
+      "items": {
+        "$ref": "#/$defs/Rule-Connect-MCP"
+      }
+    },
+    "pyIntroductionMessageMode": {
+      "type": "string",
+      "enum": ["Greeting", "Opening", "None"],
+      "description": "Controls the introduction message behavior: 'Greeting' shows a welcome message (may include pyAdditionalInformation and pyWelcomeMessageSource), 'Opening' shows an opening prompt (requires pyUserPrompt and pyInitialPromptInstructions), 'None' suppresses it."
+    },
+    "pyAdditionalInformation": {
+      "type": "string",
+      "description": "Rule name of a Rule-UI-Paragraph instance that contains additional information to display with the greeting. Optional when pyIntroductionMessageMode is 'Greeting'."
+    },
+    "pyWelcomeMessageSource": {
+      "type": "string",
+      "description": "Rule name of a Rule-UI-Paragraph instance that contains the welcome message content. Optional when pyIntroductionMessageMode is 'Greeting'."
+    },
+    "pyInitialPromptInstructions": {
+      "type": "string",
+      "description": "Initial prompt instructions displayed when pyIntroductionMessageMode is 'Opening'. Provides context or guidance to the user before they begin interacting with the agent. Must be a valid Rule-UI-Paragraph instance name when used."
+    },
+    "pySuggestionSource": {
+      "type": "string",
+      "enum": ["Static", "Dynamic"],
+      "description": "Source for suggestions: 'Static' uses predefined suggestions, 'Dynamic' generates suggestions based on context."
+    },
+    "pzDynamicSuggestionInfo": {
+      "type": "object",
+      "description": "Dynamic suggestion configuration used when pySuggestionSource is 'Dynamic'. References a data page that supplies suggestions based on context.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "x-pega-autoFill": "Embed-DataPage",
+          "description": "Must be Embed-DataPage for dynamic suggestion configuration."
+        },
+        "pyDPName": {
+          "type": "string",
+          "description": "Name of the data page that generates dynamic suggestions (e.g., D_Suggestions). Must be a valid Rule-Declare-Pages instance."
+        },
+        "pyPageClass": {
+          "type": "string",
+          "description": "Pega class of the data page's output that contains the suggestions."
+        },
+        "pyDPParams": {
+          "type": "object",
+          "description": "Key-value pairs for data page parameters passed when invoking the suggestion data page. When a parameter is required (pyParametersParamReq != 0), there MUST be a corresponding key-value entry here with pyParametersParamName as the key."
+        },
+        "pzRuleParameters": {
+          "type": "array",
+          "description": "Formal parameter definitions for the suggestion data page, specifying names, types, and whether they are required.",
+          "items": {
+            "$ref": "#/$defs/Embed-MethodParams"
+          }
+        },
+        "pzRuleParametersShowSkills": {
+          "type": "string",
+          "enum": ["true", "false"],
+          "description": "When true, displays rule parameters in the skills UI for this data page."
+        }
+      }
+    },
+    "pyRMAction": {
+      "type": "object",
+      "description": "Rule management configuration that defines how this agent handles rule lifecycle operations (create, update, delete rules).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "x-pega-autoFill": "Embed-RuleManagement",
+          "description": "Embed class for rule management. Must be Embed-RuleManagement."
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "pyIntroductionMessageMode": { "const": "Greeting" }
+        },
+        "required": ["pyIntroductionMessageMode"]
+      },
+      "then": {
+        "properties": {
+          "pyAdditionalInformation": {
+            "description": "Optional when pyIntroductionMessageMode is 'Greeting'. If provided, must be a valid Rule-UI-Paragraph instance name."
+          },
+          "pyWelcomeMessageSource": {
+            "description": "Optional when pyIntroductionMessageMode is 'Greeting'. If provided, must be a valid Rule-UI-Paragraph instance name."
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "pyIntroductionMessageMode": { "const": "Opening" }
+        },
+        "required": ["pyIntroductionMessageMode"]
+      },
+      "then": {
+        "required": ["pyUserPrompt", "pyInitialPromptInstructions"],
+        "properties": {
+          "pyUserPrompt": {
+            "description": "Required when pyIntroductionMessageMode is 'Opening'. Must be a valid Rule-UI-Paragraph instance name."
+          },
+          "pyInitialPromptInstructions": {
+            "description": "Required when pyIntroductionMessageMode is 'Opening'. Must be a valid Rule-UI-Paragraph instance name."
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "pySuggestionSource": { "const": "Static" }
+        },
+        "required": ["pySuggestionSource"]
+      },
+      "then": {
+        "required": ["pyGenAIDef"],
+        "properties": {
+          "pyGenAIDef": {
+            "required": ["pyExamples"],
+            "properties": {
+              "pyExamples": {
+                "description": "Required when pySuggestionSource is 'Static'. Can be empty, but any items added must have pyExample populated (empty items are not acceptable)."
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "pySuggestionSource": { "const": "Dynamic" }
+        },
+        "required": ["pySuggestionSource"]
+      },
+      "then": {
+        "required": ["pzDynamicSuggestionInfo"],
+        "properties": {
+          "pzDynamicSuggestionInfo": {
+            "description": "Required when pySuggestionSource is 'Dynamic'. Must reference a data page that generates contextual suggestions."
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "Embed-GenAI-Model": {
+      "type": "object",
+      "description": "Configuration for a Generative AI model that can power the agent. The authoritative source is the response `data` array from `run-data-page` for `D_pxAIModelsForCoachOrAgent` using `dataPageType: \"list\"` at authoring time. Populate this object from the selected row instead of from a hard-coded repository reference.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "x-pega-autoFill": "Embed-GenAI-Model"
+        },
+        "pyModelId": {
+          "type": "string",
+          "description": "Logical model identifier copied from the selected response `data` row (for example, `pega-default-smart` or `bedrock/anthropic/Claude-Sonnet-45/1`). This is the key used to select the model."
+        },
+        "pyModelName": {
+          "type": "string",
+          "description": "Human-readable display name copied from the selected response `data` row (for example, `Claude Sonnet 4.5`). Shown in UI pickers."
+        },
+        "pyProvider": {
+          "type": "string",
+          "description": "LLM provider backend copied from the selected response `data` row (for example, `bedrock`, `azure`, or `vertex`). Use the exact string value from the selected data row. Do not hard-code a closed provider list in authoring logic because the data page is the source of truth."
+        },
+        "pyCreator": {
+          "type": "string",
+          "description": "Organization that created the model (e.g., anthropic, openai, amazon, google)."
+        },
+        "pyInputTokens": {
+          "type": "string",
+          "description": "Maximum number of input tokens the model accepts per request. Larger values support longer contexts."
+        },
+        "pyMaxTokens": {
+          "type": "string",
+          "description": "Maximum number of output tokens the model can generate in a single response."
+        },
+        "pyIsDefaultForAgent": {
+          "type": "string",
+          "enum": ["true", "false"],
+          "description": "When 'true', this model is the default selection for new agents."
+        },
+        "pyIsSupportedForAgent": {
+          "type": "string",
+          "enum": ["true", "false"],
+          "description": "When 'true', this model can be used with agent rules. Some models may only support other use cases."
+        },
+        "pySupportedCapabilities": {
+          "$ref": "#/$defs/Embed-GenAI-Model-Capabilities",
+          "description": "Capabilities supported by the selected model, copied from the selected response `data` row's `pySupportedCapabilities`. At minimum, extract `pyIsFunctionSupported`, `pyIsJsonModeSupported`, `pyIsMutlmodalSupported`, `pyIsStreamingSupported`, and `pyIsparallelFunctionSupported` when they are present on the page."
+        },
+        "pyDescription": {
+          "type": "string",
+          "description": "Model description copied from the selected response `data` row. Use the live data page value rather than a repository-maintained model catalog."
+        },
+        "pyModelDeprecationInfo": {
+          "$ref": "#/$defs/Embed-GenAI-Model-Deprecation",
+          "description": "Deprecation status and timeline for this model, copied from the selected response `data` row's `pyModelDeprecationInfo` when present on the page."
+        },
+        "pyModelParameters": {
+          "type": "array",
+          "description": "Configurable parameters for the model (temperature, max_tokens, etc.), copied from the selected response `data` row's `pyModelParameters` list.",
+          "items": {
+            "$ref": "#/$defs/Embed-GenAI-Model-Parameters"
+          }
+        }
+      },
+      "required": ["pxObjClass", "pyModelId", "pyProvider"]
+    },
+    "Embed-GenAI-Model-Parameters": {
+      "type": "object",
+      "description": "A configurable parameter for the LLM model (e.g., temperature, max_tokens, top_p).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "x-pega-autoFill": "Embed-GenAI-Model-Parameters"
+        },
+        "pyName": {
+          "type": "string",
+          "description": "Parameter name as expected by the LLM provider (e.g., temperature, max_tokens, top_p)."
+        },
+        "pyType": {
+          "type": "string",
+          "enum": ["float", "integer", "string", "boolean", "array", "object"],
+          "description": "Data type of the parameter: float (decimal), integer, string, boolean, array (list), or object (JSON object)."
+        },
+        "pyDefaultValue": {
+          "type": "string",
+          "description": "Default value used when the parameter is not explicitly set."
+        },
+        "pyMinValue": {
+          "type": "string",
+          "description": "Minimum allowed value (for numeric parameters like temperature which ranges from 0.0 to 1.0)."
+        },
+        "pyMaxValue": {
+          "type": "string",
+          "description": "Maximum allowed value (for numeric parameters)."
+        },
+        "pyDescription": {
+          "type": "string",
+          "description": "Human-readable description of what the parameter controls and how it affects the model output."
+        }
+      },
+      "required": ["pxObjClass", "pyName"]
+    },
+    "Embed-GenAI-Model-Capabilities": {
+      "type": "object",
+      "description": "Capabilities supported by a GenAI model. Determines what features can be used with the model.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "x-pega-autoFill": "Embed-GenAI-Model-Capabilities"
+        },
+        "pyIsFunctionSupported": {
+          "type": "string",
+          "enum": ["true", "false"],
+          "description": "When 'true', the model supports function/tool calling (can invoke tools during conversation). Required for agents with tools."
+        },
+        "pyIsJsonModeSupported": {
+          "type": "string",
+          "enum": ["true", "false"],
+          "description": "When 'true', the model can be forced to output valid JSON. Useful for structured data extraction."
+        },
+        "pyIsMutlmodalSupported": {
+          "type": "string",
+          "enum": ["true", "false"],
+          "description": "When 'true', the model accepts multimodal inputs like images (vision) or audio. Check pyMultiModalList for supported MIME types."
+        },
+        "pyIsparallelFunctionSupported": {
+          "type": "string",
+          "enum": ["true", "false"],
+          "description": "When 'true', the model can call multiple functions in parallel within a single turn."
+        },
+        "pyIsStreamingSupported": {
+          "type": "string",
+          "enum": ["true", "false"],
+          "description": "When 'true', the model supports streaming responses (tokens delivered incrementally)."
+        },
+        "pyMultiModalList": {
+          "type": "array",
+          "description": "List of supported multimodal MIME types when pyIsMultimodalSupported is true (e.g., image/jpeg, audio/wav, image/png).",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["pxObjClass"]
+    },
+    "Embed-GenAI-Model-Deprecation": {
+      "type": "object",
+      "description": "Deprecation status and timeline for a model that is being phased out.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "x-pega-autoFill": "Embed-GenAI-Model-Deprecation"
+        },
+        "pyIsDeprecated": {
+          "type": "string",
+          "enum": ["true", "false"],
+          "description": "When 'true', the model is deprecated and should not be used for new agents. Existing agents should migrate to a supported model."
+        },
+        "pyDeprecationDate": {
+          "type": "string",
+          "description": "Date (YYYY-MM-DD) when the model will be removed from service. Plan migration before this date."
+        }
+      },
+      "required": ["pxObjClass"]
+    },
+    "Embed-GenAI-Assistant-Example": {
+      "type": "object",
+      "description": "An example query with optional instruction that teaches the agent how to handle similar requests.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "x-pega-autoFill": "Embed-GenAI-Assistant-Example"
+        },
+        "pyExample": {
+          "type": "string",
+          "description": "Example user query that the agent might receive (e.g., 'Show me all open cases for John Doe'). This helps the LLM understand the expected input patterns."
+        },
+        "pyInstruction": {
+          "type": "string",
+          "description": "Optional instruction on how to handle this type of query. Provide guidance on which tools to use, what data to retrieve, or how to structure the response."
+        }
+      },
+      "required": ["pxObjClass", "pyExample"]
+    },
+    "Rule-AI-Tool": {
+      "type": "object",
+      "description": "An AI tool that the agent can invoke to perform actions. pyCategory stores the display label (e.g., 'Automation', 'Data page', 'Agent'). In inspected live rules, pyIntentActionPage.pyCategory was not a reliable discriminator across all tool lists, so inspect sibling rules in your application when manually authoring tool rows.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "x-pega-autoFill": "Rule-AI-Tool"
+        },
+        "pyPurpose": {
+          "type": "string",
+          "description": "Unique purpose identifier for the tool (e.g., pzSearchEntityByLabel). This is the name used to reference the tool in the agent's prompts."
+        },
+        "pyCategory": {
+          "type": "string",
+          "enum": ["Automation", "Flow action", "Data page", "Buddy", "Section", "Agent", "Case type"],
+          "description": "Display label for the tool category stored on the Rule-AI-Tool row. This is the UI label, not a guaranteed backing-type discriminator. Use the label to place the row in the correct list property. When manually authoring, inspect sibling Rule-AI-Agent rules in your application for exact pyIntentActionPage wiring.",
+          "x-pega-hints": {
+            "Automation": "Backing rule is Rule-Obj-Activity (pyActivityType='AUTOMATION'). Use in pzActionTools. Set pyIntentActionPage.pyCategory='Rule-Obj-Activity'.",
+            "Flow action": "Backing rule is Rule-Obj-FlowAction. Use in pzActionTools. Set pyIntentActionPage.pyCategory='Rule-Obj-FlowAction'.",
+            "Data page": "Use in pzKnowledgeTools. Inspect sibling Rule-AI-Agent rules in your app to determine exact pyIntentActionPage wiring before authoring manually.",
+            "Buddy": "Use in pzKnowledgeTools. Inspect sibling Rule-AI-Agent rules in your app to determine exact pyIntentActionPage wiring before authoring manually.",
+            "Section": "Use in pzKnowledgeTools. Inspect sibling Rule-AI-Agent rules in your app to determine exact pyIntentActionPage wiring before authoring manually.",
+            "Agent": "Use in pzAgentTools. Inspect sibling Rule-AI-Agent rules in your app to determine exact pyIntentActionPage wiring before authoring manually.",
+            "Case type": "Use in pzCaseTypeTools. Inspect sibling Rule-AI-Agent rules in your app to determine exact pyIntentActionPage wiring before authoring manually."
+          }
+        },
+        "pyActivityType": {
+          "type": "string",
+          "enum": ["AUTOMATION"],
+          "description": "Activity type qualifier for automation tools. Must be 'AUTOMATION' when pyCategory is 'Automation' (i.e., pyIntentActionPage.pyCategory is 'Rule-Obj-Activity'). Indicates the activity is an automation tool."
+        },
+        "pyAskConfirmation": {
+          "type": "string",
+          "enum": ["true", "false"],
+          "description": "When true, the agent will ask the user to confirm before executing this tool. Use for destructive or sensitive operations."
+        },
+        "pyBaseRule": {
+          "type": "string",
+          "enum": ["true", "false"],
+          "description": "When true, this is a base tool rule that can be specialized via class inheritance."
+        },
+        "pyRuleAvailable": {
+          "type": "string",
+          "enum": ["Yes", "No", "Final"],
+          "description": "Tool availability: Yes (active), No (inactive), Final (locked)."
+        },
+        "pySortDateCircumWithinRSMajor": {
+          "type": "string",
+          "enum": ["true", "false"],
+          "description": "Internal Pega flag for sorting circumstanced versions by date within the same major ruleset."
+        },
+        "pyIntentActionPage": {
+          "$ref": "#/$defs/Embed-AI-Tool-Action",
+          "description": "Defines the backing rule (activity, data page, etc.) that this tool invokes."
+        }
+      },
+      "required": ["pxObjClass", "pyPurpose", "pyCategory"]
+    },
+    "Embed-AI-Tool-Action": {
+      "type": "object",
+      "description": "Defines the backing rule that an AI tool invokes. The pyRuleName must be a valid rule instance matching the pyCategory type.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "x-pega-autoFill": "Embed-AI-Tool-Action"
+        },
+        "pyCategory": {
+          "type": "string",
+          "enum": ["Rule-Obj-Activity", "Rule-Obj-FlowAction", "Rule-Declare-Pages", "Buddy", "Rule-HTML-Section", "Rule-AI-Agent", "Rule-Obj-CaseType"],
+          "description": "Type of backing rule. This determines what pyRuleName must reference.",
+          "x-pega-hints": {
+            "Rule-Obj-Activity": "pyRuleName must be an activity rule name. pyActivityType should be 'AUTOMATION'. Use in pzActionTools.",
+            "Rule-Obj-FlowAction": "pyRuleName must be a flow action rule name. Use in pzActionTools.",
+            "Rule-Declare-Pages": "pyRuleName must be a data page name. Use in pzKnowledgeTools.",
+            "Buddy": "pyRuleName must be a buddy rule name (Rule-AI-Agent instance with buddy type). Use in pzKnowledgeTools.",
+            "Rule-HTML-Section": "pyRuleName must be a section rule name. Use in pzKnowledgeTools.",
+            "Rule-AI-Agent": "pyRuleName must be an agent rule name. Use in pzAgentTools or pzExternalAgents (when pyEnableExternalAccess is enabled).",
+            "Rule-Obj-CaseType": "pyRuleName must be a case type rule name. Use in pzCaseTypeTools."
+          }
+        },
+        "pyClassName": {
+          "type": "string",
+          "description": "Pega class of the backing rule (e.g., MyApp-Work-). Must match the class context where the rule is defined."
+        },
+        "pyRuleName": {
+          "type": "string",
+          "description": "Name of the backing rule instance. Must be a valid rule of the type specified in pyCategory (see pyCategory hints above)."
+        }
+      },
+      "required": ["pxObjClass", "pyCategory", "pyRuleName"]
+    },
+    "Embed-DataPage": {
+      "type": "object",
+      "description": "Reference to a data page that provides data to the agent. Data pages are read-only data sources the agent can query to retrieve reference data or lookup information.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "x-pega-autoFill": "Embed-DataPage"
+        },
+        "pyDPName": {
+          "type": "string",
+          "description": "Name of the data page (e.g., D_Customer, D_pxGetPrimaryFieldsValue). Must be a valid Rule-Declare-Pages instance."
+        },
+        "pyPageClass": {
+          "type": "string",
+          "description": "Pega class of the data page's output (e.g., @baseclass, MyApp-Data-Customer). Defines the properties available on the page."
+        },
+        "pyCategory": {
+          "type": "string",
+          "description": "Category label for organizing data sources in the UI (e.g., 'Primary fields', 'Customer data'). Required to categorize the data source."
+        },
+        "pyApplyDataTransform": {
+          "type": "string",
+          "description": "Optional data transform to apply after retrieving data from the data page (e.g., pyMapPrimaryFieldsForAssignmentAgent). Used to post-process or reshape the data before the agent uses it."
+        },
+        "pzRuleParametersShowSkills": {
+          "type": "string",
+          "enum": ["true", "false"],
+          "description": "When true, displays rule parameters in the skills UI for this data page."
+        },
+        "pyDPParams": {
+          "type": "object",
+          "description": "Key-value pairs for data page parameters passed when invoking the data page (e.g., {\"InstanceKey\": \".pzInsKey\"}). When a parameter is required (pyParametersParamReq != 0), there MUST be a corresponding key-value entry here with pyParametersParamName as the key. Use property references (starting with .) for dynamic values."
+        },
+        "pzRuleParameters": {
+          "type": "array",
+          "description": "Formal parameter definitions for the data page, specifying names, types, and whether they are required.",
+          "items": {
+            "$ref": "#/$defs/Embed-MethodParams"
+          }
+        },
+        "pxWarningsToDisplay": {
+          "type": "array",
+          "description": "Warnings to display when this data source is used. Auto-populated by Pega.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["pxObjClass", "pyDPName", "pyCategory"]
+    },
+    "Embed-MethodParams": {
+      "type": "object",
+      "description": "Defines a parameter for a method, data page, or tool. Specifies the name, type, direction, and requirement status.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "x-pega-autoFill": "Embed-MethodParams"
+        },
+        "pyParametersParamName": {
+          "type": "string",
+          "description": "Name of the parameter (e.g., CustomerID, MaxResults). Used to reference the parameter in logic."
+        },
+        "pyParametersParamType": {
+          "type": "string",
+          "description": "Data type of the parameter: STRING, INTEGER, DECIMAL, DATETIME, DATE, BOOLEAN, PAGELIST, PAGE."
+        },
+        "pyParametersParamReq": {
+          "type": "string",
+          "description": "Whether the parameter is required: '-1' or any non-zero number for required, '0' for optional. When non-zero (required), pyDPParams MUST contain an entry with pyParametersParamName as the key."
+        },
+        "pyParametersParamInOut": {
+          "type": "string",
+          "enum": ["IN", "OUT"],
+          "description": "Direction of the parameter: IN (input only), OUT (output only)."
+        },
+        "pyParametersParamDesc": {
+          "type": "string",
+          "description": "Human-readable description of what the parameter does and what value it expects."
+        }
+      },
+      "required": ["pxObjClass"]
+    },
+    "Rule-Connect-Agent": {
+      "type": "object",
+      "description": "Connection definition for an external A2A (Agent-to-Agent) compatible agent. Allows a Pega AI Agent to delegate to or consult with external agents via the A2A protocol. Instances appear in pzExternalAgents on Rule-AI-Agent.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "x-pega-autoFill": "Rule-Connect-Agent",
+          "description": "Must be Rule-Connect-Agent."
+        },
+        "pyServiceName": {
+          "type": "string",
+          "description": "Service identifier for the external agent connection (e.g., 'ExternalAgentService'). Used to reference this connection in agent logic."
+        },
+        "pyAgentProtocol": {
+          "type": "string",
+          "enum": ["A2A"],
+          "description": "Protocol used to communicate with the external agent. Currently 'A2A' (Agent-to-Agent protocol) is supported."
+        },
+        "pyAgentCardURLSelectionType": {
+          "type": "string",
+          "enum": ["URL", "SETTING"],
+          "description": "How the agent card URL is resolved: 'URL' for direct URL, 'SETTING' for Dynamic System Setting reference."
+        },
+        "pyAgentCardAuthSelectionType": {
+          "type": "string",
+          "enum": ["AUTH_PROFILE", "NONE"],
+          "description": "Authentication method for accessing the agent card: 'AUTH_PROFILE' uses an authentication profile, 'NONE' for no auth."
+        },
+        "pyAgentExecutionAuthSelectionType": {
+          "type": "string",
+          "enum": ["AUTH_PROFILE", "NONE"],
+          "description": "Authentication method for executing the external agent: 'AUTH_PROFILE' uses an authentication profile, 'NONE' for no auth."
+        },
+         "pyHandlerFlow": {
+           "type": "string",
+           "description": "Flow to handle connection problems (e.g., 'ConnectionProblem'). This flow runs when the external agent connection fails.",
+           "x-pega-autoFill": "ConnectionProblem"
+         },
+         "pyResourceNameResolution": {
+           "type": "string",
+           "enum": ["JNDIName"],
+           "description": "Method for resolving the resource name. Typically 'JNDIName' for JNDI-based resolution.",
+           "x-pega-autoFill": "JNDIName"
+         },
+         "pyRuleAvailable": {
+           "type": "string",
+           "enum": ["Yes", "No"],
+           "description": "Availability of this connection rule: Yes (active), No (inactive).",
+           "x-pega-autoFill": "Yes"
+         },
+         "pySSLProtocolVersion": {
+           "type": "string",
+           "description": "TLS protocol version for secure connections (e.g., 'TLSv1.2', 'TLSv1.3').",
+           "x-pega-autoFill": "TLSv1.2"
+         },
+         "pyBaseRule": {
+           "type": "string",
+           "enum": ["true", "false"],
+           "description": "When true, this is a base rule that can be specialized via class inheritance."
+         },
+         "pyActionData": {
+           "type": "string",
+           "description": "Runtime action data for the agent connection. Configures how actions are sent to the external agent."
+         }
+       },
+       "required": ["pxObjClass", "pyServiceName"]
+     },
+     "Rule-Connect-MCP": {
+       "type": "object",
+       "description": "Connection definition for an MCP (Model Context Protocol) server. Allows a Pega AI Agent to access external MCP servers for additional tools and capabilities. Instances appear in pzMCPClients on Rule-AI-Agent.",
+       "properties": {
+         "pxObjClass": {
+           "type": "string",
+           "x-pega-autoFill": "Rule-Connect-MCP",
+           "description": "Must be Rule-Connect-MCP."
+         },
+         "pyServiceName": {
+           "type": "string",
+           "description": "Service identifier for the MCP server connection (e.g., 'MyMCPService'). Used to reference this MCP client in agent logic."
+         },
+         "pyHandlerFlow": {
+           "type": "string",
+           "description": "Flow to handle connection problems (e.g., 'ConnectionProblem'). This flow runs when the MCP server connection fails.",
+           "x-pega-autoFill": "ConnectionProblem"
+         },
+         "pyResourceNameResolution": {
+           "type": "string",
+           "enum": ["JNDIName"],
+           "description": "Method for resolving the resource name. Typically 'JNDIName' for JNDI-based resolution.",
+           "x-pega-autoFill": "JNDIName"
+         },
+         "pyRuleAvailable": {
+           "type": "string",
+           "enum": ["Yes", "No"],
+           "description": "Availability of this MCP connection: Yes (active), No (inactive).",
+           "x-pega-autoFill": "Yes"
+         },
+         "pySSLProtocolVersion": {
+           "type": "string",
+           "description": "TLS protocol version for secure connections to the MCP server (e.g., 'TLSv1.2', 'TLSv1.3').",
+           "x-pega-autoFill": "TLSv1.2"
+         },
+         "pyActionData": {
+           "type": "string",
+           "description": "Runtime action data for the MCP connection. Configures how actions are sent to the MCP server."
+         }
+       },
+       "required": ["pxObjClass", "pyServiceName"]
+     },
+     "Embed-ActionData": {
+       "type": "object",
+       "description": "Action data configuration for agent or MCP connections. Defines how action parameters are mapped from clipboard pages.",
+       "properties": {
+         "pxObjClass": {
+           "type": "string",
+           "x-pega-autoFill": "Embed-ActionData"
+         },
+         "pxSubscript": {
+           "type": "string",
+           "description": "Subscript identifier for this action data entry (e.g., 'none' for default)."
+         }
+       },
+       "required": ["pxObjClass"]
+     },
+     "Embed-CustomFieldsList": {
+       "type": "object",
+       "description": "Custom fields list for extension metadata on connection rules.",
+       "properties": {
+         "pxObjClass": {
+           "type": "string",
+           "x-pega-autoFill": "Embed-CustomFieldsList"
+         },
+         "pxSubscript": {
+           "type": "string",
+           "description": "Subscript identifier for this custom fields entry (e.g., 'empty' for default)."
+         }
+       },
+       "required": ["pxObjClass"]
+     }
+   }
+ }

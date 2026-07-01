@@ -1,0 +1,971 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-declare-pages.json",
+  "title": "Rule-Declare-Pages",
+  "description": "JSON schema for creating or updating a Pega data page rule (Rule-Declare-Pages) via create-rule / update-rule. Only authored and identity fields are included; system-managed and versioning fields are omitted.",
+  "type": "object",
+  "required": [
+    "pxObjClass",
+    "pyPageName",
+    "pyLabel",
+    "pyClassName",
+    "pyStructure",
+    "pyScope",
+    "pyRuleName",
+    "pyRuleAvailable"
+  ],
+  "properties": {
+    "pxObjClass": {
+      "type": "string",
+      "const": "Rule-Declare-Pages",
+      "description": "Rule type class — always 'Rule-Declare-Pages'.",
+      "x-pega-autoFill": "Rule-Declare-Pages"
+    },
+    "pyRuleName": {
+      "type": "string",
+      "description": "Internal rule name — must match pyPageName exactly. Auto-derived; agents should omit.",
+      "x-pega-autoFill": "{pyPageName}"
+    },
+    "pyPageName": {
+      "type": "string",
+      "description": "Data page name. Convention: prefix with 'D_' (e.g., 'D_CustomerList', 'D_AccountTypes')."
+    },
+    "pyLabel": {
+      "type": "string",
+      "maxLength": 64,
+      "description": "Human-readable display label shown in Dev Studio. Max length 64 characters."
+    },
+    "pyDescription": {
+      "type": "string",
+      "description": "Developer-facing description of what this data page provides."
+    },
+    "pyClassName": {
+      "type": "string",
+      "description": "Page class (for structure=page) or entry class (for structure=list). Must be a valid existing class with case-exact match. When pyStructure is 'list', this must be 'Code-Pega-List'."
+    },
+    "pyStructure": {
+      "type": "string",
+      "enum": ["page", "list"],
+      "description": "Data page structure. 'page' = single record (clipboard Page). 'list' = collection (clipboard Page List)."
+    },
+    "pyScope": {
+      "type": "string",
+      "enum": ["thread", "requestor", "node"],
+      "description": "Cache scope. 'thread' = current flow execution (case-specific). 'requestor' = user session (user-specific lookups). 'node' = server node (shared reference data, code tables). When 'node', pyAccessGroup is required."
+    },
+    "pyPageType": {
+      "type": "string",
+      "enum": ["normal", "loadonly", "savable", ""],
+      "description": "Authoritative user-facing page type selector. 'normal' = standard read-only data page (drives pyType='normal', pyIsSavable='false', pyUseNewGenPageForEditableDataPage='false'). 'savable' = supports save-back (drives pyType='loadonly', pyIsSavable='true'). 'loadonly' = DEPRECATED — do not use for read-only pages; use 'normal' instead. Legacy value retained for backward compatibility only."
+    },
+    "pyType": {
+      "type": "string",
+      "enum": ["normal", "loadonly", ""],
+      "description": "Internal data page type. Derived from pyPageType: 'normal' → 'normal'; 'loadonly' → 'loadonly'; 'savable' → 'loadonly'. Agents should set pyPageType; pyType is derived."
+    },
+    "pyEditable": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Whether the data page contents are editable after load. Data pages were originally all read-only; leave blank (treated as 'false') unless editability is explicitly required."
+    },
+    "pyRefreshStrategy": {
+      "type": "string",
+      "enum": ["never", "conditional", "reference", ""],
+      "description": "Refresh strategy. 'never' = cached until explicit flush or timeout. 'conditional' = refreshed based on conditions. 'reference' = refreshed on each reference.",
+      "x-pega-autoFill": "never"
+    },
+    "pyRefreshOncePerInteraction": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Whether to refresh each user interaction. Related to pyRefreshStrategy."
+    },
+    "pyUseTimeout": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Whether timeout-based expiration is enabled."
+    },
+    "pyTimeoutDD": {
+      "type": "string",
+      "description": "Timeout days component. Only meaningful when pyPageType is 'normal' and pyRefreshOncePerInteraction is 'false'. Leave blank when unused; the server persists the value regardless of whether the UI exposes it."
+    },
+    "pyTimeoutHH": {
+      "type": "string",
+      "description": "Timeout hours component (0–23). Only meaningful when pyPageType is 'normal' and pyRefreshOncePerInteraction is 'false'."
+    },
+    "pyTimeoutMM": {
+      "type": "string",
+      "description": "Timeout minutes component (0–59). Only meaningful when pyPageType is 'normal' and pyRefreshOncePerInteraction is 'false'."
+    },
+    "pyTimeoutSS": {
+      "type": "string",
+      "description": "Timeout seconds component (0–59). Only meaningful when pyPageType is 'normal' and pyRefreshOncePerInteraction is 'false'. When a timeout is configured, the sum of DD/HH/MM/SS must be > 0."
+    },
+    "pyAsync": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Whether to load the data page asynchronously."
+    },
+    "pyAllowExternalExpiration": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Allow external cache expiration."
+    },
+    "pyAllowIdle": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Allow the data page to enter idle state."
+    },
+    "pyAllowDuplicates": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Allow duplicate entries in list-type data pages."
+    },
+    "pyKeepOneCopy": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Keep only one cached copy."
+    },
+    "pyFlushAll": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Flush all cached instances on reload."
+    },
+    "pyAllowOverride": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Allow override in child rulesets."
+    },
+    "pyIsSavable": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Whether the data page supports save-back to the source. Derived from pyPageType: 'savable' → 'true', otherwise 'false'. Agents should set pyPageType; pyIsSavable is derived."
+    },
+    "pyUseNewGenPageForEditableDataPage": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Controls whether the data page generates an editable copy for UI interaction. Set to 'false' for read-only data pages (pyPageType='normal'). Set to 'true' only for savable data pages that need UI-editable behavior. Derived — agents should not set directly; included for readback verification."
+    },
+    "pyRefreshDataPageAfterSave": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Whether the data page is automatically refreshed after a save operation."
+    },
+    "pyIsSimulated": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Whether this is a simulated data page — a runtime variant where the real source is replaced by a stand-in (e.g. LoadActivity with canned data). Simulated variants are selected via ruleset layering and are transparent to callers. Not related to unit-test mock pages."
+    },
+    "pyIsQueryable": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Whether the data page is backed by Pega Data Object storage. When 'true', no pyDataSourceList entry is needed."
+    },
+    "pyUseWhen": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Whether a When rule gates data page loading."
+    },
+    "pyWhen": {
+      "type": "string",
+      "description": "When rule name for conditional data page loading. Used with pyUseWhen: 'true'. Server clears this field when pyScope is 'node'."
+    },
+    "pyHistoryObject": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Track history of changes."
+    },
+    "pyIsClassFieldEditable": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Whether the class field is editable."
+    },
+    "pyLoadOnlyPageEnabled": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Load-only page enabled flag."
+    },
+    "pyEnableLoadOnlyPage": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Load-only page enabled (string variant)."
+    },
+    "pyEnableRetrievePageByKey": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Enable key-based retrieval from a list data page. Server forces to 'false' when pyStructure is 'page' or pyType is 'loadonly'."
+    },
+    "pyDisplayMode": {
+      "type": "string",
+      "enum": ["basic", "clone", "specialize", "advanced", ""],
+      "description": "Display mode. 'basic' = standard new rule. 'clone' = created via save-as (includes simulation variants). 'specialize' = specialization. 'advanced' = advanced mode."
+    },
+    "pyAccessGroup": {
+      "type": "string",
+      "description": "Access group restriction. Required when pyScope is 'node'. Server clears this field when pyScope is 'thread'."
+    },
+    "pyPageContext": {
+      "type": "string",
+      "description": "Page context (usually empty)."
+    },
+    "pyPageContextClass": {
+      "type": "string",
+      "description": "Page context class (usually empty)."
+    },
+    "pyUsage": {
+      "type": "string",
+      "description": "Usage notes."
+    },
+    "pyRuleSet": {
+      "type": "string",
+      "description": "Rule set the data page is saved to."
+    },
+    "pyRuleSetVersion": {
+      "type": "string",
+      "pattern": "^\\d{2}-\\d{2}-\\d{2}$",
+      "description": "Rule set version (e.g., '01-01-02'). Use '01-01-01' for branch authoring."
+    },
+    "pyRuleAvailable": {
+      "type": "string",
+      "enum": ["Yes", "No", "Blocked", "Final", "Withdrawn", ""],
+      "description": "Availability status.",
+      "x-pega-autoFill": "Yes"
+    },
+    "pyParameters": {
+      "type": "array",
+      "description": "Data page parameters. Parameters become part of the cache key — different parameter values produce different cached instances.",
+      "items": { "$ref": "#/$defs/MethodParam" },
+      "x-pega-autoFill": []
+    },
+    "pyDataSourceList": {
+      "type": "array",
+      "description": "Data sources. At least one entry required for non-queryable data pages. Queryable data pages (pyIsQueryable: 'true') backed by Pega Data Object storage have zero sources. Multiple entries enable conditional source selection via pySourceWhen.",
+      "minItems": 0,
+      "items": { "$ref": "#/$defs/DeclarePageSource" }
+    },
+    "pyPagesAndClasses": {
+      "type": "array",
+      "description": "Named pages and classes used by the data page. Defaults to an empty stub entry. May contain populated entries for complex activity parameter passing scenarios.",
+      "items": { "$ref": "#/$defs/PageAndClass" },
+      "x-pega-autoFill": [{"pxObjClass": "Embed-PagesAndClasses"}]
+    },
+    "pyPostActivity": {
+      "type": "string",
+      "description": "Activity to run after the data page loads. Empty = none."
+    },
+    "pyPostActivityParams": {
+      "type": "array",
+      "description": "Parameters for the post-load activity.",
+      "items": { "$ref": "#/$defs/NameValuePair" },
+      "x-pega-autoFill": [{"pxObjClass": "Embed-NameValuePair", "pyName": ""}]
+    },
+    "pyPassCurrentParamPageForPostActivity": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Pass the data page parameter page to the post-load activity."
+    },
+    "pyLoadActivity": {
+      "type": "string",
+      "description": "Top-level load activity. Empty when using pyDataSourceList (standard pattern)."
+    },
+    "pyLoadActivityParameters": {
+      "type": "object",
+      "description": "Parameters for the top-level load activity. Usually empty when using pyDataSourceList."
+    },
+    "pyLoadReportDefinition": {
+      "type": "string",
+      "description": "Report definition name for report-sourced data pages."
+    },
+    "pyReportDefinitionClass": {
+      "type": "string",
+      "description": "Class of the report definition."
+    },
+    "pyKeysForPageList": {
+      "type": "array",
+      "description": "Keys for page list key-based retrieval. Each entry must start with '.' and reference a valid property. Only applicable when pyEnableRetrievePageByKey is 'true'.",
+      "items": { "type": "string" },
+      "x-pega-autoFill": []
+    },
+    "pyTableList": {
+      "type": "array",
+      "description": "Table list.",
+      "items": { "type": "object" }
+    },
+    "pyActivityParams": {
+      "type": "array",
+      "description": "Activity parameters.",
+      "items": { "type": "object" }
+    },
+    "pyDataPageSaveOptionList": {
+      "type": "array",
+      "description": "Save plan options for savable data pages (pyPageType: 'savable'). All options whose pySaveOptionWhen evaluates to true are executed.",
+      "items": { "$ref": "#/$defs/SaveOption" }
+    },
+    "pyDataPagePrivilegesList": {
+      "type": "array",
+      "description": "Privilege restrictions.",
+      "items": { "type": "object" }
+    },
+    "pyMethodStatus": {
+      "type": "string",
+      "enum": ["API", "Deprecated", "Extension", "Internal", "Template", ""],
+      "description": "Access classification. 'API' = exposed for external use. 'Internal' = platform-only. Empty = unclassified."
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "pyStructure": { "const": "page" } },
+        "required": ["pyStructure"]
+      },
+      "then": {
+        "x-pega-condition": "pyEnableRetrievePageByKey must be 'false' or empty when pyStructure is 'page' (server forces this)",
+        "properties": {
+          "pyEnableRetrievePageByKey": { "enum": ["false", ""] }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "pyScope": { "const": "node" } },
+        "required": ["pyScope"]
+      },
+      "then": {
+        "x-pega-condition": "Node-scope data pages require pyAccessGroup",
+        "required": ["pyAccessGroup"]
+      }
+    },
+    {
+      "if": {
+        "properties": { "pyPageType": { "const": "savable" } },
+        "required": ["pyPageType"]
+      },
+      "then": {
+        "x-pega-condition": "savable page type drives pyType='loadonly' and pyIsSavable='true'",
+        "properties": {
+          "pyType": { "const": "loadonly" },
+          "pyIsSavable": { "const": "true" }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "pyPageType": { "const": "normal" } },
+        "required": ["pyPageType"]
+      },
+      "then": {
+        "x-pega-condition": "normal page type drives pyType='normal', pyIsSavable='false', pyUseNewGenPageForEditableDataPage='false'",
+        "properties": {
+          "pyType": { "const": "normal" },
+          "pyIsSavable": { "const": "false" },
+          "pyUseNewGenPageForEditableDataPage": { "const": "false" }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "pyPageType": { "const": "loadonly" } },
+        "required": ["pyPageType"]
+      },
+      "then": {
+        "x-pega-condition": "loadonly page type drives pyType='loadonly' and pyIsSavable='false'",
+        "properties": {
+          "pyType": { "const": "loadonly" },
+          "pyIsSavable": { "const": "false" }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "MethodParam": {
+      "type": "object",
+      "description": "A data page parameter entry (Embed-MethodParams). Parameters become part of the cache key.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-MethodParams",
+          "x-pega-autoFill": "Embed-MethodParams"
+        },
+        "pyParametersParamName": {
+          "type": "string",
+          "description": "Parameter name (e.g., 'postalCode', 'customerId'). The name 'pyImplicitParameter' is reserved and cannot be used."
+        },
+        "pyParametersParamType": {
+          "type": "string",
+          "enum": ["STRING", "INTEGER", "DECIMAL", "DOUBLE", "TRUEORFALSE", "DATE", "DATETIME", "TIMEOFDAY", "PAGE", ""],
+          "description": "Parameter data type."
+        },
+        "pyParametersParamInOut": {
+          "type": "string",
+          "enum": ["IN", "OUT", "INOUT", ""],
+          "description": "Parameter direction."
+        },
+        "pyParametersParamReq": {
+          "type": "string",
+          "enum": ["-1", "0", "Y", "N", ""],
+          "description": "Required flag. '-1' or 'Y' = required, '0' or 'N' = optional."
+        },
+        "pyParametersParamDefaultValue": {
+          "type": "string",
+          "description": "Default value if the parameter is not passed by the caller."
+        },
+        "pyParametersParamDesc": {
+          "type": "string",
+          "description": "Parameter description."
+        },
+        "pyParametersParamIntelliValidateAs": {
+          "type": "string",
+          "description": "Validation rule name (usually empty)."
+        },
+        "pyParametersParamIntelliRule": {
+          "type": "string",
+          "description": "Intellisense rule reference (usually empty)."
+        },
+        "pyParametersParamIntelliBaseClass": {
+          "type": "string",
+          "description": "Base class for intellisense (usually empty)."
+        },
+        "pyIsAlternateKeyStorage": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Marks this parameter as part of an alternate key storage pattern. Used on savable data pages to identify which fields constitute the record key for save/patch/delete operations."
+        },
+        "pyAltKeyStorageField": {
+          "type": "string",
+          "description": "Field name used for alternate key storage. Uses dot-prefix notation (e.g., '.pyGUID', '.pxInsName'). Only set when pyIsAlternateKeyStorage is 'true'."
+        }
+      }
+    },
+    "DeclarePageSource": {
+      "type": "object",
+      "description": "A data source entry (Embed-DeclarePageSource). Defines how the data page loads its data — via connector, data transform, activity, report definition, or aggregated sub-sources.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-DeclarePageSource",
+          "x-pega-autoFill": "Embed-DeclarePageSource"
+        },
+        "pyDeclarePagesDataSource": {
+          "type": "string",
+          "enum": ["Connector", "DataTransform", "LoadActivity", "ObjOpen", "ReportDefinition", "AggregateSources", ""],
+          "description": "Source type. 'Connector' = REST/SOAP connector. 'DataTransform' = data transform. 'LoadActivity' = custom activity. 'ObjOpen' = lookup by key. 'ReportDefinition' = report definition. 'AggregateSources' = aggregates multiple sub-sources."
+        },
+        "pySourceWhen": {
+          "type": "string",
+          "description": "When rule name that controls whether this source is used. 'Always' = unconditional (use for single-source data pages or as fallback in multi-source)."
+        },
+        "pyClassName": {
+          "type": "string",
+          "description": "Target class for loaded data."
+        },
+        "pyStructure": {
+          "type": "string",
+          "enum": ["page", "list", ""],
+          "description": "Target structure. Typically mirrors the top-level pyStructure."
+        },
+        "pyConnectorName": {
+          "type": "string",
+          "description": "Connector rule name (Connector sources only)."
+        },
+        "pyConnectorClassName": {
+          "type": "string",
+          "description": "Class the connector is defined on (Connector sources only)."
+        },
+        "pyConnectorList": {
+          "type": "string",
+          "enum": ["Rule-Connect-REST", "Rule-Connect-SOAP", "Rule-Connect-dotNet", "Rule-Connect-Java", "Rule-Connect-SAP", ""],
+          "description": "Connector rule type (Connector sources only). Note: the server auto-fills this as a default value even on non-connector sources — agents should only set this for Connector sources."
+        },
+        "pyRESTMethod": {
+          "type": "string",
+          "enum": ["GET", "POST", "PUT", "DELETE", "PATCH", ""],
+          "description": "HTTP method (REST connector sources only)."
+        },
+        "pyLoadActivity": {
+          "type": "string",
+          "description": "Load activity name. 'pxCallConnector' for Connector sources (auto-set by server). 'pxCallDataTransform' for DataTransform sources (auto-set by server). 'pxCallRetrieveReportData' for ReportDefinition sources (auto-set by server). Custom activity name for LoadActivity sources."
+        },
+        "pyReqDataTransform": {
+          "type": "string",
+          "description": "Request data transform name. Prepares the request before calling the connector or populates the data page directly (DataTransform sources)."
+        },
+        "pyDTName": {
+          "type": "string",
+          "description": "Data Transform name. Required for DataTransform sources — server validates this field, not pyReqDataTransform."
+        },
+        "pyResDataTransform": {
+          "type": "string",
+          "description": "Response data transform name. Maps the connector response to the data page's class structure. Mandatory for Connector sources."
+        },
+        "pyPassCurrentParamPageForReqDT": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Pass the parameter page to the request data transform."
+        },
+        "pyPassCurrentParamPageForRespDT": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Pass the parameter page to the response data transform."
+        },
+        "pyPassCurrentParamPageForActivity": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Pass the parameter page to pxCallConnector or the custom load activity."
+        },
+        "pyExecuteOnDataPage": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Execute the data transform on the data page clipboard vs. the connector page."
+        },
+        "pyEditable": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Editable flag on the source entry."
+        },
+        "pyIsSimulated": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Whether this source entry is a simulation replacement. When 'true', the original pre-simulation source is preserved in pyDisabledSource."
+        },
+        "pyIsRequired": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Whether this source must succeed for the data page to load."
+        },
+        "pyDataSourceHolder": {
+          "type": "string",
+          "description": "Display identifier (usually the connector or DT name)."
+        },
+        "pyModalTitle": {
+          "type": "string",
+          "description": "UI display label for the source entry. Auto-populated from the source's primary identifier (When rule name, connector name, DT name, etc.). Agents should not set this field."
+        },
+        "pyDescription": {
+          "type": "string",
+          "description": "Auto-generated description of the source."
+        },
+        "pyConnectorDisplayProp": {
+          "type": "string",
+          "description": "Property used for display (usually 'pyServiceName')."
+        },
+        "pyRuleOpenerKey": {
+          "type": "string",
+          "description": "Key for opening the connector rule (format: 'CLASSNAME!CONNECTORNAME')."
+        },
+        "pyEndPointURL": {
+          "type": "string",
+          "description": "Override endpoint URL. Empty = use the connector's default."
+        },
+        "pyDPConnectorResParam": {
+          "type": "string",
+          "description": "Connector response parameter."
+        },
+        "pyDPConnectorReqParam": {
+          "type": "string",
+          "description": "Connector request parameter."
+        },
+        "pySQLOption": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "SQL option flag."
+        },
+        "pySQLAccess": {
+          "type": "string",
+          "description": "SQL access configuration."
+        },
+        "pyPageListPropClassName": {
+          "type": "string",
+          "description": "Page list property class. Auto-set to 'Code-Pega-List' for list-structure data pages. Agents should not need to set this."
+        },
+        "pyReorderFlag": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "UI tracking field that records whether this source entry was reordered in the Pega editor. Does NOT affect runtime evaluation order — array position in pyDataSourceList determines that. Auto-managed."
+        },
+        "pyPassCurrentParamPageForWhen": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Pass the parameter page to the When rule (multi-source data pages)."
+        },
+        "pyConnectorParamList": {
+          "type": "array",
+          "description": "Maps data page parameters to connector parameters.",
+          "items": { "$ref": "#/$defs/NameValuePair" },
+          "x-pega-autoFill": [{"pxObjClass": "Embed-NameValuePair", "pyValue": "", "pyName": ""}]
+        },
+        "pyConnectorDTParams": {
+          "type": "array",
+          "description": "Parameters for the connector's data transforms. Can contain populated Embed-NameValuePair entries for connector DT parameter mapping (same structure as pyConnectorParamList).",
+          "items": { "$ref": "#/$defs/NameValuePair" },
+          "x-pega-autoFill": [{"pxObjClass": "Embed-NameValuePair"}]
+        },
+        "pyWhenParamList": {
+          "type": "array",
+          "description": "Parameters passed to the When rule (multi-source data pages).",
+          "items": { "$ref": "#/$defs/NameValuePair" }
+        },
+        "pyDisabledSource": {
+          "$ref": "#/$defs/DisabledSource",
+          "description": "Preserves the original pre-simulation source verbatim. Only present on simulated data pages. Required by the 'un-simulate' UI workflow — must be preserved on updates. Omit when creating non-simulated data pages."
+        },
+        "pyLoadActivityParameters": {
+          "type": "object",
+          "description": "Internal serialization used by pxCallConnector. Mirrors many source fields. Usually auto-populated."
+        },
+        "pyDSSystemName": {
+          "type": "string",
+          "description": "System name for the data source. Optional but generates a warning if empty."
+        },
+        "pyActivityParams": {
+          "type": "array",
+          "description": "Maps data page parameters to activity parameters. Available on all source types (not just LoadActivity). The activity-source equivalent of pyConnectorParamList for connector sources. Server auto-populates pyLoadActivityParameters from this array.",
+          "items": { "$ref": "#/$defs/NameValuePair" }
+        },
+        "pyDTParamList": {
+          "type": "array",
+          "description": "Maps data page parameters to data transform parameters (DataTransform sources). The DT-source equivalent of pyConnectorParamList for connector sources and pyActivityParams for activity sources.",
+          "items": { "$ref": "#/$defs/NameValuePair" }
+        },
+        "pyRunDataTransformOnError": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "When 'true', runs the error data transform if the source load fails. Default: not set (equivalent to 'false')."
+        },
+        "pyLoadReportDefinition": {
+          "type": "string",
+          "description": "Report definition rule name (ReportDefinition sources only)."
+        },
+        "pyReportDefinitionClass": {
+          "type": "string",
+          "description": "Class the report definition is defined on (ReportDefinition sources only)."
+        },
+        "pyLookupClassName": {
+          "type": "string",
+          "description": "Class to look up by key (ObjOpen sources only). E.g., 'Data-Admin-Operator-ID'."
+        },
+        "pyLookupName": {
+          "type": "string",
+          "description": "Display name for the lookup (ObjOpen sources only). E.g., 'Operator ID'."
+        },
+        "pyClassKeyValueList": {
+          "type": "array",
+          "description": "Database lookup keys for ObjOpen sources. Each entry maps a key property to a value or parameter reference.",
+          "items": { "$ref": "#/$defs/NameValuePair" }
+        },
+        "pyTemporaryObject": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Controls temporary page behavior during source loading. Rarely used."
+        },
+        "pyRATimeout": {
+          "type": "string",
+          "description": "Timeout in seconds for source load (string-encoded integer, e.g., '30'). Found on ReportDefinition and LoadActivity sources."
+        },
+        "pySkipSummaryProcessing": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Skip summary processing for ReportDefinition sources."
+        },
+        "pyAggregatedDataSourceList": {
+          "type": "array",
+          "description": "Sub-sources for AggregateSources type. Each entry is a DeclarePageSource that loads independently; results are aggregated into the parent data page.",
+          "items": { "$ref": "#/$defs/DeclarePageSource" }
+        },
+        "pyAggregatedDataSourcesLabel": {
+          "type": "string",
+          "description": "Display label for the aggregated source group (AggregateSources type)."
+        },
+        "pySourceID": {
+          "type": "string",
+          "description": "Unique source identifier within the data page. Used for hierarchical source identification in AggregateSources."
+        },
+        "pyParentSourceID": {
+          "type": "string",
+          "description": "Parent source identifier. Links a sub-source to its parent AggregateSources entry."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "pyDeclarePagesDataSource": { "const": "Connector" } },
+            "required": ["pyDeclarePagesDataSource"]
+          },
+          "then": {
+            "x-pega-condition": "Connector source requires pyConnectorName, pyConnectorClassName, and pyConnectorList",
+            "required": ["pyConnectorName", "pyConnectorClassName", "pyConnectorList"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "pyDeclarePagesDataSource": { "const": "DataTransform" } },
+            "required": ["pyDeclarePagesDataSource"]
+          },
+          "then": {
+            "x-pega-condition": "DataTransform source requires pyDTName",
+            "required": ["pyDTName"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "pyDeclarePagesDataSource": { "const": "LoadActivity" } },
+            "required": ["pyDeclarePagesDataSource"]
+          },
+          "then": {
+            "x-pega-condition": "LoadActivity source requires pyLoadActivity and pyPassCurrentParamPageForActivity",
+            "required": ["pyLoadActivity", "pyPassCurrentParamPageForActivity"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "pyDeclarePagesDataSource": { "const": "ReportDefinition" } },
+            "required": ["pyDeclarePagesDataSource"]
+          },
+          "then": {
+            "x-pega-condition": "ReportDefinition source requires pyLoadReportDefinition, pyReportDefinitionClass, and pyPassCurrentParamPageForActivity",
+            "required": ["pyLoadReportDefinition", "pyReportDefinitionClass", "pyPassCurrentParamPageForActivity"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "pyDeclarePagesDataSource": { "const": "ObjOpen" } },
+            "required": ["pyDeclarePagesDataSource"]
+          },
+          "then": {
+            "x-pega-condition": "ObjOpen source requires pyLookupClassName and pyClassKeyValueList",
+            "required": ["pyLookupClassName", "pyClassKeyValueList"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "pyDeclarePagesDataSource": { "const": "AggregateSources" } },
+            "required": ["pyDeclarePagesDataSource"]
+          },
+          "then": {
+            "x-pega-condition": "AggregateSources requires pyAggregatedDataSourceList",
+            "required": ["pyAggregatedDataSourceList"]
+          }
+        }
+      ]
+    },
+    "DisabledSource": {
+      "type": "object",
+      "description": "Represents an alternative source type that was not chosen (Embed-DeclarePageSource with minimal fields).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-DeclarePageSource",
+          "x-pega-autoFill": "Embed-DeclarePageSource"
+        },
+        "pyDeclarePagesDataSource": {
+          "type": "string",
+          "enum": ["Connector", "DataTransform", "LoadActivity", "ObjOpen", "ReportDefinition", "AggregateSources", ""],
+          "description": "The alternative source type."
+        },
+        "pyDescription": {
+          "type": "string",
+          "description": "Display description of the alternative source."
+        }
+      }
+    },
+    "NameValuePair": {
+      "type": "object",
+      "description": "A name-value pair entry (Embed-NameValuePair). Used for connector parameter mapping, DT params, When params, and post-activity params.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-NameValuePair",
+          "x-pega-autoFill": "Embed-NameValuePair"
+        },
+        "pyName": {
+          "type": "string",
+          "description": "Parameter name."
+        },
+        "pyValue": {
+          "type": "string",
+          "description": "Parameter value or expression."
+        },
+        "pyIsActivityParameter": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Set to 'false' for connector parameters (query string, path, header — placed on the connector's parameter page where pyMapFrom: 'PARAM' reads them). Set to 'true' only for pxCallConnector activity-level parameters (e.g., timeout overrides). Using 'true' for connector parameters causes values to be silently dropped — the connector receives no parameter values.",
+          "x-pega-autoFill": "false"
+        },
+        "pyParameterRequired": {
+          "type": "string",
+          "enum": ["-1", "0", ""],
+          "description": "Required: '-1' = required, '0' = optional."
+        },
+        "pyParameterInOut": {
+          "type": "string",
+          "enum": ["IN", "OUT", "INOUT", ""],
+          "description": "Parameter direction."
+        },
+        "pyParameterType": {
+          "type": "string",
+          "enum": ["STRING", "INTEGER", "BOOLEAN", "Text", ""],
+          "description": "Parameter data type."
+        },
+        "pyDescription": {
+          "type": "string",
+          "description": "Parameter description."
+        }
+      }
+    },
+    "PageAndClass": {
+      "type": "object",
+      "description": "A named page declaration (Embed-PagesAndClasses).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-PagesAndClasses",
+          "x-pega-autoFill": "Embed-PagesAndClasses"
+        },
+        "pyPagesAndClassesPage": {
+          "type": "string",
+          "description": "Clipboard page name."
+        },
+        "pyPagesAndClassesClass": {
+          "type": "string",
+          "description": "Class of the page."
+        },
+        "pyPagesAndClassesMode": {
+          "type": "string",
+          "description": "Page mode (usually blank)."
+        }
+      }
+    },
+    "SaveOption": {
+      "type": "object",
+      "description": "A save plan option entry (Embed-DeclarePageSaveOption). Defines how a savable data page persists changes back to the source.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-DeclarePageSaveOption",
+          "x-pega-autoFill": "Embed-DeclarePageSaveOption"
+        },
+        "pySaveOptionType": {
+          "type": "string",
+          "enum": ["simplesave", "activity", "dbDelete", "simplepatch", "connector", ""],
+          "description": "Save mechanism. 'simplesave' = standard database save (most common). 'activity' = custom save activity. 'dbDelete' = database delete. 'simplepatch' = database patch/update. 'connector' = REST/SOAP connector-based save (OAS-imported)."
+        },
+        "pySaveOptionWhen": {
+          "type": "string",
+          "description": "When rule name that controls whether this save option executes. 'Always' = unconditional. When conditional, Pega evaluates save options in order."
+        },
+        "pyClassName": {
+          "type": "string",
+          "description": "Class being saved."
+        },
+        "pySaveOptionClassName": {
+          "type": "string",
+          "description": "Save option class name — usually mirrors pyClassName. May be empty on activity type."
+        },
+        "pySaveOptionClassLabel": {
+          "type": "string",
+          "description": "Human-readable label for the save option class."
+        },
+        "pyDescription": {
+          "type": "string",
+          "description": "Auto-generated description of the save option."
+        },
+        "pyStructure": {
+          "type": "string",
+          "enum": ["page", "list", ""],
+          "description": "Structure — matches the data page structure."
+        },
+        "pyConnectorName": {
+          "type": "string",
+          "description": "Connector rule name (for connector-based saves)."
+        },
+        "pyConnectorType": {
+          "type": "string",
+          "enum": ["Rule-Connect-REST", "Rule-Connect-SOAP", ""],
+          "description": "Connector rule type. Server sets 'Rule-Connect-REST' even for DB saves."
+        },
+        "pyRESTMethod": {
+          "type": "string",
+          "enum": ["GET", "POST", "PUT", "DELETE", "PATCH", ""],
+          "description": "HTTP method. Server sets 'POST' for DB saves."
+        },
+        "pyDTName": {
+          "type": "string",
+          "description": "Data transform for the save operation."
+        },
+        "pyValidateRule": {
+          "type": "string",
+          "description": "Validation When rule to run before saving."
+        },
+        "pyActivityName": {
+          "type": "string",
+          "description": "Custom save activity name (activity type only)."
+        },
+        "pyRATimeout": {
+          "type": "string",
+          "description": "Timeout in seconds for the save activity (e.g., '30'). Activity type only."
+        },
+        "pyActivityParamList": {
+          "type": "array",
+          "description": "Parameters for the save activity (activity type only).",
+          "items": { "$ref": "#/$defs/NameValuePair" }
+        },
+        "pyWhenParamList": {
+          "type": "array",
+          "description": "Parameters passed to the pySaveOptionWhen rule (conditional saves only).",
+          "items": { "$ref": "#/$defs/NameValuePair" }
+        },
+        "pyDTParamList": {
+          "type": "array",
+          "description": "Data transform parameters for save-time DT execution. Same structure as pyDTParamList on source entries.",
+          "items": { "$ref": "#/$defs/NameValuePair" }
+        },
+        "pyRuleOpenerKey": {
+          "type": "string",
+          "description": "Key for opening the connector rule."
+        },
+        "pyRuleSetName": {
+          "type": "string",
+          "description": "Ruleset name."
+        },
+        "pyIsRequired": {
+          "type": "string",
+          "description": "Whether the save option is required."
+        },
+        "pyIsResponseDTRequired": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Whether a response data transform is required."
+        },
+        "pyIsAutoCompleteUsed": {
+          "type": "string",
+          "description": "Auto-complete flag."
+        },
+        "pyReadsOrRoutesToExternalSystem": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Whether this save routes to an external system."
+        },
+        "pyPageListPropClassName": {
+          "type": "string",
+          "description": "Page list property class (e.g., 'Code-Pega-List')."
+        },
+        "pyRACaseType": {
+          "type": "string",
+          "description": "Robotic automation case type."
+        },
+        "pyIsSaveOptionDeleted": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Marks a save option as soft-deleted (still in array but inactive). Auto-managed."
+        },
+        "pyReorderFlag": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Indicates save option ordering has been customized. Auto-managed."
+        },
+        "pyModalTitle": {
+          "type": "string",
+          "description": "Title for modal dialog shown during save (if applicable). Auto-managed."
+        }
+      }
+    }
+  }
+}

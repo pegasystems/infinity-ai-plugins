@@ -1,0 +1,342 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-obj-property.json",
+  "title": "Rule-Obj-Property",
+  "description": "JSON schema for creating or updating a Pega property rule (Rule-Obj-Property). Covers scalar (String, Date, Integer, etc.), page, page list, page group, string list, string group, gateway/linked, and dropdown prompt list patterns.",
+  "type": "object",
+  "required": [
+    "pxObjClass",
+    "pyPropertyName",
+    "pyRuleName",
+    "pyLabel",
+    "pyClassName",
+    "pyPropertyMode",
+    "pyRuleAvailable",
+    "pySortDateCircumWithinRSMajor",
+    "pyIsNonTransient"
+  ],
+  "properties": {
+    "pxObjClass": {
+      "type": "string",
+      "const": "Rule-Obj-Property",
+      "description": "Rule type class — always 'Rule-Obj-Property'.",
+      "x-pega-autoFill": "Rule-Obj-Property"
+    },
+    "pyPropertyName": {
+      "type": "string",
+      "description": "Internal name of the property. PascalCase, no spaces or special characters, alphanumeric only (e.g., 'AccountManager', 'InterviewDate'). This is the value used in Pega expressions (.AccountManager)."
+    },
+    "pyRuleName": {
+      "type": "string",
+      "description": "Rule name. Must match pyPropertyName.",
+      "x-pega-autoFill": "{pyPropertyName}"
+    },
+    "pyLabel": {
+      "type": "string",
+      "description": "Human-readable display label shown in the UI and Dev Studio (e.g., 'Account Manager')."
+    },
+    "pyDescription": {
+      "type": "string",
+      "description": "Developer-facing description of the property's purpose."
+    },
+    "pyClassName": {
+      "type": "string",
+      "description": "The fully qualified Pega class this property belongs to (e.g., 'MyOrg-MyApp-Data-ClientInformation')."
+    },
+    "pyPropertyMode": {
+      "type": "string",
+      "enum": ["String", "Page", "PageList", "PageGroup", "StringList", "StringGroup"],
+      "description": "Storage mode. Use API values — they differ from Dev Studio display labels. 'String' = scalar value. 'Page' = single embedded page. 'PageList' = ordered list of embedded pages. 'PageGroup' = keyed map of embedded pages. 'StringList' = ordered list of scalar values. 'StringGroup' = keyed map of scalar values."
+    },
+    "pyStringType": {
+      "type": "string",
+      "enum": ["Text", "Date", "DateTime", "Integer", "Decimal", "TrueFalse", ""],
+      "description": "Scalar data type. Note: 'Percent' and 'Currency' are not valid API values — use 'Decimal' and configure the display format on the view control.",
+      "x-pega-hints": {
+        "Percent":  "Use 'Decimal' and configure display format on the view",
+        "Currency": "Use 'Decimal' and configure display format on the view"
+      }
+    },
+    "pyMaxLength": {
+      "type": "string",
+      "pattern": "^\\d*$",
+      "description": "Maximum character length for String/Text properties. Observed in API responses as a string, either empty or a numeric string (for example '', '1', '100', '10000'). Some persisted Text properties include explicit lengths such as '32', '64', or '255', while many leave this field blank."
+    },
+    "pyPageClass": {
+      "type": "string",
+      "description": "Fully qualified class of the embedded page instances stored in this property (e.g., 'MyOrg-MyApp-Data-AssessmentPlan')."
+    },
+    "pyStreamName": {
+      "type": "string",
+      "description": "Control template used to render this property in a view. Pega infers a default from pyPropertyMode and pyStringType. Override explicitly to change the rendering (e.g., 'pxTextArea' for multi-line text, 'pxDropdown' for a dropdown). This is a property-level setting — it affects every view that displays this property. To change a field from single-line to multi-line text, update pyStreamName on the Rule-Obj-Property, not on the view."
+    },
+    "pyTableOption": {
+      "type": "string",
+      "enum": ["ClassKeyValue", "PromptList", ""],
+      "description": "Table option controlling how property values are resolved or displayed. 'ClassKeyValue' for gateway/linked fields. 'PromptList' for dropdown properties with inline values (requires pyStreamName='pxDropdown' and pyPromptTableList)."
+    },
+    "pyPromptTableList": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/PromptValue" },
+      "description": "Static dropdown values for prompt list properties. Required when pyTableOption is 'PromptList'. Each entry needs pyLocalizedValue (display label) and pyStandardValue (stored value). Do not use pyTableValue or pyTableDescription — those field names are silently ignored by Pega."
+    },
+    "pyAdvancedPropType": {
+      "type": "string",
+      "enum": ["LINKED", "MANUAL", ""],
+      "description": "Advanced property type. 'LINKED' for gateway/linked-field properties that look up a record in a class table. 'MANUAL' is the default for all other properties (auto-filled when absent).",
+      "x-pega-autoFill": "MANUAL"
+    },
+    "pyIsGateway": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "When 'true', this is a linked/gateway property that resolves its value by looking up a record in a class table. Set to 'true' together with pyAdvancedPropType='LINKED', pyGatewayClass, pyTableClass, pyTableOption='ClassKeyValue', and pyGatewayPropertyMap."
+    },
+    "pyGatewayClass": {
+      "type": "string",
+      "description": "Class table queried by a gateway property (e.g., 'Data-Admin-Operator-ID'). Required when pyIsGateway is 'true'."
+    },
+    "pyTableClass": {
+      "type": "string",
+      "description": "Database table class for gateway properties. Typically the same as pyGatewayClass. Required when pyIsGateway is 'true'."
+    },
+    "pyTableProperty": {
+      "type": "string",
+      "description": "Key property used to look up records in the gateway table. Empty string uses the default key."
+    },
+    "pyGatewayPropertyMap": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/GatewayPropertyMap" },
+      "description": "Maps source properties to target properties for the gateway lookup. Required when pyIsGateway is 'true'. Each entry specifies which source property drives the lookup and which target property receives the result."
+    },
+    "pyIsAssociation": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "When 'true', this Page property is a linked/associated data object sourced from a data page."
+    },
+    "pyDataObject": {
+      "type": "string",
+      "description": "Data page name that populates this Page property when pyIsAssociation is 'true' (e.g., 'D_AssessmentPlan')."
+    },
+    "pyDataObjectClass": {
+      "type": "string",
+      "description": "Class of the data object for association properties. Typically matches pyPageClass."
+    },
+    "pyDataRetrievalType": {
+      "type": "string",
+      "enum": ["AUTOMATICNONREF", "AUTOMATIC", "MANUAL", ""],
+      "description": "How the data page is retrieved for association properties. 'MANUAL' is the default supported mode for authoring. 'AUTOMATIC' and 'AUTOMATICNONREF' correspond to Refer to a data page / Copy data from a data page behavior, which is not supported for creation or modification at this time.",
+      "x-pega-autoFill": "MANUAL"
+    },
+    "pyEditValidate": {
+      "type": "string",
+      "description": "Name of a validate rule to run when input is received for this property."
+    },
+    "pyOnInput": {
+      "type": "string",
+      "description": "Activity or expression run when the property value changes on input."
+    },
+    "pyOnObjChange": {
+      "type": "string",
+      "description": "Activity or expression run when the object changes."
+    },
+    "pyColumnIndexed": {
+      "type": "string",
+      "description": "Database column indexing option."
+    },
+    "pyColumnInclusion": {
+      "type": "string",
+      "description": "Controls whether the column is included in the database table."
+    },
+    "pyExpectedSize": {
+      "type": "string",
+      "pattern": "^\\d*$",
+      "description": "Expected size hint used by some property rules. Observed in API responses as a string, either empty or a numeric string (for example '', '1', '100', '10000')."
+    },
+    "pyComparator": {
+      "type": "string",
+      "description": "Custom comparator class for sorting or comparing values of this property."
+    },
+    "pyRuleAccessWhen": {
+      "type": "string",
+      "description": "Circumstance When rule that gates access to this rule version."
+    },
+    "pyRuleSet": {
+      "type": "string",
+      "description": "Ruleset to save the property into. Set automatically from the branch context by the builder — agents do not need to provide this."
+    },
+    "pyRuleSetVersion": {
+      "type": "string",
+      "description": "Ruleset version. Set automatically from the branch context by the builder — agents do not need to provide this."
+    },
+    "pyRuleAvailable": {
+      "type": "string",
+      "enum": ["Yes", "No", "Withdrawn", "Final", "Blocked"],
+      "description": "Availability status. Auto-filled to 'Yes' when absent.",
+      "x-pega-autoFill": "Yes"
+    },
+    "pySortDateCircumWithinRSMajor": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Affects rule resolution sorting. Auto-filled to 'true' for all rule types — agents should not set this.",
+      "x-pega-autoFill": "true"
+    },
+    "pySPRuleSetName": {
+      "type": "string",
+      "description": "Must match pyRuleSet. Auto-derived from pyRuleSet by the property validator — agents should not set this.",
+      "x-pega-autoDerived": true
+    },
+    "pyIsNonTransient": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "When 'true', the property value is persisted to the database. Auto-filled to 'true' for all property rules — agents should not set this.",
+      "x-pega-autoFill": "true"
+    },
+    "pyIsFieldForWorkClass": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "When 'true', the property belongs to a work (case) class. Auto-derived from pyClassName: set to 'true' when the class name contains '-Work-', 'false' otherwise. Agents should not set this.",
+      "x-pega-autoDerived": true
+    },
+    "pyReflectStatus": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Enables reflection status tracking. Auto-filled to 'true' — agents should not set this.",
+      "x-pega-autoFill": "true"
+    },
+    "pyLocalize": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "When 'true', enables localization for this property's value. Auto-filled to 'false'.",
+      "x-pega-autoFill": "false"
+    },
+    "pyIsLightweight": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "When 'true', the property is lightweight (non-persisted). Auto-filled to 'false'.",
+      "x-pega-autoFill": "false"
+    },
+    "pyIsReference": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "When 'true', the property is a reference property. Auto-filled to 'false'.",
+      "x-pega-autoFill": "false"
+    },
+    "pyCannotBeDeclarativeTarget": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "When 'true', prevents this property from being a declarative rule target. Auto-filled to 'false'.",
+      "x-pega-autoFill": "false"
+    },
+    "pyTableAmountUnits": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Controls amount units display for currency/decimal properties. Auto-filled to 'true'.",
+      "x-pega-autoFill": "true"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "pyPropertyMode": {
+            "enum": ["String", "StringList", "StringGroup"]
+          }
+        },
+        "required": ["pyPropertyMode"]
+      },
+      "then": {
+        "required": ["pyStringType"],
+        "x-pega-condition": "pyPropertyMode is 'String', 'StringList', or 'StringGroup'"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "pyPropertyMode": {
+            "enum": ["Page", "PageList", "PageGroup"]
+          }
+        },
+        "required": ["pyPropertyMode"]
+      },
+      "then": {
+        "required": ["pyPageClass"],
+        "x-pega-condition": "pyPropertyMode is 'Page', 'PageList', or 'PageGroup'"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "pyDataRetrievalType": {
+            "enum": ["AUTOMATIC", "AUTOMATICNONREF"]
+          }
+        },
+        "required": ["pyDataRetrievalType"]
+      },
+      "then": {
+        "not": {},
+        "x-pega-condition": "pyDataRetrievalType is 'AUTOMATIC' or 'AUTOMATICNONREF' — The Property is using `Refer to a data page` or `Copy data from a data page`. Creation or modification is not allowed at this time"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "pyAdvancedPropType": {
+            "const": "LINKED"
+          }
+        },
+        "required": ["pyAdvancedPropType"]
+      },
+      "then": {
+        "not": {},
+        "x-pega-condition": "pyAdvancedPropType is 'LINKED' — The Property is using `Automatic reference to class instance (linked)`. Creation or modification is not allowed at this time"
+      }
+    }
+  ],
+  "$defs": {
+    "GatewayPropertyMap": {
+      "type": "object",
+      "description": "A single entry in pyGatewayPropertyMap (Embed-GatewayProperty). Maps a source property to a target property for the gateway lookup.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-GatewayProperty",
+          "description": "Embed class for gateway property map entries. Always 'Embed-GatewayProperty'.",
+          "x-pega-autoFill": "Embed-GatewayProperty"
+        },
+        "pySourcePropertyType": {
+          "type": "string",
+          "enum": ["READ_ONLY", "READ_WRITE", ""],
+          "description": "Access mode for the source property. 'READ_ONLY' is most common."
+        },
+        "pyTargetProperty": {
+          "type": "string",
+          "description": "Property name (without dot prefix) on the current page to populate with the lookup result (e.g., 'pyUserIdentifier')."
+        },
+        "pySourceProperty": {
+          "type": "string",
+          "description": "Source property reference with dot prefix (e.g., '.AccountManager') that drives the class table lookup."
+        }
+      }
+    },
+    "PromptValue": {
+      "type": "object",
+      "description": "A single entry in pyPromptTableList (Embed-PropertyPromtValues). Note: 'Promt' is an intentional Pega typo — do not correct it.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-PropertyPromtValues",
+          "description": "Embed class for prompt list entries. Always 'Embed-PropertyPromtValues'. Note: 'Promt' is an intentional Pega typo (missing 'p' in Prompt). Using the correct spelling 'Embed-PropertyPromptValues' creates an empty prompt list without error.",
+          "x-pega-autoFill": "Embed-PropertyPromtValues"
+        },
+        "pyLocalizedValue": {
+          "type": "string",
+          "description": "Display label shown in the dropdown to the user."
+        },
+        "pyStandardValue": {
+          "type": "string",
+          "description": "Value stored on the clipboard when this option is selected. Do not use 'pyTableValue' — it is silently ignored by Pega."
+        }
+      }
+    }
+  }
+}

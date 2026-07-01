@@ -1,0 +1,24 @@
+{
+  "pega-infinity-authoring": {
+    "type": "stdio",
+    "command": "java",
+    "args": [
+      "-jar",
+      "./resources/infinity-rules-mcp.jar",
+      "--spring.profiles.active=stdio"
+    ],
+    "cwd": "./",
+    "env": {
+      "PEGA_SKILLS_PATH": "./resources/pega-skills",
+      "PEGA_CLIENT_MODE": "codex-plugin"
+    },
+    "env_vars": [
+      "PEGA_BASE_URL",
+      "PEGA_OAUTH_CLIENT_ID",
+      "PEGA_OAUTH_REDIRECT_PORT",
+      "PEGA_LOCAL_SKILLS_PATH"
+    ],
+    "startup_timeout_sec": 20,
+    "tool_timeout_sec": 120
+  }
+}

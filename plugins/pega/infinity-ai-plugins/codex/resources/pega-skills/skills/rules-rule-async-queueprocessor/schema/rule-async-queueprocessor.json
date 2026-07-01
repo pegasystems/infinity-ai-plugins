@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-async-queueprocessor.json",
+  "title": "Rule-Async-QueueProcessor",
+  "description": "JSON schema for creating or updating a Pega Queue Processor rule (Rule-Async-QueueProcessor). Only authored and identity fields are included; system-managed and read-only fields are omitted.",
+  "type": "object",
+  "required": [
+    "pxObjClass",
+    "pyLabel",
+    "pyPurpose",
+    "pyActivityName",
+    "pyNodeTypes",
+    "pyNodeTypesText"
+  ],
+  "properties": {
+    "pxObjClass": {
+      "type": "string",
+      "const": "Rule-Async-QueueProcessor",
+      "description": "Rule type class — always 'Rule-Async-QueueProcessor'.",
+      "x-pega-autoFill": "Rule-Async-QueueProcessor"
+    },
+    "pyLabel": {
+      "type": "string",
+      "description": "Human-readable display label shown in rule lists."
+    },
+    "pyRuleName": {
+      "type": "string",
+      "description": "Internal rule name. Server-derived from pyPurpose — do not set directly.",
+      "x-pega-autoFill": "{pyPurpose}"
+    },
+    "pyPurpose": {
+      "type": "string",
+      "description": "Rule identifier and class key; unique, case-insensitive. Ask the user for the rule name and use it here. The server uses this to populate pyRuleName."
+    },
+    "pyBaseClass": {
+      "type": "string",
+      "description": "Applies-to class for the Queue Processor. Must match the class of the activity referenced by pyActivityName — do not default to '@baseclass'."
+    },
+    "pyRuleSet": {
+      "type": "string",
+      "description": "Ruleset name the rule is saved into."
+    },
+    "pyRuleSetVersion": {
+      "type": "string",
+      "pattern": "^\\d{2}-\\d{2}-\\d{2}$",
+      "description": "Ruleset version string, e.g. '01-01-01'."
+    },
+    "pyActivityName": {
+      "type": "string",
+      "description": "Name of the activity to execute for each dequeued message. Required to save the rule."
+    },
+    "pyNodeTypes": {
+      "type": "object",
+      "description": "Map of node type keys to node type objects. At least one entry required. Use 'BackgroundProcessing' for standard background nodes. Never use node IDs.",
+      "default": {
+        "BackgroundProcessing": {
+          "pxObjClass": "Embed-Rule-FutureQueue-nodeInfo",
+          "pxSubscript": "BackgroundProcessing",
+          "pyNodeType": "BackgroundProcessing"
+        }
+      },
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "required": ["pxObjClass", "pxSubscript", "pyNodeType"],
+        "properties": {
+          "pxObjClass": { "type": "string", "const": "Embed-Rule-FutureQueue-nodeInfo", "x-pega-autoFill": "Embed-Rule-FutureQueue-nodeInfo" },
+          "pxSubscript": { "type": "string" },
+          "pyNodeType": { "type": "string" }
+        }
+      }
+    },
+    "pyNodeTypesText": {
+      "type": "string",
+      "description": "Node-type label required by the server. Builder auto-fills 'BackgroundProcessing'.",
+      "x-pega-autoFill": "BackgroundProcessing"
+    },
+    "pyProcessingMode": {
+      "type": "string",
+      "enum": ["Immediate", "Delayed"],
+      "description": "'Immediate' dispatches messages as fast as possible. 'Delayed' defers by a duration stored in a property on the work object."
+    },
+    "pyMaxThreads": {
+      "type": "string",
+      "description": "Maximum concurrent processing threads. Must be ≤ Kafka partition count. Resets to 1 when Auto-Tune is enabled. String-encoded integer."
+    },
+    "pyIsAutoTuneEnabled": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Enable Auto-Tune. Dynamically adjusts thread count based on Kafka lag and average processing time. Do not also set pyMaxThreads > 1."
+    },
+    "pyMaxAttempts": {
+      "type": "string",
+      "description": "Maximum retry attempts before a message moves to the broken queue. String-encoded integer."
+    },
+    "pyInitialInterval": {
+      "type": "string",
+      "description": "Wait time in minutes before the 2nd attempt. String-encoded integer."
+    },
+    "pyIntervalFactor": {
+      "type": "string",
+      "description": "Exponential backoff multiplier applied per retry. String-encoded decimal, e.g. '2.0'."
+    },
+    "pyIsDelayedProperty": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Set 'true' when pyProcessingMode is 'Delayed'."
+    },
+    "pyMaxReadyToProcessStateMessages": {
+      "type": "string",
+      "description": "Messages fetched per poll cycle. Default 2000. Increase for high-volume inbound topics."
+    },
+    "pyLongRunningInterruptThreshold": {
+      "type": "string",
+      "description": "Hard interrupt threshold in milliseconds. Builder auto-fills '900000' (15 minutes). Server validates this unconditionally regardless of pyIsAlertThresholdManuallyEnabled. Activity is forcibly interrupted when exceeded.",
+      "x-pega-autoFill": "900000"
+    },
+    "pyLongRunningThreshold": {
+      "type": "string",
+      "description": "Warning threshold in milliseconds. When pyIsAlertThresholdManuallyEnabled is 'true', include this field explicitly. A typical manual value is '2000'. Raises PEGA0117 when exceeded without interrupting the activity."
+    },
+    "pyIsAlertThresholdManuallyEnabled": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Toggle between manual and baseline-derived alerting thresholds. When set to 'true', both pyLongRunningThreshold and pyLongRunningInterruptThreshold are mandatory.",
+      "x-pega-autoFill": "false"
+    },
+    "pyIsOffsetManagementEnabled": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Offset management toggle."
+    },
+    "pyIsStaleRuleCheckEnabled": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Stale rule check toggle."
+    },
+    "pyIsEnabled": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Set 'false' to disable the QP without deleting it."
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "pyIsAlertThresholdManuallyEnabled": { "const": "true" }
+        },
+        "required": ["pyIsAlertThresholdManuallyEnabled"]
+      },
+      "then": {
+        "required": [
+          "pyLongRunningThreshold",
+          "pyLongRunningInterruptThreshold"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,742 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-connect-rest.json",
+  "title": "Rule-Connect-REST",
+  "description": "JSON schema for creating or updating a Pega REST connector rule (Rule-Connect-REST). Only authored and identity fields are included; system-managed and versioning fields are omitted.",
+  "type": "object",
+  "required": [
+    "pxObjClass",
+    "pyLabel",
+    "pyClassName",
+    "pyServiceName",
+    "pyEmbeddedURL",
+    "pyGETResponseDataList",
+    "pyGETRequestHeaders",
+    "pyGETRequestParameters",
+    "pyGETResponseHeaders",
+    "pyPOSTRequestHeaders",
+    "pyPOSTRequestParameters",
+    "pyPOSTRequestData",
+    "pyPOSTRequestDataList",
+    "pyPOSTResponseHeaders",
+    "pyPOSTResponseDataList",
+    "pyPUTRequestHeaders",
+    "pyPUTRequestParameters",
+    "pyPUTRequestDataList",
+    "pyPUTResponseHeaders",
+    "pyPUTResponseDataList",
+    "pyPATCHRequestHeaders",
+    "pyPATCHRequestParameters",
+    "pyPATCHRequestDataList",
+    "pyPATCHResponseHeaders",
+    "pyPATCHResponseDataList",
+    "pyDELETERequestHeaders",
+    "pyDELETERequestParameters",
+    "pyDELETERequestDataList",
+    "pyDELETEResponseHeaders",
+    "pyDELETEResponseDataList"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "pyUseAuthentication": { "const": "true" },
+          "pyAuthProfileSelectionType": { "const": "SETTING" }
+        },
+        "required": ["pyUseAuthentication", "pyAuthProfileSelectionType"]
+      },
+      "then": {
+        "required": ["pyAuthenticationProfileForSetting"],
+        "x-pega-condition": "When pyUseAuthentication is 'true' and pyAuthProfileSelectionType is 'SETTING', pyAuthenticationProfileForSetting is required."
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "pyUseAuthentication": { "const": "true" },
+          "pyAuthProfileSelectionType": { "const": "AUTH_PROFILE" }
+        },
+        "required": ["pyUseAuthentication", "pyAuthProfileSelectionType"]
+      },
+      "then": {
+        "properties": {
+          "pyAuthenticationProfile": {
+            "description": "Auth profile property reference (e.g., '.pyAuthProfile'). Used when pyUseAuthentication is 'true' and pyAuthProfileSelectionType is 'AUTH_PROFILE'. Note: create-rule drops this field (builder limitation #1) — use update-rule to set it post-creation."
+          }
+        },
+        "x-pega-condition": "When pyUseAuthentication is 'true' and pyAuthProfileSelectionType is 'AUTH_PROFILE', pyAuthenticationProfile should be provided (but see builder limitation #1 — the builder drops it on create)."
+      }
+    }
+  ],
+  "properties": {
+    "pxObjClass": {
+      "type": "string",
+      "const": "Rule-Connect-REST",
+      "description": "Rule type class -- always 'Rule-Connect-REST'.",
+      "x-pega-autoFill": "Rule-Connect-REST"
+    },
+    "pyRuleName": {
+      "type": "string",
+      "description": "Internal rule name — must match pyServiceName exactly.",
+      "x-pega-autoFill": "{pyServiceName}"
+    },
+    "pyLabel": {
+      "type": "string",
+      "description": "Human-readable display label."
+    },
+    "pyClassName": {
+      "type": "string",
+      "description": "The Pega class this connector is defined on (e.g., 'MyOrg-MyApp-Data-MyDataType')."
+    },
+    "pyServiceName": {
+      "type": "string",
+      "description": "Connector name (PascalCase, no spaces). With pyClassName, forms the identity key."
+    },
+    "pyDescription": {
+      "type": "string",
+      "description": "Developer-facing description of the connector's purpose."
+    },
+    "pyRuleSet": {
+      "type": "string",
+      "description": "Rule set the connector is saved to."
+    },
+    "pyRuleSetVersion": {
+      "type": "string",
+      "pattern": "^\\d{2}-\\d{2}-\\d{2}$",
+      "description": "Rule set version (e.g., '01-01-02')."
+    },
+    "pyRuleAvailable": {
+      "type": "string",
+      "enum": ["Yes", "No", "Blocked", "Final", "Withdrawn"],
+      "description": "Availability status.",
+      "x-pega-autoFill": "Yes"
+    },
+    "pyHasEmbedUrl": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Marker flag indicating the rule uses pyEmbeddedURL (post-Infinity 8.3 shape). Autofilled to 'true' so the rule form does not render the legacy 'Upgrade URL configuration' affordance. Always set or rely on autofill; do not set 'false' on rules that use pyEmbeddedURL.",
+      "x-pega-autoFill": "true"
+    },
+    "pyEmbeddedURL": {
+      "$ref": "#/$defs/EmbedURL",
+      "description": "URL configuration embedded object (Embed-URL). For direct URLs (pyBaseURLSelectionType: 'URL'), set pyBaseURL to the base URL. For SETTING URLs, use pyBaseURLSetting instead."
+    },
+    "pyParameters": {
+      "type": "array",
+      "description": "Input/output parameters declared by this connector. Each {paramName} in the URL path must have a matching entry. The data page passes parameter values at runtime.",
+      "items": { "$ref": "#/$defs/MethodParam" }
+    },
+
+    "pyGETRequestHeaders": {
+      "type": "array",
+      "description": "GET request headers. Always include Accept: application/json for JSON APIs.",
+      "items": { "$ref": "#/$defs/InterfaceParameter" },
+      "x-pega-autoFill": [{"pxObjClass": "Embed-InterfaceParameter"}]
+    },
+    "pyGETRequestParameters": {
+      "type": "array",
+      "description": "GET request parameters.",
+      "items": { "$ref": "#/$defs/InterfaceParameter" },
+      "x-pega-autoFill": [{"pxObjClass": "Embed-InterfaceParameter"}]
+    },
+    "pyGETResponseHeaders": {
+      "type": "array",
+      "description": "GET response header mappings. Can map response headers to clipboard properties (e.g., etag → Param.pyIfMatch).",
+      "items": { "$ref": "#/$defs/InterfaceParameter" },
+      "x-pega-autoFill": [{"pxObjClass": "Embed-InterfaceParameter"}]
+    },
+    "pyGETResponseDataList": {
+      "type": "array",
+      "description": "GET response body mappings. pyMapToKey is invocation-context-dependent: data-page-sourced connectors use 'DataSource.<property>' (e.g. 'DataSource.pyResponseData'); activity-invoked use a calling-page property (e.g. '.pyResponseData'). Mixing produces silent empty-response failure (200 OK, no exception). See references/request-response-mapping.",
+      "items": { "$ref": "#/$defs/InterfaceParameter" },
+      "x-pega-autoFill": [{"pxObjClass": "Embed-InterfaceParameter", "pyUseFastJSONProcessing": "false", "pyDataType": "string", "pyParameterName": "Response Message"}]
+    },
+
+    "pyPOSTRequestHeaders": {
+      "type": "array",
+      "description": "POST request headers. Include Content-Type: application/json for JSON POST bodies.",
+      "items": { "$ref": "#/$defs/InterfaceParameter" },
+      "x-pega-autoFill": [{"pxObjClass": "Embed-InterfaceParameter"}]
+    },
+    "pyPOSTRequestParameters": {
+      "type": "array",
+      "description": "POST request parameters.",
+      "items": { "$ref": "#/$defs/InterfaceParameter" },
+      "x-pega-autoFill": [{"pxObjClass": "Embed-InterfaceParameter"}]
+    },
+    "pyPOSTRequestData": {
+      "type": "object",
+      "description": "POST request data object.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-InterfaceParameter",
+          "x-pega-autoFill": "Embed-InterfaceParameter"
+        }
+      },
+      "x-pega-autoFill": {"pxObjClass": "Embed-InterfaceParameter"}
+    },
+    "pyPOSTDataMappingType": {
+      "type": "string",
+      "enum": ["URL_ENCODED", ""],
+      "description": "POST body encoding type. Set to 'URL_ENCODED' for form-encoded POST (application/x-www-form-urlencoded). Omit or leave empty for JSON body (default). When URL_ENCODED, pyPOSTRequestDataList entries use pyParameterName as the form field name, include pyMapFrom/pyMapFromKey, and omit pyUseFastJSONProcessing."
+    },
+    "pyPOSTRequestDataList": {
+      "type": "array",
+      "description": "POST request body mappings. For JSON body: use pyMapFrom: 'Clipboard' with pyMapFromKey: '.pyRequestBodyPOST'. For URL_ENCODED body: each entry is a form field with pyParameterName as the field name and pyMapFrom/pyMapFromKey for the value source.",
+      "items": { "$ref": "#/$defs/InterfaceParameter" },
+      "x-pega-autoFill": [{"pxObjClass": "Embed-InterfaceParameter", "pyUseFastJSONProcessing": "false", "pyDataType": "string", "pyParameterName": "Request Mapping"}]
+    },
+    "pyPOSTResponseHeaders": {
+      "type": "array",
+      "description": "POST response header mappings.",
+      "items": { "$ref": "#/$defs/InterfaceParameter" },
+      "x-pega-autoFill": [{"pxObjClass": "Embed-InterfaceParameter"}]
+    },
+    "pyPOSTResponseDataList": {
+      "type": "array",
+      "description": "POST response body mappings. pyMapToKey is invocation-context-dependent: data-page-sourced connectors use 'DataSource.<property>' (e.g. 'DataSource.pyResponseData' or 'DataSource.pyResponseBodyPOST'); activity-invoked use a calling-page property. Mixing produces silent empty-response failure. See references/request-response-mapping.",
+      "items": { "$ref": "#/$defs/InterfaceParameter" },
+      "x-pega-autoFill": [{"pxObjClass": "Embed-InterfaceParameter", "pyUseFastJSONProcessing": "false", "pyDataType": "string", "pyParameterName": "Response Message"}]
+    },
+
+    "pyPUTRequestHeaders": {
+      "type": "array",
+      "description": "PUT request headers.",
+      "items": { "$ref": "#/$defs/InterfaceParameter" },
+      "x-pega-autoFill": [{"pxObjClass": "Embed-InterfaceParameter"}]
+    },
+    "pyPUTRequestParameters": {
+      "type": "array",
+      "description": "PUT request parameters.",
+      "items": { "$ref": "#/$defs/InterfaceParameter" },
+      "x-pega-autoFill": [{"pxObjClass": "Embed-InterfaceParameter"}]
+    },
+    "pyPUTRequestDataList": {
+      "type": "array",
+      "description": "PUT request body mappings.",
+      "items": { "$ref": "#/$defs/InterfaceParameter" },
+      "x-pega-autoFill": [{"pxObjClass": "Embed-InterfaceParameter", "pyUseFastJSONProcessing": "false", "pyParameterName": "Request Message", "pyDataType": "string"}]
+    },
+    "pyPUTResponseHeaders": {
+      "type": "array",
+      "description": "PUT response header mappings.",
+      "items": { "$ref": "#/$defs/InterfaceParameter" },
+      "x-pega-autoFill": [{"pxObjClass": "Embed-InterfaceParameter"}]
+    },
+    "pyPUTResponseDataList": {
+      "type": "array",
+      "description": "PUT response body mappings. pyMapToKey is invocation-context-dependent: data-page-sourced connectors use 'DataSource.<property>' (e.g. 'DataSource.pyResponseData' or 'DataSource.pyResponseBodyPUT'); activity-invoked use a calling-page property. Mixing produces silent empty-response failure. See references/request-response-mapping.",
+      "items": { "$ref": "#/$defs/InterfaceParameter" },
+      "x-pega-autoFill": [{"pxObjClass": "Embed-InterfaceParameter", "pyUseFastJSONProcessing": "false", "pyDataType": "string", "pyParameterName": "Response Message"}]
+    },
+
+    "pyPATCHRequestHeaders": {
+      "type": "array",
+      "description": "PATCH request headers.",
+      "items": { "$ref": "#/$defs/InterfaceParameter" },
+      "x-pega-autoFill": [{"pxObjClass": "Embed-InterfaceParameter"}]
+    },
+    "pyPATCHRequestParameters": {
+      "type": "array",
+      "description": "PATCH request parameters.",
+      "items": { "$ref": "#/$defs/InterfaceParameter" },
+      "x-pega-autoFill": [{"pxObjClass": "Embed-InterfaceParameter"}]
+    },
+    "pyPATCHRequestDataList": {
+      "type": "array",
+      "description": "PATCH request body mappings.",
+      "items": { "$ref": "#/$defs/InterfaceParameter" },
+      "x-pega-autoFill": [{"pxObjClass": "Embed-InterfaceParameter", "pyUseFastJSONProcessing": "false", "pyParameterName": "Request Message", "pyDataType": "string"}]
+    },
+    "pyPATCHResponseHeaders": {
+      "type": "array",
+      "description": "PATCH response header mappings.",
+      "items": { "$ref": "#/$defs/InterfaceParameter" },
+      "x-pega-autoFill": [{"pxObjClass": "Embed-InterfaceParameter"}]
+    },
+    "pyPATCHResponseDataList": {
+      "type": "array",
+      "description": "PATCH response body mappings. pyMapToKey is invocation-context-dependent: data-page-sourced connectors use 'DataSource.<property>' (e.g. 'DataSource.pyResponseData' or 'DataSource.pyResponseBodyPATCH'); activity-invoked use a calling-page property. Mixing produces silent empty-response failure. See references/request-response-mapping.",
+      "items": { "$ref": "#/$defs/InterfaceParameter" },
+      "x-pega-autoFill": [{"pxObjClass": "Embed-InterfaceParameter", "pyUseFastJSONProcessing": "false", "pyDataType": "string", "pyParameterName": "Response Message"}]
+    },
+    "pyDELETERequestHeaders": {
+      "type": "array",
+      "description": "DELETE request headers.",
+      "items": { "$ref": "#/$defs/InterfaceParameter" },
+      "x-pega-autoFill": [{"pxObjClass": "Embed-InterfaceParameter"}]
+    },
+    "pyDELETERequestParameters": {
+      "type": "array",
+      "description": "DELETE request parameters.",
+      "items": { "$ref": "#/$defs/InterfaceParameter" },
+      "x-pega-autoFill": [{"pxObjClass": "Embed-InterfaceParameter"}]
+    },
+    "pyDELETERequestDataList": {
+      "type": "array",
+      "description": "DELETE request body mappings.",
+      "items": { "$ref": "#/$defs/InterfaceParameter" },
+      "x-pega-autoFill": [{"pxObjClass": "Embed-InterfaceParameter", "pyUseFastJSONProcessing": "false", "pyParameterName": "Request Message", "pyDataType": "string"}]
+    },
+    "pyDELETEResponseHeaders": {
+      "type": "array",
+      "description": "DELETE response header mappings.",
+      "items": { "$ref": "#/$defs/InterfaceParameter" },
+      "x-pega-autoFill": [{"pxObjClass": "Embed-InterfaceParameter"}]
+    },
+    "pyDELETEResponseDataList": {
+      "type": "array",
+      "description": "DELETE response body mappings. pyMapToKey is invocation-context-dependent: data-page-sourced connectors use 'DataSource.<property>' (e.g. 'DataSource.pyResponseData'); activity-invoked use a calling-page property. Mixing produces silent empty-response failure. See references/request-response-mapping.",
+      "items": { "$ref": "#/$defs/InterfaceParameter" },
+      "x-pega-autoFill": [{"pxObjClass": "Embed-InterfaceParameter", "pyUseFastJSONProcessing": "false", "pyDataType": "string", "pyParameterName": "Response Message"}]
+    },
+    "pyExecutionMode": {
+      "type": "string",
+      "enum": ["sync", "sync_queue_on_error", "async"],
+      "description": "Execution mode: 'sync' (default) for synchronous, 'async' for asynchronous.",
+      "x-pega-autoFill": "sync"
+    },
+    "pyResponseTimeout": {
+      "type": "string",
+      "description": "Response timeout in milliseconds (e.g., '10000' for 10 seconds).",
+      "x-pega-autoFill": "10000"
+    },
+    "pyFollowRedirects": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Whether to follow HTTP redirects. Autofilled to 'true' to match platform-default behavior.",
+      "x-pega-autoFill": "true"
+    },
+    "pyEnableLaxRedirect": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Lax redirect handling.",
+      "x-pega-autoFill": "false"
+    },
+    "pySSLProtocolVersion": {
+      "type": "string",
+      "description": "TLS protocol version (e.g., 'TLSv1.2').",
+      "x-pega-autoFill": "TLSv1.2"
+    },
+    "pyMaintainSession": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Whether to maintain HTTP session across calls.",
+      "x-pega-autoFill": "false"
+    },
+    "pyResourceNameResolution": {
+      "type": "string",
+      "description": "Resource name resolution strategy.",
+      "x-pega-autoFill": "JNDIName"
+    },
+    "pyUseProxy": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Whether to route requests through a proxy.",
+      "x-pega-autoFill": "false"
+    },
+    "pyRESTProxyConfig": {
+      "$ref": "#/$defs/ProxyConfig",
+      "description": "Proxy configuration (Data-ProxyAuthentication)."
+    },
+    "pyUseAuthentication": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Whether authentication is required for this connector.",
+      "x-pega-autoFill": "false"
+    },
+    "pyAuthProfileSelectionType": {
+      "type": "string",
+      "enum": ["AUTH_PROFILE", "SETTING"],
+      "description": "Auth profile source. 'AUTH_PROFILE' when auth is off or using a direct profile (pyAuthenticationProfile). 'SETTING' when using a DSS-based profile (pyAuthenticationProfileForSetting).",
+      "x-pega-autoFill": "AUTH_PROFILE"
+    },
+    "pyAuthenticationProfile": {
+      "type": "string",
+      "description": "Auth profile property reference (e.g., '.pyAuthProfile'). Used when pyUseAuthentication is 'true' and pyAuthProfileSelectionType is 'AUTH_PROFILE'."
+    },
+    "pyAuthenticationProfileForSetting": {
+      "type": "string",
+      "description": "DSS reference for SETTING-based auth profiles (e.g., 'Pega-ProcessEngine!pxAgenticVoiceAuthProfileReference'). Used when pyAuthProfileSelectionType is 'SETTING'."
+    },
+    "pyTruststoreName": {
+      "type": "string",
+      "description": "TLS truststore name for certificate validation (e.g., 'BoxComTrust')."
+    },
+    "pyHandlerFlow": {
+      "type": "string",
+      "description": "Flow to run on connection error.",
+      "x-pega-autoFill": "ConnectionProblem"
+    },
+    "pyStatusValProperty": {
+      "type": "string",
+      "description": "Property to store the HTTP status code.",
+      "x-pega-autoFill": ".pyStatusValue"
+    },
+    "pyStatusMsgProperty": {
+      "type": "string",
+      "description": "Property to store the HTTP status message.",
+      "x-pega-autoFill": ".pyStatusMessage"
+    },
+    "pyPagesAndClasses": {
+      "type": "array",
+      "description": "Pages and classes mapping.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "pxObjClass": {
+            "type": "string",
+            "const": "Embed-PagesAndClasses",
+            "x-pega-autoFill": "Embed-PagesAndClasses"
+          }
+        }
+      },
+      "x-pega-autoFill": [{"pxObjClass": "Embed-PagesAndClasses"}]
+    },
+    "pyResourceParameters": {
+      "type": "array",
+      "description": "URL resource path substitution parameters (Embed-InterfaceParameter). Maps {param} placeholders in the URL path to clipboard properties or constants at runtime. This is distinct from pyParameters (connector-level I/O params) and pyEmbeddedURL.pyResourcePathParameters (URL path segment definitions). Always include — use stub entry when no resource substitution parameters are needed.",
+      "items": { "$ref": "#/$defs/InterfaceParameter" },
+      "x-pega-autoFill": [{"pxObjClass": "Embed-InterfaceParameter"}]
+    },
+    "pyVersionNS": {
+      "type": "string",
+      "description": "Version namespace.",
+      "x-pega-autoFill": "7.1"
+    },
+    "pyReadsOrRoutesToExternalSystem": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Whether the connector reads from or routes to an external system.",
+      "x-pega-autoFill": "false"
+    },
+    "pyEnvironmentsSettings": {
+      "type": "array",
+      "description": "Environment-specific settings. Auto-injected by the server on create with an empty entry.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "pxObjClass": {
+            "type": "string",
+            "const": "Embed-Integration-DataSources-Environment-Settings",
+            "x-pega-autoFill": "Embed-Integration-DataSources-Environment-Settings"
+          }
+        }
+      },
+      "x-pega-autoFill": [{"pxObjClass": "Embed-Integration-DataSources-Environment-Settings"}]
+    },
+    "pyBaseRule": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "System-managed flag. Auto-populated by the server."
+    },
+    "pyHistoryObject": {
+      "type": "string",
+      "description": "System-managed history reference. Auto-populated by the server.",
+      "x-pega-autoFill": ""
+    },
+    "pyActionData": {
+      "type": ["string", "object"],
+      "description": "System-managed action data. Auto-populated by the server.",
+      "x-pega-autoFill": ""
+    },
+    "pyActionDataPageGroup": {
+      "type": "object",
+      "description": "System-managed action data page group. Auto-populated by the server.",
+      "x-pega-autoFill": {}
+    },
+    "pyDisplayMode": {
+      "type": "string",
+      "enum": ["basic", "clone", "specialize", "advanced", ""],
+      "description": "Display mode for the connector. Set to 'basic' for new connectors, 'clone' for cloned rules, 'specialize' for specialized rules. The builder does NOT auto-fill this — agents must include it explicitly when recreating a connector."
+    },
+    "pyMethodStatus": {
+      "type": "string",
+      "enum": ["API", "Deprecated", "Extension", "Internal", "Template", ""],
+      "description": "Method status. Set to 'Internal' on most connectors. Set to 'Extension' for extension-point connectors designed to be overridden by implementations. The builder does NOT auto-fill this — agents must include it explicitly when recreating a connector."
+    },
+    "pyUsage": {
+      "type": "string",
+      "description": "Usage description. Mirrors pyDescription. Auto-populated by the server.",
+      "x-pega-autoFill": ""
+    }
+  },
+  "$defs": {
+    "EmbedURL": {
+      "type": "object",
+      "description": "URL configuration (Embed-URL). For direct URLs (pyBaseURLSelectionType: 'URL'), set pyBaseURL to the base URL; pyEndpointURL is optional but typically matches pyBaseURL. For SETTING URLs (pyBaseURLSelectionType: 'SETTING'), use pyBaseURLSetting instead. Note: the builder saves the connector even if the URL is empty, producing a broken rule — always provide pyBaseURL or pyBaseURLSetting.",
+      "required": ["pxObjClass", "pyBaseURLSelectionType"],
+      "allOf": [
+        {
+          "if": {
+            "properties": { "pyBaseURLSelectionType": { "const": "URL" } },
+            "required": ["pyBaseURLSelectionType"]
+          },
+          "then": {
+            "required": ["pyBaseURL"],
+            "x-pega-condition": "When pyBaseURLSelectionType is 'URL', pyBaseURL is required."
+          }
+        },
+        {
+          "if": {
+            "properties": { "pyBaseURLSelectionType": { "const": "SETTING" } },
+            "required": ["pyBaseURLSelectionType"]
+          },
+          "then": {
+            "required": ["pyBaseURLSetting"],
+            "x-pega-condition": "When pyBaseURLSelectionType is 'SETTING', pyBaseURLSetting is required."
+          }
+        }
+      ],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-URL",
+          "x-pega-autoFill": "Embed-URL"
+        },
+        "pyBaseURL": {
+          "type": "string",
+          "description": "Base URL of the API (e.g., 'https://api.example.com'). Required when pyBaseURLSelectionType is 'URL'."
+        },
+        "pyEndpointURL": {
+          "type": "string",
+          "description": "Optional — when present, typically set to the same value as pyBaseURL. Omit when using SETTING."
+        },
+        "pyBaseURLSelectionType": {
+          "type": "string",
+          "enum": ["URL", "SETTING"],
+          "description": "'URL' for a direct URL, 'SETTING' to resolve from a Dynamic System Setting."
+        },
+        "pyBaseURLSetting": {
+          "type": "string",
+          "description": "Dynamic System Setting reference for SETTING URLs (e.g., 'Pega-NLP!pyPegaAzureOpenAIGatewayServiceBaseURL'). Used when pyBaseURLSelectionType is 'SETTING'."
+        },
+        "pyNote": {
+          "type": "string",
+          "description": "Documentation note for the URL (e.g., the actual URL when using a SETTING reference)."
+        },
+        "pyURLEntered": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Marker flag indicating a URL value is present. Autofilled to 'true' so the runtime URL resolver does not reject the connector with 'no URL configured' (gates execution regardless of pyBaseURLSelectionType). Required at runtime even when the UI form renders correctly without it.",
+          "x-pega-autoFill": "true"
+        },
+        "pyHasTrailingSlash": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Whether the URL has a trailing slash.",
+          "x-pega-autoFill": "false"
+        },
+        "pyIsODataQueryable": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "OData support flag.",
+          "x-pega-autoFill": "false"
+        },
+        "pyIsAdvancedQueryable": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Advanced query support flag.",
+          "x-pega-autoFill": "false"
+        },
+        "pyResourcePathParameters": {
+          "type": "array",
+          "description": "URL path segments. Each becomes a /segment in the URL. Dynamic segments use {paramName} as CONSTANT.",
+          "items": { "$ref": "#/$defs/ResourcePathParam" }
+        },
+        "pyQueryStringParameters": {
+          "type": "array",
+          "description": "Query string ?key=value parameters. Dynamic values use pyMapFrom: 'PARAM' (from connector parameters) or 'CLIPBOARD' (from clipboard properties).",
+          "items": { "$ref": "#/$defs/QueryStringParam" }
+        }
+      }
+    },
+    "ResourcePathParam": {
+      "type": "object",
+      "description": "A URL path segment (Embed-URL-Parameter-ResourcePath). Each entry becomes a /segment in the URL.",
+      "required": ["pxObjClass", "pyParameterName", "pyMapFrom", "pyMapFromKey"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-URL-Parameter-ResourcePath",
+          "x-pega-autoFill": "Embed-URL-Parameter-ResourcePath"
+        },
+        "pyParameterName": {
+          "type": "string",
+          "description": "Name/label of the path segment or query parameter."
+        },
+        "pyMapFrom": {
+          "type": "string",
+          "enum": ["CONSTANT", "CLIPBOARD", "PARAM"],
+          "description": "Value source. 'CONSTANT' for literal text or {param} dynamic segments, 'CLIPBOARD' for clipboard property references, 'PARAM' for connector parameter values. WARNING: create-rule may reject 'PARAM' — use update-rule if needed."
+        },
+        "pyMapFromKey": {
+          "type": "string",
+          "description": "The value: literal text for CONSTANT, property reference for CLIPBOARD. For dynamic path segments, use '{paramName}'."
+        },
+        "pyEmptyBehavior": {
+          "type": "string",
+          "enum": ["REQUIRED", "OMIT", "SKIP"],
+          "description": "'REQUIRED' to fail if empty, 'OMIT' to omit the segment if empty, 'SKIP' to skip the segment entirely."
+        },
+        "pyEncoding": {
+          "type": "string",
+          "enum": ["URL", "NONE"],
+          "description": "Encoding type. 'URL' for URL encoding (default), 'NONE' for no encoding.",
+          "x-pega-autoFill": "URL"
+        }
+      }
+    },
+    "QueryStringParam": {
+      "type": "object",
+      "description": "A query string parameter (Embed-URL-Parameter-QueryString). Each becomes a ?key=value in the URL.",
+      "required": ["pxObjClass", "pyParameterName", "pyMapFrom", "pyMapFromKey"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-URL-Parameter-QueryString",
+          "x-pega-autoFill": "Embed-URL-Parameter-QueryString"
+        },
+        "pyParameterName": {
+          "type": "string",
+          "description": "Query parameter key name (e.g., 'countryCode', 'format')."
+        },
+        "pyMapFrom": {
+          "type": "string",
+          "enum": ["PARAM", "CONSTANT", "CLIPBOARD"],
+          "description": "Value source. 'PARAM' for connector parameter values, 'CLIPBOARD' for clipboard property references, 'CONSTANT' for literal values."
+        },
+        "pyMapFromKey": {
+          "type": "string",
+          "description": "The value source: parameter name for PARAM, property reference for CLIPBOARD, literal text for CONSTANT."
+        },
+        "pyEmptyBehavior": {
+          "type": "string",
+          "enum": ["REQUIRED", "OMIT", "SKIP"],
+          "description": "'REQUIRED' to fail if empty, 'OMIT' to omit the parameter if empty, 'SKIP' to skip entirely."
+        },
+        "pyEncoding": {
+          "type": "string",
+          "enum": ["URL", "NONE"],
+          "description": "Encoding type. 'URL' for URL encoding (default), 'NONE' for no encoding.",
+          "x-pega-autoFill": "URL"
+        },
+        "pyFirstItem": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Set to 'true' on the first query string parameter only. Controls the '?' vs '&' separator."
+        },
+        "pyQueryStringDisplayText": {
+          "type": "string",
+          "description": "Display text for the query parameter in the UI (e.g., 'countryCode=.pyCountryCode'). Auto-generated by the editor."
+        }
+      }
+    },
+    "MethodParam": {
+      "type": "object",
+      "description": "A connector parameter (Embed-MethodParams). Each {paramName} in the URL path must have a matching entry.",
+      "required": ["pxObjClass"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-MethodParams",
+          "x-pega-autoFill": "Embed-MethodParams",
+          "description": "Always 'Embed-MethodParams'."
+        },
+        "pyParametersParamName": {
+          "type": "string",
+          "description": "Parameter name (e.g., 'postalCode'). Must match the {paramName} in URL path or query string. Optional — some connectors have unnamed parameters."
+        },
+        "pyParametersParamType": {
+          "type": "string",
+          "enum": ["STRING", "INTEGER", "BOOLEAN"],
+          "description": "Parameter data type. Must be ALL CAPS (e.g., 'STRING' not 'String')."
+        },
+        "pyParametersParamInOut": {
+          "type": "string",
+          "enum": ["IN", "OUT"],
+          "description": "Parameter direction: 'IN' for input, 'OUT' for output."
+        },
+        "pyParametersParamReq": {
+          "type": "string",
+          "enum": ["-1", "0"],
+          "description": "'-1' for required, '0' for optional."
+        },
+        "pyParametersParamDesc": {
+          "type": "string",
+          "description": "Human-readable parameter description."
+        }
+      }
+    },
+    "InterfaceParameter": {
+      "type": "object",
+      "description": "A request/response mapping entry (Embed-InterfaceParameter). Used for headers, request body, response body, and resource parameter mappings.",
+      "required": ["pxObjClass"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-InterfaceParameter",
+          "x-pega-autoFill": "Embed-InterfaceParameter"
+        },
+        "pyParameterName": {
+          "type": "string",
+          "description": "Header name, or logical name for data mappings (e.g., 'Accept', 'Response Message')."
+        },
+        "pyDesc": {
+          "type": "string",
+          "description": "Description for the header/parameter entry."
+        },
+        "pyDataType": {
+          "type": "string",
+          "description": "Data type for the mapping. Required on data list entries (use 'string'). Optional on headers — server may use 'String' (capital S). Case-insensitive."
+        },
+        "pyMapFrom": {
+          "type": "string",
+          "enum": ["Constant", "Clipboard", "JSON"],
+          "description": "Source type for request headers/body. 'Constant' for literal values, 'Clipboard' for property references, 'JSON' for direct JSON serialization (used on request data entries). Note: capital 'C' on 'Constant'/'Clipboard' for headers. WARNING: create-rule may reject 'JSON' and substitute 'Clipboard' — use update-rule to set 'JSON' post-creation if needed."
+        },
+        "pyMapFromKey": {
+          "type": "string",
+          "description": "The source value: literal text for Constant, property path for Clipboard (e.g., '.pxAuthToken', '.pyRequestBodyPOST', 'Param.requestJSON')."
+        },
+        "pyMapTo": {
+          "type": "string",
+          "enum": ["Clipboard", "JSON"],
+          "description": "Target type for response mappings. 'Clipboard' to map response to a clipboard property, 'JSON' to parse response as JSON directly. WARNING: create-rule may reject 'JSON' and substitute 'Clipboard' — use update-rule to set 'JSON' post-creation if needed."
+        },
+        "pyMapToKey": {
+          "type": "string",
+          "description": "Target property for response mappings. Data-page-sourced (typical): 'DataSource.pyResponseData', 'DataSource.pyResponse.pyResponseJSON', or other 'DataSource.*' property; POST/PUT/PATCH may use 'DataSource.pyResponseBodyPOST', 'DataSource.pyResponseBodyPUT', etc. Activity-invoked: '.pyResponseData' (or other calling-page property). 'Param.<name>' works in both contexts. Mixing is silent — 200 OK, no exception, response DT reads empty. See references/request-response-mapping."
+        },
+        "pyUseFastJSONProcessing": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Whether to use fast JSON processing.",
+          "x-pega-autoFill": "false"
+        },
+        "pyMappedPropertyReferenceAppliesTo": {
+          "type": "string",
+          "description": "Optional applies-to context for property references. Often empty string or absent."
+        }
+      }
+    },
+    "ProxyConfig": {
+      "type": "object",
+      "description": "Proxy configuration (Data-ProxyAuthentication).",
+      "required": ["pxObjClass"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Data-ProxyAuthentication",
+          "x-pega-autoFill": "Data-ProxyAuthentication"
+        },
+    "pyProxyAuthTypeSelection": {
+      "type": "string",
+      "enum": ["NO_AUTH", "AUTH_PROFILE", "SETTING", ""],
+      "description": "Proxy authentication configuration type. 'NO_AUTH' = no proxy auth, 'AUTH_PROFILE' = use an authentication profile, 'SETTING' = use an application setting."
+    }
+      }
+    }
+  }
+}

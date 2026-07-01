@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pega Infinity Security Scan Report</title>
+  <style>
+    :root {
+      --bg: #f4f1ea;
+      --panel: #fffdf8;
+      --ink: #1f2a30;
+      --muted: #2d3e47;
+      --line: #ddd4c5;
+      --accent: #0e6b5c;
+      --accent-2: #b85c38;
+      --critical: #a61e2a;
+      --high: #cb5b16;
+      --medium: #b08900;
+      --low: #2d7d46;
+      --info: #3d5a80;
+      --shadow: 0 10px 28px rgba(31, 42, 48, 0.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      background: linear-gradient(180deg, #efe8db 0%, var(--bg) 180px);
+      color: var(--ink);
+      line-height: 1.55;
+    }
+    .wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 28px 20px 48px;
+    }
+    .hero {
+      background: linear-gradient(135deg, #17323a 0%, #0e6b5c 100%);
+      color: #fff;
+      border-radius: 18px;
+      padding: 32px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero:after {
+      content: "";
+      position: absolute;
+      right: -60px;
+      top: -40px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+    }
+    h1, h2, h3, h4 { margin: 0 0 12px; line-height: 1.2; }
+    h1 { font-size: 34px; }
+    h2 {
+      font-size: 24px;
+      margin-top: 30px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--line);
+    }
+    h3 { font-size: 18px; margin-top: 18px; }
+    p { margin: 0 0 12px; }
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+    .meta-card, .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+    }
+    .meta-card {
+      padding: 16px;
+      color: var(--ink);
+      font-weight: 600;
+      font-size: 16px;
+    }
+    .meta-card .label {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+    .section {
+      margin-top: 22px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+    .score {
+      border-radius: 14px;
+      padding: 16px;
+      color: #fff;
+      text-align: center;
+    }
+    .score strong {
+      display: block;
+      font-size: 34px;
+      margin-bottom: 4px;
+    }
+    .critical { background: linear-gradient(135deg, #8f1722, var(--critical)); }
+    .high { background: linear-gradient(135deg, #a74612, var(--high)); }
+    .medium { background: linear-gradient(135deg, #8d6e00, var(--medium)); }
+    .low { background: linear-gradient(135deg, #22633a, var(--low)); }
+    .info { background: linear-gradient(135deg, #334b6c, var(--info)); }
+    .findings {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .finding {
+      border-left: 6px solid var(--line);
+      padding: 16px 18px;
+      background: #f9f7f3;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      color: #1f2a30;
+    }
+    .finding.critical { border-left-color: var(--critical); }
+    .finding.high { border-left-color: var(--high); }
+    .finding.medium { border-left-color: var(--medium); }
+    .finding.low { border-left-color: var(--low); }
+    .badge {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    .badge.critical { background: var(--critical); }
+    .badge.high { background: var(--high); }
+    .badge.medium { background: var(--medium); color: #231a00; }
+    .badge.low { background: var(--low); }
+    .badge.info { background: var(--info); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 15px;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: #e0d5c3;
+      font-weight: 700;
+      color: #1f2a30;
+    }
+    code {
+      background: #e8dccf;
+      color: #1f2a30;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 0.92em;
+    }
+    ul { margin: 8px 0 0 20px; }
+    .small { color: var(--muted); font-size: 14px; }
+    .two-col {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 18px;
+    }
+    .footer {
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: 14px;
+      text-align: center;
+    }
+    @media print {
+      body { background: #fff; }
+      .hero, .section, .meta-card { box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>Pega Infinity Security Scan Report</h1>
+      <p>Evidence-based scan of the current FSSAI Licensing application using the <code>app-security-scanner</code> skill rubric and live Pega rule discovery.</p>
+      <div class="meta">
+        <div class="meta-card">
+          <span class="label">Application</span>
+          Licensing
+        </div>
+        <div class="meta-card">
+          <span class="label">Scan Date</span>
+          2026-04-16
+        </div>
+        <div class="meta-card">
+          <span class="label">Assessment Basis</span>
+          Pega Infinity security documentation + current application artifacts
+        </div>
+        <div class="meta-card">
+          <span class="label">Primary Risk Theme</span>
+          Sensitive licensing workflow with weak discoverable security controls
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Executive Summary</h2>
+      <p>The current application manages regulated licensing workflows and includes sensitive personal and business data such as owner names, business addresses, contact numbers, email addresses, inspection notes, improvement notices, payment records, and uploaded documents. Based on the live rule inventory, the application’s security posture is <strong>below the expected standard</strong> for a production-facing regulated workflow.</p>
+      <p>The strongest verified control area is CORS, where both safe and unsafe policies exist and can be directly assessed. The weakest areas are application-specific authorization, authentication, encryption, and browser hardening: no app-specific ABAC controls, no discoverable app-specific authentication service rules, and no discoverable CSP artifacts were found in the visible rule set. Additionally, a service package for OAuth client management is configured with <strong>Basic</strong> authentication, which is not a strong default posture.</p>
+
+      <div class="score-grid">
+        <div class="score critical"><strong>3</strong>Critical</div>
+        <div class="score high"><strong>5</strong>High</div>
+        <div class="score medium"><strong>4</strong>Medium</div>
+        <div class="score info"><strong>7</strong>Verified Controls</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Scan Scope and Evidence</h2>
+      <div class="two-col">
+        <div class="card" style="padding:18px;">
+          <h3>Scope</h3>
+          <ul>
+            <li>Current application summary and business model</li>
+            <li>Security-related rule discovery across accessible applications</li>
+            <li>Detailed inspection of representative CORS policies</li>
+            <li>Inspection of the <code>oauthclients</code> service package</li>
+            <li>Gap analysis against the <code>app-security-scanner</code> skill domains</li>
+          </ul>
+        </div>
+        <div class="card" style="padding:18px;">
+          <h3>Verified Evidence</h3>
+          <ul>
+            <li>Application stores personal, business, payment, inspection, and compliance data</li>
+            <li>15 CORS policy rules are discoverable</li>
+            <li>Only 5 <code>Rule-Access-Policy</code> records were found and all are platform/system-level</li>
+            <li>No app-level authentication service rules were discovered in the current context</li>
+            <li>No discoverable CSP rule instances were returned by rule search</li>
+            <li><code>DATA-ADMIN-SERVICEPACKAGE OAUTHCLIENTS</code> uses <code>pyAuthenticationType: Basic</code></li>
+          </ul>
+        </div>
+      </div>
+      <p class="small">Limitation: the available MCP tool surface does not expose every security landing page directly, so this report distinguishes between <em>verified configured controls</em>, <em>verified missing controls</em>, and <em>controls not discoverable from available artifacts</em>.</p>
+    </section>
+
+    <section class="section">
+      <h2>Application Risk Context</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Area</th>
+            <th>Observed Evidence</th>
+            <th>Security Impact</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Identity and contact data</td>
+            <td>Owner Name, Business Address, Contact Number, Email ID</td>
+            <td>Requires strong authentication, ABAC, auditing, and encryption</td>
+          </tr>
+          <tr>
+            <td>Document handling</td>
+            <td>License application includes supporting documents and photos</td>
+            <td>Requires malware scanning, storage controls, and access restrictions</td>
+          </tr>
+          <tr>
+            <td>Payments</td>
+            <td>Payment Record and License Fees data objects are part of the model</td>
+            <td>Requires secure service auth, auditability, and data protection</td>
+          </tr>
+          <tr>
+            <td>Inspection and compliance</td>
+            <td>Inspection remarks, notices, penalties, follow-up dates</td>
+            <td>Requires role segregation and record-level access control</td>
+          </tr>
+          <tr>
+            <td>Public-facing potential</td>
+            <td>Vendor onboarding, application submission, renewal, status tracking</td>
+            <td>Raises exposure for authentication, CORS, CSRF, CSP, and upload security</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section">
+      <h2>Verified Findings</h2>
+      <div class="findings">
+        <div class="finding critical">
+          <div class="badge critical">Critical</div>
+          <h3>No discoverable app-specific ABAC or property encryption policies</h3>
+          <p>The scan found only 5 <code>Rule-Access-Policy</code> rules, all belonging to platform/system classes such as <code>Work-Cover-Task</code> and <code>Data-OperatorPresence-Session</code>. No application-specific access control policy was found for the licensing data model.</p>
+          <p><strong>Why this matters:</strong> the application handles sensitive personal, business, and compliance data. Without app-specific ABAC and property encryption policies, there is no visible evidence of record-level restriction or field-level encryption for regulated data.</p>
+          <p><strong>Recommended action:</strong> define <code>Rule-Access-Policy</code> and <code>Rule-Access-PolicyCondition</code> rules for licensing work and data classes, and add <code>PropertyEncrypt</code> policies for sensitive fields such as owner identity, contact details, payment-related fields, and inspection-sensitive fields.</p>
+        </div>
+
+        <div class="finding critical">
+          <div class="badge critical">Critical</div>
+          <h3>Unsafe CORS policies are present in the environment</h3>
+          <p>The scan verified multiple insecure CORS policy records:</p>
+          <ul>
+            <li><code>WILDCARDCRED</code>: wildcard origin <code>*</code> with <code>pyAllowCredentials=true</code></li>
+            <li><code>INVALIDORIGINHTTP</code>: insecure <code>http://insecure-app.example.com</code> with credentials enabled</li>
+            <li><code>LARGEMAXAGEABUSE</code>: max age <code>2147483647</code></li>
+            <li><code>DUPLICATEORIGINS</code>: duplicate trusted origins repeated three times</li>
+            <li><code>NOHEADERSCRED</code>: credentials enabled with no explicit allowed headers present in the retrieved rule</li>
+          </ul>
+          <p><strong>Why this matters:</strong> these patterns can enable credential leakage, stale trust caching, operational confusion, and weak cross-origin governance.</p>
+          <p><strong>Recommended action:</strong> remove wildcard-plus-credentials combinations, enforce HTTPS-only origins, cap max-age to a short interval such as 600 seconds, deduplicate origins, and define explicit allow/expose header lists when credentials are enabled.</p>
+        </div>
+
+        <div class="finding critical">
+          <div class="badge critical">Critical</div>
+          <h3>OAuth client management service package still uses Basic authentication</h3>
+          <p>The retrieved rule <code>DATA-ADMIN-SERVICEPACKAGE OAUTHCLIENTS</code> shows:</p>
+          <ul>
+            <li><code>pyAuthenticationType: Basic</code></li>
+            <li><code>pyRequiresAuthentication: true</code></li>
+            <li><code>pyUseSSL: true</code></li>
+            <li><code>pyAccessGroup: PRPC:Administrators</code></li>
+          </ul>
+          <p><strong>Why this matters:</strong> Basic authentication is weaker than token-based or federated authentication for privileged administrative services. Even with TLS enabled, it increases exposure to credential replay, shared-secret misuse, and weaker credential governance.</p>
+          <p><strong>Recommended action:</strong> move administrative and API-facing services to OAuth 2.0 or federated authentication, review access group scoping, and verify that secrets are not broadly distributed or statically embedded in integrations.</p>
+        </div>
+
+        <div class="finding high">
+          <div class="badge high">High</div>
+          <h3>No discoverable app-specific authentication service rules</h3>
+          <p>No <code>Data-Admin-Security-AuthService</code> rules were returned from the current accessible application context. That does not prove they do not exist elsewhere, but it does mean there is no visible evidence in the current rule inventory of app-specific SSO or stronger login configuration.</p>
+          <p><strong>Recommended action:</strong> verify whether the application relies on an external enterprise IdP, and document the active authentication service, MFA policy, and requestor timeout settings.</p>
+        </div>
+
+        <div class="finding high">
+          <div class="badge high">High</div>
+          <h3>No discoverable CSP artifacts for browser hardening</h3>
+          <p>Searches for content security policy artifacts did not return CSP rule instances in the accessible scope. For a portal that may be accessed by vendors, officers, and administrators, absence of visible CSP configuration is a material browser-hardening concern.</p>
+          <p><strong>Recommended action:</strong> create and assign Content Security Policy records with explicit directives such as <code>default-src 'self'</code>, restrictive <code>frame-ancestors</code>, and narrow <code>connect-src</code> allowlists.</p>
+        </div>
+
+        <div class="finding high">
+          <div class="badge high">High</div>
+          <h3>Document-heavy business flow with no verified malware scanning control</h3>
+          <p>The application design explicitly includes document uploads for ID proof, address proof, photos, and layout plans. No discoverable evidence of attachment malware scanning or upload-hardening controls was obtained from the available artifacts.</p>
+          <p><strong>Recommended action:</strong> verify antivirus integration for attachments, restrict file types, validate file signatures, and apply strict repository access controls.</p>
+        </div>
+
+        <div class="finding high">
+          <div class="badge high">High</div>
+          <h3>Likely gap in record-level protection for regulator and vendor personas</h3>
+          <p>The application model includes distinct personas with different access needs, including officers working within jurisdictions. No visible app-level ABAC policy enforces jurisdiction, ownership, or case-specific access filters.</p>
+          <p><strong>Recommended action:</strong> implement ABAC conditions based on operator properties, ownership, jurisdiction, and exception lists for work and data classes.</p>
+        </div>
+
+        <div class="finding medium">
+          <div class="badge medium">Medium</div>
+          <h3>Positive control: remediated CORS policy exists</h3>
+          <p>The rule <code>CORSNEW</code> was verified in a safer state:</p>
+          <ul>
+            <li>three explicit HTTPS origins</li>
+            <li><code>pyAllowCredentials=true</code> with no wildcard origin</li>
+            <li><code>pyAllowedMethods=GET</code></li>
+            <li><code>pyMaxAge=600</code></li>
+            <li>TLS protocol version <code>TLSv1.2</code></li>
+          </ul>
+          <p>This is a good reference configuration for credentialed, narrowly scoped cross-origin access.</p>
+        </div>
+
+        <div class="finding medium">
+          <div class="badge medium">Medium</div>
+          <h3>Positive control: secure CORS baseline pattern exists</h3>
+          <p>The rule <code>CLEANCORS</code> shows an acceptable baseline pattern for non-credentialed cross-origin access with HTTPS origins, explicit allowed headers, explicit exposed headers, and <code>pyAllowCredentials=false</code>.</p>
+        </div>
+
+        <div class="finding medium">
+          <div class="badge medium">Medium</div>
+          <h3>TLS is enabled on inspected service artifacts</h3>
+          <p>The retrieved OAuth service package has <code>pyUseSSL=true</code>, and the inspected CORS rules carry <code>pySSLProtocolVersion: TLSv1.2</code>. This is positive, but it is not a substitute for stronger service authentication and application-level encryption.</p>
+        </div>
+
+        <div class="finding medium">
+          <div class="badge medium">Medium</div>
+          <h3>Security governance evidence is not directly discoverable</h3>
+          <p>The scan could not directly verify Security Checklist completion, Security Event Configuration state, dynamic security system settings, requestor timeout settings, or keystore activation through the exposed MCP tools.</p>
+          <p><strong>Recommended action:</strong> manually review those landing pages in Dev Studio and record them in a control matrix.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Representative Evidence Table</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Artifact</th>
+            <th>Observed Configuration</th>
+            <th>Assessment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>DATA-ADMIN-SERVICEPACKAGE OAUTHCLIENTS</code></td>
+            <td>Basic auth, SSL enabled, access group <code>PRPC:Administrators</code>, stateless processing</td>
+            <td>High risk due to Basic auth on privileged service package</td>
+          </tr>
+          <tr>
+            <td><code>DATA-ADMIN-SECURITY-CORSPOLICY CORSNEW</code></td>
+            <td>Credentialed, explicit HTTPS origins, GET only, max-age 600</td>
+            <td>Acceptable pattern</td>
+          </tr>
+          <tr>
+            <td><code>DATA-ADMIN-SECURITY-CORSPOLICY WILDCARDCRED</code></td>
+            <td>Origin <code>*</code>, credentials enabled, broad methods</td>
+            <td>Critical misconfiguration</td>
+          </tr>
+          <tr>
+            <td><code>DATA-ADMIN-SECURITY-CORSPOLICY INVALIDORIGINHTTP</code></td>
+            <td>HTTP origin with credentials enabled</td>
+            <td>Critical misconfiguration</td>
+          </tr>
+          <tr>
+            <td><code>DATA-ADMIN-SECURITY-CORSPOLICY LARGEMAXAGEABUSE</code></td>
+            <td>Max-age <code>2147483647</code></td>
+            <td>High risk due to stale trust caching</td>
+          </tr>
+          <tr>
+            <td><code>DATA-ADMIN-SECURITY-CORSPOLICY DUPLICATEORIGINS</code></td>
+            <td>Same origin repeated three times</td>
+            <td>Medium risk, governance weakness</td>
+          </tr>
+          <tr>
+            <td><code>Rule-Access-Policy</code> inventory</td>
+            <td>Only 5 discovered, all platform/system level</td>
+            <td>Critical gap for app-level ABAC and property encryption evidence</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section">
+      <h2>Domain-by-Domain Assessment</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Security Domain</th>
+            <th>Status</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Authentication</td>
+            <td>Weak / not fully evidenced</td>
+            <td>No app-specific auth service discovered; privileged service package still uses Basic auth.</td>
+          </tr>
+          <tr>
+            <td>Authorization</td>
+            <td>High concern</td>
+            <td>No visible app-specific ABAC controls for sensitive licensing data.</td>
+          </tr>
+          <tr>
+            <td>Auditing and monitoring</td>
+            <td>Not verifiable from current tool surface</td>
+            <td>Needs manual review of Security Event Configuration and field-level audit settings.</td>
+          </tr>
+          <tr>
+            <td>Encryption and key management</td>
+            <td>Not evidenced</td>
+            <td>No visible application encryption policies or keystore usage in the discovered rule inventory.</td>
+          </tr>
+          <tr>
+            <td>Browser hardening</td>
+            <td>Partial / inconsistent</td>
+            <td>CORS controls exist but vary from safe to unsafe; CSP not observed.</td>
+          </tr>
+          <tr>
+            <td>Secrets and federation</td>
+            <td>Not evidenced</td>
+            <td>No visible external secret store or identity federation artifacts in the accessible scope.</td>
+          </tr>
+          <tr>
+            <td>Operational security</td>
+            <td>Not verifiable from current tool surface</td>
+            <td>Keystore activation, FIPS mode, and related operational settings require manual review.</td>
+          </tr>
+          <tr>
+            <td>Governance</td>
+            <td>Not verifiable from current tool surface</td>
+            <td>Security Checklist and security admin landing pages were not directly accessible through MCP.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section">
+      <h2>Remediation Priorities</h2>
+      <h3>Immediate</h3>
+      <ul>
+        <li>Retire or isolate unsafe CORS policies such as <code>WILDCARDCRED</code> and <code>INVALIDORIGINHTTP</code>.</li>
+        <li>Replace Basic authentication on privileged service packages with OAuth 2.0 or federated auth.</li>
+        <li>Define ABAC policies for licensing work and data classes using ownership, jurisdiction, and role conditions.</li>
+      </ul>
+      <h3>Near Term</h3>
+      <ul>
+        <li>Create property encryption policies for sensitive fields and evaluate class-level encryption where appropriate.</li>
+        <li>Implement CSP records for all portals, especially if the application is internet-facing.</li>
+        <li>Verify Security Event Configuration for failed logins, security admin changes, OAuth events, and data access events.</li>
+        <li>Verify attachment virus scanning and upload hardening.</li>
+      </ul>
+      <h3>Validation Follow-up</h3>
+      <ul>
+        <li>Review Security Checklist completion in App Studio or Dev Studio.</li>
+        <li>Review keystore activation and external KMS posture on the Data Encryption landing page.</li>
+        <li>Review requestor timeout and MFA posture on security policies and access groups.</li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2>Conclusion</h2>
+      <p>The application’s business model clearly requires stronger security than the currently discoverable configuration demonstrates. The environment contains both good and bad CORS examples, which is useful operationally, but it also exposes a more systemic problem: there is insufficient visible evidence of app-specific authorization, encryption, and browser-hardening controls for a regulated licensing workflow.</p>
+      <p><strong>Overall assessment:</strong> <span style="color: var(--critical); font-weight: 700;">Needs remediation before production-level trust</span>.</p>
+    </section>
+
+    <div class="footer">
+      Generated on 2026-04-16 using the app-security-scanner skill rubric and live Pega rule inspection.<br />
+      File intended for download and internal review.
+    </div>
+  </div>
+</body>
+</html>

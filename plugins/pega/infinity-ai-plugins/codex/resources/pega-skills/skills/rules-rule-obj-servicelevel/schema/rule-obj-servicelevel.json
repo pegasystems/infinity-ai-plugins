@@ -1,0 +1,228 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-obj-servicelevel.json",
+  "title": "Rule-Obj-ServiceLevel",
+  "description": "JSON schema for creating or updating a Pega Service Level Agreement rule (Rule-Obj-ServiceLevel). Only authored and identity fields are included; system-managed fields are omitted.",
+  "type": "object",
+  "required": [
+    "pxObjClass",
+    "pyClassName",
+    "pyRuleName",
+    "pyServiceLevelName",
+    "pyLabel",
+    "pyCalculateTimesFrom",
+    "pyMaxLateEvents"
+  ],
+  "properties": {
+    "pxObjClass": {
+      "type": "string",
+      "const": "Rule-Obj-ServiceLevel",
+      "description": "Rule type class — always 'Rule-Obj-ServiceLevel'.",
+      "x-pega-autoFill": "Rule-Obj-ServiceLevel"
+    },
+    "pyClassName": {
+      "type": "string",
+      "description": "Target class the SLA applies to (e.g., work class)."
+    },
+    "pyRuleName": {
+      "type": "string",
+      "description": "Rule name (PascalCase, no spaces). Must match pyServiceLevelName.",
+      "x-pega-autoFill": "{pyServiceLevelName}"
+    },
+    "pyServiceLevelName": {
+      "type": "string",
+      "description": "Internal SLA name — the class key for this rule."
+    },
+    "pyLabel": {
+      "type": "string",
+      "maxLength": 64,
+      "description": "Human-readable display label."
+    },
+    "pyRuleSet": {
+      "type": "string",
+      "description": "Ruleset name the rule is saved into."
+    },
+    "pyRuleSetVersion": {
+      "type": "string",
+      "pattern": "^\\d{2}-\\d{2}-\\d{2}$",
+      "description": "Ruleset version string, e.g. '01-01-01'."
+    },
+    "pyCalculateTimesFrom": {
+      "type": "string",
+      "enum": ["ASSIGNSTART", "PROPERTY"],
+      "description": "How SLA intervals are measured. 'ASSIGNSTART' = fixed interval from when assignment is ready (most common). 'PROPERTY' = 'Set to the value of a property' mode — goal/deadline/late times come from DateTime properties (set pyGoalTimeProperty, pyDeadlineTimeProperty).",
+      "x-pega-autoFill": "ASSIGNSTART"
+    },
+    "pyNextActionSetting": {
+      "type": "string",
+      "enum": ["Immediate", "Calculate", "Property"],
+      "description": "Assignment ready timing. 'Immediate' = ready as soon as created. 'Calculate' = ready after a fixed delay (set pyNextActionDays/Hours/Minutes/Seconds). 'Property' = ready time read from a DateTime property (set pyNextActionProperty).",
+      "x-pega-autoFill": "Immediate"
+    },
+    "pyNextActionDays": {
+      "type": "string",
+      "description": "Timed delay — days. Used when pyNextActionSetting is 'Calculate'.",
+      "x-pega-autoFill": "0"
+    },
+    "pyNextActionHours": {
+      "type": "string",
+      "description": "Timed delay — hours. Used when pyNextActionSetting is 'Calculate'.",
+      "x-pega-autoFill": "0"
+    },
+    "pyNextActionMinutes": {
+      "type": "string",
+      "description": "Timed delay — minutes. Used when pyNextActionSetting is 'Calculate'.",
+      "x-pega-autoFill": "0"
+    },
+    "pyNextActionSeconds": {
+      "type": "string",
+      "description": "Timed delay — seconds. Used when pyNextActionSetting is 'Calculate'.",
+      "x-pega-autoFill": "0"
+    },
+    "pyNextActionProperty": {
+      "type": "string",
+      "description": "DateTime property reference for dynamic assignment ready time. Used when pyNextActionSetting is 'Property'. Must start with a dot, e.g. '.pxCreateDateTime'."
+    },
+    "pyUrgencySLA": {
+      "type": "string",
+      "description": "Initial urgency value when the SLA starts.",
+      "x-pega-autoFill": "0"
+    },
+    "pyMaxLateEvents": {
+      "type": "string",
+      "description": "Maximum number of Passed Deadline (Late) escalation events.",
+      "x-pega-autoFill": "1"
+    },
+    "pyCalendar": {
+      "type": "string",
+      "description": "Calendar rule name for business-day calculations. Blank = calendar days."
+    },
+    "pyRuleAvailable": {
+      "type": "string",
+      "enum": ["Yes", "No", "Withdrawn", "Final", "Blocked"],
+      "description": "Whether the rule is active.",
+      "x-pega-autoFill": "Yes"
+    },
+    "pyGoalDefaultDays": { "type": "string", "description": "Goal — days.", "x-pega-autoFill": "0" },
+    "pyGoalDefaultHours": { "type": "string", "description": "Goal — hours.", "x-pega-autoFill": "0" },
+    "pyGoalDefaultMinutes": { "type": "string", "description": "Goal — minutes.", "x-pega-autoFill": "0" },
+    "pyGoalDefaultSeconds": { "type": "string", "description": "Goal — seconds.", "x-pega-autoFill": "0" },
+    "pyGoalInBusinessDays": { "type": "string", "enum": ["true", "false", ""], "description": "Use business days for goal." },
+    "pyGoalTimeProperty": { "type": "string", "description": "DateTime property for dynamic goal time. Used when pyCalculateTimesFrom is 'PROPERTY'. MUST reference an existing DateTime property on pyClassName (e.g. '.pxCreateDateTime'). Do NOT invent property names — list properties first to verify." },
+    "pyDeadlineDefaultDays": { "type": "string", "description": "Deadline — days.", "x-pega-autoFill": "0" },
+    "pyDeadlineDefaultHours": { "type": "string", "description": "Deadline — hours.", "x-pega-autoFill": "0" },
+    "pyDeadlineDefaultMinutes": { "type": "string", "description": "Deadline — minutes.", "x-pega-autoFill": "0" },
+    "pyDeadlineDefaultSeconds": { "type": "string", "description": "Deadline — seconds.", "x-pega-autoFill": "0" },
+    "pyDeadlineInBusinessDays": { "type": "string", "enum": ["true", "false", ""], "description": "Use business days for deadline." },
+    "pyDeadlineTimeProperty": { "type": "string", "description": "DateTime property for dynamic deadline time. Used when pyCalculateTimesFrom is 'PROPERTY'. MUST reference an existing DateTime property on pyClassName (e.g. '.pxUpdateDateTime'). Do NOT invent property names — list properties first to verify." },
+    "pyLateDefaultDays": { "type": "string", "description": "Late — days.", "x-pega-autoFill": "0" },
+    "pyLateDefaultHours": { "type": "string", "description": "Late — hours.", "x-pega-autoFill": "0" },
+    "pyLateDefaultMinutes": { "type": "string", "description": "Late — minutes.", "x-pega-autoFill": "0" },
+    "pyLateDefaultSeconds": { "type": "string", "description": "Late — seconds.", "x-pega-autoFill": "0" },
+    "pyLateInBusinessDays": { "type": "string", "enum": ["true", "false", ""], "description": "Use business days for late." },
+    "pyEscalations": {
+      "type": "object",
+      "description": "PageGroup with three fixed keys: Goal, Deadline, Late. Each defines escalation interval, urgency bump, and actions.",
+      "properties": {
+        "Goal": { "$ref": "#/$defs/SLEscalation" },
+        "Deadline": { "$ref": "#/$defs/SLEscalation" },
+        "Late": { "$ref": "#/$defs/SLEscalation" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "SLEscalation": {
+      "type": "object",
+      "description": "Escalation tier — defines interval, urgency increase, and actions.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-SLEscalation",
+          "x-pega-autoFill": "Embed-SLEscalation"
+        },
+        "pyDays": { "type": "string", "description": "Interval — days. Must match top-level counterpart." },
+        "pyHours": { "type": "string", "description": "Interval — hours. Must match top-level counterpart." },
+        "pyMinutes": { "type": "string", "description": "Interval — minutes. Must match top-level counterpart." },
+        "pySeconds": { "type": "string", "description": "Interval — seconds. Must match top-level counterpart." },
+        "pyEscalationUrgency": { "type": "string", "description": "Urgency increase when tier fires.", "x-pega-autoFill": "0" },
+        "pyInBusinessDays": { "type": "string", "enum": ["true", "false", ""], "description": "Use business days." },
+        "pyEscalationActions": {
+          "type": "array",
+          "description": "Actions to execute when the escalation fires.",
+          "items": { "$ref": "#/$defs/EscalationAction" }
+        }
+      }
+    },
+    "EscalationAction": {
+      "type": "object",
+      "description": "Action to run at escalation time.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-EscalationAction",
+          "x-pega-autoFill": "Embed-EscalationAction"
+        },
+        "pyActionSelect": {
+          "type": "string",
+          "enum": ["DataTransform", "CallFlow", "AdvanceFlow", "NotifyAssignee", "NotifyManager", "NotifyParty", "Transfer", "CallActivity", ""],
+          "description": "Action type. Maps to UI: Apply Data Transform, Call Flow, Advance Flow, Notify Assignee, Notify Manager, Notify Party, Transfer, Run Activity."
+        },
+        "pyStepActionSelect": {
+          "type": "string",
+          "enum": ["DataTransform", "CallFlow", "AdvanceFlow", "NotifyAssignee", "NotifyManager", "NotifyParty", "Transfer", "CallActivity", ""],
+          "description": "Internal action type — must match pyActionSelect."
+        },
+        "pyActivityToRun": {
+          "type": "string",
+          "description": "Activity name to run when pyActionSelect is 'CallActivity' (e.g., 'pxPostMessage')."
+        },
+        "pyRuleNameProperty": {
+          "type": "string",
+          "description": "Property reference for the activity name. Set to '.pyActivityToRun' when using CallActivity."
+        },
+        "pyActivity": {
+          "type": "string",
+          "description": "Activity name — auto-set by Pega for notify actions. For CallActivity, use pyActivityToRun instead."
+        },
+        "pyResumeFlowAction": {
+          "type": "string",
+          "description": "Flow action name to advance to when pyActionSelect is 'AdvanceFlow'. Required — Pega validates this field is not blank."
+        },
+        "pyCallFlowType": {
+          "type": "string",
+          "description": "Flow name to call when pyActionSelect is 'CallFlow'. Pega auto-sets pyActivity to 'startFlow'."
+        },
+        "pyDataTransform": {
+          "type": "string",
+          "description": "Data transform name when pyActionSelect is 'DataTransform'. Note: value may not persist via API — UI save recommended."
+        },
+        "pyActionWhen": {
+          "type": "string",
+          "description": "When rule to gate the action."
+        },
+        "pyCorrName": {
+          "type": "string",
+          "description": "Correspondence rule name for NotifyParty. Required when pyActionSelect is 'NotifyParty' — Pega validates this field is not blank."
+        },
+        "pyPartyRole": {
+          "type": "string",
+          "description": "Work party role to notify when pyActionSelect is 'NotifyParty'. Required — Pega validates this field is not blank. Common values: 'Customer', 'Interested'."
+        },
+        "pyCorrForSendEmail": {
+          "type": "string",
+          "description": "Correspondence rule for email notifications (used by NotifyAssignee, NotifyManager)."
+        },
+        "pySubject": {
+          "type": "string",
+          "description": "Email subject line for notification actions."
+        },
+        "pyRunActivityParams": {
+          "type": "object",
+          "description": "Activity parameter map — keys are parameter names, values are strings. Required when the activity needs parameters (e.g., pxPostMessage requires 'Message' and 'Verb').",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    }
+  }
+}

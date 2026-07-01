@@ -1,0 +1,6 @@
+target/
+tmp/
+logs/
+build/
+.DS_Store
+*.log

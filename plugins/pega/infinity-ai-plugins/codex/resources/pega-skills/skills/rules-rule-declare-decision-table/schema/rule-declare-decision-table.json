@@ -1,0 +1,500 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-declare-decision-table.json",
+  "title": "Rule-Declare-DecisionTable",
+  "description": "JSON schema for creating a Pega Decision Table (Rule-Declare-DecisionTable). Fields marked x-pega-autoFill are injected by the builder and may be omitted from payloads. Uses simple string arrays for pyCondition and pyResults. Supports multi-result tables via pyPropertyColumns for setting multiple output properties per row.",
+  "type": "object",
+  "required": [
+    "pyClassName",
+    "pyPurpose",
+    "pyRuleName",
+    "pyLabel",
+    "pyDefaultResult"
+  ],
+  "properties": {
+    "pxObjClass": {
+      "type": "string",
+      "const": "Rule-Declare-DecisionTable",
+      "description": "Rule type class — always 'Rule-Declare-DecisionTable'.",
+      "x-pega-autoFill": "Rule-Declare-DecisionTable"
+    },
+    "pyClassName": {
+      "type": "string",
+      "description": "The Pega class this decision table belongs to (e.g., 'MyOrg-MyApp-Work-MyCase')."
+    },
+    "pyRuleName": {
+      "type": "string",
+      "description": "Internal name (PascalCase, no spaces). must match pyPurpose exactly",
+      "x-pega-autoFill": "{pyPurpose}"
+    },
+    "pyPurpose": {
+      "type": "string",
+      "description": "Purpose identifier — must match pyRuleName exactly."
+    },
+    "pyLabel": {
+      "type": "string",
+      "description": "Human-readable display label."
+    },
+    "pyDescription": {
+      "type": "string",
+      "description": "Developer-facing description of the table's purpose."
+    },
+    "pyRuleSet": {
+      "type": "string",
+      "description": "Rule set the table is saved to."
+    },
+    "pyRuleSetVersion": {
+      "type": "string",
+      "pattern": "^\\d{2}-\\d{2}-\\d{2}$",
+      "description": "Rule set version (e.g., '01-01-01')."
+    },
+    "pyRuleAvailable": {
+      "type": "string",
+      "enum": ["Yes", "No", "Blocked", "Withdrawn", "Final"],
+      "description": "Availability status. 'Final' means cannot be overridden.",
+      "x-pega-autoFill": "Yes"
+    },
+    "pyDefaultAction": {
+      "type": "string",
+      "enum": ["RETURN", "SET"],
+      "description": "Action for the default/otherwise branch — 'RETURN' to return a value, 'SET' to execute pyDefaultResultPropSet side-effects without returning.",
+      "x-pega-autoFill": "RETURN"
+    },
+    "pyDefaultResult": {
+      "type": "string",
+      "description": "Fallback result when no row matches."
+    },
+    "pyDoHarvesting": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "Whether Pega harvests dependencies from this rule.",
+      "x-pega-autoFill": "true"
+    },
+    "pyAllowedToLoadResults": {
+      "type": "string",
+      "enum": ["yes", "no"],
+      "description": "Whether results can be loaded from external sources.",
+      "x-pega-autoFill": "yes"
+    },
+    "pyReturnColumnHasAccess": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "Whether the return column has access control.",
+      "x-pega-autoFill": "true"
+    },
+    "pyRedirectRule": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "String boolean — whether this table redirects to another rule.",
+      "x-pega-autoFill": "false"
+    },
+    "pyColumns": {
+      "type": "array",
+      "description": "Condition columns — array of Embed-DecisionTable-Column. Each column's pyCondition array length must match pyResults array length.",
+      "items": { "$ref": "#/$defs/Column" }
+    },
+    "pyResults": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Result values per row — simple string array (e.g., ['Pass', 'Fail']). Array length must match pyCondition arrays."
+    },
+    "pyParameters": {
+      "type": "array",
+      "description": "Input parameters for parameter-based tables. Required when pyProperty uses Param.Name notation.",
+      "items": { "$ref": "#/$defs/MethodParam" }
+    },
+    "pyDelegatedRestrictions": {
+      "$ref": "#/$defs/DelegatedRestrictions",
+      "description": "CRITICAL: PageGroup controlling Dev Studio visibility. Without pyAllowedToReturnValues='yes', the Return column is invisible.",
+      "x-pega-autoFill": {
+        "default": {
+          "pxObjClass": "Embed-Restrictions-FunctionAliases",
+          "pyAllowedToReturnValues": "yes",
+          "pyAllowedToReturnValuesStr": "true",
+          "pyAllowedToChangeRows": "no",
+          "pyAllowedToChangeRowsStr": "false",
+          "pyAllowedToChangeColumns": "no",
+          "pyAllowedToChangeColumnsStr": "false",
+          "pyAllowedToChangePropSets": "no",
+          "pyAllowedToChangePropSetsStr": "false",
+          "pyAllowedToBuildExpressions": "no",
+          "pyAllowedToBuildExpressionsStr": "false",
+          "pyEvaluateAllRows": "no",
+          "pyEvaluateAllRowsStr": "false"
+        }
+      }
+    },
+    "pyPropertyColumns": {
+      "type": "array",
+      "description": "Property set output columns — set additional output properties per row alongside the return value. Each column's pyPropertyValues length must match pyResults length.",
+      "items": { "$ref": "#/$defs/PropertyColumn" }
+    },
+    "pyDefaultResultPropSet": {
+      "type": "array",
+      "description": "Default values for property columns when no row matches — one entry per pyPropertyColumns entry. Parallel array with pyPropertyColumns.",
+      "items": { "$ref": "#/$defs/ModelParams" }
+    },
+    "pyPagesAndClasses": {
+      "type": "array",
+      "description": "Named page class mappings — required when property column paths reference page lists (e.g., .pxResults(<APPEND>).Property). Maps page names to their Pega class.",
+      "items": { "$ref": "#/$defs/PagesAndClasses" }
+    },
+    "pyEvaluateAllRows": {
+      "type": "string",
+      "enum": ["yes", "no"],
+      "description": "Evaluate all rows instead of first-match-wins. Set to 'yes' when building lists via <APPEND> macros. Also exists in pyDelegatedRestrictions.default — both should be consistent."
+    },
+    "pyAllowedValues": {
+      "type": "array",
+      "description": "Authored vocabulary of possible return values, each optionally carrying SET side-effects that fire when a row with that return value matches. Superset of pyResults — may include values not currently used by any row. When present, must stay consistent with pyResults. See references/allowed-values.md.",
+      "items": { "$ref": "#/$defs/AllowedValue" }
+    },
+    "pyAllowedResultsProperty": {
+      "type": "string",
+      "description": "Optional property whose allowed-values list bounds the return-value vocabulary. When empty or omitted, the vocabulary is free-form."
+    },
+    "pyInitialPropSet": {
+      "type": "array",
+      "description": "Pre-logic 'Initialize with' block — unconditional property SETs that run before any row evaluation. Seeds the target page with defaults or derived values that conditions can then read. Each entry is an Embed-ModelParams with a property target and a Pega expression. Omit or leave empty for most tables — adding entries flags the rule as 'Advanced' in Dev Studio.",
+      "items": { "$ref": "#/$defs/InitialPropSetEntry" }
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "Column": {
+      "type": "object",
+      "description": "A condition column (Embed-DecisionTable-Column). pyCondition is a simple string array with operator+value concatenated per entry (e.g., ['>=80', '<80']).",
+      "required": ["pyProperty"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-DecisionTable-Column",
+          "description": "Always 'Embed-DecisionTable-Column'.",
+          "x-pega-autoFill": "Embed-DecisionTable-Column"
+        },
+        "pyProperty": {
+          "type": "string",
+          "description": "Property to evaluate — dot-prefix for case properties (.Score), Param.Name for parameters."
+        },
+        "pyPropertyLabel": {
+          "type": "string",
+          "description": "Human-readable column label."
+        },
+        "pyColumnDataType": {
+          "type": "string",
+          "enum": ["integer", "decimal", "text", "date", "truefalse", "identifier", "dateTime", "timeofday", "double", "boolean", "none"],
+          "description": "Data type — 'truefalse' for boolean properties, 'identifier' for key/ID properties, 'dateTime'/'timeofday' for temporal types. Pega auto-corrects if mismatched with property type."
+        },
+        "pyCondition": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Condition values per row — simple string array with operator+value concatenated (e.g., '>=80', '<0.20', 'Active'). Array length must match pyResults."
+        },
+        "pyDefaultOperator": {
+          "type": "string",
+          "enum": ["=", "!=", ">=", "<=", ">", "<"],
+          "description": "Default comparison operator. '!=' for not-equals matching. Optional — operator is embedded in pyCondition strings."
+        },
+        "pyUseRange": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Whether this column uses range-based conditions."
+        },
+        "pyUseRangeMax": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Whether this column uses range max values."
+        },
+        "pyHasAccess": {
+          "type": "string",
+          "description": "Column-level access control — 'true' to enable."
+        },
+        "pyOrConditions": {
+          "type": "array",
+          "description": "OR conditions — allows a single row to match multiple values. Each entry targets a specific row by pyRowNum and provides alternative values.",
+          "items": { "$ref": "#/$defs/OrCondition" }
+        }
+      },
+      "additionalProperties": true
+    },
+    "MethodParam": {
+      "type": "object",
+      "description": "An input parameter (Embed-MethodParams).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-MethodParams",
+          "x-pega-autoFill": "Embed-MethodParams"
+        },
+        "pyParametersParamName": {
+          "type": "string",
+          "description": "Parameter name — referenced in pyProperty as Param.Name."
+        },
+        "pyParametersParamDesc": {
+          "type": "string",
+          "description": "Description."
+        },
+        "pyParametersParamType": {
+          "type": "string",
+          "enum": ["Text", "Integer", "Double", "Decimal", "Date", "DateTime", "TimeofDay", "TrueFalse", "Page"],
+          "description": "Data type of the parameter."
+        }
+      }
+    },
+    "OrCondition": {
+      "type": "object",
+      "description": "An OR condition entry (Embed-DecisionTable-OrCondition). Allows a single row to match any of multiple values instead of requiring separate rows.",
+      "required": ["pyRowNum"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-DecisionTable-OrCondition",
+          "x-pega-autoFill": "Embed-DecisionTable-OrCondition"
+        },
+        "pyRowNum": {
+          "type": "string",
+          "description": "1-based row number this OR condition applies to (e.g., '1', '2')."
+        },
+        "pyOrCondition": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Alternative values for the row — simple string array (e.g., ['Active', 'Pending', 'Open'])."
+        }
+      }
+    },
+    "DelegatedRestrictions": {
+      "type": "object",
+      "description": "PageGroup keyed by 'default' — controls Dev Studio visibility and editability.",
+      "properties": {
+        "default": {
+          "type": "object",
+          "description": "The default restriction set (Embed-Restrictions-FunctionAliases).",
+          "properties": {
+            "pxObjClass": {
+              "type": "string",
+              "const": "Embed-Restrictions-FunctionAliases",
+              "x-pega-autoFill": "Embed-Restrictions-FunctionAliases"
+            },
+            "pyAllowedToReturnValues": {
+              "type": "string",
+              "enum": ["yes", "no"],
+              "description": "CRITICAL: 'yes' shows the Return column in Dev Studio."
+            },
+            "pyAllowedToReturnValuesStr": {
+              "type": "string",
+              "enum": ["true", "false"],
+              "description": "String-boolean mirror of pyAllowedToReturnValues."
+            },
+            "pyAllowedToChangeRows": {
+              "type": "string",
+              "enum": ["yes", "no"],
+              "description": "Allow adding/removing rows."
+            },
+            "pyAllowedToChangeRowsStr": {
+              "type": "string",
+              "enum": ["true", "false"]
+            },
+            "pyAllowedToChangeColumns": {
+              "type": "string",
+              "enum": ["yes", "no"],
+              "description": "Allow modifying column layout."
+            },
+            "pyAllowedToChangeColumnsStr": {
+              "type": "string",
+              "enum": ["true", "false"]
+            },
+            "pyAllowedToChangePropSets": {
+              "type": "string",
+              "enum": ["yes", "no"],
+              "description": "Allow modifying property set columns."
+            },
+            "pyAllowedToChangePropSetsStr": {
+              "type": "string",
+              "enum": ["true", "false"]
+            },
+            "pyAllowedToBuildExpressions": {
+              "type": "string",
+              "enum": ["yes", "no"],
+              "description": "Allow building expressions."
+            },
+            "pyAllowedToBuildExpressionsStr": {
+              "type": "string",
+              "enum": ["true", "false"]
+            },
+            "pyEvaluateAllRows": {
+              "type": "string",
+              "enum": ["yes", "no"],
+              "description": "Evaluate all rows vs first match."
+            },
+            "pyEvaluateAllRowsStr": {
+              "type": "string",
+              "enum": ["true", "false"]
+            }
+          }
+        }
+      }
+    },
+    "PropertyColumn": {
+      "type": "object",
+      "description": "A property set output column (Embed-DecisionTable-PropertyColumn). Sets an additional output property per row, parallel with pyResults.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-DecisionTable-PropertyColumn",
+          "x-pega-autoFill": "Embed-DecisionTable-PropertyColumn"
+        },
+        "pyProperty": {
+          "type": "string",
+          "description": "Property path to set — dot-prefix (.PropertyName), Param.Name, or page list macros (.PageList(<APPEND>).PropertyName, .PageList(<LAST>).PropertyName)."
+        },
+        "pyPropertyLabel": {
+          "type": "string",
+          "description": "Human-readable column label."
+        },
+        "pyPropertyValues": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Output values per row — simple string array. Array length must match pyResults. Values containing class names or rule names use embedded quotes (e.g., '\"Link-Attachment\"')."
+        },
+        "pyDefaultPropertySetOperator": {
+          "type": "string",
+          "enum": ["=", ""],
+          "description": "Operator for setting the property — typically '='. May be empty string on some existing rules."
+        },
+        "pyPropSetDefaultValue": {
+          "type": "string",
+          "description": "Default value when no row matches. Can be empty string, literal value, or Param.Name reference."
+        },
+        "pyHasAccess": {
+          "type": "string",
+          "description": "Column-level access control — 'true' to enable."
+        },
+        "pyColumnRestrictions": {
+          "type": "object",
+          "description": "Per-column edit restrictions. Server may scaffold this when pyHasAccess is 'true'.",
+          "properties": {
+            "pxObjClass": {
+              "type": "string",
+              "const": "Embed-DecisionTable-Column"
+            },
+            "pyAllowedToEditValues": {
+              "type": "string",
+              "enum": ["yes", "no"]
+            }
+          }
+        }
+      }
+    },
+    "ModelParams": {
+      "type": "object",
+      "description": "A model parameter entry (Embed-ModelParams) — maps a property name to a default value for property column fallbacks.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-ModelParams",
+          "x-pega-autoFill": "Embed-ModelParams"
+        },
+        "pyPropertiesName": {
+          "type": "string",
+          "description": "Property path — should match the corresponding pyPropertyColumns entry's pyProperty."
+        },
+        "pyPropertiesValue": {
+          "type": "string",
+          "description": "Default value — can be empty string, literal value, or Param reference."
+        }
+      }
+    },
+    "PagesAndClasses": {
+      "type": "object",
+      "description": "A page-to-class mapping (Embed-PagesAndClasses). Required when property column paths reference page lists with <APPEND>/<LAST> macros.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-PagesAndClasses",
+          "x-pega-autoFill": "Embed-PagesAndClasses"
+        },
+        "pyPageName": {
+          "type": "string",
+          "description": "Page name — dot-prefixed property path (e.g., '.pxResults')."
+        },
+        "pyPageClass": {
+          "type": "string",
+          "description": "Pega class name for the page (e.g., 'Embed-Rule-Obj-Guardrail')."
+        }
+      }
+    },
+    "AllowedValue": {
+      "type": "object",
+      "description": "An authored return-value vocabulary entry (Embed-Decision-AllowedValues). Optionally carries SET side-effects via pyPropertySet that fire for every row returning this value.",
+      "required": ["pyAllowedValue"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-Decision-AllowedValues",
+          "x-pega-autoFill": "Embed-Decision-AllowedValues"
+        },
+        "pyAllowedValue": {
+          "type": "string",
+          "description": "The return value name (e.g., 'Approved', 'Critical'). Must match an entry in pyResults to be active, but unused vocabulary entries are allowed."
+        },
+        "pzIsAllowedResultsPropSetExist": {
+          "type": "string",
+          "enum": ["true", "false"],
+          "description": "'true' when SET side-effects are attached to this value, 'false' for vocabulary-only stubs."
+        },
+        "pyPropertySet": {
+          "type": "array",
+          "description": "SET actions that fire as side-effects when a row returns this value.",
+          "items": { "$ref": "#/$defs/AllowedValueAction" }
+        }
+      }
+    },
+    "AllowedValueAction": {
+      "type": "object",
+      "description": "A SET action within an allowed-value entry (Embed-ModelParams). Sets a property to a literal or expression when the parent allowed value's return value is matched.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-ModelParams",
+          "x-pega-autoFill": "Embed-ModelParams"
+        },
+        "pyActionName": {
+          "type": "string",
+          "const": "SET",
+          "description": "Action type — always 'SET'."
+        },
+        "pyPropertiesName": {
+          "type": "string",
+          "description": "Target property — dot-prefix for case properties (.someProperty) or Param.someParam for parameters."
+        },
+        "pyPropertiesValue": {
+          "type": "string",
+          "description": "Value to set — literal string, quoted class name ('\"Rule-Decision-Scorecard\"'), or Pega expression (ternary, @String.* calls, etc.)."
+        },
+        "pyExpressionBuilder": {
+          "type": "string",
+          "description": "Expression source — same value as pyPropertiesValue when using expressions. Optional; used by the UI expression editor cache."
+        }
+      }
+    },
+    "InitialPropSetEntry": {
+      "type": "object",
+      "description": "A pre-logic initialization entry (Embed-ModelParams). Sets a property to a Pega expression result before any row evaluation. pyPropertiesValue is compiled as a Pega expression at assembly time — supports literals, property references, Param.* references, and function calls.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-ModelParams",
+          "x-pega-autoFill": "Embed-ModelParams"
+        },
+        "pyPropertiesName": {
+          "type": "string",
+          "description": "Target property on the evaluated page (e.g., '.Discount', '.Address.City'). Standard dot/index syntax."
+        },
+        "pyPropertiesValue": {
+          "type": "string",
+          "description": "Pega expression to evaluate and assign — literals ('0', '\"Pending\"'), property references (.OtherProp), Param.* references, function calls (@DateTime.addDays(.StartDate, 7))."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "pega-infinity-authoring",
+  "description": "Pega Infinity Authoring with bundled MCP tools and runtime skills.",
+  "version": "0.0.1",
+  "author": {
+    "name": "Pegasystems",
+    "url": "https://github.com/pegasystems"
+  },
+  "repository": "https://github.com/pegasystems/infinity-ai-plugins",
+  "license": "Apache-2.0",
+  "keywords": [
+    "pega",
+    "mcp",
+    "copilot",
+    "authoring"
+  ],
+  "skills": [
+    "./skills/pega-assistant",
+    "./skills/pega-setup"
+  ],
+  "mcpServers": "./.mcp.json"
+}

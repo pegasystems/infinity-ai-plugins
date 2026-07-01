@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-corrtype.json",
+  "title": "Rule-CorrType",
+  "description": "Validates Rule-CorrType (Correspondence Type) payloads for Pega Infinity. Correspondence types define the delivery channel for outbound correspondence -- email, fax, postal mail, phone/text, etc.",
+  "type": "object",
+  "required": [
+    "pxObjClass",
+    "pyRuleName",
+    "pyLabel",
+    "pyCorrType",
+    "pyAddressClass",
+    "pyCorrClass"
+  ],
+  "properties": {
+    "pxObjClass": {
+      "type": "string",
+      "const": "Rule-CorrType",
+      "description": "Must be Rule-CorrType.",
+      "x-pega-autoDerived": true,
+      "x-pega-autoFill": "Rule-CorrType"
+    },
+    "pyRuleName": {
+      "type": "string",
+      "description": "Internal rule name, used as the correspondence type identifier. Typically a short name like Email, Fax, Mail.",
+      "x-pega-autoFill": "{pyCorrType}"
+    },
+    "pyLabel": {
+      "type": "string",
+      "description": "Human-readable display label for the correspondence type."
+    },
+    "pyDescription": {
+      "type": "string",
+      "description": "Developer-facing description of this correspondence type."
+    },
+    "pyCorrType": {
+      "type": "string",
+      "description": "The correspondence type name. Typically matches pyRuleName. Identifies the delivery channel (e.g. Email, Fax, Mail, PhoneText)."
+    },
+    "pyAddressClass": {
+      "type": "string",
+      "description": "The Data-Address subclass used for this correspondence type (e.g. Data-Address-Email, Data-Address-Fax, Data-Address-Postal, Data-Address-PhoneText)."
+    },
+    "pyCorrClass": {
+      "type": "string",
+      "description": "The Data-Corr subclass used for this correspondence type (e.g. Data-Corr-Email, Data-Corr-Fax, Data-Corr-Letter, Data-Corr-PhoneText)."
+    },
+    "pyCorrClassModel": {
+      "type": "string",
+      "description": "The data transform (model) name applied to the correspondence class. Example: pyDefault."
+    },
+    "pyUsage": {
+      "type": "string",
+      "description": "Usage description for the correspondence type."
+    },
+    "pyHistoryObject": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "Whether correspondence instances of this type are stored as history objects.",
+      "x-pega-autoFill": "false"
+    },
+    "pyRuleAvailable": {
+      "type": "string",
+      "enum": ["Yes", "No", "Final", "Withdrawn", "Blocked"],
+      "description": "Availability status.",
+      "x-pega-autoFill": "Yes"
+    },
+    "pyMethodStatus": {
+      "type": "string",
+      "enum": ["API", "Deprecated", "Extension", "Internal", "Template", ""],
+      "description": "Method status for the rule.",
+      "x-pega-autoFill": ""
+    }
+  }
+}

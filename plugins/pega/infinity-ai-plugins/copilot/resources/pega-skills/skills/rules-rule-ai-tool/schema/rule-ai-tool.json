@@ -1,0 +1,383 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-ai-tool.json",
+  "title": "Rule-AI-Tool",
+  "description": "Validates Rule-AI-Tool payloads for Pega Infinity.",
+  "type": "object",
+  "required": [
+    "pxObjClass",
+    "pyLabel",
+    "pyClassName",
+    "pyRuleName",
+    "pyPurpose",
+    "pyIntentDescription",
+    "pyIntentActionPage",
+    "pyGenAIDef"
+  ],
+  "properties": {
+    "pxObjClass": {
+      "type": "string",
+      "const": "Rule-AI-Tool",
+      "description": "The Pega object class identifier. Always set to Rule-AI-Tool for this rule type.",
+      "x-pega-autoFill": "Rule-AI-Tool"
+    },
+    "pyLabel": {
+      "type": "string",
+      "description": "Display name shown in the UI and tool registries to identify this AI tool."
+    },
+    "pyClassName": {
+      "type": "string",
+      "description": "The applies-to class that scopes this tool (e.g., @baseclass for global, or a specific work/data class)."
+    },
+    "pyRuleName": {
+      "type": "string",
+      "description": "Unique rule identifier within the applies-to class, typically matching the pyPurpose value."
+    },
+    "pyRuleSet": {
+      "type": "string",
+      "description": "RuleSet that contains this tool definition. Auto-derived from the application context.",
+      "x-pega-autoDerived": true
+    },
+    "pyRuleSetVersion": {
+      "type": "string",
+      "description": "Version of the RuleSet containing this tool. Auto-derived from the application context.",
+      "x-pega-autoDerived": true
+    },
+    "pyRuleAvailable": {
+      "type": "string",
+      "enum": [
+        "Yes",
+        "No",
+        "Final",
+        "Withdrawn",
+        "Blocked"
+      ],
+      "description": "Availability status controlling whether this tool can be resolved and executed at runtime.",
+      "x-pega-autoFill": "Yes"
+    },
+    "pySortDateCircumWithinRSMajor": {
+      "type": "string",
+      "description": "Internal timestamp used for rule resolution ordering within the same RuleSet major version.",
+      "x-pega-autoFill": "true"
+    },
+    "pyPurpose": {
+      "type": "string",
+      "description": "Functional identifier for the tool, used as a key when agents reference it (e.g., pxGetCaseTypes, pzSearchRule)."
+    },
+    "pyIntentDescription": {
+      "type": "string",
+      "description": "Detailed natural language instructions provided to the AI agent explaining the tool's purpose, when to invoke it, expected inputs, and output format."
+    },
+    "pyIntentActionPage": {
+      "type": "object",
+      "description": "Configuration of the backing rule that executes when the tool is invoked. The pyRuleName must reference a valid rule instance matching the selected pyCategory.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "description": "Embedded object class for the tool action configuration.",
+          "x-pega-autoFill": "Embed-AI-Tool-Action"
+        },
+        "pyCategory": {
+          "type": "string",
+          "enum": [
+            "Rule-Obj-Activity",
+            "Rule-Declare-Pages",
+            "Buddy",
+            "Rule-HTML-Section",
+            "Rule-AI-Agent",
+            "Rule-Obj-FlowAction",
+            "Rule-Obj-CaseType"
+          ],
+          "description": "Type of backing rule that provides the tool's implementation logic."
+        },
+        "pyClassName": {
+          "type": "string",
+          "description": "Applies-to class of the backing rule instance that implements this tool."
+        },
+        "pyRuleName": {
+          "type": "string",
+          "description": "Name of the backing rule instance to invoke. Must correspond to a valid rule of the type specified by pyCategory.",
+          "x-pega-validation": {
+            "existenceCheck": "MANDATORY (except Buddy category) — Before creating the Rule-AI-Tool, use search-rules or list-rules to verify that a rule with this name exists for the rule type indicated by pyCategory. Do NOT proceed if the rule does not exist. For Buddy-category tools, pyRuleName must be one of: platform_buddy, sales_automation_buddy, customer_decision_hub_buddy, customer_service_buddy — validate against this list instead of rule APIs.",
+            "parameterCheck": "MANDATORY — If the backing rule has parameters, use get-rule to inspect its parameter definitions. All required parameters on the backing rule MUST have corresponding entries in the top-level pyParameters array."
+          }
+        },
+        "pyRuleInsName": {
+          "type": "string",
+          "description": "Instance name of the backing rule, typically in the format UPPERCASE-CLASS!UPPERCASE-PURPOSE (e.g., OG97R6-EVERTRUST-WORK-RETIREMENTPLANNING!PYDEFAULT). Used by Pega to resolve the exact rule instance at runtime. Required for Case Type tools."
+        },
+        "pyBrowseClass": {
+          "type": "string",
+          "description": "Class used to browse or scope data when the tool executes its backing rule."
+        },
+        "pyBuddyType": {
+          "type": "string",
+          "enum": [
+            "Internal",
+            "External"
+          ],
+          "description": "Specifies whether the buddy is an internal Pega knowledge source or an external integration. Only applicable when pyCategory is Buddy."
+        },
+        "pyParameters": {
+          "type": "array",
+          "description": "Input/output parameter definitions for the backing rule. Activity-backed tools typically use Embed-AutomationRule-IO; Data Page-backed tools typically use Embed-MethodParams.",
+          "items": {
+            "oneOf": [
+              { "$ref": "#/$defs/Embed-AutomationRule-IO" },
+              { "$ref": "#/$defs/Embed-MethodParams" }
+            ]
+          }
+        }
+      },
+      "required": [
+        "pxObjClass",
+        "pyCategory",
+        "pyClassName",
+        "pyRuleName"
+      ]
+    },
+    "pyGenAIDef": {
+      "type": "object",
+      "description": "GenAI configuration containing sample queries that help the AI agent understand when and how to invoke this tool.",
+      "required": [
+        "pxObjClass",
+        "pyExamples"
+      ],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "description": "Embedded object class for the GenAI definition.",
+          "x-pega-autoFill": "Embed-GenAI-Definition"
+        },
+        "pyExamples": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Sample user queries or phrases that should trigger this tool. At least one example is required for agent discoverability.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "pxObjClass": {
+                "type": "string",
+                "description": "Embedded object class for each example entry.",
+                "x-pega-autoFill": "Embed-GenAI-Assistant-Example"
+              },
+              "pyExample": {
+                "type": "string",
+                "description": "A representative user query or command that would invoke this tool."
+              }
+            },
+            "required": [
+              "pxObjClass",
+              "pyExample"
+            ]
+          }
+        }
+      }
+    },
+    "pyAskConfirmation": {
+      "type": "string",
+      "enum": [
+        "true",
+        "false"
+      ],
+      "description": "Controls whether the agent must prompt the user for explicit confirmation before executing this tool.",
+      "x-pega-autoFill": "false"
+    },
+    "pyAskConfirmationMessage": {
+      "type": "string",
+      "description": "Custom confirmation prompt displayed to the user when pyAskConfirmation is true. Required in Pega 26+."
+    },
+    "pyRetentionPolicy": {
+      "type": "string",
+      "enum": [
+        "ALWAYS_RETAIN",
+        "RETAIN_UNTIL_ACTIONED",
+        "EPHEMERAL"
+      ],
+      "description": "Determines how long the tool's execution results persist in the conversation context for the AI agent.",
+      "x-pega-autoFill": "ALWAYS_RETAIN"
+    },
+    "pyDisplayMode": {
+      "type": "string",
+      "enum": [
+        "basic",
+        "clone",
+        "advanced"
+      ],
+      "description": "UI presentation mode for the tool rule form in App Studio or Dev Studio.",
+      "x-pega-autoFill": "basic"
+    },
+    "pyBaseRule": {
+      "type": "string",
+      "enum": [
+        "true",
+        "false"
+      ],
+      "description": "Indicates whether this rule serves as a base definition that other rules can override or extend.",
+      "x-pega-autoFill": "false"
+    },
+    "pyDescription": {
+      "type": "string",
+      "description": "Optional supplementary description providing additional context about the tool's behavior or usage notes."
+    },
+    "pyMethodStatus": {
+      "type": "string",
+      "enum": ["API", "Deprecated", "Extension", "Internal", "Template", ""],
+      "description": "Lifecycle status indicating whether this tool is a public API, deprecated, an extension point, or internal-only.",
+      "x-pega-autoFill": ""
+    },
+    "pyParameters": {
+      "type": "array",
+      "description": "Top-level input/output parameter definitions exposed to the AI agent for passing data to and from the tool.",
+      "items": {
+        "$ref": "#/$defs/Embed-MethodParams"
+      }
+    }
+  },
+  "$defs": {
+    "Embed-MethodParams": {
+      "type": "object",
+      "description": "Defines a single method-style parameter with name, type, direction, and requirement level.",
+      "required": [
+        "pyParametersParamName",
+        "pyParametersParamType",
+        "pyParametersParamDesc",
+        "pyParametersParamReq"
+      ],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "description": "Embedded object class for method parameter entries.",
+          "x-pega-autoFill": "Embed-MethodParams"
+        },
+        "pyParametersParamType": {
+          "type": "string",
+          "enum": [
+            "STRING",
+            "INTEGER",
+            "DECIMAL",
+            "DATETIME",
+            "DATE",
+            "BOOLEAN",
+            "PAGELIST",
+            "PAGE"
+          ],
+          "description": "Data type of the parameter value expected by the backing rule."
+        },
+        "pyParametersParamName": {
+          "type": "string",
+          "description": "Property name on the parameter page where this value is read from or written to."
+        },
+        "pyParametersParamValue": {
+          "type": "string",
+          "description": "Default or pre-populated value assigned to this parameter if not provided by the agent."
+        },
+        "pyParametersParamDesc": {
+          "type": "string",
+          "description": "Description of this parameter explaining its purpose and usage. Shown in the parameter configuration UI."
+        },
+        "pyParametersParamPassBy": {
+          "type": "string",
+          "enum": [
+            "value",
+            "reference"
+          ],
+          "description": "How the Rule-AI-Tool passes this parameter to the backing rule. Use \"value\" when the tool should pass the parameter value directly, or \"reference\" when the backing rule should resolve the referenced property at runtime."
+        },
+        "pyParametersParamLabel": {
+          "type": "string",
+          "description": "Display label for the parameter shown in the tool configuration UI."
+        },
+        "pyParametersParamReq": {
+          "type": "string",
+          "enum": [
+            "-1",
+            "0"
+          ],
+          "description": "Indicates whether the parameter is required (-1) or optional (0). All required parameters of the backing rule must be marked as -1."
+        }
+      }
+    },
+    "Embed-AutomationRule-IO": {
+      "type": "object",
+      "description": "Defines a single automation-style I/O parameter used by activity-backed tools.",
+      "required": [
+        "pyParameterName",
+        "pyParametersInOut",
+        "pyParametersParamName",
+        "pyParametersParamType",
+        "pyRequired"
+      ],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "description": "Embedded object class for automation I/O parameter entries.",
+          "x-pega-autoFill": "Embed-AutomationRule-IO"
+        },
+        "pyAutomationParamType": {
+          "type": "string",
+          "description": "Data type of this automation parameter (e.g., String, Integer, Page)."
+        },
+        "pyAutomationIOTextFormat": {
+          "type": "string",
+          "enum": [
+            "None",
+            "EscapedJSON"
+          ],
+          "description": "Serialization format applied to text parameter values. Use EscapedJSON for structured data passed as a string."
+        },
+        "pyAutomationParamTextOption": {
+          "type": "string",
+          "description": "Additional formatting options applied to the text representation of this parameter."
+        },
+        "pyParameterName": {
+          "type": "string",
+          "description": "Logical name identifying this parameter in the automation interface."
+        },
+        "pyParametersInOut": {
+          "type": "string",
+          "enum": [
+            "In",
+            "Out"
+          ],
+          "description": "Direction indicating whether this parameter is an input to or output from the automation."
+        },
+        "pyParametersParamName": {
+          "type": "string",
+          "description": "Property reference on the clipboard where this parameter value is mapped."
+        },
+        "pyParametersParamType": {
+          "type": "string",
+          "description": "Clipboard property type corresponding to this parameter (e.g., STRING, INTEGER)."
+        },
+        "pyParametersParamValue": {
+          "type": "string",
+          "description": "Property reference or literal value used to populate or read this parameter at runtime."
+        },
+        "pyDescription": {
+          "type": "string",
+          "description": "Human-readable description of this automation parameter."
+        },
+        "pyLabel": {
+          "type": "string",
+          "description": "Display label for this automation parameter."
+        },
+        "pyRequired": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Indicates whether this automation parameter must be provided for successful tool execution."
+        },
+        "pyValidValues": {
+          "type": "array",
+          "description": "Valid value constraints for this parameter. Typically empty for most tools.",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

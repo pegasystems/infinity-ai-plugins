@@ -1,0 +1,811 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-obj-validate.json",
+  "title": "Rule-Obj-Validate",
+  "description": "JSON schema for creating or updating a Pega validate rule (Rule-Obj-Validate). Only authored and identity fields are included; system-managed and versioning fields are omitted. Validate rules enforce property-level validation logic using a declarative grid (pyValidationValues) that compiles to activity steps (pySteps).",
+  "type": "object",
+  "required": [
+    "pxObjClass",
+    "pyActivityName",
+    "pyLabel",
+    "pyClassName",
+    "pyJavaGenerateAPIVersion"
+  ],
+  "properties": {
+    "pxObjClass": {
+      "type": "string",
+      "const": "Rule-Obj-Validate",
+      "description": "Rule type class -- always 'Rule-Obj-Validate'.",
+      "x-pega-autoFill": "Rule-Obj-Validate"
+    },
+    "pyActivityName": {
+      "type": "string",
+      "description": "Internal name of the validate rule (PascalCase or camelCase, no spaces). Same as pyRuleName."
+    },
+    "pyLabel": {
+      "type": "string",
+      "description": "Human-readable display label."
+    },
+    "pyClassName": {
+      "type": "string",
+      "description": "The Pega class this validate rule belongs to (e.g., 'MyOrg-MyApp-Work-MyCase')."
+    },
+    "pyDescription": {
+      "type": "string",
+      "description": "Developer-facing description of the validate rule's purpose."
+    },
+    "pyActivityType": {
+      "type": "string",
+      "enum": ["ACTIVITY", "VALIDATE"],
+      "description": "Validate flavor. ACTIVITY (default, dominant) uses rich pyValidationValues with embedded when conditions. VALIDATE uses simpler pyMetaData rows and direct Property-Validate / Property-Set-Messages step calls.",
+      "x-pega-autoFill": "ACTIVITY"
+    },
+    "pyAuthenticatedOnly": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "True to require an authenticated session. Pega booleans are strings.",
+      "x-pega-autoFill": "false"
+    },
+
+    "pyJavaFUAVersion": {
+        "type": "string",
+        "const": "03-02",
+        "description": "Java FUAs version -- must be '03-02' for current Infinity versions.",
+        "x-pega-autoFill": "03-02"
+
+    },
+    "pyJavaGenerateVersion": {
+        "type": "string",
+        "const": "03-01-01",
+        "description": "Java generation version -- must be '03-01-01' for current Infinity versions.",
+        "x-pega-autoFill": "03-01-01"
+    },
+"pyInputProperty": {
+        "type": "string",
+        "description": "Primary property this validate rule validates (e.g., '.pyLabel'). Optional but recommended for clarity and auto-documentation. only populate when pyInputType is INPUT_PROPERTY."
+},
+    "pyInputType": {
+      "type": "string",
+      "enum": ["WORK_STATUS", "INPUT_PROPERTY", "FLOW_ACTION", "", "STAGE"],
+      "description": "Type of the primary input property."
+    },
+    "pyInputMayStart": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "True to allow this validate rule to start a flow. String 'true'/'false' (not JSON boolean)."
+    },
+    "pyInputLabel": {
+      "type": "string",
+      "description": "Label for the primary input property (e.g., 'Customer Name'). Used for error messages and documentation."
+    },
+    "pyReloadForm": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "True to reload the form after validation completes. String 'true'/'false' (not JSON boolean)."
+    },
+    "pyDisplayMode": {
+      "type": "string",
+      "enum": ["basic", "clone", "specialize", ""],
+      "description": "How the rule was created."
+    },
+    "pyUsage": {
+      "type": "string",
+      "description": "Usage description (free text)."
+    },
+    "pyMethodStatus": {
+      "type": "string",
+      "enum": ["API", "Deprecated", "Extension", "Internal", "Template", ""],
+      "description": "Visibility: '' (public), 'Internal', or 'API'."
+    },
+       "pyRuleSet": {
+      "type": "string",
+      "description": "Rule set the validate rule is saved to.",
+      "x-pega-autoDerived": true
+    },
+    "pyRuleSetVersion": {
+      "type": "string",
+      "pattern": "^\\d{2}-\\d{2}-\\d{2}$",
+      "description": "Rule set version (e.g., '01-01-02').",
+      "x-pega-autoDerived": true
+    },
+    "pyRuleAvailable": {
+      "type": "string",
+      "enum": ["Yes", "Final", "Blocked", "Withdrawn", "No"],
+      "description": "Availability status.",
+      "x-pega-autoFill": "Yes"
+    },
+    "pyJavaGenerateAPIVersion": {
+      "type": "string",
+      "const": "03-02",
+      "description": "Java API version -- must be '03-02' for current Infinity versions.",
+      "x-pega-autoFill": "03-02"
+    },
+    "pyValidationValues": {
+      "type": "array",
+      "description": "THE core validation definition -- declarative grid of property validations. Each entry is an Embed-ValidationValue representing a validation column (circumstanced variant). Most rules have a single entry for the default validation set.",
+      "items": { "$ref": "#/$defs/ValidationValue" }
+    },
+
+    "pySteps": {
+      "type": "array",
+      "description": "Compiled activity steps -- auto-generated from pyValidationValues. Shares the same Embed-ActivitySteps structure as Rule-Obj-Activity. In VALIDATE mode, steps use direct Property-Validate and Property-Set-Messages calls.",
+      "items": { "$ref": "#/$defs/ActivityStep" }
+    },
+    "pyParameters": {
+      "type": "array",
+      "description": "Input parameters for the validate rule.",
+      "items": { "$ref": "#/$defs/MethodParam" }
+    },
+    "pyLocalParameters": {
+      "type": "array",
+      "description": "Local variables scoped to this validate rule (e.g., 'hasConditionPage').",
+      "items": { "$ref": "#/$defs/MethodParam" }
+    },
+    "pyPagesAndClasses": {
+      "type": "array",
+      "description": "Named pages used by the compiled steps, with their classes and modes.",
+      "items": { "$ref": "#/$defs/PageAndClass" }
+    },
+    "pyCircumstanceProp": {
+      "type": "string",
+      "description": "Property used for circumstancing (variant resolution). Blank for no circumstancing."
+    },
+    "pyCircumstanceVal": {
+      "type": "string",
+      "description": "Circumstance value. Blank for no circumstancing."
+    }
+  },
+  "$defs": {
+    "ValidationValue": {
+      "type": "object",
+      "description": "A validation column (Embed-ValidationValue) -- the top-level container for a set of property validations, optionally with chained validate rules via pyAddValidates.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-ValidationValue",
+          "x-pega-autoFill": "Embed-ValidationValue"
+        },
+        "pyLabel": {
+          "type": "string",
+          "description": "Column label (e.g., 'Default Validation')."
+        },
+        "pxlistsubscript": {
+          "type": "string",
+          "description": "Subscript for repeated columns (usually empty)."
+        },
+        "pyValue": {
+          "type": "string",
+          "description": "Circumstance value (empty = default column)."
+        },
+        "pyPrecondition": {
+          "type": "string",
+          "description": "Precondition expression for this column."
+        },
+        "pyColumnExpanded": {
+          "type": "boolean",
+          "description": "Boolean -- UI expansion state."
+        },
+        "pyColumnLabel": {
+          "type": "string",
+          "description": "Display label for the column."
+        },
+        "pyNextValue": {
+          "type": "string",
+          "description": "Next value reference."
+        },
+        "pyTemplateInputBox": {
+          "type": "string",
+          "description": "Template input box reference."
+        },
+        "pzDefaultConditions": {
+          "type": "string",
+          "description": "Default conditions (usually empty)."
+        },
+        "pyAddValidates": {
+          "type": "array",
+          "description": "Additional validate rules to call after this column's validations. Each entry references another Rule-Obj-Validate by name.",
+          "items": { "$ref": "#/$defs/AddValidateRef" }
+        },
+        "pyValidations": {
+          "type": "array",
+          "description": "THE VALIDATION ROWS -- list of property validations (Embed-PropertyValidation). Each entry validates one property.",
+          "items": { "$ref": "#/$defs/PropertyValidation" }
+        },
+        "pzChildColumns": {
+          "type": "array",
+          "description": "Child columns for sub-circumstances (empty in most rules).",
+          "items": { "type": "object" }
+        }
+      }
+    },
+    "PropertyValidation": {
+      "type": "object",
+      "description": "A single property validation row (Embed-PropertyValidation). Validates one property with optional when conditions, required logic, and error messages.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-PropertyValidation",
+          "x-pega-autoFill": "Embed-PropertyValidation"
+        },
+        "pyPropertyName": {
+          "type": "string",
+          "description": "Property to validate (e.g., '.pyLabel', '.pysmtpHost', 'Primary.pyName'). Dot-prefixed for properties on the step page."
+        },
+        "pxlistsubscript": {
+          "type": "string",
+          "description": "Subscript for repeated columns (usually empty)."
+        },
+        "pyClassName": {
+          "type": "string",
+          "description": "Class context for the property."
+        },
+        "pyNamedPage": {
+          "type": "string",
+          "description": "Named page prefix (e.g., 'Primary', 'ClientRegistration')."
+        },
+        "pyPropertyMode": {
+          "type": "string",
+          "enum": ["String", "PageList", "Page", "Integer", "Decimal", "Date", "DateTime", "Time", "TrueFalse"],
+          "description": "Property type."
+        },
+        "pyRequired": {
+          "type": "string",
+          "enum": ["true", "false"],
+          "description": "Whether the property is required. String 'true'/'false' (not JSON boolean)."
+        },
+        "pyReqDefault": {
+          "type": "string",
+          "description": "Default value for required check."
+        },
+        "pyContinue": {
+          "type": "string",
+          "enum": ["true", "false"],
+          "description": "Continue validating subsequent rows on error. String 'true'/'false' (not JSON boolean)."
+        },
+        "pyConditions": {
+          "type": "string",
+          "enum": ["true", "false"],
+          "description": "Whether custom when conditions exist for this row. String 'true'/'false' (not JSON boolean)."
+        },
+        "pyValidationType": {
+          "type": "string",
+          "enum": ["ValidateProperty", "CallValidateSingle"],
+          "description": "Validation type. ValidateProperty validates a specific property. CallValidateSingle delegates to another validate rule via Obj-Validate."
+        },
+        "pyCallValidate": {
+          "type": "string",
+          "description": "Name of another validate rule to call (only for CallValidateSingle type)."
+        },
+        "pyMessageCategory": {
+          "type": "string",
+          "description": "Message rule category for the error message."
+        },
+        "pyMessageValue": {
+          "type": "string",
+          "description": "Error message -- literal string (in escaped quotes) or Rule-Message name (e.g., '\"GreaterThanZero\"', 'pzInvalidOwner')."
+        },
+        "pyTemporaryObject": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Temporary object flag. String 'true'/'false' (not JSON boolean)."
+        },
+        "pyRequiredTemp": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Temporary required flag -- mirrors pyRequired for UI state."
+        },
+        "pyRowStatus": {
+          "type": "string",
+          "description": "Row status tracking (usually empty)."
+        },
+        "pyTemplateInputBox": {
+          "type": "string",
+          "description": "Template reference."
+        },
+        "pyRequiredWhen": {
+          "$ref": "#/$defs/EmbeddedWhen",
+          "description": "Conditional required logic -- controls when the pyRequired flag applies. Same structure as pyValidWhen."
+        },
+        "pyValidWhen": {
+          "$ref": "#/$defs/EmbeddedWhen",
+          "description": "THE VALIDATION CONDITION -- embedded Rule-Obj-When defining when the validation error fires."
+        }
+      }
+    },
+    "EmbeddedWhen": {
+      "type": "object",
+      "description": "An embedded Rule-Obj-When condition. Contains a list of condition clauses combined with AND/OR logic.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Rule-Obj-When",
+          "x-pega-autoFill": "Rule-Obj-When"
+        },
+        "pyCondition": {
+          "type": "array",
+          "description": "Condition clauses -- each clause is an Embed-WhenConditions entry.",
+          "items": { "$ref": "#/$defs/WhenCondition" }
+        }
+      }
+    },
+    "WhenCondition": {
+      "type": "object",
+      "description": "A single condition clause (Embed-WhenConditions) in an embedded when rule.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-WhenConditions",
+          "x-pega-autoFill": "Embed-WhenConditions"
+        },
+        "pyConditionValue1": {
+          "type": "string",
+          "description": "The expression (e.g., '.pyLabel==\"\"', '@(Pega-RULES:Utilities).PropertyHasValue(.pyLabel)')."
+        },
+        "pyConditionValue1Purpose": {
+          "type": "string",
+          "enum": [
+            "",
+            "1FreeFormExpressionBoolean",
+            "PropertyHasValue",
+            "PropertyExistsAndHasValue",
+            "invokeValidate",
+            "pzRule-Obj-Whenfalse",
+            "Rule-Obj-When",
+            "StringEquals",
+            "StringEqualsIgnoreCase",
+            "StringNotEqualsIgnoreCase",
+            "compareTwoStrings",
+            "CompareTwoValues",
+            "CompareTwoNumbers",
+            "MathGreaterThan",
+            "MathGreaterThanEqualTo",
+            "MathLessThan",
+            "MathLessThanEqualTo",
+            "pxPageListLengthCompare",
+            "LocalEvaluateProperty",
+            "isInThePastDate",
+            "isInThePastDateTime",
+            "pxDateTimeisPastOrFuture",
+            "pxValueIsNotInPageList",
+            "pxValueIsInPageList",
+            "pxIsInPageListWhen",
+            "pxHasPagesCountInPageListWhen",
+            "pxAssignedToMyStaff",
+            "WithinDaysOfNow",
+            "CreatedRecently",
+            "ResolvedRecently",
+            "CompareDateTimes",
+            "CompareDatesInDays",
+            "CompareDates",
+            "CompareTwoDateTimes",
+            "pxCompareDateTimes",
+            "pxCompareDateTimeToSymbolicDate",
+            "pzCompareADateTimeToASymbolicDateWrapper",
+            "pzCompareTwoDateTimesWrapper",
+            "pzCompareMultiValues",
+            "contains",
+            "pzContainsIgnoreCase",
+            "pxIsInListOfValues",
+            "pxIsNotInListOfValues",
+            "pxIsInListOfValuesWCB",
+            "pxIsNotInListOfValuesWCB",
+            "pxIsInListOfValuesInPageList",
+            "pxIsNotInListOfValuesInPageList",
+            "pxIsInListOfValuesWCBInPageList",
+            "pxIsNotInListOfValuesWCBInPageList",
+            "pxIsAttachmentOfCategoryInCase",
+            "allEntriesSatisfyCondition",
+            "anyEntrySatisfiesCondition",
+            "pxCallWhenUsingPage",
+            "pzIsToggleEnabled",
+            "pzCheckBatchStopRequest",
+            "Status",
+            "StatusResolved",
+            "Urgency",
+            "Satisfaction",
+            "Language",
+            "RootCause",
+            "pyCollectionEvalReturnNumber",
+            "pyCollectionEvalReturnDate",
+            "pyCollectionEvalReturnString",
+            "pyCollectionEvalReturnBoolean",
+            "pyCollectionHasReturnValue"
+          ],
+          "description": "Function alias identifying which function is used in the condition expression."
+        },
+        "pyConditionValue1String": {
+          "type": "string",
+          "description": "Human-readable template (e.g., '[property reference] has a value')."
+        },
+        "pyConditionValue1StringLabel": {
+          "type": "string",
+          "description": "Populated template with actual values."
+        },
+        "pyCondValueCategory": {
+          "type": "string",
+          "enum": ["", "AND", "OR"],
+          "description": "Logical combinator: '' (none/first clause), 'AND', or 'OR'."
+        },
+        "pyClassName": {
+          "type": "string",
+          "description": "Class context."
+        },
+        "pyUsage": {
+          "type": "string",
+          "description": "'java' for Java-based evaluation."
+        },
+        "pyTempText": {
+          "type": "string",
+          "description": "Temporary text."
+        },
+        "pyTemplateInputBox": {
+          "type": "string",
+          "description": "Template reference."
+        },
+        "pyCallParams": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Named parameters for the function call (e.g., comparator, lValue, rValue)."
+        },
+        "pyFunctionData": {
+          "$ref": "#/$defs/UserFunction",
+          "description": "Function metadata -- Embed-UserFunction storing the function signature and parameters."
+        }
+      }
+    },
+    "UserFunction": {
+      "type": "object",
+      "description": "Function metadata (Embed-UserFunction) for a condition expression. Stores the function name, signature, and parameter definitions.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-UserFunction",
+          "x-pega-autoFill": "Embed-UserFunction"
+        },
+        "pyName": {
+          "type": "string",
+          "description": "Function name (e.g., 'PropertyHasValue', '1FreeFormExpressionBoolean')."
+        },
+        "pyCity": {
+          "type": "string",
+          "description": "Same as pyName."
+        },
+        "pySignature": {
+          "type": "string",
+          "description": "Function signature template (e.g., '@(Pega-RULES:Utilities).PropertyHasValue({strReference})')."
+        },
+        "pyEcho": {
+          "type": "string",
+          "description": "Display echo text (e.g., '[property reference] has a value')."
+        },
+        "pyLabel": {
+          "type": "string",
+          "description": "Populated display label."
+        },
+        "pyReturnType": {
+          "type": "string",
+          "description": "Return type: 'boolean'."
+        },
+        "pyRuleSet": {
+          "type": "string",
+          "description": "RuleSet containing the function (e.g., 'Pega-RULES')."
+        },
+        "pyActivityClass": {
+          "type": "string",
+          "description": "Always 'Rule-Alias-Function'."
+        },
+        "pyActivityName": {
+          "type": "string",
+          "description": "Function loader name."
+        },
+        "pyBaseClass": {
+          "type": "string",
+          "description": "Usually '@baseclass'."
+        },
+        "pyClassName": {
+          "type": "string",
+          "description": "Class context."
+        },
+        "pyDescription": {
+          "type": "string",
+          "description": "Function description."
+        },
+        "pyUsage": {
+          "type": "string",
+          "description": "'java' for Java-based evaluation."
+        },
+        "pyParameters": {
+          "type": "array",
+          "description": "Function parameter definitions (Embed-MethodParams).",
+          "items": { "$ref": "#/$defs/FunctionParam" }
+        },
+        "pyUIParameters": {
+          "type": "array",
+          "description": "UI rendering of parameters (Embed-MethodParams).",
+          "items": { "$ref": "#/$defs/FunctionParam" }
+        }
+      }
+    },
+    "FunctionParam": {
+      "type": "object",
+      "description": "A function parameter (Embed-MethodParams) used in when-condition function metadata.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "enum": ["Embed-MethodParams", "@baseclass"],
+          "x-pega-autoFill": "Embed-MethodParams"
+        },
+        "pyParametersParamName": {
+          "type": "string",
+          "description": "Parameter name (e.g., 'strReference', 'expression')."
+        },
+        "pyParametersParamType": {
+          "type": "string",
+          "description": "'Freeform', 'HTMLProperty', 'Label', 'DropDown', 'IntelliPrompt', etc."
+        },
+        "pyParametersParamValue": {
+          "type": "string",
+          "description": "Actual value."
+        },
+        "pyParametersParamDesc": {
+          "type": "string",
+          "description": "Description."
+        },
+        "pyParametersParamDefaultValue": {
+          "type": "string",
+          "description": "Default value."
+        },
+        "pyNodeCaption": {
+          "type": "string",
+          "description": "UI caption/label for the parameter node (used in pyUIParameters)."
+        },
+        "pyReference": {
+          "type": "string",
+          "description": "Sequencing/positioning reference for the UI parameter (used in pyUIParameters)."
+        },
+        "pyParametersParamDropdownValues": {
+          "type": "string",
+          "description": "Pipe- or semicolon-separated list of dropdown options."
+        },
+        "pyParametersParamIntelliValidateAs": {
+          "type": "string",
+          "description": "IntelliPrompt validation mode (e.g., 'Property', 'Rule')."
+        },
+        "pyParametersParamIntelliBaseClass": {
+          "type": "string",
+          "description": "IntelliPrompt base class for property/rule lookup."
+        },
+        "pyParametersParamIntelliRule": {
+          "type": "string",
+          "description": "IntelliPrompt rule type (e.g., 'Rule-Obj-When')."
+        },
+        "pyParametersParamSize": {
+          "type": "string",
+          "description": "UI input size."
+        },
+        "pyExpressionGadget": {
+          "type": "object",
+          "description": "Embedded expression gadget metadata for free-form expression parameters.",
+          "additionalProperties": true
+        },
+        "pxPages": {
+          "type": "object",
+          "description": "Embedded page references for the parameter (e.g., expression context).",
+          "additionalProperties": true
+        },
+        "pyHtmlPropertyDropDownValues": {
+          "type": "string",
+          "description": "HTML property dropdown values."
+        },
+        "pyEchoParametersParamValue": {
+          "type": "string",
+          "description": "Echo/display value for the parameter."
+        },
+        "pyIsOptional": {
+          "type": "string",
+          "description": "Whether the parameter is optional.",
+          "enum": ["true", "false", ""]
+        },
+        "pxSubscript": {
+          "type": "string",
+          "description": "Subscript index for repeated parameters."
+        }
+      },
+      "additionalProperties": true
+    },
+    "AddValidateRef": {
+      "type": "object",
+      "description": "Reference to another validate rule (Embed-Reference-Rule) called via pyAddValidates chaining.",
+      "required": ["pxObjClass", "pyRuleName"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-Reference-Rule",
+          "x-pega-autoFill": "Embed-Reference-Rule"
+        },
+        "pyRuleName": {
+          "type": "string",
+          "description": "Name of the validate rule to call."
+        }
+      }
+    },
+    "ActivityStep": {
+      "type": "object",
+      "description": "A compiled activity step (Embed-ActivitySteps). Same structure as Rule-Obj-Activity steps. See the activity skill for the full step reference.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-ActivitySteps",
+          "x-pega-autoFill": "Embed-ActivitySteps"
+        },
+        "pyStepsActivityName": {
+          "type": "string",
+          "description": "The method to invoke (e.g., 'Property-Set', 'Property-Validate', 'Property-Set-Messages', 'Page-New', 'Page-Remove', 'Obj-Validate')."
+        },
+        "pyStepsDescription": {
+          "type": "string",
+          "description": "Developer-written description of what this step does."
+        },
+        "pyStepsObjectName": {
+          "type": "string",
+          "description": "The clipboard page this step operates on."
+        },
+        "pyStepsCallParams": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Key-value pairs of method-specific parameters."
+        },
+        "pyParamArray": {
+          "type": "array",
+          "description": "Additional parameters passed as an array of Embed-MethodParams.",
+          "items": { "$ref": "#/$defs/MethodParam" }
+        },
+        "pyStepsPreCondition": {
+          "type": "string",
+          "description": "Precondition flag ('-1' = has precondition)."
+        },
+        "pyStepsPreCondParams": {
+          "type": "array",
+          "description": "Pre-condition configuration (Embed-ActivityPreConditions).",
+          "items": { "$ref": "#/$defs/ActivityPreCondition" }
+        },
+        "pyStepsBlockName": {
+          "type": "string",
+          "description": "Block name for grouping steps."
+        },
+        "pySteps": {
+          "type": "array",
+          "description": "Nested sub-steps (used inside blocks).",
+          "items": { "$ref": "#/$defs/ActivityStep" }
+        }
+      }
+    },
+    "ActivityPreCondition": {
+      "type": "object",
+      "description": "A step pre-condition (Embed-ActivityPreConditions).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-ActivityPreConditions",
+          "x-pega-autoFill": "Embed-ActivityPreConditions"
+        },
+        "pyStepsPreCondParamsWhen": {
+          "type": "string",
+          "description": "When expression (e.g., '@(Pega-RULES:Math).lessThanEqualTo(.RemainingEffort, 0)')."
+        },
+        "pyStepsPreCondParamsWhenTrue": {
+          "type": "string",
+          "description": "Step number to go to when condition is true."
+        },
+        "pyStepsPreCondParamsWhenTruePrms": {
+          "type": "string",
+          "description": "Parameters when true."
+        },
+        "pyStepsPreCondParamsWhenFalse": {
+          "type": "string",
+          "description": "Step number to go to when condition is false."
+        },
+        "pyStepsPreCondParamsWhenFalsePrms": {
+          "type": "string",
+          "description": "Parameters when false."
+        }
+      }
+    },
+    "MethodParam": {
+      "type": "object",
+      "description": "A parameter entry (Embed-MethodParams).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "enum": ["Embed-MethodParams", "@baseclass"],
+          "x-pega-autoFill": "Embed-MethodParams"
+        },
+        "pyParametersParamName": {
+          "type": "string",
+          "description": "Parameter name."
+        },
+        "pyParametersParamDesc": {
+          "type": "string",
+          "description": "Description."
+        },
+        "pyParametersParamType": {
+          "type": "string",
+          "description": "Data type (e.g., 'STRING', 'Page', 'TrueFalse')."
+        },
+        "pyParametersParamInOut": {
+          "type": "string",
+          "enum": ["IN", "OUT", ""],
+          "description": "Direction."
+        },
+        "pyParametersParamReq": {
+          "type": "string",
+          "enum": ["0", "-1", ""],
+          "description": "Required: '0' = optional, '-1' = required."
+        },
+        "pyParametersParamDefaultValue": {
+          "type": "string",
+          "description": "Default value expression."
+        },
+        "PropertyName": {
+          "type": "string",
+          "description": "For Property-Validate steps: property name (e.g., '.CustomerName')."
+        },
+        "PropertiesName": {
+          "type": "string",
+          "description": "For Property-Set steps: property name."
+        },
+        "PropertiesValue": {
+          "type": "string",
+          "description": "For Property-Set steps: value or expression."
+        },
+        "Required": {
+          "type": "string",
+          "description": "For Property-Validate steps: '-1' = required, '0' = not required."
+        },
+        "Continue": {
+          "type": "string",
+          "description": "For Property-Validate steps: '-1' = continue on error."
+        },
+        "Default": {
+          "type": "string",
+          "description": "For Property-Validate steps: default value."
+        },
+        "ErrorMessage": {
+          "type": "string",
+          "description": "For Property-Validate steps: error message reference."
+        },
+        "ValidateAs": {
+          "type": "string",
+          "description": "For Property-Validate steps: validate-as rule name."
+        },
+        "OnlyIfChanged": {
+          "type": "string",
+          "description": "For Property-Validate steps: only validate if changed."
+        }
+      }
+    },
+    "PageAndClass": {
+      "type": "object",
+      "description": "A named page declaration.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-PagesAndClasses",
+          "x-pega-autoFill": "Embed-PagesAndClasses"
+        },
+        "pyPagesAndClassesPage": {
+          "type": "string",
+          "description": "Clipboard page name (e.g., 'pyWorkPage')."
+        },
+        "pyPagesAndClassesClass": {
+          "type": "string",
+          "description": "Class of the page."
+        },
+        "pyPagesAndClassesMode": {
+          "type": "string",
+          "description": "Page mode (usually blank)."
+        }
+      }
+    }
+  }
+}

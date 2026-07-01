@@ -1,0 +1,1160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-obj-casetype.json",
+  "title": "Rule-Obj-CaseType",
+  "description": "JSON schema for creating or updating a Pega case type definition (Rule-Obj-CaseType). A case type defines the lifecycle of a business case: its stages, processes within stages, local actions, child case relationships, attachments, and runtime behavior. System-managed fields (pxInsKey, pxCreateDateTime, etc.) are omitted.",
+  "type": "object",
+  "required": [
+    "pxObjClass",
+    "pyClassName",
+    "pyLabel",
+    "pyRuleAvailable",
+    "pyWorkPartiesRule",
+    "pyStages"
+  ],
+  "properties": {
+    "pxObjClass": {
+      "type": "string",
+      "const": "Rule-Obj-CaseType",
+      "description": "Rule type class — always 'Rule-Obj-CaseType'.",
+      "x-pega-autoFill": "Rule-Obj-CaseType"
+    },
+    "pyClassName": {
+      "type": "string",
+      "description": "Fully qualified Pega class name that this case type governs (e.g., 'MyOrg-MyApp-Work-ServiceRequest'). This class must already exist as a Rule-Obj-Class before the case type can be created. The class hierarchy determines inheritance of case type behavior."
+    },
+    "pyRuleName": {
+      "type": "string",
+      "const": "pyDefault",
+      "description": "Rule name — always 'pyDefault' for case type rules. Each class has exactly one case type definition keyed by this constant.",
+      "x-pega-autoFill": "pyDefault"
+    },
+    "pyPurpose": {
+      "type": "string",
+      "const": "pyDefault",
+      "description": "Purpose qualifier — always 'pyDefault'. Part of the composite key but invariant for case types.",
+      "x-pega-autoFill": "pyDefault"
+    },
+    "pyLabel": {
+      "type": "string",
+      "description": "Human-readable display name shown in the case designer, portal headers, and work queues (e.g., 'Sprint', 'Bug', 'Change Request', 'Data Import'). Keep concise — 1-3 words."
+    },
+    "pyDescription": {
+      "type": "string",
+      "description": "Free-text description of the case type's business purpose. Displayed in the case type explorer and documentation views. Example: 'Tracks customer service requests through triage, fulfillment, and completion.'"
+    },
+    "pyRuleAvailable": {
+      "type": "string",
+      "enum": ["Yes", "No", "Final", "Withdrawn", "Blocked"],
+      "description": "Availability status controlling whether this case type can be instantiated and used. 'Yes' = active and usable. 'Final' = locked/read-only, cannot be modified. 'Withdrawn' = soft-deleted, hidden from case type lists. 'Blocked' = temporarily disabled. 'No' = not available.",
+      "x-pega-autoFill": "Yes"
+    },
+    "pyRuleSet": {
+      "type": "string",
+      "description": "Ruleset where this rule is saved. During branch development, this is automatically set to the branch ruleset by the ChangeRequest workflow."
+    },
+    "pyRuleSetVersion": {
+      "type": "string",
+      "description": "Ruleset version (e.g., '01-01-01'). Auto-derived from the branch context."
+    },
+    "pyBaseRule": {
+      "type": "string",
+      "description": "When true, marks this as the base (lowest-priority) rule in the ruleset stack. Base rules serve as defaults that higher-priority rulesets can override. Typically false for application-specific case types.",
+      "x-pega-autoFill": "false"
+    },
+    "pyBaseRuleHolder": {
+      "type": "string",
+      "description": "Reference to the base rule this rule overrides, if any. Contains the pzInsKey of the base rule in the lower ruleset. Empty when this is the base rule itself. Observed on case types that specialize a framework-provided base case type (e.g., ChangeRequest overriding a PegaAccel base)."
+    },
+    "pyIcon": {
+      "type": "string",
+      "description": "CSS icon class displayed next to the case type label in portals and case lists. Uses Pega's icon library with 'pi pi-' prefix (e.g., 'pi pi-case-solid', 'pi pi-shoe-solid', 'pi pi-gear-solid', 'pi pi-clipboard-check-solid'). Browse available icons in Pega's icon gallery."
+    },
+    "pyDisplayMode": {
+      "type": "string",
+      "enum": ["basic", "advanced", "specialize", "clone",""],
+      "description": "Controls how this case type appears in the case type explorer and how it can be reused. 'basic' = simple display mode, used for infrastructure case types. 'advanced' = full-featured display with all options. 'specialize' = can be extended by a child class (inheritance-based reuse). 'clone' = can be copied to create a new independent case type."
+    },
+    "pyLockingMode": {
+      "type": "string",
+      "enum": ["Default", "Optimistic"],
+      "description": "Controls how concurrent edits to case instances are handled. 'Default' = pessimistic locking (locks the case when opened for edit, preventing concurrent modifications). 'Optimistic' = allows concurrent edits and detects conflicts at save time. Use 'Optimistic' for high-concurrency scenarios like agile boards where multiple users update cases simultaneously."
+    },
+    "pyLockTimeout": {
+      "type": "integer",
+      "description": "Lock timeout value in minutes for pessimistic locking. When pyLockingMode is 'Default', this controls how long a case remains locked before the lock is automatically released. Prevents cases from being permanently locked when an operator leaves without saving."
+    },
+    "pyAllowRemoteInstantiation": {
+      "type": "string",
+      "description": "When true, allows this case type to be created remotely via the DX API or by external systems. Required for case types exposed through REST services or federated case management.",
+      "x-pega-autoFill": "false"
+    },
+    "pyIsRemote": {
+      "type": "string",
+      "description": "When true, marks this as a remote case type stub — a local reference to a case type that lives in a different Pega application/system. Remote case types delegate actual processing to the remote system.",
+      "x-pega-autoFill": "false"
+    },
+    "pyDoNotLockParent": {
+      "type": "string",
+      "description": "When true, creating a child case of this type does not lock the parent case. Improves performance when child cases are created frequently or in bulk and the parent does not need transactional consistency with the child.",
+      "x-pega-autoFill": "false"
+    },
+    "pyWorkPartiesRule": {
+      "type": "string",
+      "description": "Name of the work parties rule that defines the stakeholder roles for this case (e.g., owner, customer, interested party). Almost always 'pyCaseManagementDefault', which provides standard case management party roles. Custom work parties rules are rare.",
+      "x-pega-autoFill": "pyCaseManagementDefault"
+    },
+    "pyInitialCaseUrgency": {
+      "type": "integer",
+      "description": "Numeric urgency value assigned to new case instances (e.g., 10, 20). Urgency contributes to the case's priority calculation (priority = urgency + 100 - case age). Higher values = more urgent. Typical range is 10-100."
+    },
+    "pyOfflineEnabled": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "When 'true', enables offline support for this case type. Cases can be created and worked on in Pega mobile apps without network connectivity, then synced when connectivity is restored."
+    },
+    "pyOfflineStatus": {
+      "type": "string",
+      "enum": ["Disabled", "Enabled", ""],
+      "description": "Offline mode status for the case type. 'Disabled' = offline mode is turned off. 'Enabled' = offline mode is active. This is a separate control from pyOfflineEnabled that governs the overall offline feature status."
+    },
+    "pyEnableSearch": {
+      "type": "string",
+      "description": "When true, case instances are indexed for full-text search. Enables operators to find cases by searching for content within case properties. Disable for high-volume transient cases where search indexing overhead is undesirable."
+    },
+    "pySEOEnabled": {
+      "type": "string",
+      "description": "When true, enables search engine optimization for case type pages. Generates SEO-friendly URLs and metadata. Only relevant for customer-facing web portals."
+    },
+    "pyIsConstellationCase": {
+      "type": "string",
+      "description": "When true, this case type uses the Constellation UI architecture (React-based, design-system-driven). When false, it uses the traditional UI (harness/section-based). New applications should use Constellation."
+    },
+    "pyTemplateTrueFalse": {
+      "type": "string",
+      "description": "When true, marks this case type as a template that can be used to generate new case types. Templates serve as blueprints — they are not instantiated directly but provide a starting structure for derived case types."
+    },
+    "pyCreateTemporaryObject": {
+      "type": "string",
+      "description": "When true, the case creation process first creates a temporary (non-persisted) case object for the user to fill in, then persists it only on submit. When false, the case is persisted immediately on creation. Temporary objects provide a 'discard' option during creation."
+    },
+    "pyDefaultValuesFromFedarated": {
+      "type": "string",
+      "description": "When true, default property values for new cases are sourced from a federated (remote) data source rather than local defaults. Used in federated case management where a central system provides canonical default values. Note: Pega misspells 'Federated' as 'Fedarated' — use the misspelled form."
+    },
+    "pyLicenseCategory": {
+      "type": "string",
+      "enum": ["Execution", "Management", "Dispatch", "Complex"],
+      "description": "License metering category that determines how case instances count toward licensing. Set by Pega product teams for platform case types; application developers rarely need to set this."
+    },
+    "pyMethodStatus": {
+      "type": "string",
+      "enum": ["API", "Deprecated", "Extension", "Internal", "Template", ""],
+      "description": "When 'Extension', marks this case type as an extension point — a base definition meant to be specialized by application-specific implementations. Extension case types like PegaTask-Item provide a minimal skeleton that concrete case types inherit from."
+    },
+    "pyCategory": {
+      "type": "string",
+      "description": "Organizational category for the case type in the case type explorer. Observed values: 'Custom' (for application-specific case types). Framework case types typically leave this empty."
+    },
+    "pyLifeCycleTabs": {
+      "type": "string",
+      "enum": ["Lifecycle", "Adhoc"],
+      "description": "Controls which tabs appear in the case lifecycle view. 'Lifecycle' = shows the full life cycle tab. 'Adhoc' = shows the optional actions tab."
+    },
+    "pyProcessesViewMode": {
+      "type": "string",
+      "enum": ["Tile", "FilmStrip", "List"],
+      "description": "Controls the visual layout of processes in the case designer. 'Tile' = shows processes as draggable tiles in a visual canvas. 'FilmStrip' = horizontal strip view. 'List' = traditional list/tree view."
+    },
+    "pyLPGeolocationEnabled": {
+      "type": "string",
+      "enum": ["Disabled", "Enabled", ""],
+      "description": "Controls geolocation tracking for cases. 'Enabled' = captures geographic coordinates when cases are created or updated (useful for field service or location-based routing). 'Disabled' = no geolocation capture."
+    },
+    "pyMemo": {
+      "type": "string",
+      "description": "Free-text developer notes attached to the rule. Visible in Dev Studio's rule form. Use for documenting design decisions, migration notes, or version history context."
+    },
+    "pyDeleteMemo": {
+      "type": "string",
+      "description": "Developer memo explaining why this rule was deleted or withdrawn. Populated when a rule is withdrawn to document the reason."
+    },
+    "pyEnableConfirmView": {
+      "type": "string",
+      "description": "When true, displays a confirmation screen after case creation showing the case ID and a summary. When false, the user is taken directly to the case's perform view after creation."
+    },
+    "pyConfirmViewName": {
+      "type": "string",
+      "description": "Name of the section or view displayed as the confirmation screen after case creation. Only used when pyEnableConfirmView is 'true'. If empty, Pega uses its default confirmation template."
+    },
+    "pyEnableGetNextWork": {
+      "type": "string",
+      "description": "When true, enables the 'Get Next Work' feature — after completing a task in this case type, the system automatically routes the operator to the next highest-priority assignment rather than returning to the worklist."
+    },
+    "pyConstantTrackingEnabled": {
+      "type": "string",
+      "description": "When true, enables continuous tracking of case progress and timing metrics. Tracked data feeds into reporting and analytics dashboards for SLA compliance and throughput analysis."
+    },
+    "pyEnableAddNewField": {
+      "type": "string",
+      "description": "When true, allows users to add new fields (properties) to the case class directly from the case designer UI. Enables low-code property creation without switching to the data model view."
+    },
+    "pyOfflineAttachmentsEnabled": {
+      "type": "string",
+      "description": "When true, case attachments (files, images) can be captured in offline mode and synced when connectivity is restored. Requires pyOfflineEnabled to also be 'true'."
+    },
+    "pyProcessAttachmentsOffline": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "When 'true', offline-captured attachments are processed (virus scan, content validation) upon sync rather than at capture time. Relevant only when pyOfflineAttachmentsEnabled is 'true'."
+    },
+    "pyLocaleReference": {
+      "type": "string",
+      "description": "Localization key used for translating the case type label and UI strings. Format: 'CLASSNAME!CASE!LABEL' (e.g., 'PEGAPROJMGMT-WORK-SPRINT!CASE!SPRINT'). Referenced by Pega's localization framework to look up translated strings."
+    },
+    "pySLAType": {
+      "type": "string",
+      "enum": ["Never", "Always", "Custom", "Use existing"],
+      "description": "Controls whether a top-level SLA (Service Level Agreement) is attached to the entire case. 'Always' = an SLA rule monitors the overall case duration with goal/deadline/past-deadline intervals. 'Never' = no top-level case SLA. 'Custom' = a custom SLA configuration. 'Use existing' = references an existing SLA rule."
+    },
+    "pyStepApprovalType": {
+      "type": "string",
+      "enum": ["Simple", "Cascading"],
+      "description": "Default approval pattern used for approval steps within this case type's flows. 'Simple' = single-level approval by one approver. 'Cascading' = hierarchical approval that escalates up the reporting chain. Sets the default for new approval shapes added in the flow designer."
+    },
+    "pyCascadingCancellation": {
+      "type": "string",
+      "description": "When true, cancelling or withdrawing this case automatically cancels all active child cases. When false, child cases continue independently even if the parent is cancelled. Important for parent-child case hierarchies where child work is meaningless without the parent."
+    },
+    "pyIsOptimisticPackaging": {
+      "type": "string",
+      "description": "When true, uses optimistic packaging for ruleset export — assumes no conflicts and packages rules without locking. When false, uses standard pessimistic packaging with lock validation."
+    },
+    "pyOnlyPostProcessOnClient": {
+      "type": "string",
+      "description": "When true, post-processing logic (like data transforms and validations after assignment submission) runs on the client side rather than the server. Used to reduce server round-trips in Constellation UI applications."
+    },
+    "pyCheckInRuleSet": {
+      "type": "string",
+      "description": "Name of the ruleset where checked-in (finalized) versions of this rule are stored. Used in branched development workflows where work-in-progress rules live in a branch ruleset and are checked into the target ruleset on merge."
+    },
+    "pyUsage": {
+      "type": "string",
+      "description": "Brief usage note describing the intended use of this case type. Observed on extension-style base case types (e.g., 'Simulation' for Pega-DM-Simulation). Application-specific case types typically leave this empty."
+    },
+    "pxFlowName": {
+      "type": "string",
+      "description": "Name of the primary flow associated with this case type at the top level. Observed on simpler case types that have a single main flow rather than stage-based decomposition."
+    },
+    "pyPropLabel": {
+      "type": "string",
+      "description": "Alternative display label stored as a property-level label. Observed on case types where the label is managed through property-based localization rather than the pyLabel field directly."
+    },
+    "pyCount": {
+      "type": "integer",
+      "description": "Numeric counter field used internally by the case designer to track the number of certain elements (e.g., local actions, processes). Auto-managed by the server."
+    },
+    "pyTempText": {
+      "type": "string",
+      "description": "Temporary text field used by the case designer UI for transient state during editing. Not persisted meaningfully — ignore when authoring programmatically."
+    },
+    "pyStageIDMax": {
+      "type": "string",
+      "description": "Auto-incremented counter tracking the number of primary stages (e.g., \"3\" means PRIM0, PRIM1, PRIM2 exist). The server increments this when stages are added via the UI. When authoring programmatically, set this to the count of primary stages (a numeric string). Note: because PRIMARY IDs are zero-indexed, this equals (highest PRIM index) + 1."
+    },
+    "pyAltStageIDMax": {
+      "type": "string",
+      "description": "Auto-incremented counter tracking the number of alternate stages (e.g., \"2\" means ALT1 and ALT2 exist). Set this to the count of alternate stages (a numeric string) when authoring programmatically. ALT IDs are one-indexed, so this also equals the highest ALT index."
+    },
+    "pyStages": {
+      "type": "array",
+      "description": "Ordered array of primary stages defining the case lifecycle from creation to resolution. At least one stage is required. The first stage is typically the initialization stage (with pyIsInitializationStage='true'), and the last stage should be a terminal resolution stage. Cases progress through stages sequentially, though conditional skipping is supported.",
+      "items": {
+        "$ref": "#/$defs/Embed-Stage"
+      }
+    },
+    "pyAlternateStages": {
+      "type": "array",
+      "description": "Alternate stages for exception/resolution paths outside the normal flow (e.g., 'Withdrawn', 'Rejected', 'Failed'). Cases jump to alternate stages from any primary stage. Each alternate stage should be terminal with pyStageTransition='resolution' and a corresponding pyStageWorkStatus.",
+      "items": {
+        "$ref": "#/$defs/Embed-Stage"
+      }
+    },
+    "pyCaseWideLocalActions": {
+      "type": "array",
+      "description": "Local actions available across ALL stages of the case. These appear in the case actions menu regardless of which stage is active. Common examples: 'Edit details' (pyUpdateCaseDetails), 'Withdraw', 'Transfer to another operator'. Case-wide actions are defined once and inherited by every stage.",
+      "items": {
+        "$ref": "#/$defs/Embed-Pega-AssignAction"
+      }
+    },
+    "pyCoverableClasses": {
+      "type": "array",
+      "description": "Child case type definitions — specifies which other case types can be created as children of this case. Each entry configures whether child cases start automatically, can be started manually, are required for case resolution, and how data maps between parent and child. Used to model hierarchical case structures (e.g., a Project case containing Sprint and UserStory child cases).",
+      "items": {
+        "$ref": "#/$defs/Embed-CoverableClass"
+      }
+    },
+    "pyAttachments": {
+      "type": "array",
+      "description": "Attachment category definitions at the case type level. Each entry defines a named category of files/documents that can be attached to cases (e.g., 'Supporting Documents', 'Photos', 'Contracts'). Categories organize attachments and can be made required at specific stages via pyRequiredCategories on Embed-Stage.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "pxObjClass": {
+            "type": "string",
+            "const": "Embed-AttachmentCategory",
+            "x-pega-autoFill": "Embed-AttachmentCategory"
+          },
+          "pyAttachmentCategory": {
+            "type": "string",
+            "description": "Short identifier/code for the attachment category (e.g., 'EDoR', 'EDoD', 'SupportingDocs'). This is the value referenced by pyRequiredCategories on stages."
+          },
+          "pyLabel": {
+            "type": "string",
+            "description": "Display name of the attachment category shown to operators (e.g., 'Epic Definition of Ready', 'Supporting Documents')."
+          },
+          "pyType": {
+            "type": "string",
+            "description": "Type of attachments allowed in this category (e.g., 'File')."
+          },
+          "pyIsRequired": {
+            "type": "string",
+            "enum": ["true", "false", ""],
+            "description": "When 'true', at least one attachment in this category is required before the case can be resolved."
+          },
+          "pyAttachCategoryClass": {
+            "type": "string",
+            "description": "Fully qualified class name that owns the Rule-Obj-AttachmentCategory rule (e.g., 'MyOrg-MyApp-Work-Claim')."
+          },
+          "pyAttachCategoryKey": {
+            "type": "string",
+            "description": "Instance key (pzInsKey) of the Rule-Obj-AttachmentCategory rule that defines this category's behavior and validation."
+          },
+          "pyPagelistClass": {
+            "type": "string",
+            "description": "Class of the work object where the attachment pagelist property lives (e.g., 'MyOrg-MyApp-Work-Claim')."
+          },
+          "pyPagelistReference": {
+            "type": "string",
+            "description": "Property reference on the work object that stores attachments for this category (e.g., 'SupportingDocsAttachments'). This is the pagelist property where uploaded files are stored at runtime."
+          }
+        }
+      }
+    },
+    "pyCalculations": {
+      "type": "array",
+      "description": "Calculations tab — computed fields on the parent case type derived from child case (coverable class) properties. Each calculation specifies an aggregation operation (SUM, COUNT, AVG, MIN, MAX) applied to properties from child case classes listed in pyCoverableClasses, with the result stored in a property on the parent case class (pyPropertyToCalculate). Example: SUM of .Num1 and .Num2 from child class stored in .Num3 on the parent.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "pxObjClass": {
+            "type": "string",
+            "const": "Embed-Rule-Obj-CaseType-Calc",
+            "x-pega-autoFill": "Embed-Rule-Obj-CaseType-Calc"
+          },
+          "pyLabel": {
+            "type": "string",
+            "description": "Display label for the calculated field."
+          },
+          "pyOperation": {
+            "type": "string",
+            "enum": ["SUM", "COUNT", "AVG", "MIN", "MAX"],
+            "description": "Aggregation operation applied to the input property values: SUM, COUNT, AVG, MIN, or MAX."
+          },
+          "pyPropertyToCalculate": {
+            "type": "string",
+            "description": "Property reference on the parent case class where the calculated result is stored (e.g., '.Num3', '.TotalHours'). The property must already exist on the parent case class with a compatible numeric type. Uses dot-notation with leading dot."
+          },
+          "pyInputs": {
+            "type": "array",
+            "description": "Input properties from child case classes fed into the calculation. Each input identifies a property on a child (coverable) case class whose values are aggregated using pyOperation. The child class must be listed in pyCoverableClasses.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "pxObjClass": {
+                  "type": "string",
+                  "const": "Embed-Rule-Obj-CaseType-CalcInput",
+                  "x-pega-autoFill": "Embed-Rule-Obj-CaseType-CalcInput"
+                },
+                "pyClass": {
+                  "type": "string",
+                  "description": "Fully qualified class name of the child case type that owns the input property (e.g., 'MyOrg-MyApp-Work-SubTask'). Must reference a class listed in pyCoverableClasses."
+                },
+                "pyPropertyName": {
+                  "type": "string",
+                  "description": "Property reference on the child case class used as input to the calculation (e.g., '.Num1', '.EstimatedHours'). Uses dot-notation with leading dot."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "pyFlowsToStart": {
+      "type": "array",
+      "description": "Flows to start when the case is created, independent of any stage. These are top-level flows that run alongside the stage-based lifecycle. Each entry can be conditional (pyWhen), enabled/disabled (pyEnabled), and configured for automatic or manual start.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "pxObjClass": {
+            "type": "string",
+            "const": "Embed-ChooseRule",
+            "x-pega-autoFill": "Embed-ChooseRule"
+          },
+          "pyFlowType": {
+            "type": "string",
+            "description": "Name of the flow rule to start (e.g., 'pyStartCase', 'BackgroundSync')."
+          },
+          "pyAutomaticStart": {
+            "type": "string",
+            "description": "When true, the flow starts automatically during case creation without user action."
+          },
+          "pyAutoStartWhenType": {
+            "type": "string",
+            "description": "Condition type for auto-start. Observed values: 'always' (unconditional auto-start)."
+          },
+          "pyManualStart": {
+            "type": "string",
+            "description": "When true, this flow can be started manually by an operator from the case actions."
+          },
+          "pyProcessStartType": {
+            "type": "string",
+            "enum": ["user", "auto"],
+            "description": "Who can start this flow. 'user' = operator-initiated. 'auto' = starts automatically when the parent case starts."
+          },
+          "pyWhen": {
+            "type": "string",
+            "description": "Name of a when-rule that conditionally controls whether this flow starts. Only evaluated when pyAutoStartWhenType is not 'always'."
+          },
+          "pyEnabled": {
+            "type": "string",
+            "description": "When true, this flow-to-start entry is active. When false, the entry is defined but disabled (will not start)."
+          },
+          "pyShowBackButton": {
+            "type": "string",
+            "description": "When true, shows a back/cancel button when this flow presents UI to the operator."
+          },
+          "pySkipOrAllowType": {
+            "type": "string",
+            "enum": ["always", "when", "never", "expression", ""],
+            "description": "Condition controlling whether this flow runs. 'always' = unconditional. 'when' = governed by a when-rule. 'never' = disabled. 'expression' = governed by an inline expression."
+          }
+        }
+      }
+    },
+    "pyCasetypeStartingFlows": {
+      "type": "array",
+      "description": "Starting flow definitions that control how the case is initially created. Typically contains a single entry for 'pyStartCase'. Can include conditional starting flows for different creation channels (e.g., portal vs API vs email).",
+      "items": {
+        "type": "object",
+        "properties": {
+          "pxObjClass": {
+            "type": "string",
+            "const": "Embed-ChooseRule",
+            "x-pega-autoFill": "Embed-ChooseRule"
+          },
+          "pyClass": {
+            "type": "string",
+            "description": "Class context for the starting flow. Usually matches pyClassName."
+          },
+          "pyStartingFlowType": {
+            "type": "string",
+            "description": "Starting flow type identifier (e.g., 'pyStartCase' for the standard creation flow)."
+          },
+          "pyAutomaticStart": {
+            "type": "string",
+            "description": "When true, this starting flow launches automatically (standard for pyStartCase)."
+          },
+          "pyManualStart": {
+            "type": "string",
+            "description": "When true, this starting flow can be triggered manually."
+          },
+          "pyEnabled": {
+            "type": "string",
+            "description": "When true, this starting flow entry is active."
+          }
+        }
+      }
+    },
+    "pyCaseOptionalProcesses": {
+      "type": "array",
+      "description": "Optional (ad-hoc) processes available across the entire case, not tied to any specific stage. Operators can launch these manually from the case actions menu. Defined as Embed-StageProcess entries with flow references.",
+      "items": {
+        "$ref": "#/$defs/Embed-StageProcess"
+      }
+    },
+    "pyRemoteFields": {
+      "type": "array",
+      "description": "Properties exposed for remote/federated access when pyDefaultValuesFromFedarated is 'true'. Each entry identifies a case property that external systems can read or write. Standard exposed fields include pyID, pyLabel, pyStatusWork, pxUrgencyWork, and pxAssignedOperatorID.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "pxObjClass": {
+            "type": "string",
+            "const": "Embed-Rule-Obj-CaseType-FCM",
+            "x-pega-autoFill": "Embed-Rule-Obj-CaseType-FCM"
+          },
+          "pyExposedProperty": {
+            "type": "string",
+            "description": "Fully qualified property name exposed remotely (e.g., 'pyID', 'pyLabel', 'pyStatusWork', 'pxUrgencyWork', 'pxAssignedOperatorID')."
+          },
+          "pyIsDefaultExposed": {
+            "type": "string",
+            "description": "When true, this property is exposed by default without explicit configuration. Standard properties like pyID and pyStatusWork are default-exposed."
+          },
+          "pyPropDesc": {
+            "type": "string",
+            "description": "Human-readable description of the exposed property (e.g., 'Case ID', 'Status', 'Urgency')."
+          }
+        }
+      }
+    },
+    "pyStatusGroups": {
+      "type": "array",
+      "description": "Status groups organize case work statuses into logical categories for dashboards and reporting. Each group (e.g., 'New', 'Open', 'Pending', 'Resolved') contains a list of pyStatusWork values. Status groups drive the colored status badges and filterable columns in case manager portals.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "pxObjClass": {
+            "type": "string",
+            "const": "Embed-Rule-Obj-CaseType-Status",
+            "x-pega-autoFill": "Embed-Rule-Obj-CaseType-Status"
+          },
+          "pyClassName": {
+            "type": "string",
+            "description": "Class this status group applies to. Usually matches the case type's pyClassName or its parent work class."
+          },
+          "pyStatusGroup": {
+            "type": "string",
+            "description": "Group name displayed in dashboards (e.g., 'New', 'Open', 'Pending-Approval', 'Resolved')."
+          },
+          "pyStatusWorkList": {
+            "type": "array",
+            "description": "List of individual work statuses belonging to this group.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "pxObjClass": {
+                  "type": "string",
+                  "const": "Embed-Rule-Obj-CaseType-Status",
+                  "x-pega-autoFill": "Embed-Rule-Obj-CaseType-Status"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "pyPagesAndClasses": {
+      "type": "array",
+      "description": "Declares additional pages (named clipboard structures) and their associated classes used during case processing. Each entry maps a page name to a class, making the page available in data transforms and activities. Use '$None' as the class for untyped pages.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "pxObjClass": {
+            "type": "string",
+            "const": "Embed-PagesAndClasses",
+            "x-pega-autoFill": "Embed-PagesAndClasses"
+          },
+          "pyPagesAndClassesClass": {
+            "type": "string",
+            "description": "Pega class for the page (e.g., 'Data-Portal', '$None' for untyped)."
+          },
+          "pyPagesAndClassesPage": {
+            "type": "string",
+            "description": "Page name (e.g., 'D_ChildPage', 'RequestDetails')."
+          }
+        }
+      }
+    },
+    "pyParameters": {
+      "type": "array",
+      "description": "Input parameters that can be passed when creating a case of this type. Each parameter has a name, type, and optional description. Parameters are populated by the calling context (API, parent flow, or UI) during case creation.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "pxObjClass": {
+            "type": "string",
+            "const": "Embed-MethodParams",
+            "x-pega-autoFill": "Embed-MethodParams"
+          },
+          "pyParametersParamName": {
+            "type": "string",
+            "description": "Parameter name (e.g., 'CustomerID', 'Priority')."
+          },
+          "pyParametersParamType": {
+            "type": "string",
+            "description": "Parameter data type: 'STRING', 'INTEGER', 'DECIMAL', 'PAGE', 'PAGELIST', etc."
+          }
+        }
+      }
+    },
+    "pyProcessList": {
+      "type": "array",
+      "description": "Master list of all flows/processes referenced anywhere in this case type (across all stages). Each entry provides the flow's technical name and display label. This is a denormalized index maintained by the case designer for quick reference — it does not drive behavior.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "pxObjClass": {
+            "type": "string",
+            "const": "Embed-Stage",
+            "x-pega-autoFill": "Embed-Stage"
+          },
+          "pyFlowLabel": {
+            "type": "string",
+            "description": "Display label of the flow (e.g., 'Create', 'Manager Review')."
+          },
+          "pyFlowName": {
+            "type": "string",
+            "description": "Technical name of the flow rule (e.g., 'CreateForm_Default', 'ManagerReview')."
+          }
+        }
+      }
+    },
+    "pyCasePredictions": {
+      "type": "array",
+      "description": "Prediction strategy references attached to the case type. Each entry references a prediction model that provides AI-driven recommendations during case processing (e.g., next-best-action, routing suggestions)."
+    },
+    "pyRelatedClasses": {
+      "type": "array",
+      "description": "Related class definitions that supplement the primary case class. Used to declare additional classes involved in case processing that are not child cases."
+    },
+    "pyPropertyValueFromFedarated": {
+      "type": "array",
+      "description": "List of properties whose default values are pulled from a federated data source at case creation time. Active when pyDefaultValuesFromFedarated is 'true'. Note: Pega misspells 'Federated' as 'Fedarated'."
+    },
+    "pyCaseMatchList": {
+      "type": "array",
+      "description": "Case matching rules that detect potential duplicate cases during creation. Each entry references a Rule-Declare-CaseMatch rule that compares the new case's properties against existing cases to find matches. The actual matching logic (weighted conditions, must-match filters, cutoff scores) is defined in the referenced Rule-Declare-CaseMatch rule, not in this list.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "pxObjClass": {
+            "type": "string",
+            "const": "Embed-ChooseRule",
+            "x-pega-autoFill": "Embed-ChooseRule"
+          },
+          "pyCaseMatchName": {
+            "type": "string",
+            "description": "Name of the Rule-Declare-CaseMatch rule to use for duplicate detection (e.g., 'pyDefaultCaseMatch'). The referenced rule defines the matching conditions, scores, and cutoff threshold."
+          }
+        }
+      }
+    },
+    "pyCreateCaseView": {
+      "type": "object",
+      "description": "View configuration for the case creation screen. Specifies which harness or section is displayed when an operator creates a new case of this type.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-CaseTypeView",
+          "x-pega-autoFill": "Embed-CaseTypeView"
+        },
+        "pyLabel": {
+          "type": "string",
+          "description": "View identifier, typically 'pyCreate' for the standard creation harness."
+        },
+        "pyType": {
+          "type": "string",
+          "description": "View type — 'Harness' for full-page views, 'Section' for embedded views."
+        }
+      }
+    },
+    "pyPerformCaseView": {
+      "type": "object",
+      "description": "View configuration for the case processing screen. Specifies which harness is displayed when an operator opens an existing case to work on it.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-CaseTypeView",
+          "x-pega-autoFill": "Embed-CaseTypeView"
+        },
+        "pyLabel": {
+          "type": "string",
+          "description": "View identifier, typically 'Perform' for the standard processing harness."
+        },
+        "pyType": {
+          "type": "string",
+          "description": "View type — 'Harness' for full-page views."
+        }
+      }
+    },
+    "pyCollaborationSettings": {
+      "type": "object",
+      "description": "Settings controlling real-time collaboration features (e.g., Pulse messaging, co-browsing) for this case type.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-Rule-Obj-CaseType-Collaboration",
+          "x-pega-autoFill": "Embed-Rule-Obj-CaseType-Collaboration"
+        }
+      }
+    },
+    "pyCaseConfiguration": {
+      "type": "object",
+      "description": "UI configuration settings for the case type, controlling layout and display options in the case designer and runtime portal.",
+      "properties": {
+        "Settings": {
+          "type": "object",
+          "properties": {
+            "pxObjClass": {
+              "type": "string",
+              "const": "Embed-CaseTypeUI",
+              "x-pega-autoFill": "Embed-CaseTypeUI"
+            }
+          }
+        }
+      }
+    },
+    "pyRMAction": {
+      "type": "object",
+      "description": "Rule management action configuration. Controls how this rule behaves in ruleset management operations (check-in, check-out, merge, etc.).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-RuleManagement",
+          "x-pega-autoFill": "Embed-RuleManagement"
+        }
+      }
+    },
+    "pyToolBarSettings": {
+      "type": "object",
+      "description": "Dev Studio toolbar configuration for the case type rule form. Controls which toolbar buttons and actions are available when viewing/editing this rule in Dev Studio. Observed on older/platform case types.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-WBSettings-ToolBar",
+          "x-pega-autoFill": "Embed-WBSettings-ToolBar"
+        }
+      }
+    },
+    "pyCustomFields": {
+      "type": "object",
+      "description": "Container for custom extension fields on the case type. Uses 'Embed-CustomFieldsList' as the embedded object class. Allows product teams to attach additional metadata to the case type without modifying the base schema."
+    },
+    "pyRuleAvailabilityAlternativeRules": {
+      "type": "object",
+      "description": "Specifies alternative rules to use when this rule is withdrawn or blocked. Allows graceful fallback: if this case type is withdrawn, the system can use the specified alternative case type instead."
+    }
+  },
+  "$defs": {
+    "Embed-Stage": {
+      "type": "object",
+      "description": "A stage in the case lifecycle. Stages are the highest-level organizational unit in a case type — each stage represents a distinct phase of work (e.g., 'Create', 'Review', 'Approval', 'Completed'). Stages contain processes (flows), local actions, and transition rules that control when the case advances to the next stage.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-Stage",
+          "x-pega-autoFill": "Embed-Stage"
+        },
+        "pyStageID": {
+          "type": "string",
+          "description": "Unique identifier for the stage. Primary stages use 'PRIM0', 'PRIM1', 'PRIM2', etc. (zero-indexed). Alternate stages use 'ALT1', 'ALT2', etc. (one-indexed). IDs must be unique within their category and sequential."
+        },
+        "pyStageName": {
+          "type": "string",
+          "description": "Display name shown in the case lifecycle bar and case designer (e.g., 'Create', 'Triage', 'Fulfillment', 'Completed', 'Withdrawn'). Should be concise — 1-2 words."
+        },
+        "pyStageTransition": {
+          "type": "string",
+          "enum": ["automatic", "manual", "resolution"],
+          "description": "Controls how the case advances past this stage. 'automatic' = advances to the next stage as soon as all processes in this stage complete. 'manual' = requires an explicit operator action or system event to advance. 'resolution' = this is a terminal stage — entering it resolves (closes) the case with the status in pyStageWorkStatus."
+        },
+        "pyIsInitializationStage": {
+          "type": "string",
+          "description": "When true, this is the first stage entered during case creation. The case creation flow runs within this stage. Exactly one primary stage should have this set to true — typically PRIM0."
+        },
+        "pyIsTerminalStage": {
+          "type": "string",
+          "description": "When true, entering this stage resolves the case. Terminal stages must have pyStageTransition='resolution' and should set pyStageWorkStatus to a resolved status. All alternate stages and the last primary stage are typically terminal."
+        },
+        "pyStageWorkStatus": {
+          "type": "string",
+          "description": "Work status applied to the case when it enters this stage AND the stage is terminal (pyIsTerminalStage='true'). Standard resolved statuses: 'Resolved-Completed', 'Resolved-Withdrawn', 'Resolved-Rejected', 'Resolved-Cancelled'. Custom statuses are allowed."
+        },
+        "pyStageEntryStatus": {
+          "type": "string",
+          "description": "Work status applied to the case when entering this non-terminal stage. Sets the case's visible status during this phase (e.g., 'Open-InProgress', 'Pending-Approval', 'Pending-Start'). Not needed on terminal stages (use pyStageWorkStatus instead)."
+        },
+        "pyChildCaseStatus": {
+          "type": "string",
+          "description": "Status to forcibly set on all active child cases when this stage is entered. Used on terminal/resolution stages to cascade resolution to children (e.g., 'Resolved-Completed' on the parent's Completed stage forces children to also resolve)."
+        },
+        "pyAllowSubcase": {
+          "type": "string",
+          "description": "When true, operators can manually create child cases (subcases) while the case is in this stage. When false, subcase creation is disabled for this stage."
+        },
+        "pyResolveChildCases": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "When 'true', all active child cases are resolved when this stage is entered. The child cases receive the status specified in pyChildCaseStatus. Typically set on terminal stages to prevent orphaned child cases."
+        },
+        "pyCleanupProcess": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "When 'true', runs a cleanup process upon entering this stage that cancels all running flows and assignments from previous stages. Always set to 'true' on terminal/resolution stages to ensure a clean case closure."
+        },
+        "pySkipOrAllowType": {
+          "type": "string",
+          "enum": ["always", "when", "never", "expression", "Always", ""],
+          "description": "Condition controlling whether this stage is entered during normal case progression. 'always'/'Always' = stage is always entered. 'when' = stage is entered only if the when-rule in pySkipStageWhen evaluates to true. 'never' = stage is always skipped. 'expression' = governed by an inline expression in pyExpressionToSkipOrAllow."
+        },
+        "pySkipStageWhen": {
+          "type": "string",
+          "description": "Name of a when-rule that determines if this stage should be skipped during case progression. Evaluated when pySkipOrAllowType='when'. If the when-rule returns false, the case skips this stage and advances to the next one. Common in pipeline/batch case types (e.g., 'pySkipCustomerDataSyncExport')."
+        },
+        "pyExpressionToSkipOrAllow": {
+          "type": "string",
+          "description": "Inline expression that determines if this stage is entered. Used when pySkipOrAllowType='expression'. Provides an alternative to when-rules for simple conditions without creating a separate rule."
+        },
+        "pyValidate": {
+          "type": "string",
+          "description": "Name of a validate rule to execute when entering this stage. If validation fails, the stage transition is blocked. Used to ensure data completeness before advancing (e.g., 'CompleteStageEntryValidation')."
+        },
+        "pySLAType": {
+          "type": "string",
+          "enum": ["Never", "Always", "Custom", "Use existing"],
+          "description": "Controls whether an SLA is attached to this stage. 'Always' = an SLA rule monitors time spent in this stage with goal/deadline intervals. 'Never' = no SLA for this stage."
+        },
+        "pyExpanded": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "UI-only field controlling whether this stage is shown expanded (processes visible) or collapsed in the case designer. Does not affect runtime behavior."
+        },
+        "pyChannelMenuLabel": {
+          "type": "string",
+          "description": "Label for the 'add process' button in multi-channel stages (e.g., 'Add create process', 'Add channel process'). Only relevant when the stage supports multiple channels."
+        },
+        "pxFlowIDMax": {
+          "type": "integer",
+          "description": "Auto-incremented counter tracking the highest flow ID allocated within this stage (e.g., 2 means FLOW0 and FLOW1 exist). Managed by the case designer."
+        },
+        "pyProcesses": {
+          "type": "array",
+          "description": "Ordered array of processes (flows) that execute within this stage. Processes run either in parallel (all start when the stage is entered) or sequentially (each waits for the previous to complete), controlled by pyStartType on each process.",
+          "items": {
+            "$ref": "#/$defs/Embed-StageProcess"
+          }
+        },
+        "pyLocalActions": {
+          "type": "array",
+          "description": "Local actions available only within this specific stage. Stage-level local actions supplement case-wide local actions (pyCaseWideLocalActions). They appear in the actions menu only while the case is in this stage.",
+          "items": {
+            "$ref": "#/$defs/Embed-Pega-AssignAction"
+          }
+        },
+        "pyOptionalProcesses": {
+          "type": "array",
+          "description": "Optional (ad-hoc) processes that operators can manually launch while the case is in this stage. Unlike regular processes which start automatically, optional processes must be explicitly triggered by an operator.",
+          "items": {
+            "$ref": "#/$defs/Embed-StageProcess"
+          }
+        },
+        "pyRequiredCategories": {
+          "type": "array",
+          "description": "Attachment category names that must have at least one attachment before the case can advance past this stage. References categories defined in the top-level pyAttachments array."
+        },
+        "pyAttachments": {
+          "type": "array",
+          "description": "Stage-level attachment category definitions. Overrides or supplements the case-wide pyAttachments for this specific stage. Allows different stages to require different document types.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "pxObjClass": {
+                "type": "string",
+                "const": "Embed-AttachmentCategory",
+                "x-pega-autoFill": "Embed-AttachmentCategory"
+              },
+              "pyAttachmentCategory": {
+                "type": "string",
+                "description": "Short identifier/code for the attachment category."
+              },
+              "pyLabel": {
+                "type": "string",
+                "description": "Display name of the attachment category."
+              },
+              "pyType": {
+                "type": "string",
+                "description": "Type of attachments allowed (e.g., 'File')."
+              },
+              "pyIsRequired": {
+                "type": "string",
+                "enum": ["true", "false", ""],
+                "description": "When 'true', at least one attachment in this category is required."
+              },
+              "pyAttachCategoryClass": {
+                "type": "string",
+                "description": "Class owning the Rule-Obj-AttachmentCategory rule."
+              },
+              "pyAttachCategoryKey": {
+                "type": "string",
+                "description": "Instance key of the Rule-Obj-AttachmentCategory rule."
+              },
+              "pyPagelistClass": {
+                "type": "string",
+                "description": "Class where the attachment pagelist property lives."
+              },
+              "pyPagelistReference": {
+                "type": "string",
+                "description": "Property reference storing attachments for this category at runtime."
+              }
+            }
+          }
+        },
+        "pyChannels": {
+          "type": "array",
+          "description": "Channel configurations for multi-channel stages. Each channel (e.g., 'Default', 'Web', 'Mobile', 'Email') can have its own set of processes. The pyShowChannel flag controls visibility.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "pxObjClass": {
+                "type": "string",
+                "const": "Data-Channel-Configuration",
+                "x-pega-autoFill": "Data-Channel-Configuration"
+              },
+              "pyLabel": {
+                "type": "string",
+                "description": "Display label for the channel."
+              },
+              "pyShowChannel": {
+                "type":"string",
+                "description": "When true, this channel is visible and its processes are active."
+              },
+              "pzChannelName": {
+                "type": "string",
+                "description": "Technical channel name (e.g., 'Default', 'Web', 'Mobile')."
+              }
+            }
+          }
+        }
+      }
+    },
+    "Embed-StageProcess": {
+      "type": "object",
+      "description": "A process (flow) within a stage. Each process references a flow rule that defines the actual work steps (assignments, decisions, automations). Processes within a stage can run in parallel or sequentially, and can be conditional.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-StageProcess",
+          "x-pega-autoFill": "Embed-StageProcess"
+        },
+        "pxFlowID": {
+          "type": "string",
+          "description": "Unique flow identifier within the stage, auto-assigned sequentially: 'FLOW0', 'FLOW1', 'FLOW2', etc. The first process in a stage is always 'FLOW0'."
+        },
+        "pyFlowName": {
+          "type": "string",
+          "description": "Name of the flow rule to execute (e.g., 'CreateForm_Default', 'ManagerReview', 'Fulfillment'). Must reference an existing Rule-Obj-Flow in the class hierarchy."
+        },
+        "pyLabel": {
+          "type": "string",
+          "description": "Display label shown in the case designer and lifecycle view (e.g., 'Create', 'Manager Review', 'Quality Check')."
+        },
+        "pyDescription": {
+          "type": "string",
+          "description": "Free-text description of what this process does. Shown as a tooltip or subtitle in the case designer."
+        },
+        "pyStartType": {
+          "type": "string",
+          "enum": ["PARALLEL", "SEQUENTIAL"],
+          "description": "'PARALLEL' = starts immediately when the stage is entered (runs concurrently with other PARALLEL processes). 'SEQUENTIAL' = starts only after all preceding processes have completed. The first process in a stage should typically be 'PARALLEL'."
+        },
+        "pySkipOrAllowType": {
+          "type": "string",
+          "enum": ["always", "when", "never", "expression", ""],
+          "description": "Condition controlling whether this process runs. 'always' = runs unconditionally. 'when' = runs only if the when-rule in pyStartWhen evaluates to true. 'never' = skipped. 'expression' = governed by an inline expression."
+        },
+        "pyStartWhen": {
+          "type": "string",
+          "description": "Name of a when-rule that controls whether this process starts. Only evaluated when pySkipOrAllowType='when'. The when-rule receives the case page as context. Example: 'CreatedViaUI' (only run the create form if the case was created interactively)."
+        },
+        "pyWhenToSkip": {
+          "type": "string",
+          "description": "Name of a when-rule that, when true, causes this process to be SKIPPED. Inverse of pyStartWhen — the process runs unless this condition is met. Can be used alongside pyStartWhen for complex conditional logic."
+        },
+        "pyLaunchOnReentry": {
+          "type": "string",
+          "description": "When true, this process restarts if the case re-enters this stage (e.g., after being sent back from a later stage). When false, the process does not restart on reentry — useful for one-time initialization processes."
+        },
+        "pyShowBackButton": {
+          "type": "string",
+          "description": "When true, displays a back/previous button in the flow's UI, allowing the operator to return to the previous step. When false, only forward navigation is available."
+        },
+        "pySLAType": {
+          "type": "string",
+          "enum": ["Never", "Always", "Custom", "Use existing"],
+          "description": "Controls whether an SLA is attached to this specific process. 'Always' = an SLA rule monitors time spent in this process. 'Never' = no process-level SLA."
+        },
+        "pyStepSLA": {
+          "type": "string",
+          "description": "Name of the SLA rule attached to this process. Only used when pySLAType='Always'. The SLA rule defines goal, deadline, and past-deadline intervals with escalation actions."
+        },
+        "pyChannelName": {
+          "type": "string",
+          "description": "Channel this process belongs to in multi-channel stages (e.g., 'Default', 'Web', 'Email'). When set, the process only runs for cases arriving through the specified channel."
+        },
+        "pyCallParams": {
+          "type": "object",
+          "description": "Key-value pairs passed as input parameters to the flow when it starts. Keys are parameter names, values are string literals or property references. Examples: {\"DataSyncType\": \"ADM\", \"Operation\": \"export\"}, {\"ApproverType\": \"WorkBasket\"}. Must match the parameter definitions in the target flow."
+        },
+        "pzRuleParameters": {
+          "type": "array",
+          "description": "Formal parameter definitions for the flow, declaring each parameter's name, type, description, and whether it is required. This array describes the interface contract — pyCallParams provides the actual values.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "pxObjClass": {
+                "type": "string",
+                "const": "Embed-MethodParams",
+                "x-pega-autoFill": "Embed-MethodParams"
+              },
+              "pyParametersParamName": {
+                "type": "string",
+                "description": "Parameter name (e.g., 'DataSyncType', 'Operation', 'ApproverType')."
+              },
+              "pyParametersParamType": {
+                "type": "string",
+                "description": "Parameter data type: 'STRING', 'INTEGER', 'DECIMAL', 'PAGE', 'PAGELIST', etc."
+              },
+              "pyParametersParamDesc": {
+                "type": "string",
+                "description": "Human-readable description of what the parameter controls."
+              },
+              "pyParametersParamReq": {
+                "type": "string",
+                "enum": ["0", "1"],
+                "description": "'1' = required (flow will fail if not provided). '0' = optional."
+              }
+            }
+          }
+        }
+      }
+    },
+    "Embed-Pega-AssignAction": {
+      "type": "object",
+      "description": "A local action (flow action) available to operators during case processing. Local actions appear in the case's actions menu and allow operators to perform ad-hoc operations like editing details, adding notes, withdrawing cases, or triggering sub-workflows. They reference flow action rules that define the UI and processing logic.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-Pega-AssignAction",
+          "x-pega-autoFill": "Embed-Pega-AssignAction"
+        },
+        "pyActionLabel": {
+          "type": "string",
+          "description": "Display text shown in the actions menu (e.g., 'Edit details', 'Withdraw', 'Add comment', 'Transfer to another operator', 'Change priority')."
+        },
+        "pyActionName": {
+          "type": "string",
+          "description": "Technical name of the flow action rule to execute (e.g., 'pyUpdateCaseDetails' for the built-in edit action, 'CasewideLocalActions1' for custom actions). Must reference an existing Rule-Obj-FlowAction."
+        },
+        "pyClassName": {
+          "type": "string",
+          "description": "Class context in which the flow action executes. Usually the case type's class (pyClassName) or its parent work class. The flow action rule must be defined on this class or an ancestor."
+        },
+        "pySkipOrAllowType": {
+          "type": "string",
+          "enum": ["always", "when", "never", "expression", "Always", ""],
+          "description": "Condition controlling when this action appears in the menu. 'always'/'Always' = always visible. 'when' = visible only when the when-rule in pyWhen returns true. 'never' = hidden. 'expression' = governed by an inline expression in pyExpressionToSkipOrAllow."
+        },
+        "pyWhen": {
+          "type": "string",
+          "description": "Name of a when-rule that controls whether this action is shown. Evaluated at runtime when pySkipOrAllowType='when'. Example: 'IsManagerRole' (only show this action to managers)."
+        },
+        "pyExpressionToSkipOrAllow": {
+          "type": "string",
+          "description": "Inline expression controlling action visibility. Used when pySkipOrAllowType='expression'. Provides a lighter-weight alternative to when-rules for simple conditions."
+        },
+        "pyAllowWhenCaseIsResolved": {
+          "type": "string",
+          "description": "When true, this action remains available even after the case is resolved (in a terminal stage). By default, local actions are hidden on resolved cases. Use this for post-resolution actions like 'Reopen' or 'Export final report'."
+        },
+        "pyStepPlaceHolder": {
+          "type": "string",
+          "description": "Placeholder label shown in the case designer before the action is fully configured. Typically 'Local Action'. Does not affect runtime behavior."
+        },
+        "pySectionFlowAction": {
+          "type": "string",
+          "description": "Override flow action name used when this action is rendered as an inline section rather than a modal dialog. When set, the section uses this flow action instead of pyActionName. Used to provide different UI layouts for inline vs modal execution of the same action."
+        },
+        "pzRemoveValidateOnFlowAction": {
+          "type": "string",
+          "description": "When true, disables client-side validation when this flow action is submitted. Use for actions where validation is handled server-side or is intentionally bypassed (e.g., 'Save as draft' actions)."
+        }
+      }
+    },
+    "Embed-CoverableClass": {
+      "type": "object",
+      "description": "A child case type relationship definition. Configures how a specific child case type relates to the parent case — whether it starts automatically, can be created manually, is required, and how data maps between parent and child.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-ChooseRule",
+          "x-pega-autoFill": "Embed-ChooseRule"
+        },
+        "pyClass": {
+          "type": "string",
+          "description": "Fully qualified class name of the child case type (e.g., 'MyOrg-MyApp-Work-SubTask'). Must reference an existing class with its own case type definition."
+        },
+        "pyLabel": {
+          "type": "string",
+          "description": "Display label for the child case type relationship (e.g., 'Sub-Task', 'Review Item'). Shown in the case designer's child cases panel."
+        },
+        "pyAutomaticStart": {
+          "type": "string",
+            "x-pega-autoFill": "true",
+          "description": "When true, child cases of this type are created automatically based on pyAutomaticStartOption timing."
+        },
+        "pyAutomaticStartOption": {
+          "type": "string",
+          "enum": ["ParentCaseStart", "DependencyFulfillment"],
+          "description": "When to auto-create the child case."
+        },
+        "pyManualStart": {
+          "type": "string",
+          "description": "When true, operators can manually create child cases of this type from the parent case's child cases panel."
+        },
+        "pyRequired": {
+          "type": "string",
+          "description": "When true, at least one child case of this type must be created and resolved before the parent case can advance to resolution. Enforces that required sub-work is completed."
+        },
+        "pyIsValidCircumstance": {
+          "type": "string",
+          "description": "When true, this child case type entry is valid for the current circumstance (variant). Used in circumstanced case types where different variants have different child case configurations."
+        },
+        "pyApplyDataTransform": {
+          "type": "string",
+          "description": "Name of a data transform rule to execute when creating the child case. Used to map data from the parent case to the child case (e.g., copying customer information, setting default values)."
+        },
+        "pyDataTransform": {
+          "type": "string",
+          "description": "Alternative data transform reference. Some case types use this field instead of pyApplyDataTransform for the parent-to-child data mapping."
+        },
+        "pyDataTransformParams": {
+          "type": "object",
+          "description": "Parameters passed to the data transform when creating the child case. Key-value pairs providing additional context for the mapping."
+        },
+        "pyShowCircumstances": {
+          "type": "string",
+          "description": "When true, shows circumstance/variant options when creating this type of child case."
+        },
+        "pyProperties": {
+          "type": "array",
+          "description": "Direct property mapping between parent and child case. Each entry maps a parent property (pyFrom) to a child property (pyTo), providing a simple alternative to data transforms for straightforward field copying.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "pyFrom": {
+                "type": "string",
+                "description": "Source property path on the parent case (e.g., '.pyID', '.CustomerName')."
+              },
+              "pyTo": {
+                "type": "string",
+                "description": "Target property path on the child case (e.g., '.ParentCaseID', '.CustomerName')."
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

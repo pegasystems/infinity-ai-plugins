@@ -1,0 +1,693 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-test-application-businessaction.json",
+  "title": "Rule-Test-Application-BusinessAction",
+  "description": "JSON schema for creating or updating a Pega Business Action (Rule-Test-Application-BusinessAction) via create-rule / update-rule. Only authored and identity fields are included; system-managed and versioning fields are omitted.",
+  "type": "object",
+  "required": [
+    "pxObjClass",
+    "pyClassName",
+    "pyPurpose",
+    "pyLabel",
+    "pyKeywordDescription",
+    "pyKeywordType",
+    "pyTestSteps",
+    "pyRuleAvailable"
+  ],
+  "properties": {
+    "pyRuleAvailable": {
+      "type": "string",
+      "enum": ["Yes", "No", "Withdrawn", "Final", "Blocked"],
+      "description": "Availability status.",
+      "x-pega-autoFill": "Yes"
+    },
+    "pxObjClass": {
+      "type": "string",
+      "const": "Rule-Test-Application-BusinessAction",
+      "description": "Rule type class.",
+      "x-pega-autoFill": "Rule-Test-Application-BusinessAction"
+    },
+    "pyClassName": {
+      "type": "string",
+      "description": "Applies-to class (case type work class). Example: MyOrg-MyApp-Work-MyCaseType"
+    },
+    "pyRuleSet": {
+      "type": "string",
+      "description": "Ruleset name for the Business Action rule."
+    },
+    "pyRuleSetVersion": {
+      "type": "string",
+      "pattern": "^\\d{2}-\\d{2}-\\d{2}$",
+      "description": "Ruleset version (e.g., '01-01-01')."
+    },
+    "pyPurpose": {
+      "type": "string",
+      "maxLength": 64,
+      "description": "Identity key (PascalCase, no spaces). Combined with pyClassName forms unique rule key. Max 64 characters. Example: CreateHomeloanCase"
+    },
+    "pyLabel": {
+      "type": "string",
+      "maxLength": 64,
+      "description": "Human-readable label displayed in App Studio. Max 64 characters. Example: Create Home loan Case"
+    },
+    "pyKeywordDescription": {
+      "type": "string",
+      "description": "BDD-style description for the business action. Example: User Creates new Home loan Case"
+    },
+    "pyKeywordType": {
+      "type": "string",
+      "enum": ["WHEN"],
+      "description": "BDD keyword type. Always WHEN for Business Actions.",
+      "x-pega-autoFill": "WHEN"
+    },
+    "pyBusinessActionPersona": {
+      "type": "string",
+      "description": "Persona performing this action. Optional."
+    },
+    "pyBusinessActionDecision": {
+      "type": "string",
+      "description": "Describes the decision/outcome after this action completes. Example: If Reviewer marks Application status as Application complete, then Property valuation child case gets created."
+    },
+    "pyBusinessActionValidation": {
+      "type": "string",
+      "description": "Validation notes for this business action."
+    },
+    "pxCaseName": {
+      "type": "string",
+      "description": "Display name of the case type. Example: Home loan"
+    },
+    "pyIsAssertion": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "Whether this Business Action is an assertion (validation-only). Always false for standard Business Actions.",
+      "x-pega-autoFill": "false"
+    },
+    "pySkipValidations": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "Whether to skip form validations during execution.",
+      "x-pega-autoFill": "false"
+    },
+    "pyIsBASelected": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "Whether this Business Action is selected for test generation."
+    },
+    "pyStepPageReference": {
+      "type": "string",
+      "description": "Step page reference for execution context. Typically RH_1.",
+      "x-pega-autoFill": "RH_1"
+    },
+    "pyInputParameters": {
+      "type": "array",
+      "description": "Input parameters for the Business Action. These provide test data and execution context.",
+      "items": {
+        "$ref": "#/$defs/InputParameter"
+      }
+    },
+    "pyOutputParameters": {
+      "type": "array",
+      "description": "Root-level output parameters captured from the overall Business Action execution. Exactly ONE entry for CreateCase BAs: descriptive name (e.g., HomeLoanCaseID) with pyMapOutputFrom=Response. NEVER put generic CaseID or pyParameterValue here — those belong at step level only.",
+      "maxItems": 1,
+      "items": {
+        "$ref": "#/$defs/RootOutputParameter"
+      }
+    },
+    "pyTestSteps": {
+      "type": "array",
+      "description": "Ordered list of automation steps. Steps execute sequentially.",
+      "minItems": 1,
+      "items": {
+        "oneOf": [
+          { "$ref": "#/$defs/CreateCaseStep" },
+          { "$ref": "#/$defs/PerformAssignmentStep" },
+          { "$ref": "#/$defs/AssertStageStep" },
+          { "$ref": "#/$defs/PerformActionStep" },
+          { "$ref": "#/$defs/UserContextStep" },
+          { "$ref": "#/$defs/GetCaseStep" },
+          { "$ref": "#/$defs/AssertStatusStep" },
+          { "$ref": "#/$defs/AssertFieldStep" },
+          { "$ref": "#/$defs/AssertErrorStep" }
+        ]
+      }
+    },
+    "pyPlaywrightMethod": {
+      "type": "string",
+      "description": "Function call signature for UI automation. Example: FunctionName(page, browser, context, Param1, Param2);"
+    },
+    "pyPlaywrightScript": {
+      "type": "string",
+      "description": "Full async TypeScript function body for Playwright UI automation."
+    }
+  },
+  "$defs": {
+    "InputParameter": {
+      "type": "object",
+      "required": ["pyParameterName"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-TestParameter",
+          "x-pega-autoFill": "Embed-TestParameter"
+        },
+        "pyParameterName": {
+          "type": "string",
+          "description": "Parameter name. Examples: CaseID, First_name, ValidationFails"
+        },
+        "pyParameterValue": {
+          "type": "string",
+          "description": "Default test data value. Examples: John, 250000, False"
+        }
+      }
+    },
+    "CreateCaseStep": {
+      "type": "object",
+      "description": "Creates a new case instance and captures the CaseID.",
+      "required": ["pxObjClass", "pyStepType", "pyStepDescription", "pyActionParameters"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-APIAutomation-Execution-CreateCase"
+        },
+        "pyStepType": {
+          "type": "string",
+          "const": "Embed-APIAutomation-Execution-CreateCase",
+          "x-pega-autoFill": "{pxObjClass}"
+        },
+        "pyStepDescription": {
+          "type": "string",
+          "description": "Human-readable step description. Example: User creates new Home loan case"
+        },
+        "pyOutputParameters": {
+          "type": "array",
+          "description": "Values captured from API response.",
+          "items": {
+            "$ref": "#/$defs/OutputParameter"
+          }
+        },
+        "pyActionParameters": {
+          "type": "array",
+          "description": "Parameters passed to the DX API for case creation.",
+          "items": {
+            "$ref": "#/$defs/ActionParameter"
+          }
+        }
+      }
+    },
+    "PerformAssignmentStep": {
+      "type": "object",
+      "description": "Fills and submits an assignment form via DX API.",
+      "required": ["pxObjClass", "pyStepType", "pyAssignmentName", "pyStepDescription", "pyActionParameters"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-APIAutomation-Execution-PerformAssignment"
+        },
+        "pyStepType": {
+          "type": "string",
+          "const": "Embed-APIAutomation-Execution-PerformAssignment",
+          "x-pega-autoFill": "{pxObjClass}"
+        },
+        "pyAssignmentName": {
+          "type": "string",
+          "description": "Assignment name matching the flow action label. Example: Living situation"
+        },
+        "pyExecutionContext": {
+          "type": "string",
+          "description": "Class context for assignment execution. Same as rule's pyClassName."
+        },
+        "pyStepDescription": {
+          "type": "string",
+          "description": "Human-readable step description. Example: User submits Living situation form"
+        },
+        "pyForm": {
+          "type": "array",
+          "description": "Maps input parameters to form fields for API submission. Standard fields use FormMapping; single-reference fields use ReferenceFormMapping; multi-reference fields use MultiReferenceFormMapping.",
+          "items": {
+            "oneOf": [
+              { "$ref": "#/$defs/FormMapping" },
+              { "$ref": "#/$defs/ReferenceFormMapping" },
+              { "$ref": "#/$defs/MultiReferenceFormMapping" }
+            ]
+          }
+        },
+        "pyOutputParameters": {
+          "type": "array",
+          "description": "Values captured from API response.",
+          "items": {
+            "$ref": "#/$defs/OutputParameter"
+          }
+        },
+        "pyActionParameters": {
+          "type": "array",
+          "description": "Parameters passed to the DX API for assignment submission.",
+          "items": {
+            "$ref": "#/$defs/ActionParameter"
+          }
+        }
+      }
+    },
+    "AssertStageStep": {
+      "type": "object",
+      "description": "Verifies the case has reached an expected stage.",
+      "required": ["pxObjClass", "pyStepType", "pyStepDescription", "pyActionParameters"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-APIAutomation-Execution-AssertStage"
+        },
+        "pyStepType": {
+          "type": "string",
+          "const": "Embed-APIAutomation-Execution-AssertStage",
+          "x-pega-autoFill": "{pxObjClass}"
+        },
+        "pyExecutionContext": {
+          "type": "string",
+          "description": "Class context. Typically Work-."
+        },
+        "pyStepDescription": {
+          "type": "string",
+          "description": "Human-readable step description. Example: Verify Case Stage"
+        },
+        "pyActionParameters": {
+          "type": "array",
+          "description": "Parameters: CaseID (Input) and StageName (Input).",
+          "items": {
+            "$ref": "#/$defs/ActionParameter"
+          }
+        }
+      }
+    },
+    "PerformActionStep": {
+      "type": "object",
+      "description": "Executes a case-wide action (not tied to a specific assignment). Actions are accessed via the case actions menu (e.g., Change stage, Reopen, Edit details).",
+      "required": ["pxObjClass", "pyStepType", "pyStepDescription", "pyActionParameters"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-APIAutomation-Execution-PerformAction"
+        },
+        "pyStepType": {
+          "type": "string",
+          "const": "Embed-APIAutomation-Execution-PerformAction",
+          "x-pega-autoFill": "{pxObjClass}"
+        },
+        "pyStepDescription": {
+          "type": "string",
+          "description": "Human-readable description. Example: User submits Change stage Action"
+        },
+        "pyForm": {
+          "type": "array",
+          "description": "Maps input parameters to form fields. Checkboxes are NEVER included in pyForm. Single-reference fields use ReferenceFormMapping; multi-reference fields use MultiReferenceFormMapping.",
+          "items": {
+            "oneOf": [
+              { "$ref": "#/$defs/FormMapping" },
+              { "$ref": "#/$defs/ReferenceFormMapping" },
+              { "$ref": "#/$defs/MultiReferenceFormMapping" }
+            ]
+          }
+        },
+        "pyActionParameters": {
+          "type": "array",
+          "description": "Parameters: CaseID (Input) and Action Name (Constant, e.g., pyChangeStage, pyReopen, pyUpdateCaseDetails).",
+          "items": {
+            "$ref": "#/$defs/ActionParameter"
+          }
+        }
+      }
+    },
+    "UserContextStep": {
+      "type": "object",
+      "description": "Sets user login context (URL and Persona) for test execution.",
+      "required": ["pxObjClass", "pyStepType", "pyStepDescription", "pyActionParameters"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-APIAutomation-Execution-UserContext"
+        },
+        "pyStepType": {
+          "type": "string",
+          "const": "Embed-APIAutomation-Execution-UserContext",
+          "x-pega-autoFill": "{pxObjClass}"
+        },
+        "pyExecutionContext": {
+          "type": "string",
+          "description": "Class context. Typically Work- for foundation Business Actions."
+        },
+        "pyStepDescription": {
+          "type": "string",
+          "description": "Human-readable step description. Example: User logins to system"
+        },
+        "pyActionParameters": {
+          "type": "array",
+          "description": "Parameters: URL (Input) and Persona (Input).",
+          "items": {
+            "$ref": "#/$defs/ActionParameter"
+          }
+        }
+      }
+    },
+    "GetCaseStep": {
+      "type": "object",
+      "description": "Opens/retrieves an existing case by CaseID.",
+      "required": ["pxObjClass", "pyStepType", "pyStepDescription", "pyActionParameters"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-APIAutomation-Execution-GetCase"
+        },
+        "pyStepType": {
+          "type": "string",
+          "const": "Embed-APIAutomation-Execution-GetCase",
+          "x-pega-autoFill": "{pxObjClass}"
+        },
+        "pyExecutionContext": {
+          "type": "string",
+          "description": "Class context for case retrieval."
+        },
+        "pyStepDescription": {
+          "type": "string",
+          "description": "Human-readable step description. Example: Navigate to case"
+        },
+        "pyActionParameters": {
+          "type": "array",
+          "description": "Parameters: CaseID (Input).",
+          "items": {
+            "$ref": "#/$defs/ActionParameter"
+          }
+        }
+      }
+    },
+    "AssertStatusStep": {
+      "type": "object",
+      "description": "Asserts the case has reached an expected status.",
+      "required": ["pxObjClass", "pyStepType", "pyStepDescription", "pyActionParameters"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-APIAutomation-Execution-AssertStatus"
+        },
+        "pyStepType": {
+          "type": "string",
+          "const": "Embed-APIAutomation-Execution-AssertStatus",
+          "x-pega-autoFill": "{pxObjClass}"
+        },
+        "pyStepDescription": {
+          "type": "string",
+          "description": "Human-readable step description. Example: Verify case status is Resolved-Completed"
+        },
+        "pyActionParameters": {
+          "type": "array",
+          "description": "Parameters: CaseID (Input) and Status (Constant).",
+          "items": {
+            "$ref": "#/$defs/ActionParameter"
+          }
+        }
+      }
+    },
+    "AssertFieldStep": {
+      "type": "object",
+      "description": "Asserts a specific field value on a case view.",
+      "required": ["pxObjClass", "pyStepType", "pyStepDescription", "pyActionParameters"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-APIAutomation-Execution-AssertField"
+        },
+        "pyStepType": {
+          "type": "string",
+          "const": "Embed-APIAutomation-Execution-AssertField",
+          "x-pega-autoFill": "{pxObjClass}"
+        },
+        "pyStepDescription": {
+          "type": "string",
+          "description": "Human-readable step description. Example: Verify field value matches expected"
+        },
+        "pyActionParameters": {
+          "type": "array",
+          "description": "Parameters: CaseID (Input), ViewName (Constant), FieldPath (Constant), ExpectedValue (Constant).",
+          "items": {
+            "$ref": "#/$defs/ActionParameter"
+          }
+        }
+      }
+    },
+    "AssertErrorStep": {
+      "type": "object",
+      "description": "Asserts a validation error message is displayed.",
+      "required": ["pxObjClass", "pyStepType", "pyStepDescription", "pyActionParameters"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-APIAutomation-Execution-AssertError"
+        },
+        "pyStepType": {
+          "type": "string",
+          "const": "Embed-APIAutomation-Execution-AssertError",
+          "x-pega-autoFill": "{pxObjClass}"
+        },
+        "pyStepDescription": {
+          "type": "string",
+          "description": "Human-readable step description. Example: Verify validation error is shown"
+        },
+        "pyActionParameters": {
+          "type": "array",
+          "description": "Parameters: ErrorMessage (Constant).",
+          "items": {
+            "$ref": "#/$defs/ActionParameter"
+          }
+        }
+      }
+    },
+    "FormMapping": {
+      "type": "object",
+      "description": "Standard form field mapping for non-reference fields (TextInput, Dropdown, RadioButtons, etc.).",
+      "required": ["pyParameterName", "pyParameterValue", "pyMapRequestFieldFrom"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-TestParameter",
+          "x-pega-autoFill": "Embed-TestParameter"
+        },
+        "pyParameterName": {
+          "type": "string",
+          "description": "Field ID from view rule pyFieldReference (e.g., CurrentAddress, FirstName)"
+        },
+        "pyParameterValue": {
+          "type": "string",
+          "description": "Input parameter label that provides the value (e.g., What's your current address?)"
+        },
+        "pyMapRequestFieldFrom": {
+          "type": "string",
+          "enum": ["Input", "Constant"],
+          "description": "Source of field value. Always Input for parameter-driven fields.",
+          "x-pega-autoFill": "Input"
+        },
+        "pyParameterType": {
+          "type": "string",
+          "description": "Optional type hint for the parameter value. Example: String"
+        }
+      }
+    },
+    "ReferenceFormMapping": {
+      "type": "object",
+      "description": "Form field mapping for single-reference fields (singleselect autocomplete). Used when a view field has referenceFields with mode=singleselect. Does NOT use pyMapRequestFieldFrom or pyParameterValue at root — uses pyTestReferenceField instead.",
+      "required": ["pyParameterName", "pyParameterType", "pyTestReferenceField"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-TestParameter",
+          "x-pega-autoFill": "Embed-TestParameter"
+        },
+        "pyParameterName": {
+          "type": "string",
+          "description": "The referenceID from the view's ObjectReference field (Step 2). Example: FeatureCase, Sprint, ProductVersion, BugFoundInRelease"
+        },
+        "pyParameterType": {
+          "type": "string",
+          "const": "Reference",
+          "description": "Always Reference for singleselect reference fields.",
+          "x-pega-autoFill": "Reference"
+        },
+        "pyTestReferenceField": {
+          "type": "array",
+          "description": "Sub-parameters mapping selectionKey to the input parameter that provides the value.",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/ReferenceFieldParameter"
+          }
+        }
+      }
+    },
+    "MultiReferenceFormMapping": {
+      "type": "object",
+      "description": "Form field mapping for multi-reference fields (multiselect table). Used when a view field has referenceFields with mode=multiselect. Uses pyTestMultiReferenceList containing entries with pyTestReferenceField.",
+      "required": ["pyParameterName", "pyParameterType", "pyTestMultiReferenceList"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-TestParameter",
+          "x-pega-autoFill": "Embed-TestParameter"
+        },
+        "pyParameterName": {
+          "type": "string",
+          "description": "The referenceID from the view's ObjectReference field (Step 2). Example: DuplicateBugList, ExistingTestAssets"
+        },
+        "pyParameterType": {
+          "type": "string",
+          "const": "Multi-Reference",
+          "description": "Always Multi-Reference (with hyphen) for multiselect reference fields.",
+          "x-pega-autoFill": "Multi-Reference"
+        },
+        "pyTestMultiReferenceList": {
+          "type": "array",
+          "description": "List of multi-reference selection entries. Each entry contains a pyTestReferenceField array.",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/MultiReferenceEntry"
+          }
+        }
+      }
+    },
+    "MultiReferenceEntry": {
+      "type": "object",
+      "description": "An entry in pyTestMultiReferenceList containing the reference field selection parameters.",
+      "required": ["pyTestReferenceField"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-TestParameter",
+          "x-pega-autoFill": "Embed-TestParameter"
+        },
+        "pyTestReferenceField": {
+          "type": "array",
+          "description": "Selection key parameters. Uses pyMapActionParameterFrom: Constant.",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/MultiReferenceFieldParameter"
+          }
+        }
+      }
+    },
+    "MultiReferenceFieldParameter": {
+      "type": "object",
+      "description": "A sub-parameter inside multi-reference pyTestReferenceField. Maps field with Constant source and relevant test data value.",
+      "required": ["pyParameterName", "pyParameterValue", "pyMapActionParameterFrom"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-TestParameter",
+          "x-pega-autoFill": "Embed-TestParameter"
+        },
+        "pyParameterName": {
+          "type": "string",
+          "description": "The selectionKey or additional field from the view's ObjectReference field. Typically pyID."
+        },
+        "pyParameterValue": {
+          "type": "string",
+          "description": "Relevant test data value for this row selection. Examples: BUG-101, FEAT-42, Sprint 5. Must not be empty."
+        },
+        "pyMapActionParameterFrom": {
+          "type": "string",
+          "const": "Constant",
+          "description": "Always Constant for multi-reference table row selections.",
+          "x-pega-autoFill": "Constant"
+        }
+      }
+    },
+    "ReferenceFieldParameter": {
+      "type": "object",
+      "description": "A sub-parameter inside single-reference pyTestReferenceField. Maps selectionKey to the input parameter providing the value.",
+      "required": ["pyParameterName", "pyParameterValue", "pyMapActionParameterFrom"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-TestParameter",
+          "x-pega-autoFill": "Embed-TestParameter"
+        },
+        "pyParameterName": {
+          "type": "string",
+          "description": "The selectionKey from the view's ObjectReference field. Typically pyID."
+        },
+        "pyParameterValue": {
+          "type": "string",
+          "description": "The input parameter name that provides the reference value. Matches the referenceFields label. Example: Feature, Sprint, Found in release"
+        },
+        "pyMapActionParameterFrom": {
+          "type": "string",
+          "enum": ["Input", "Constant"],
+          "description": "How the value is resolved. Input = from pyInputParameters (most common for singleselect references)."
+        }
+      }
+    },
+    "ActionParameter": {
+      "type": "object",
+      "required": ["pyParameterName", "pyParameterValue", "pyMapActionParameterFrom"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-TestParameter",
+          "x-pega-autoFill": "Embed-TestParameter"
+        },
+        "pyParameterName": {
+          "type": "string",
+          "description": "Action parameter name. Common values: CaseID, Assignment, CaseType, ProcessID, ValidationFails"
+        },
+        "pyParameterValue": {
+          "type": "string",
+          "description": "Parameter value or reference. For Constant: literal value. For Input: input parameter name."
+        },
+        "pyMapActionParameterFrom": {
+          "type": "string",
+          "enum": ["Constant", "Input"],
+          "description": "How the value is resolved. Constant = literal value. Input = from pyInputParameters."
+        }
+      }
+    },
+    "OutputParameter": {
+      "type": "object",
+      "description": "Step-level output parameter captured from a step's API response. Uses pyParameterValue to specify JSON response path. The pyParameterName must be a descriptive case-type-specific name (e.g., HomeLoanCaseID) — the SAME name used at root-level. NEVER use generic CaseID.",
+      "required": ["pyParameterName", "pyParameterValue"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-TestParameter",
+          "x-pega-autoFill": "Embed-TestParameter"
+        },
+        "pyParameterName": {
+          "type": "string",
+          "not": { "const": "CaseID" },
+          "description": "Descriptive case-type-specific name matching root-level. Example: HomeLoanCaseID. NEVER generic CaseID."
+        },
+        "pyParameterValue": {
+          "type": "string",
+          "description": "Response path to extract value from. Always: data$caseInfo$ID"
+        }
+      }
+    },
+    "RootOutputParameter": {
+      "type": "object",
+      "description": "Root-level output parameter exported by the Business Action to the Test Case. Uses pyMapOutputFrom (always Response). The pyParameterName must be a descriptive case-type-specific name (e.g., HomeLoanCaseID) — the SAME name used at step-level. NEVER use generic CaseID. NEVER use pyParameterValue.",
+      "required": ["pyParameterName", "pyMapOutputFrom"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-TestParameter",
+          "x-pega-autoFill": "Embed-TestParameter"
+        },
+        "pyParameterName": {
+          "type": "string",
+          "not": { "const": "CaseID" },
+          "description": "Descriptive case-type-specific name matching step-level. Example: HomeLoanCaseID. NEVER generic CaseID."
+        },
+        "pyMapOutputFrom": {
+          "type": "string",
+          "const": "Response",
+          "description": "Source type. Always Response for root-level outputs.",
+          "x-pega-autoFill": "Response"
+        }
+      }
+    }
+  }
+}
+

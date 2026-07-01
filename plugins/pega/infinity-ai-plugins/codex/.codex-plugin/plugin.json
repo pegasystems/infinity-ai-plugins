@@ -1,0 +1,36 @@
+{
+  "name": "pega-infinity-authoring",
+  "version": "0.0.1",
+  "description": "Pega Infinity Authoring with bundled MCP tools and runtime skills.",
+  "author": {
+    "name": "Pegasystems",
+    "url": "https://github.com/pegasystems"
+  },
+  "repository": "https://github.com/pegasystems/infinity-ai-plugins",
+  "license": "Apache-2.0",
+  "keywords": [
+    "pega",
+    "mcp",
+    "authoring",
+    "codex"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Pega Infinity Authoring",
+    "shortDescription": "Pega Infinity Authoring tools for Codex.",
+    "longDescription": "Bundle the Pega Infinity Authoring server, runtime skills, and agent skills for Pega Infinity authoring workflows.",
+    "developerName": "Pegasystems",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/pegasystems/infinity-ai-plugins",
+    "defaultPrompt": [
+      "Use Pega Infinity Authoring to explore the active Pega application.",
+      "Use Pega Infinity Authoring to help author a Pega rule through a ChangeRequest workflow."
+    ],
+    "brandColor": "#0A63A8"
+  }
+}
