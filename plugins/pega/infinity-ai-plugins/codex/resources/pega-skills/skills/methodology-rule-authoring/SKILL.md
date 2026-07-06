@@ -8,30 +8,87 @@ description: General instructions for creating and updating Pega rules using the
 This skill explains how to choose the correct write API for a Pega rule type, then
 create or update the rule using that API.
 
+## Tool Selection
+
+Do not guess which write API to use.
+All rule types in `## Supported Rule Types` use `create-rule` / `update-rule`.
+
+If the rule type does not appear in the table, stop and verify support before
+authoring.
+
+## Supported Rule Types
+
+Use the rule-type-specific API based on the support table below.
+
+### Supported create/update rule types
+
+These rule types have dedicated `rules-*` skills in this skills repo and should be
+authored with `create-rule` / `update-rule`.
+
+| Rule type | Skill | API |
+|-----------|-------|-----|
+| `Rule-Async-JobScheduler` | `rules-rule-async-jobscheduler` | `create-rule` / `update-rule` |
+| `Rule-Async-QueueProcessor` | `rules-rule-async-queueprocessor` | `create-rule` / `update-rule` |
+| `Rule-Connect-GenerativeAI` | `rules-rule-connect-generativeai` | `create-rule` / `update-rule` |
+| `Rule-Connect-REST` | `rules-rule-connect-rest` | `create-rule` / `update-rule` |
+| `Rule-Declare-DecisionTable` | `rules-rule-declare-decision-table` | `create-rule` / `update-rule` |
+| `Rule-Declare-Pages` | `rules-rule-declare-pages` | `create-rule` / `update-rule` |
+| `Rule-Decision-DataSet` | `rules-rule-decision-dataset` | `create-rule` / `update-rule` |
+| `Rule-Edit-Validate` | `rules-rule-edit-validate` | `create-rule` / `update-rule` |
+| `Rule-Obj-Activity` | `rules-rule-obj-activity` | `create-rule` / `update-rule` |
+| `Rule-Obj-Class` | `rules-rule-obj-class` | `create-rule` / `update-rule` |
+| `Rule-Obj-Corr` | `rules-rule-corrtype` | `create-rule` / `update-rule` |
+| `Rule-Obj-FieldValue` | `rules-rule-obj-fieldvalue` | `create-rule` / `update-rule` |
+| `Rule-Obj-Flow` | `rules-rule-obj-flow` | `create-rule` / `update-rule` |
+| `Rule-Obj-FlowAction` | `rules-rule-obj-flowaction` | `create-rule` / `update-rule` |
+| `Rule-Obj-Model` | `rules-rule-obj-model` | `create-rule` / `update-rule` |
+| `Rule-Obj-Property` | `rules-rule-obj-property` | `create-rule` / `update-rule` |
+| `Rule-Obj-Report-Definition` | `rules-rule-obj-report-definition` | `create-rule` / `update-rule` |
+| `Rule-Obj-ServiceLevel` | `rules-rule-obj-servicelevel` | `create-rule` / `update-rule` |
+| `Rule-Obj-Validate` | `rules-rule-obj-validate` | `create-rule` / `update-rule` |
+| `Rule-Obj-When` | `rules-rule-obj-when` | `create-rule` / `update-rule` |
+| `Rule-RuleSet-Branch` | `rules-rule-ruleset-branch` | `create-rule` / `update-rule` |
+| `Rule-RuleSet-Name` | `rules-rule-ruleset-name` | `create-rule` / `update-rule` |
+| `Rule-RuleSet-Version` | `rules-rule-ruleset-version` | `create-rule` / `update-rule` |
+| `Rule-Test-Unit-Case` | `rules-rule-test-unit-case` | `create-rule` / `update-rule` |
+| `Rule-UI-View` | `rules-rule-ui-view` | `create-rule` / `update-rule` |
+
+If a rule type is not listed in the table above, inform the user it is not available
+for creation or modification.
+
 ## Creating a Rule
 
 ### Workflow
 
 1. **Load the rule-type skill** — use `get-skill` to load the `rules-*` skill for
-    the target rule type. This provides examples and the JSON schema.
-2. **Find the closest example and use it as-is** — identify the example from the
+    the target rule type. This provides examples and points you to the JSON schema.
+2. **Must read the rule-type schema directly** — load the schema entry for the rule type
+   (rules-{pxObjClass lowercase-with-hyphens}/schema/{pxObjClass lowercase-with-hyphens} for example `rules-rule-obj-property/schema/rule-obj-property`) before building
+   the payload. Use the schema as the source of truth for:
+   - required fields
+   - auto-filled and auto-derived fields you should omit
+   - valid enum values
+   - conditional requirements such as fields that are required only for certain
+     modes or configurations
+   When the example and schema appear to disagree, trust the schema for field
+   validity and use existing live rules only as a secondary check for application
+   conventions.
+3. **Find the closest example and use it as-is** — identify the example from the
    skill's `examples/` directory that most closely matches what you need to create.
    `examples/` contains full rule examples while subfolders in `examples/` contain
    example steps or shapes or rows. The file `examples/stub.md` is a good start if
    you want to create the simplest possible rule. **Treat the example as a rigid
    template:** use the exact same property names, nesting structure, and field
    patterns it uses. Only change the _values_ to match the user's requirements. Do
-   not invent property names, guess at field structures, or add fields that do not
-   appear in the example — the example is the source of truth for which fields exist
-   and how they are spelled.
-3. **Adapt the example** — change the field values to match the user's requirements.
+not invent property names or guess at field structures. Follow the example's structure, but when the schema requires additional fields (or different enum values), follow the schema's spelling and requirements to keep the payload valid.
+4. **Adapt the example** — change the field values to match the user's requirements.
    Base all of your decision regarding the data model on the examples. Do not
    combine examples. Do not get creative. Do not remove or add fields you don't need.
    Don't add fields the example.
-4. **Call `create-rule`.**
+5. **Call `create-rule`.**
    See `methodology-change-request-workflow` for the full ChangeRequest lifecycle
    that provides the `changeRequestID`.
-5. **Verify** — call `get-rule` on the returned key to confirm the rule was created
+6. **Verify** — call `get-rule` on the returned key to confirm the rule was created
    correctly.
 
 ## Updating a Rule

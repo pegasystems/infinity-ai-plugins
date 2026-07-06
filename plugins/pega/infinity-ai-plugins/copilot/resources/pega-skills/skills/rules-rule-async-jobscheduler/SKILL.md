@@ -13,6 +13,22 @@ description: Schema and authoring guide for Pega Job Scheduler rules (Rule-Async
 | Large-volume batch (100 000+ records) | JS + QP Hybrid — JS dispatches; QP processes in parallel |
 | Per-node cache initialisation at startup | JS `ASSOCIATED_NODE` scope + `Startup` frequency |
 | Event-driven processing | Queue Processor — never use JS for event-driven |
+| "Background job" that processes "items in the queue" or "waiting records" | **Ambiguous — ask before proceeding** |
+
+### Disambiguating "background job" + "queue" requests
+
+When the user says they want a "background job" (or "scheduled job") that
+processes "items in the queue", "waiting records", or similar, the architecture
+depends on *how items enter the queue*. Ask before creating any rule:
+
+> "When items are added — are they pushed immediately when an event occurs
+> (e.g. a case reaches a certain status), or do they wait in the database
+> until a scheduled sweep picks them up?"
+
+- **Event-pushed** → Queue Processor only. Items are enqueued via
+  `Queue-For-Processing`; no Job Scheduler is needed.
+- **Schedule-swept** → Job Scheduler + Queue Processor hybrid. The JS
+  activity browses and dispatches; the QP processes each item in parallel.
 
 ## Authoring Notes
 
@@ -21,7 +37,10 @@ description: Schema and authoring guide for Pega Job Scheduler rules (Rule-Async
 Ask the user for the rule name. Use it for `pyPurpose`; the server auto-derives
 `pyRuleName` from it. The builder's auto-derivation from `pyLabel` is unreliable
 and returns empty strings, producing a malformed instance key (double space in
-the key where the name should be).
+the key where the name should be). If `pyPurpose` is omitted, the builder fills
+an empty string and the rule is created without a proper name or identity key.
+If the user provides a description rather than a name, derive a CamelCase
+identifier (e.g. "check for latest tickets" → `CheckForLatestTickets`).
 
 ### `pyStartTime` is local time in `pyUseTimeZone` — never pre-convert to UTC
 

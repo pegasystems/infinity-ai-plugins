@@ -456,7 +456,7 @@ Example:
 
 ```text
 perform-action(
-  assignmentID="ASSIGN-WORKLIST ...",
+  assignmentID="ASSIGN-WORKBASKET ...",
   actionID="Submit",
   content="{\"pyDescription\":\"Updated order\"}",
   pageInstructions="[{\"instruction\":\"APPEND\",\"target\":\"Items\",\"content\":{\"Name\":\"Widget\",\"Quantity\":1}}]"

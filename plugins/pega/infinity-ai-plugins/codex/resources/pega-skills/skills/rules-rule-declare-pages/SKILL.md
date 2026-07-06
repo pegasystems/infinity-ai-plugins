@@ -32,6 +32,8 @@ description: Schema and authoring guide for Pega data page rules (Rule-Declare-P
 | `pyDataSourceList entry — ObjOpen` | Minimum-viable ObjOpen (Lookup) source entry. Retrieves a single record by key. Required fields pyLookupClassName and pyClassKeyValueList. Server auto-sets pyLoadActivity to pxCallObjOpen. |
 | `pyDataSourceList entry — ReportDefinition` | Minimum-viable report-definition source entry. Required fields pyLoadReportDefinition and pyReportDefinitionClass. Server auto-sets pyLoadActivity to pxCallRetrieveReportData. |
 | `pyDataSourceList entry — AggregateSources` | Minimum-viable aggregate-sources source entry. Combines results from multiple independent sub-sources into a single data page. Required field pyAggregatedDataSourceList (each nested entry is itself a DeclarePageSource of any type). Rare — used when one data page must merge multiple feeds. |
+| `pyDataSourceList entry — GenAI` | Minimum-viable GenAI source entry. Loads data via a Generative AI connector (Rule-Connect-GenerativeAI). Required field pyConnectorName. Server auto-sets pyLoadActivity to pxCallGenAI. |
+| `pyDataSourceList entry — KnowledgeBuddy` | Minimum-viable Knowledge Buddy source entry. Queries a Knowledge Buddy for AI-powered responses. Required field pyKBName. Optional pyKBQuery, pyKBQueryJSON, pyKBResponse. Server auto-sets pyLoadActivity to pxCallKnowledgeBuddy. |
 
 ## Authoring Notes
 
@@ -49,10 +51,38 @@ Pega convention requires data page names to start with `D_` (e.g., `D_CustomerLi
 | **Report Definition** | `"ReportDefinition"` | `pyLoadReportDefinition`, `pyReportDefinitionClass` | Querying database via a report definition (e.g., case lists, aggregations) |
 | **Aggregate Sources** | `"AggregateSources"` | `pyAggregatedDataSourceList`, `pyAggregatedDataSourcesLabel` | Aggregating results from multiple sub-sources into a single data page (rare, advanced pattern) |
 | **Lookup (ObjOpen)** | `"ObjOpen"` | `pyLookupClassName`, `pyLookupName`, `pyClassKeyValueList` | Direct database object retrieval by key (e.g., operator info, org lookups) |
+| **Gen AI** | `"GenAI"` | `pyConnectorName` (required — Rule-Connect-GenerativeAI rule name) | Loading data via a Generative AI connector. Server auto-sets `pyLoadActivity: "pxCallGenAI"`. |
+| **Knowledge Buddy** | `"KnowledgeBuddy"` | `pyKBName` (required — KB rule name), `pyKBQuery` (optional — query text, e.g. `"Param.Query"`), `pyKBQueryJSON` (optional — structured JSON query), `pyKBResponse` (optional — dot-prefixed property for response, e.g. `".pyResponseData"`) | Querying a Knowledge Buddy for context-aware AI responses. Server auto-sets `pyLoadActivity: "pxCallKnowledgeBuddy"`. |
 
 > **Note:** For list-structure data pages (`pyStructure: "list"`), a LoadActivity source's activity must be defined on `Code-Pega-List`, not the data page's element class. The activity must populate the primary page that the data page engine passes in as the step page.
 
-> `pyConnectorList` (required) specifies the connector rule type: `"Rule-Connect-REST"`, `"Rule-Connect-SOAP"`, `"Rule-Connect-dotNet"`, `"Rule-Connect-Java"`, or `"Rule-Connect-SAP"`.
+> `pyConnectorList` (required for Connector sources) specifies the connector rule type: `"Rule-Connect-REST"`, `"Rule-Connect-SOAP"`, `"Rule-Connect-dotNet"`, `"Rule-Connect-Java"`, or `"Rule-Connect-SAP"`.
+
+### GenAI and Knowledge Buddy sources
+
+These source types use dedicated internal load activities that the server auto-sets
+when `pyDeclarePagesDataSource` is configured:
+
+| Source Type | Auto-set `pyLoadActivity` |
+|-------------|--------------------------|
+| GenAI | `pxCallGenAI` |
+| KnowledgeBuddy | `pxCallKnowledgeBuddy` |
+
+Agents should NOT set `pyLoadActivity` for these source types — the server
+derives it from `pyDeclarePagesDataSource`.
+
+`pyConnectorList` is irrelevant for GenAI and KnowledgeBuddy sources. The server
+auto-fills it as `"Rule-Connect-REST"` but it has no runtime effect. Do not set
+it explicitly.
+
+Both GenAI and KnowledgeBuddy sources use `pyConnectorName` to reference a
+`Rule-Connect-GenerativeAI` connector rule. No request/response data transforms
+are needed — the connector or Knowledge Buddy handles mapping internally.
+
+For **KnowledgeBuddy** sources, `pyKBQuery` typically wires from a data page
+parameter using `"Param.<ParamName>"` syntax. `pyKBResponse` uses dot-prefixed
+property notation (e.g., `".pyResponseData"`) to specify where the KB stores
+its response on the data page's primary page.
 
 ### `Connector` source — `DataSource` named page contract
 

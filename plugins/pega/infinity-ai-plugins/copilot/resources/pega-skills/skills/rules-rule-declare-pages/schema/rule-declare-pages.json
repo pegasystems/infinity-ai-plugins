@@ -446,8 +446,8 @@
         },
         "pyDeclarePagesDataSource": {
           "type": "string",
-          "enum": ["Connector", "DataTransform", "LoadActivity", "ObjOpen", "ReportDefinition", "AggregateSources", ""],
-          "description": "Source type. 'Connector' = REST/SOAP connector. 'DataTransform' = data transform. 'LoadActivity' = custom activity. 'ObjOpen' = lookup by key. 'ReportDefinition' = report definition. 'AggregateSources' = aggregates multiple sub-sources."
+          "enum": ["Connector", "DataTransform", "LoadActivity", "ObjOpen", "ReportDefinition", "AggregateSources", "GenAI", "KnowledgeBuddy", ""],
+          "description": "Source type. 'Connector' = REST/SOAP connector. 'DataTransform' = data transform. 'LoadActivity' = custom activity. 'ObjOpen' = lookup by key. 'ReportDefinition' = report definition. 'AggregateSources' = aggregates multiple sub-sources. 'GenAI' = Generative AI connector (server auto-sets pyLoadActivity to pxCallGenAI). 'KnowledgeBuddy' = Knowledge Buddy query (server auto-sets pyLoadActivity to pxCallKnowledgeBuddy)."
         },
         "pySourceWhen": {
           "type": "string",
@@ -464,7 +464,7 @@
         },
         "pyConnectorName": {
           "type": "string",
-          "description": "Connector rule name (Connector sources only)."
+          "description": "Connector rule name (Connector, GenAI, and KnowledgeBuddy sources)."
         },
         "pyConnectorClassName": {
           "type": "string",
@@ -681,6 +681,22 @@
         "pyParentSourceID": {
           "type": "string",
           "description": "Parent source identifier. Links a sub-source to its parent AggregateSources entry."
+        },
+        "pyKBName": {
+          "type": "string",
+          "description": "Knowledge Buddy rule name. Required for KnowledgeBuddy sources."
+        },
+        "pyKBQuery": {
+          "type": "string",
+          "description": "Query text for Knowledge Buddy. Typically 'Param.<Name>' to wire from a data page parameter."
+        },
+        "pyKBQueryJSON": {
+          "type": "string",
+          "description": "Structured JSON query for Knowledge Buddy. Alternative to pyKBQuery for complex queries."
+        },
+        "pyKBResponse": {
+          "type": "string",
+          "description": "Dot-prefixed property reference where the Knowledge Buddy response is stored (e.g., '.pyResponseData')."
         }
       },
       "allOf": [
@@ -742,6 +758,26 @@
           "then": {
             "x-pega-condition": "AggregateSources requires pyAggregatedDataSourceList",
             "required": ["pyAggregatedDataSourceList"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "pyDeclarePagesDataSource": { "const": "GenAI" } },
+            "required": ["pyDeclarePagesDataSource"]
+          },
+          "then": {
+            "x-pega-condition": "GenAI source requires pyConnectorName",
+            "required": ["pyConnectorName"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "pyDeclarePagesDataSource": { "const": "KnowledgeBuddy" } },
+            "required": ["pyDeclarePagesDataSource"]
+          },
+          "then": {
+            "x-pega-condition": "KnowledgeBuddy source requires pyKBName",
+            "required": ["pyKBName"]
           }
         }
       ]

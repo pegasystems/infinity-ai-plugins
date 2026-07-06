@@ -115,16 +115,28 @@
     },
     "pyDataObject": {
       "type": "string",
-      "description": "Data page name that populates this Page property when pyIsAssociation is 'true' (e.g., 'D_AssessmentPlan')."
+      "description": "Data page name that populates this Page property when pyIsAssociation is 'true' (e.g., 'D_AssessmentPlan'). Most of the time it is Lookup data page of the referenced case type. When creating a case reference from one case type to another, this is the target case type's lookup data page (e.g., 'D_UserStory' for a reference to UserStory)."
     },
     "pyDataObjectClass": {
       "type": "string",
       "description": "Class of the data object for association properties. Typically matches pyPageClass."
     },
+    "pyDOParamList": {
+      "type": "array",
+      "description": "Maps properties from the current page to the data page's input parameters. Each entry binds a local property (pyValue) to a named data page parameter (pyName). Required when the data page in pyDataObject accepts parameters.",
+      "items": { "$ref": "#/$defs/DOParam" },
+      "x-pega-autoFill": []
+    },
+    "pyDOKeyList": {
+      "type": "array",
+      "description": "Maps properties from the current page to the data page's key parameters. Used for key-based lookup and caching of the referenced data page.",
+      "items": { "$ref": "#/$defs/DOParam" },
+      "x-pega-autoFill": []
+    },
     "pyDataRetrievalType": {
       "type": "string",
       "enum": ["AUTOMATICNONREF", "AUTOMATIC", "MANUAL", ""],
-      "description": "How the data page is retrieved for association properties. 'MANUAL' is the default supported mode for authoring. 'AUTOMATIC' and 'AUTOMATICNONREF' correspond to Refer to a data page / Copy data from a data page behavior, which is not supported for creation or modification at this time.",
+      "description": "How the data page is retrieved for association properties. 'MANUAL' (default) for embedded pages. 'AUTOMATIC' to refer to a data page (case reference). 'AUTOMATICNONREF' to copy data from a data page.",
       "x-pega-autoFill": "MANUAL"
     },
     "pyEditValidate": {
@@ -218,8 +230,7 @@
     "pyIsReference": {
       "type": "string",
       "enum": ["true", "false", ""],
-      "description": "When 'true', the property is a reference property. Auto-filled to 'false'.",
-      "x-pega-autoFill": "false"
+      "description": "When 'true', the property is a case reference property. Auto-filled to 'true' when pyDataRetrievalType is AUTOMATIC or AUTOMATICNONREF, 'false' otherwise."
     },
     "pyCannotBeDeclarativeTarget": {
       "type": "string",
@@ -266,15 +277,28 @@
     {
       "if": {
         "properties": {
+          "pyPropertyMode": {
+            "enum": ["Page", "PageList"]
+          },
           "pyDataRetrievalType": {
             "enum": ["AUTOMATIC", "AUTOMATICNONREF"]
           }
         },
-        "required": ["pyDataRetrievalType"]
+        "required": ["pyPropertyMode", "pyDataRetrievalType"]
       },
       "then": {
-        "not": {},
-        "x-pega-condition": "pyDataRetrievalType is 'AUTOMATIC' or 'AUTOMATICNONREF' — The Property is using `Refer to a data page` or `Copy data from a data page`. Creation or modification is not allowed at this time"
+        "required": ["pyDataObject", "pyPageClass"],
+        "properties": {
+          "pyIsAssociation": {
+            "const": "true",
+            "x-pega-autoFill": "true"
+          },
+          "pyIsReference": {
+            "const": "true",
+            "x-pega-autoFill": "true"
+          }
+        },
+        "x-pega-condition": "pyPropertyMode is 'Page' or 'PageList' and pyDataRetrievalType is 'AUTOMATIC' or 'AUTOMATICNONREF' — requires pyDataObject (data page name) and pyPageClass (page class). Auto-fills pyIsReference and pyIsAssociation to 'true'. Pass data page parameters via pyDOParamList (each entry maps a local property to a data page parameter)."
       }
     },
     {
@@ -315,6 +339,42 @@
         "pySourceProperty": {
           "type": "string",
           "description": "Source property reference with dot prefix (e.g., '.AccountManager') that drives the class table lookup."
+        }
+      }
+    },
+    "DOParam": {
+      "type": "object",
+      "description": "A single entry in pyDOParamList or pyDOKeyList (Embed-NameValuePair). Maps a property on the current page to a data page parameter.",
+      "required": ["pyName", "pyValue"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-NameValuePair",
+          "description": "Embed class — always 'Embed-NameValuePair'.",
+          "x-pega-autoFill": "Embed-NameValuePair"
+        },
+        "pyName": {
+          "type": "string",
+          "description": "Data page parameter name. Must match a parameter declared on the target data page (e.g., 'pyGUID', 'ProjectName')."
+        },
+        "pyValue": {
+          "type": "string",
+          "description": "Dot-prefixed property reference on the current page whose value is passed to the data page parameter at runtime (e.g., '.UserStoryID', '.ProjectName')."
+        },
+        "pyParameterType": {
+          "type": "string",
+          "enum": ["STRING", "INTEGER", "BOOLEAN", "Decimal", ""],
+          "description": "Parameter data type. 'Decimal' is mixed-case — preserve verbatim."
+        },
+        "pyParameterInOut": {
+          "type": "string",
+          "enum": ["IN", "OUT", "INOUT", ""],
+          "description": "Parameter direction. Data page parameters are typically 'IN'."
+        },
+        "pyParameterRequired": {
+          "type": "string",
+          "enum": ["-1", "0", ""],
+          "description": "Whether the parameter is required. '-1' = required, '0' = optional."
         }
       }
     },

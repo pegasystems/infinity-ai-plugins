@@ -14,6 +14,13 @@ description: Schema and authoring guide for Pega activity rules (Rule-Obj-Activi
 `pyRuleName` field in the activity schema — `pyActivityName` serves as both
 the key and the rule name.
 
+### Queue-For-Processing: dispatch to a named Queue Processor
+
+To call an existing Queue Processor rule from an Activity step, use the
+`Queue-For-Processing` method with `QueueName` set to the Queue Processor rule
+name and `QueueType: DEDICATED`. Load the **Queue-For-Processing Dispatch**
+step skill for the parameter shape.
+
 ## Examples
 
 ### Rule-level
@@ -51,7 +58,7 @@ Step examples are organized by category. Each skill contains frontmatter + one J
 `Apply-DataTransform`, `Apply-Parse-XML`, `Load-DataPage`, `Map-Structured`, `RDB-List`, `RDB-Open`, `RDB-Save`, `Save-DataPage Step`
 
 #### Queue-For-* methods
-`Queue-For-Agent`, `Queue-For-Processing Immediate`, `Queue-For-Processing Delayed`, `Queue-For-Processing Run as Operator`
+`Queue-For-Agent`, `Queue-For-Processing Dispatch`, `Queue-For-Processing Immediate`, `Queue-For-Processing Delayed`, `Queue-For-Processing Run as Operator`
 
 #### Show-* methods
 `Show-Harness`, `Show-HTML`, `Show-Page`, `Show-Property`
@@ -441,6 +448,31 @@ Step N+3: Log-Message           pyStepsBlockName: "ERR" (first step of error blo
 Step N+4: Property-Set          (error status)
 Step N+5: Page-Remove           (cleanup on error path too)
 ```
+
+#### `pyStepsBlockName: "//"` comments out a step
+
+Setting `pyStepsBlockName` to `"//"` on a step marks it as **commented out**.
+A commented step is skipped both at design time and at runtime:
+
+- **Design time:** The rule saves even if the step is misconfigured or
+  incomplete — no validation errors are raised for commented steps.
+- **Runtime:** The step is never executed; the activity proceeds to the
+  next non-commented step.
+
+This is the Pega equivalent of commenting out a line of code. Use it to
+temporarily disable a step without deleting it.
+
+```json
+{
+  "pyStepsBlockName": "//",
+  "pyStepsActivityName": "Property-Set",
+  "pyStepsObjectName": "..."
+}
+```
+
+**Warning:** Do not leave `"//"` steps in production activities — they are
+invisible to reviewers reading the rule in Designer Studio unless the
+Block Name column is explicitly checked.
 
 #### Obj-Browse uses pyParamArray as a column/filter grid — NOT key-value pairs
 

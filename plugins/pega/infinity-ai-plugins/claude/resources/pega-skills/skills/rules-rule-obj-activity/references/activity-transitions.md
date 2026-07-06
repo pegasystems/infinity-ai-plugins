@@ -152,6 +152,7 @@ Common block-naming conventions seen in OOTB:
 | `PARSE_ERROR`, `JSON` | Parsing-error handlers |
 | `ODF`, `ON_DATA_FOUND` | Branch when data was found |
 | `1`, `2`, `op`, `wb` | Short labels in switch-case dispatchers |
+| `//` | **Commented-out step** — step is skipped at runtime; design-time validation is also bypassed (rule saves even if step is misconfigured) |
 
 ## Preconditions vs transitions (decision guide)
 

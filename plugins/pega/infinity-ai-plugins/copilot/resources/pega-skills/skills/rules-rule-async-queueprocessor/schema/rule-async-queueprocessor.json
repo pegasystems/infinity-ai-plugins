@@ -87,7 +87,8 @@
     "pyIsAutoTuneEnabled": {
       "type": "string",
       "enum": ["true", "false", ""],
-      "description": "Enable Auto-Tune. Dynamically adjusts thread count based on Kafka lag and average processing time. Do not also set pyMaxThreads > 1."
+      "description": "Enable Auto-Tune. Dynamically adjusts thread count based on Kafka lag and average processing time. Pega Infinity 26 default is 'true' — builder auto-fills this if not supplied. Do not also set pyMaxThreads > 1 when enabled.",
+      "x-pega-autoFill": "true"
     },
     "pyMaxAttempts": {
       "type": "string",

@@ -1,7 +1,7 @@
 {
   "name": "pega-infinity-authoring",
   "description": "Pega Infinity Authoring with bundled MCP tools and runtime skills.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": {
     "name": "Pegasystems",
     "url": "https://github.com/pegasystems"

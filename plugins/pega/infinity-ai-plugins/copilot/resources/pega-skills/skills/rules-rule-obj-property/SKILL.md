@@ -23,6 +23,8 @@ description: Schema and authoring guide for Pega property rules (Rule-Obj-Proper
 | `Date Only` | String/Date property rendered with `pxDateTime` for date-only input |
 | `Date And Time` | String/DateTime property rendered with `pxDateTime` for timestamp input |
 | `Currency Field` | String/Decimal property rendered with `pxCurrency` for currency-style input |
+| `Refer to Data Page` | Use when a Page/PageList property should stay linked to source data. Set `AUTOMATIC`; map `pyDOParamList` as `pyName: pyID`, `pyValue: <property path>`. |
+| `Copy Data from Data Page` | Use when a Page/PageList property should copy source data once. Set `AUTOMATICNONREF`; map `pyDOParamList` as `pyName: pyID`, `pyValue: <property path>`. |
 
 ## References
 
@@ -123,3 +125,30 @@ You cannot change the type of <PropertyName> field.
 If the design changes require a different type, create a new property with the
 correct type and a different name, then update all references. The original
 property becomes a branch artifact that should be cleaned up.
+
+### Properties sourced from a data page
+
+A Page or PageList property can be sourced from a data page using one of two
+retrieval modes:
+
+- **Refer to data page** (`pyDataRetrievalType: "AUTOMATIC"`) — maintains a live
+  reference to the data page. Data refreshes on each access.
+- **Copy data from data page** (`pyDataRetrievalType: "AUTOMATICNONREF"`) — copies
+  a snapshot of the data page into the property. Data does not stay linked.
+
+Set `pyDataObject` to the target data page name (e.g., `D_UserStory`
+for UserStory, `D_Epic` for Epic). To find a case type's lookup data page:
+
+1. Search with `search-rules` for `D_<CaseTypeName>` (e.g., `D_Epic`)
+2. For Data- subclasses only: fetch the target class's `Rule-ClassMetadata`
+   and read `pyLookUpDataPage` (this field does not exist on Work- classes)
+
+If no lookup data page can be found for the target case type, ask the user to
+provide the data page name.
+
+Map the data page's parameters via `pyDOParamList`. It need to set the name and value format. The common pattern passes `.<PropertyName>.pyID` — the case ID on the property itself.
+
+To discover parameters, fetch the data page with `get-rule` (detail='full')
+and read `pyParameters`. If the data page has a single `pyID` parameter, auto-map
+it to `.<PropertyName>.pyID`. If there are multiple parameters, ask the user
+which properties on the current page should map to each parameter.

@@ -15,10 +15,29 @@ description: Single-entity extraction with multiple flat scalar response fields 
   "pyCustomizeSystemPrompt": "false",
   "pySystemPromptName": "pzDefaultSystemPrompt",
   "pyPromptName": "pyGenerativeAIPromptTemplate",
-  "pyImprovePrivacy": "true",
   "pyUseOpLocaleForResponse": "false",
-  "pyGenAIProvConfig": {
-    "pyTemperature": "0.4"
+  "pyGenAIDef": {
+    "pxObjClass": "Embed-GenAI-Definition",
+    "pyUseCase": "custom",
+    "pyUserPrompt": "pyGenerativeAIPromptTemplate",
+    "pySystemPrompt": "pzDefaultSystemPrompt"
+  },
+  "pyGenAIConfig": {
+    "pxObjClass": "Embed-GenAI-Config",
+    "pyEnableLocalization": "false",
+    "pyEnablePII": "true",
+    "pyModelConfiguration": {
+      "pxObjClass": "Embed-GenAI-Model",
+      "pyModelId": "pega-default-fast",
+      "pyModelParameters": [
+        {
+          "pxObjClass": "Embed-GenAI-Model-Parameters",
+          "pyName": "temperature",
+          "pyType": "float",
+          "pyValue": "0.4"
+        }
+      ]
+    }
   },
   "pyResponseFields": [
     {

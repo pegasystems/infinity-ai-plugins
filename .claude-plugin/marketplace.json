@@ -10,7 +10,7 @@
       "name": "pega-infinity-authoring",
       "source": "./plugins/pega/infinity-ai-plugins/claude",
       "description": "Pega Infinity Authoring with bundled MCP tools and runtime skills.",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "repository": "https://github.com/pegasystems/infinity-ai-plugins"
     }
   ]

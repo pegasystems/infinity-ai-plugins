@@ -15,6 +15,7 @@ description: Minimal valid Queue Processor create payload — required fields on
       "pxSubscript": "BackgroundProcessing",
       "pyNodeType": "BackgroundProcessing"
     }
-  }
+  },
+  "pyIsAutoTuneEnabled": "true"
 }
 ```

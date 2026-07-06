@@ -12,6 +12,22 @@ description: Schema and authoring guide for Pega Queue Processor rules (Rule-Asy
 | Event-driven (enqueue on event, process async) | Queue Processor — Immediate mode |
 | Deferred processing with per-item variable delay | Queue Processor — Delayed mode |
 | Schedule-driven (recurring task at fixed time) | Job Scheduler — do not use QP |
+| "Background job" that processes "items in the queue" or "waiting records" | **Ambiguous — ask before proceeding** |
+
+### Disambiguating "background job" + "queue" requests
+
+When the user says they want a "background job" (or "scheduled job") that
+processes "items in the queue", "waiting records", or similar, the architecture
+depends on *how items enter the queue*. Ask before creating any rule:
+
+> "When items are added — are they pushed immediately when an event occurs
+> (e.g. a case reaches a certain status), or do they wait in the database
+> until a scheduled sweep picks them up?"
+
+- **Event-pushed** → Queue Processor only. Items are enqueued via
+  `Queue-For-Processing`; no Job Scheduler is needed.
+- **Schedule-swept** → Job Scheduler + Queue Processor hybrid. The JS
+  activity browses and dispatches; the QP processes each item in parallel.
 
 ## Authoring Notes
 
@@ -42,6 +58,13 @@ The builder unconditionally auto-fills `pyLongRunningInterruptThreshold` to
 of `pyIsAlertThresholdManuallyEnabled`. The UI variant
 (`pyLongRunningInterruptThresholdUI`) is server-computed and cannot be set
 via API — it is not included in the schema.
+
+### `pyIsAutoTuneEnabled` defaults to `"true"` in Pega Infinity 26
+
+In Pega Infinity 26, the rule form defaults the "Automatically optimize for
+concurrency" checkbox to checked. The builder auto-fills `pyIsAutoTuneEnabled`
+to `"true"` if not supplied. Override to `"false"` only when a fixed thread
+count per node is explicitly required.
 
 ### Manual alert thresholds are conditional
 

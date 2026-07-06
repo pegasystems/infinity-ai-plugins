@@ -131,7 +131,7 @@ Properties should describe what they hold, not how they're used:
 | List of entities | Page List | Embedded list — multiple related records |
 | Key/value pairs | Page Group | Keyed collection — lookup by key |
 | Fixed choices | Single Value with local list | Constrained values |
-| Cross-case reference | Single Value (Text) | Store the case ID, not the full object |
+| Cross-case reference | Page (with automatic retrieval) | Point to a data page that loads the referenced case by ID |
 
 ### Design for reuse with Data Types
 

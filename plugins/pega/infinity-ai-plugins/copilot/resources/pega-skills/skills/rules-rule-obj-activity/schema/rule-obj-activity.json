@@ -324,7 +324,7 @@
         },
         "pyStepsBlockName": {
           "type": "string",
-          "description": "Block name for grouping steps (blank = no block). Must be unique across all steps in the activity; duplicates cause a DuplicateSteplabel validation error. Common conventions: 'ERR' / 'END' / 'RESP' for error/exit blocks, '//' for comment/divider blocks (step body is typically a no-op)."
+          "description": "Block name for grouping steps (blank = no block). Must be unique across all steps in the activity; duplicates cause a DuplicateSteplabel validation error. Common conventions: 'ERR' / 'END' / 'RESP' for error/exit blocks. Special value: '//' marks the step as commented out — the step is completely skipped at runtime and bypasses design-time validation (the rule saves even if the step is misconfigured or incomplete)."
         },
         "pyOnException": {
           "type": "string",

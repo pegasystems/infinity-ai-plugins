@@ -16,12 +16,14 @@ The remaining examples are grouped by `pyExpectedResponseEntity`.
 |-------|-------------|
 | `genai-custom-unstructured` | Q&A connector returning unstructured text to `.pyResponseData` (temperature 0.2) |
 | `genai-custom-structured` | Custom use-case returning structured JSON to `.pyJsonData` (temperature 0.6) |
+| `genai-custom-with-parameters` | Connector with input parameters — accepts named STRING parameters passed by the caller |
 
 ### Single — `pyExpectedResponseEntity = "Single"`
 
 | Skill | Description |
 |-------|-------------|
 | `genai-single-flat` | Multiple top-level scalar response fields, privacy enabled (temperature 0.4) |
+| `genai-single-flat-with-attachment` | Attachment input enabled — `pyIncludeAttachment='true'` with `pyGenAIDef.pyImageAttachRefValue` (temperature 0.4) |
 | `genai-single-page-inside-fields` | Embedded `Page` whose children use `.pyPage.pyChild` dot notation |
 | `genai-single-nested-pages-deep` | Multi-level embedded pages: `.pyOuter.pyInner.pyLeaf` |
 | `genai-single-nested-pagelist-deep` | Top-level scalar plus a 3-level-deep nested pagelist (`.pyStages().pySteps().pyDynamicCaseFields()`) |
@@ -86,7 +88,14 @@ on pre-24.2 where they do not exist and will cause validation errors.
     "pyModelConfiguration": {
       "pxObjClass": "Embed-GenAI-Model",
       "pyModelId": "pega-default-fast",
-      "pyModelParameters": []
+      "pyModelParameters": [
+        {
+          "pxObjClass": "Embed-GenAI-Model-Parameters",
+          "pyName": "temperature",
+          "pyType": "float",
+          "pyValue": "0.2"
+        }
+      ]
     }
   }
 }
@@ -95,17 +104,20 @@ on pre-24.2 where they do not exist and will cause validation errors.
 Set `pyGenAIDef.pyUseCase` to match the top-level `pyUseCase`. Set
 `pyGenAIDef.pyUserPrompt` and `pyGenAIDef.pySystemPrompt` to match `pyPromptName`
 and `pySystemPromptName` respectively. Set `pyModelId` to `"pega-default-fast"`
-(default) or `"pega-default-smart"` for more capable tasks.
+(default) or `"pega-default-smart"` for more capable tasks. Set the temperature
+`pyValue` in `pyModelParameters` to match the desired randomness level.
 - **`pyResponseFieldsInfo` is auto-generated.** The Validate activity regenerates this
   field from `pyResponseFields` on every save. Do not set it manually.
-- **`pyImprovePrivacy`.** Observed as `"false"` on most real rules; set `"true"` only
+- **`pyGenAIConfig.pyEnablePII`.** Observed as `"false"` on most real rules; set `"true"` only
   when PII redaction is required. Include in create payloads for completeness.
 
-### Temperature (`pyGenAIProvConfig.pyTemperature`)
+### Temperature (`pyGenAIConfig.pyModelConfiguration.pyModelParameters`)
 
-Controls response randomness. Stored as a string in 0.2 increments from `"0.2"` to
-`"2.0"`. Lower = more deterministic, higher = more creative. Choose based on the
-task:
+Controls response randomness. The temperature value is stored as a
+`pyModelParameters` entry (with `pyName = "temperature"` and `pyType = "float"`)
+inside `pyGenAIConfig.pyModelConfiguration`. Valid values are strings in 0.2
+increments from `"0.2"` to `"2.0"`. Lower = more deterministic, higher = more
+creative. Choose based on the task:
 
 | Range            | When to use                                                   |
 |------------------|---------------------------------------------------------------|
@@ -136,6 +148,30 @@ Every leaf must repeat the **full** prefix — there is no row that "declares" a
 intermediate page or list; the server infers structure from shared prefixes. All
 intermediate properties must already exist on the appropriate class with the correct
 mode (`Page` vs `Page List`), and each leaf scalar must exist on the innermost class.
+
+### Input parameters (`pyParameters`)
+
+Connectors can accept named input parameters passed by the caller (Activity, Flow,
+or other invocation context). Parameters are defined in `pyParameters` as an array
+of `Embed-MethodParams` entries.
+
+Each parameter entry requires:
+- `pyParametersParamName` — PascalCase name (e.g., `"AdditionalContext"`, `"Name"`)
+- `pyParametersParamType` — data type (`STRING`, `INTEGER`, `DOUBLE`, `BOOLEAN`, `DATE`, `DATETIME`)
+
+`STRING` is the dominant type for GenAI connector parameters since they typically
+pass textual context to the prompt. Parameters are referenced in the prompt FieldValue
+using `{.ParamName}` substitution syntax.
+
+```json
+"pyParameters": [
+  {
+    "pxObjClass": "Embed-MethodParams",
+    "pyParametersParamName": "AdditionalContext",
+    "pyParametersParamType": "STRING"
+  }
+]
+```
 
 ### Single vs List at the root
 - `pyExpectedResponseEntity = "Single"` → response is one object. Do NOT set `pyListName`.

@@ -10,7 +10,7 @@
   "plugins": [
     {
       "name": "pega-infinity-authoring",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "source": "infinity-ai-plugins/copilot",
       "description": "Pega Infinity Authoring with bundled MCP tools and runtime skills.",
       "repository": "https://github.com/pegasystems/infinity-ai-plugins"

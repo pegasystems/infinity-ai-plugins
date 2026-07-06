@@ -129,9 +129,10 @@ must loop the case back to the appropriate stage:
 2. **Once back in `Open-Authoring`**, evaluate the user's request against available
    workflows using the MID-AUTHORING DECISION:
    - Call `list-available-authoring-workflows` and semantically match the request.
-   - **Match found AND within limitations** → call `trigger-optional-process` with `pzExecuteWorkflowForAuthoring`,
-     work through the workflow assignment screens until the workflow completes, then
-     submit `pyAuthorRuleChanges` to return to Review.
+   - **Match found AND within limitations** → call `create-case` using the matched workflow `caseTypeID`
+      and `content={"pyChangeRequestID":"{changeRequestCaseID}"}`,
+      use the returned embedded `nextAssignment`, and work through workflow screens until complete,
+      then submit `pyAuthorRuleChanges` to return to Review.
    - **Match found BUT exceeds limitations** → treat as no match, use skills path below.
    - **No match** → author the rules using the relevant rule-type skill and write API,
      then submit `pyAuthorRuleChanges` to return to Review.
@@ -149,6 +150,28 @@ must loop the case back to the appropriate stage:
 
 **Note:** `pyPriority` and `pyTargetClass` are not valid properties on this case type.
 Do not include them in the intake submission — they cause undefined property errors.
+
+#### Branch ID Selection Rules
+
+The `pyBranchID` value is determined **at form-filling time** (Step 3 — Submit Intake),
+not before. Do not pre-select or decide on a Branch ID during the Pre-flight step or
+case creation. Apply the following priority order when filling the intake form:
+
+| Priority | Condition | Action |
+|----------|-----------|--------|
+| 1 | User explicitly provides a Branch ID | Use the user-provided value exactly as given (respecting the 3-16 character and prefix constraints). |
+| 2 | `pyBranchID` is already populated on the case (e.g., resuming a case) | Keep the existing value — do NOT override or re-select it. |
+| 3 | User's request references a work item ID (User Story, Task, Feedback, or Issue — e.g., "work on US-162", "pick up T-45", "fix I-4009") | Use that work item ID as the Branch ID (strip any characters that violate constraints if necessary). |
+| 4 | None of the above apply | The agent selects a concise, descriptive Branch ID derived from the change intent (e.g., `AddPhoneNum`, `FixSLALogic`). |
+
+**Key rules:**
+- **Never override a user-supplied or pre-existing Branch ID.** If the user said it or
+  the field already has a value, that value wins unconditionally.
+- **Work item IDs take precedence over agent-generated names.** If the user says
+  "work on US-162," the Branch ID is `US-162` — do not invent a different name.
+- **Agent-generated Branch IDs are the last resort.** Only generate one when the user
+  has not provided a Branch ID, no existing value is present, and no work item ID is
+  referenced in the request.
 
 ### Authoring tracking fields (updated incrementally in Stage 2)
 
@@ -177,7 +200,7 @@ Before creating the ChangeRequest case, determine which authoring path to take:
    as "create & update GenAI Connect Rules").
 2. **Match found** → check the workflow's stated **limitations** (in its description/scope).
    If the user's request requires capabilities that exceed those limitations, treat it
-   as **no match** and follow Path 2. Otherwise, record the workflow identifier; follow
+   as **no match** and follow Path 2. Otherwise, record the workflow case type ID; follow
    **Path 1** after intake.
 3. **No match OR limitations exceeded** → follow **Path 2** after intake.
 
@@ -190,30 +213,49 @@ are handled separately via the MID-AUTHORING DECISION (see below).
 **Parameters:** `caseTypeID="PegaAccel-GenAI-ChangeRequest"`
 
 This creates a new case and returns:
-- `caseId` -- the work object ID (e.g., `CR-1001`)
-- `nextAssignmentID` -- the assignment for Stage 1 (Intake)
-- `objClass` -- `PegaAccel-GenAI-ChangeRequest`
+- `caseID` -- the work object ID (e.g., `PXC-11`)
+- `caseTypeID` -- `PegaAccel-GenAI-ChangeRequest`
+- `nextAssignmentID` -- the assignment for Stage 1 (Intake), when one exists
+- `nextAssignment` -- the **full assignment payload** for Stage 1 (actions, content, and assignment metadata), when `nextAssignmentID` is present
+- `responseClass` -- the response class from the create-case API, when present
 
-Record the `caseId` and `nextAssignmentID`.
+Record the `caseID` and `nextAssignmentID`. If `nextAssignment` is present, use it immediately instead of making an extra `get-assignment` call.
 
-### Step 2: Get the Intake Assignment
+### Step 2: Use the Embedded Intake Assignment
+
+After `create-case`, inspect `nextAssignment` from the response.
+
+This should already give you:
+- the Stage 1 assignment ID
+- available actions (should include `pyCaptureChangeRequest`)
+- current case data/content
+
+Confirm `pyCaptureChangeRequest` is available in `nextAssignment.actions`.
+
+### Step 2b: Fallback — Get the Intake Assignment Only If Needed
 
 **Tool:** `get-assignment`
 **Parameters:** `assignmentID="{nextAssignmentID}"`
+
+Call this only if one of the following is true:
+- `create-case` returned a `nextAssignmentID` but not a usable `nextAssignment`
+- you need to re-fetch the intake assignment because the workflow was resumed or the assignment may have changed
+- you are troubleshooting an unexpected intake state
 
 This returns:
 - Available actions (should include `pyCaptureChangeRequest`)
 - Current case data
 
-Confirm `pyCaptureChangeRequest` is available as an action.
-
 ### Step 3: Submit Intake (Stage 1 -> Stage 2)
 
 **Tool:** `perform-action`
 **Parameters:**
-- `assignmentID="{nextAssignmentID}"`
+- `assignmentID="{nextAssignment.assignmentID}"` (or `{nextAssignmentID}` if you had to use Step 2b)
 - `actionID="pyCaptureChangeRequest"`
 - `content` -- JSON with intake fields (`pyLabel` must be under 64 characters):
+
+**Determine `pyBranchID` now** using the Branch ID Selection Rules (see Intake fields
+section above). Do not pre-select the Branch ID before this step.
 
 ```json
 {
@@ -240,18 +282,26 @@ Confirm `pyAuthorRuleChanges` is available as an action.
 
 ### Path 1 — Workflow-Driven Authoring (match found at pre-flight)
 
-When a workflow was matched in the pre-flight step, trigger it immediately:
+When a workflow was matched in the pre-flight step, start it by creating the workflow case:
 
-1. Confirm `availableProcesses` in the authoring assignment contains
-   `pzExecuteWorkflowForAuthoring`.
-2. Call `trigger-optional-process` with the case ID and process ID
-   `pzExecuteWorkflowForAuthoring`. This returns a new `nextAssignmentID`.
-3. Call `get-assignment` on that ID — the screen is **"Set Workflow Execution Context"**
-   with a required `pyRuleAuthoringContext` field. Submit it with the matched workflow
-   identifier using action `pzCaptureContextForAuthoring`.
-4. Work through the workflow assignment screens: read fields, collect inputs from the
-   user, submit. Repeat until the workflow completes.
-5. Control returns to the main authoring assignment (`PZRULEAUTHORING_FLOW`).
+1. Call `create-case` with:
+   - `caseTypeID="{matchedWorkflowCaseTypeID}"`
+   - `content={"pyChangeRequestID":"{changeRequestCaseID}"}`
+
+   **Example structure:**
+   ```
+   create-case(
+     caseTypeID: "PegaAccel-AI-Work-Update-Toggle",
+     content: { "pyChangeRequestID": "PEGAACCEL PXCR-19" }
+   )
+   ```
+
+2. `pyChangeRequestID` is mandatory and must be set to the current ChangeRequest `caseID`.
+3. Use the embedded `nextAssignment` returned by `create-case` as the first workflow assignment.
+   Do not call `get-assignment` immediately unless that embedded assignment is missing or unusable.
+4. Work through workflow assignment screens by submitting actions and using returned assignment IDs
+   until the workflow completes.
+5. Continue with the main authoring case flow.
 
 
 ### Path 2 — Skills-Based Authoring (no match at pre-flight)
@@ -267,10 +317,10 @@ Applies whenever the user makes a new authoring request while the case is in
 
 1. Call `list-available-authoring-workflows` and semantically match the new request.
 2. **Match found** → check the workflow's stated **limitations**. If the request exceeds
-   those limitations, treat as no match and go to step 3. Otherwise, trigger
-   `pzExecuteWorkflowForAuthoring`, submit `pzCaptureContextForAuthoring` with the
-   matched identifier, work through the workflow screens until complete. Control returns
-   to `PZRULEAUTHORING_FLOW`.
+   those limitations, treat as no match and go to step 3. Otherwise, call `create-case`
+   with the matched workflow `caseTypeID` and `content={"pyChangeRequestID":"{changeRequestCaseID}"}`,
+   then work through workflow screens using returned assignment IDs until complete.
+
 3. **No match OR limitations exceeded** → load the relevant rule-type skill and author
    the rules using the write API. Track changes in `pyAuthoringNotes`.
 4. After completing the additional changes, proceed to Step 6 and Step 7.
@@ -503,21 +553,23 @@ base ruleset happens separately through Pega's branch review/merge workflow.
 Analyze intent: create/update rule? -> yes: follow this recipe | no: answer directly
 
 Pre-flight: list-available-authoring-workflows -> semantic match
-  +-- [match found AND within limitations]   note workflow identifier -> PATH 1
+  +-- [match found AND within limitations]   note workflow case type ID -> PATH 1
   +-- [match found BUT exceeds limitations]  -> PATH 2
   +-- [no match]                             -> PATH 2
 
 create-case (ChangeRequest)
-  -> get-assignment (Intake)
+  -> inspect embedded nextAssignment (Intake)
+  -> [fallback only if needed: get-assignment (Intake)]
   -> perform-action pyCaptureChangeRequest (pyBranchID required)
      -> get-assignment (Authoring / Open-Authoring)
 
 PATH 1 — Workflow-Driven
-  -> trigger-optional-process (pzExecuteWorkflowForAuthoring)
-  -> get-assignment: "Set Workflow Execution Context"
-  -> perform-action pzCaptureContextForAuthoring (pyRuleAuthoringContext = matched identifier)
-  -> workflow assignment screens (get-assignment + perform-action loop until complete)
-  -> returns to Open-Authoring (PZRULEAUTHORING_FLOW)
+  -> create-case (caseTypeID = matched workflow case type)
+       content: { pyChangeRequestID: <changeRequestCaseID> }
+  -> inspect embedded nextAssignment (workflow first assignment)
+  -> [fallback only if needed: get-assignment for that assignmentID]
+  -> workflow assignment screens (perform-action loop until complete)
+  -> continue with main authoring case flow
   -> [user makes additional request? -> MID-AUTHORING DECISION]
   -> Step 6: create PegaUnit test cases for testable rules
         [Step 6a: if no eligible test rulesets -> emit user-visible warning before Step 7]
@@ -534,9 +586,9 @@ PATH 2 — Skills-Based
 MID-AUTHORING DECISION (any time user makes a new request while in Open-Authoring)
   list-available-authoring-workflows -> semantic match
   +-- [match found AND within limitations]
-  |                      -> trigger-optional-process (pzExecuteWorkflowForAuthoring)
-  |                      -> pzCaptureContextForAuthoring (matched identifier)
-  |                      -> workflow screens until complete -> returns to PZRULEAUTHORING_FLOW
+  |                      -> create-case (matched workflow case type)
+  |                           content: { pyChangeRequestID: <changeRequestCaseID> }
+  |                      -> use embedded nextAssignment, then workflow screens until complete
   +-- [match found BUT exceeds limitations] -> treat as no match, use skills path
   +-- [no match]      -> load rule-type skill -> author rules via write API
   -> after changes complete: proceed to Step 6 and Step 7
@@ -554,8 +606,8 @@ MID-AUTHORING DECISION (any time user makes a new request while in Open-Authorin
 ## Resuming a Case from a Previous Session
 
 When resuming a ChangeRequest case that was created in a previous session, you will
-not have the `nextAssignmentID` from a prior `create-case` or `perform-action`
-response. You must construct the assignment ID manually using the case ID (from
+not have the `nextAssignmentID` or embedded `nextAssignment` from a prior
+`create-case` or `perform-action` response. You must construct the assignment ID manually using the case ID (from
 `list-cases`) and the flow name for the current stage.
 
 ### Assignment ID format
@@ -563,7 +615,7 @@ response. You must construct the assignment ID manually using the case ID (from
 The Pega assignment ID format for ChangeRequest cases is:
 
 ```
-ASSIGN-WORKLIST {CASE_CLASS_PREFIX} {CASE_ID}!{UPPERCASE_FLOW_NAME}
+ASSIGN-WORKBASKET {CASE_CLASS_PREFIX} {CASE_ID}!{UPPERCASE_FLOW_NAME}
 ```
 
 Where:
@@ -586,7 +638,7 @@ Where:
 If `list-cases` shows case `PXC-11` with status `Open-Review`, the assignment ID is:
 
 ```
-ASSIGN-WORKLIST PEGAACCEL PXC-11!PZCHANGEREVIEW_FLOW
+ASSIGN-WORKBASKET PEGAACCEL PXC-11!PZCHANGEREVIEW_FLOW
 ```
 
 ### Common mistakes to avoid when constructing assignment IDs
@@ -605,7 +657,7 @@ ASSIGN-WORKLIST PEGAACCEL PXC-11!PZCHANGEREVIEW_FLOW
 1. Use `list-cases` with `objClass="PegaAccel-GenAI-ChangeRequest"` to find the case.
    Note the case ID (e.g., `PXC-11`) and status (e.g., `Open-Review`).
 2. Map the case status to the flow name using the table above.
-3. Construct the assignment ID: `ASSIGN-WORKLIST PEGAACCEL {CASE_ID}!{FLOW_NAME}`.
+3. Construct the assignment ID: `ASSIGN-WORKBASKET PEGAACCEL {CASE_ID}!{FLOW_NAME}`.
 4. Call `get-assignment` with the constructed assignment ID to verify it is valid and
    discover available actions.
 
@@ -614,6 +666,7 @@ ASSIGN-WORKLIST PEGAACCEL PXC-11!PZCHANGEREVIEW_FLOW
 The parent agent wraps its existing authoring delegation inside this workflow:
 
 1. **Before authoring:** Create the ChangeRequest case (Steps 1-3)
+   and use the embedded intake assignment returned by `create-case` when present.
 2. **During authoring:** Pass the `changeRequestID` to every write call. Track authoring notes on the case.
 3. **After authoring:** Create PegaUnit test cases for testable authored rules
    (using `pyBranchID`), submit authoring (`pyAuthorRuleChanges`) which triggers
@@ -645,6 +698,6 @@ data.
 | `pyAuthorRuleChanges` action not available | Case not in Authoring stage (`Open-Authoring`) | Verify intake was submitted; check `nextAssignmentID` and confirm `pyStatusWork` is `Open-Authoring` |
 | Review assignment not appearing | Authoring stage didn't complete | Check that `pyAuthorRuleChanges` was submitted successfully |
 | A rule write call fails with "changeRequestID is required" | `changeRequestID` parameter was not passed to the selected write API | All rule authoring must pass the ChangeRequest case ID. Create a ChangeRequest case first using `create-case` with `caseTypeID='PegaAccel-GenAI-ChangeRequest'`. |
-| `get-assignment` returns error for a known case | Assignment ID is incorrectly constructed | Use the format `ASSIGN-WORKLIST PEGAACCEL {CASE_ID}!{FLOW_NAME}` — no space before `!`, no numbered suffixes, no shape IDs. See "Resuming a Case from a Previous Session" section. |
+| `get-assignment` returns error for a known case | Assignment ID is incorrectly constructed | Use the format `ASSIGN-WORKBASKET PEGAACCEL {CASE_ID}!{FLOW_NAME}` — no space before `!`, no numbered suffixes, no shape IDs. See "Resuming a Case from a Previous Session" section. |
 | Case loops back to Authoring after submitting review | `pyApprovalDecision` was omitted from the `perform-action` call | Always include `pyApprovalDecision` together with `pyChangeSummary` in the final review submission. Omitting it defaults to "Keep working" behavior. |
 | Test case creation silently skipped with no user notification | Step 6a's user-facing warning was omitted | When no eligible test rulesets exist, emit the "⚠️ PegaUnit test case creation skipped" message (see Step 6a) in your reply before submitting Authoring. `pyAuthoringNotes` alone is not sufficient. |

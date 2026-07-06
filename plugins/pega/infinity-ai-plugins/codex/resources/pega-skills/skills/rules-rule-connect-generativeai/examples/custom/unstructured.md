@@ -15,10 +15,29 @@ description: GenAI connector that returns unstructured text to .pyResponseData u
   "pyCustomizeSystemPrompt": "false",
   "pySystemPromptName": "pzDefaultSystemPrompt",
   "pyPromptName": "pyGenerativeAIPromptTemplate",
-  "pyImprovePrivacy": "false",
   "pyUseOpLocaleForResponse": "true",
-  "pyGenAIProvConfig": {
-    "pyTemperature": "0.2"
+  "pyGenAIDef": {
+    "pxObjClass": "Embed-GenAI-Definition",
+    "pyUseCase": "qa",
+    "pyUserPrompt": "pyGenerativeAIPromptTemplate",
+    "pySystemPrompt": "pzDefaultSystemPrompt"
+  },
+  "pyGenAIConfig": {
+    "pxObjClass": "Embed-GenAI-Config",
+    "pyEnableLocalization": "true",
+    "pyEnablePII": "false",
+    "pyModelConfiguration": {
+      "pxObjClass": "Embed-GenAI-Model",
+      "pyModelId": "pega-default-fast",
+      "pyModelParameters": [
+        {
+          "pxObjClass": "Embed-GenAI-Model-Parameters",
+          "pyName": "temperature",
+          "pyType": "float",
+          "pyValue": "0.2"
+        }
+      ]
+    }
   },
   "pyResponseFields": [
     {

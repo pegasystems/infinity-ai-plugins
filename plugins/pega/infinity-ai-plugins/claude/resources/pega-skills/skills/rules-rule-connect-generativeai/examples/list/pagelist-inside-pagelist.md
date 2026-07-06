@@ -16,10 +16,29 @@ description: List-response connector where each list item itself contains a chil
   "pyCustomizeSystemPrompt": "false",
   "pySystemPromptName": "pzDefaultSystemPrompt",
   "pyPromptName": "pyGenerativeAIPromptTemplate",
-  "pyImprovePrivacy": "false",
   "pyUseOpLocaleForResponse": "true",
-  "pyGenAIProvConfig": {
-    "pyTemperature": "1.0"
+  "pyGenAIDef": {
+    "pxObjClass": "Embed-GenAI-Definition",
+    "pyUseCase": "qa",
+    "pyUserPrompt": "pyGenerativeAIPromptTemplate",
+    "pySystemPrompt": "pzDefaultSystemPrompt"
+  },
+  "pyGenAIConfig": {
+    "pxObjClass": "Embed-GenAI-Config",
+    "pyEnableLocalization": "true",
+    "pyEnablePII": "false",
+    "pyModelConfiguration": {
+      "pxObjClass": "Embed-GenAI-Model",
+      "pyModelId": "pega-default-fast",
+      "pyModelParameters": [
+        {
+          "pxObjClass": "Embed-GenAI-Model-Parameters",
+          "pyName": "temperature",
+          "pyType": "float",
+          "pyValue": "1.0"
+        }
+      ]
+    }
   },
   "pyResponseFields": [
     {

@@ -1,0 +1,373 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-decision-dataset.json",
+  "title": "Rule-Decision-DataSet",
+  "description": "JSON schema for creating or updating a Pega dataset rule (Rule-Decision-DataSet) via create-rule / update-rule. Only authored and identity fields are included; system-managed and versioning fields are omitted.",
+  "type": "object",
+  "required": [
+    "pxObjClass",
+    "pyClassName",
+    "pyRuleName",
+    "pyLabel",
+    "pyPurpose",
+    "pyCategory",
+    "pyType",
+    "pyRuleAvailable",
+    "pyConfiguration",
+    "pyPagesAndClasses"
+  ],
+  "properties": {
+    "pxObjClass": {
+      "type": "string",
+      "const": "Rule-Decision-DataSet",
+      "description": "Rule type class — always 'Rule-Decision-DataSet'.",
+      "x-pega-autoFill": "Rule-Decision-DataSet"
+    },
+    "pyClassName": {
+      "type": "string",
+      "description": "The Pega class this dataset operates on. Must be a valid existing class with case-exact match (e.g., 'MyOrg-MyApp-Data-Customer')."
+    },
+    "pyRuleName": {
+      "type": "string",
+      "maxLength": 255,
+      "description": "Dataset name — unique within the class (e.g., 'Customers', 'TransactionHistory')."
+    },
+    "pyLabel": {
+      "type": "string",
+      "maxLength": 64,
+      "description": "Human-readable display label shown in Dev Studio."
+    },
+    "pyPurpose": {
+      "type": "string",
+      "description": "Purpose identifier — must match pyRuleName exactly."
+    },
+    "pyCategory": {
+      "type": "string",
+      "description": "Dataset category that determines the type. Drives which pyConfiguration shape is used.",
+      "enum": [
+        "Data-Admin-DataSet-DB",
+        "Data-Admin-DataSet-Snowflake"
+      ]
+    },
+    "pyType": {
+      "type": "string",
+      "description": "Dataset type — must match pyCategory.",
+      "enum": [
+        "Data-Admin-DataSet-DB",
+        "Data-Admin-DataSet-Snowflake"
+      ]
+    },
+    "pyTypeLabel": {
+      "type": "string",
+      "description": "Human-readable type label. Auto-derived from pyType if omitted.",
+      "enum": [
+        "Database Table",
+        "Snowflake"
+      ]
+    },
+    "pyRuleAvailable": {
+      "type": "string",
+      "enum": ["Yes", "No", "Blocked"],
+      "description": "Rule availability status.",
+      "x-pega-autoFill": "Yes"
+    },
+    "pyCanTransfer": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "Whether this dataset can be used as a source or destination in data flows."
+    },
+    "pyDescription": {
+      "type": "string",
+      "description": "Optional developer-facing description of what this dataset provides."
+    },
+    "pyConfiguration": {
+      "type": "object",
+      "description": "Type-specific configuration. Shape is determined by pyCategory/pyType.",
+      "oneOf": [
+        { "$ref": "#/$defs/DataAdminDataSetDB" },
+        { "$ref": "#/$defs/DataAdminDataSetSnowflake" }
+      ]
+    },
+    "pyPagesAndClasses": {
+      "type": "array",
+      "description": "Pages and classes stub — always include as a single-element array.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "pxObjClass": {
+            "type": "string",
+            "const": "Embed-PagesAndClasses"
+          }
+        },
+        "required": ["pxObjClass"]
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "pyCategory": { "const": "Data-Admin-DataSet-DB" } },
+        "required": ["pyCategory"]
+      },
+      "then": {
+        "properties": {
+          "pyConfiguration": { "$ref": "#/$defs/DataAdminDataSetDB" },
+          "pyType": { "const": "Data-Admin-DataSet-DB" }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "pyCategory": { "const": "Data-Admin-DataSet-Snowflake" } },
+        "required": ["pyCategory"]
+      },
+      "then": {
+        "properties": {
+          "pyConfiguration": { "$ref": "#/$defs/DataAdminDataSetSnowflake" },
+          "pyType": { "const": "Data-Admin-DataSet-Snowflake" }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "DataAdminDataSetDB": {
+      "type": "object",
+      "description": "Configuration for Database Table datasets (Data-Admin-DataSet-DB).",
+      "required": [
+        "pxObjClass",
+        "pyImplementation",
+        "pyTableName",
+        "pySSLProtocolVersion",
+        "pyKeys"
+      ],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Data-Admin-DataSet-DB",
+          "description": "Configuration class — always 'Data-Admin-DataSet-DB' for Database Table."
+        },
+        "pyImplementation": {
+          "type": "string",
+          "const": "Pega-DecisionEngine:DBDataSet",
+          "description": "Implementation identifier — always 'Pega-DecisionEngine:DBDataSet'."
+        },
+        "pyTableName": {
+          "type": "string",
+          "description": "Database table name. Can be Pega-managed (e.g., 'pr_data_customer') or a custom external table name."
+        },
+        "pySSLProtocolVersion": {
+          "type": "string",
+          "description": "SSL protocol version for database connections.",
+          "default": "TLSv1.2"
+        },
+        "pyKeys": {
+          "type": "array",
+          "description": "Primary/lookup key columns. At least one key is required. Multiple keys form a composite key.",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/EmbedDataSetKeyValue"
+          }
+        },
+        "pyPartitionKey": {
+          "type": "string",
+          "description": "Optional property reference for table partitioning (e.g., '.RegionCode'). Omit if table is not partitioned."
+        }
+      },
+      "additionalProperties": false
+    },
+    "EmbedDataSetKeyValue": {
+      "type": "object",
+      "description": "A single key column entry for dataset key lookup.",
+      "required": ["pxObjClass", "pyKey"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-DataSet-KeyValue",
+          "description": "Embed class — always 'Embed-DataSet-KeyValue'."
+        },
+        "pyKey": {
+          "type": "string",
+          "description": "Property reference in dot-notation (e.g., '.CustomerID', '.pyGUID', '.pyLabel')."
+        }
+      },
+      "additionalProperties": false
+    },
+    "DataAdminDataSetSnowflake": {
+      "type": "object",
+      "description": "Configuration for Snowflake datasets (Data-Admin-DataSet-Snowflake).",
+      "required": [
+        "pxObjClass",
+        "pyClassName",
+        "pyImplementation",
+        "pySnowflake",
+        "pyTableNameType",
+        "pySSLProtocolVersion",
+        "pyMappings"
+      ],
+      "allOf": [
+        {
+          "if": { "properties": { "pyTableNameType": { "const": "Single" } }, "required": ["pyTableNameType"] },
+          "then": { "required": ["pyTableName"] }
+        },
+        {
+          "if": { "properties": { "pyTableNameType": { "const": "Settings" } }, "required": ["pyTableNameType"] },
+          "then": { "required": ["pyTableNameApplicationSettings"] }
+        }
+      ],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Data-Admin-DataSet-Snowflake",
+          "description": "Configuration class — always 'Data-Admin-DataSet-Snowflake' for Snowflake."
+        },
+        "pyClassName": {
+          "type": "string",
+          "description": "The Pega class this dataset operates on — must match the top-level pyClassName. Required for server-side property validation (e.g., 'O5GU06-CardServ-Data')."
+        },
+        "pyImplementation": {
+          "type": "string",
+          "const": "Pega-DecisionEngine:SnowflakeDataSet",
+          "description": "Implementation identifier — always 'Pega-DecisionEngine:SnowflakeDataSet'."
+        },
+        "pySnowflake": {
+          "type": "string",
+          "description": "Name of the Snowflake data instance (connection profile configured in Pega, e.g., 'SFKeyPairAuthTest')."
+        },
+        "pyTableName": {
+          "type": "string",
+          "description": "Snowflake table or view name (e.g., 'CUSTOMERS', 'ALLDATATYPES'). Required when pyTableNameType is 'Single'."
+        },
+        "pyTableNameType": {
+          "type": "string",
+          "enum": ["Single", "Settings"],
+          "description": "'Single' for a direct table name in pyTableName, 'Settings' to read from application settings via pyTableNameApplicationSettings."
+        },
+        "pyTableNameApplicationSettings": {
+          "type": "string",
+          "description": "Application setting key name that holds the table name. Required when pyTableNameType is 'Settings'."
+        },
+        "pySSLProtocolVersion": {
+          "type": "string",
+          "description": "SSL protocol version for connections.",
+          "default": "TLSv1.2"
+        },
+        "pySelectAll": {
+          "type": "string",
+          "enum": ["true", "false"],
+          "description": "'true' to select all columns from the table. When 'false', only mapped columns are selected."
+        },
+        "pyMappings": {
+          "type": "array",
+          "description": "Column-to-property mappings. Maps Snowflake columns to Pega class properties.",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/EmbedDataSetSnowflakeMappings"
+          }
+        },
+        "pySelectKeys": {
+          "type": "array",
+          "description": "Keys for browse-by-key operations (lookup/delete).",
+          "items": {
+            "$ref": "#/$defs/EmbedDataSetSnowflakeSelect"
+          }
+        },
+        "pyResumeKeys": {
+          "type": "array",
+          "description": "Keys for resumable read operations (pagination).",
+          "items": {
+            "$ref": "#/$defs/EmbedDataSetSnowflakeResume"
+          }
+        },
+        "pyPartitionKey": {
+          "$ref": "#/$defs/EmbedDataSetSnowflakePartition",
+          "description": "Optional partition key for partitioned Snowflake tables."
+        }
+      },
+      "additionalProperties": false
+    },
+    "EmbedDataSetSnowflakeMappings": {
+      "type": "object",
+      "description": "A column-to-property mapping for Snowflake datasets.",
+      "required": ["pxObjClass", "pyColumnName", "pyPropertyName"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-DataSet-Snowflake-Mappings",
+          "description": "Embed class — always 'Embed-DataSet-Snowflake-Mappings'."
+        },
+        "pyColumnName": {
+          "type": "string",
+          "description": "Snowflake column name (e.g., 'CUSTOMERID', 'DATECOLUMN')."
+        },
+        "pyPropertyName": {
+          "type": "string",
+          "description": "Pega property reference in dot-notation (e.g., '.CustomerID', '.pxCustomerID')."
+        }
+      },
+      "additionalProperties": false
+    },
+    "EmbedDataSetSnowflakeSelect": {
+      "type": "object",
+      "description": "A select key entry for Snowflake browse-by-key operations.",
+      "required": ["pxObjClass", "pyColumnName", "pyPropertyName"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-DataSet-Snowflake-Select",
+          "description": "Embed class — always 'Embed-DataSet-Snowflake-Select'."
+        },
+        "pyColumnName": {
+          "type": "string",
+          "description": "Snowflake column name used as a select key."
+        },
+        "pyPropertyName": {
+          "type": "string",
+          "description": "Pega property reference in dot-notation."
+        }
+      },
+      "additionalProperties": false
+    },
+    "EmbedDataSetSnowflakeResume": {
+      "type": "object",
+      "description": "A resume key entry for Snowflake resumable reads (pagination).",
+      "required": ["pxObjClass", "pyColumnName", "pyPropertyName"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-DataSet-Snowflake-Resume",
+          "description": "Embed class — always 'Embed-DataSet-Snowflake-Resume'."
+        },
+        "pyColumnName": {
+          "type": "string",
+          "description": "Snowflake column name used for pagination."
+        },
+        "pyPropertyName": {
+          "type": "string",
+          "description": "Pega property reference in dot-notation."
+        }
+      },
+      "additionalProperties": false
+    },
+    "EmbedDataSetSnowflakePartition": {
+      "type": "object",
+      "description": "A partition key for Snowflake partitioned tables.",
+      "required": ["pxObjClass", "pyColumnName", "pyPropertyName"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-DataSet-Snowflake-Partition",
+          "description": "Embed class — always 'Embed-DataSet-Snowflake-Partition'."
+        },
+        "pyColumnName": {
+          "type": "string",
+          "description": "Snowflake column name used for partitioning."
+        },
+        "pyPropertyName": {
+          "type": "string",
+          "description": "Pega property reference in dot-notation."
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

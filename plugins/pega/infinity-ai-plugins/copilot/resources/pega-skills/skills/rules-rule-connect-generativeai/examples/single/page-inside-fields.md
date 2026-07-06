@@ -15,10 +15,29 @@ description: Single-response connector with an embedded Page — child scalars a
   "pyCustomizeSystemPrompt": "false",
   "pySystemPromptName": "pzDefaultSystemPrompt",
   "pyPromptName": "pyGenerativeAIPromptTemplate",
-  "pyImprovePrivacy": "false",
   "pyUseOpLocaleForResponse": "false",
-  "pyGenAIProvConfig": {
-    "pyTemperature": "0.4"
+  "pyGenAIDef": {
+    "pxObjClass": "Embed-GenAI-Definition",
+    "pyUseCase": "qa",
+    "pyUserPrompt": "pyGenerativeAIPromptTemplate",
+    "pySystemPrompt": "pzDefaultSystemPrompt"
+  },
+  "pyGenAIConfig": {
+    "pxObjClass": "Embed-GenAI-Config",
+    "pyEnableLocalization": "false",
+    "pyEnablePII": "false",
+    "pyModelConfiguration": {
+      "pxObjClass": "Embed-GenAI-Model",
+      "pyModelId": "pega-default-fast",
+      "pyModelParameters": [
+        {
+          "pxObjClass": "Embed-GenAI-Model-Parameters",
+          "pyName": "temperature",
+          "pyType": "float",
+          "pyValue": "0.4"
+        }
+      ]
+    }
   },
   "pyResponseFields": [
     {

@@ -28,8 +28,7 @@
     "pyRuleName": {
       "type": "string",
       "description": "Internal rule name. Server-derived from pyPurpose — do not set directly.",
-      "x-pega-autoDerived": true,
-      "x-pega-deriveFrom": "pyPurpose"
+      "x-pega-autoFill": "{pyPurpose}"
     },
     "pyPurpose": {
       "type": "string",
