@@ -39,3 +39,18 @@ The skill:
 - checks whether a Pega Infinity connection is already configured
 - guides the user through setting up Pega Infinity base URL, optional OAuth client ID, and write-access
 - verifies the connection after configuration
+
+## Local Skills Override
+
+To test local `infinity-skills` with Claude Code, GitHub Copilot CLI, or Codex, set the `pega_skills_path` entry in `~/.infinity-rules-mcp/config.json` or `%USERPROFILE%\.infinity-rules-mcp\config.json` to the directory that contains `manifest.json` before starting the client.
+
+```json
+{
+  "pega_base_url": "https://example.pega.example.com",
+  "pega_skills_path": "/path/to/infinity-skills"
+}
+```
+
+Point `pega_skills_path` at the directory that contains `manifest.json`.
+
+If `pega_skills_path` is missing or empty, the plugin uses the normal bundled or cached skills payload.
