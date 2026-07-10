@@ -6,6 +6,11 @@ This repository packages Pega Infinity AI plugins for multiple AI clients. It co
 
 - Java 17 or later is required to run the bundled bootstrap launcher and MCP server.
 
+## Supported Pega Infinity Versions
+
+- Pega Infinity 24.2.5
+- Pega Infinity 26.1
+
 ## Install From This Repository
 
 For clients that support installing a marketplace from a git path, use this repository as the marketplace source.
