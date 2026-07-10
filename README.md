@@ -8,9 +8,9 @@ This repository packages Pega Infinity AI plugins for multiple AI clients. It co
 
 ## Supported Pega Infinity Versions
 
-- Pega Infinity 26.1
-- Pega Infinity 25.1.3 (consult Pega)
-- Pega Infinity 24.2.5 (consult Pega)
+- Pega Infinity 26.1+
+- Pega Infinity 25.1.3+ (consult Pega)
+- Pega Infinity 24.2.5+ (consult Pega)
 
 ## Install From This Repository
 
