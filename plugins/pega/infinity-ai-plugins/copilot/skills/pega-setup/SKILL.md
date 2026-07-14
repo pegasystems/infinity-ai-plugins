@@ -23,9 +23,9 @@ This is an interactive step-by-step guide. The agent detects the user's current 
 
 Check whether a connection is already configured.
 
-First, try calling `list-skills`. If it succeeds, the connection is working - confirm this to the user and skip to Step 4.
+First, try calling `list-skills`. If it succeeds, the bundled plugin runtime and local skills are available. Confirm that the plugin is installed correctly, but do not treat this as proof that the remote Pega environment is reachable or configured.
 
-If `list-skills` fails or is unavailable, check for existing configuration:
+If `list-skills` fails or is unavailable, first fix the local plugin/runtime issue. Then check for existing configuration:
 
 ```bash
 cat ~/.infinity-rules-mcp/config.json 2>/dev/null | grep -E 'pega_(base_url|oauth_client_id)'
@@ -40,7 +40,7 @@ Also check for environment variables:
 
 **Interpretation:**
 
-- Treat `pega_base_url` / `PEGA_BASE_URL` as configured only if the value is non-empty and not a placeholder such as `<paste-your-pega-url-here>`
+- Treat `pega_base_url` / `PEGA_BASE_URL` as configured only if the value is non-empty, not a placeholder such as `<paste-your-pega-url-here>`, and uses the environment root URL without `/prweb`
 - If `pega_oauth_client_id` / `PEGA_OAUTH_CLIENT_ID` is present, treat it as an advanced override rather than a required setup field
 
 **Partial Configuration Handling:**
@@ -52,7 +52,8 @@ Also check for environment variables:
 
 If no valid configuration exists, confirm the user has:
 
-- the Pega base URL, for example `https://example.pega.net`
+- the Pega base URL, for example `https://example.pega.net` or `https://example.pega.example.com`
+- use the environment root URL only; do not include `/prweb` or any other path segment
 
 Do not ask the user to set an OAuth client ID in the normal flow. The MCP server provides the default client ID automatically.
 
@@ -121,13 +122,19 @@ The user must fully restart the Copilot CLI session for changes to take effect:
 
 ### 4.2: Verify Connection
 
-After restart, call `list-skills` to confirm the connection works.
+After restart, verify two things separately:
 
-**Expected result:** A list of available Pega runtime skills is returned.
+1. Call `list-skills` to confirm the bundled plugin runtime and local skills are available.
+2. Call `list-available-applications` or `get-application` to confirm the remote Pega environment is reachable with the configured base URL.
+
+**Expected results:**
+
+- `list-skills` returns available bundled Pega runtime skills.
+- `list-available-applications` or `get-application` returns application data from the target Pega environment.
 
 **If verification fails**, check:
 
-- Is the base URL correct and reachable from this machine?
+- Is the base URL correct, reachable from this machine, and set to the environment root URL without `/prweb`?
 - If the environment requires a non-default OAuth client ID, was that override configured?
 - Is Java 17+ installed and on the PATH? (`java -version`)
 
@@ -142,14 +149,14 @@ Expected output shows the configured keys with values redacted to `[set]`. If no
 
 ### 4.4: Next Steps
 
-1. **Explore the environment**: Call `list-available-applications` to see available applications
+1. **Confirm remote app context**: Call `list-available-applications` to see available applications
 2. **Load runtime skills**: Call `list-skills` then `get-skill` to load Pega-specific guidance
 3. **For authoring changes**: Use `get-skill("recipes/change-request-workflow")` to learn the authoring workflow
 
 ## Troubleshooting
 
 - **Server won't start**: Check that Java is installed (`java -version`). The bundled server requires Java 17+.
-- **Connection refused**: Verify the base URL is correct, does not include extra path segments such as `/prweb`, and the Pega environment is accessible from this machine.
+- **Connection refused**: Verify the base URL is correct, uses the environment root URL without `/prweb` or other path segments, and the Pega environment is accessible from this machine.
 - **Authentication failed**: The default OAuth client ID should work in the normal flow. If the environment requires a custom client ID, set `pega_oauth_client_id` or `PEGA_OAUTH_CLIENT_ID` as an override.
 - **Tools not appearing after config change**: Fully restart the Copilot CLI session (quit and reopen). If still missing, confirm `PEGA_CLIENT_MODE=copilot-plugin` is set and `resources/pega-skills/manifest.json` exists in the installed plugin directory.
 - **Config file not loading**: Ensure `~/.infinity-rules-mcp/config.json` is valid JSON. Check for trailing commas or missing quotes.

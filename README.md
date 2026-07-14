@@ -42,9 +42,11 @@ After the plugin is installed, start a new session and ask the assistant to run
 
 The skill:
 
-- checks whether a Pega Infinity connection is already configured
+- checks whether the plugin runtime is available and whether a remote Pega Infinity connection is configured
 - guides the user through setting up Pega Infinity base URL, optional OAuth client ID, and write-access
 - verifies the connection after configuration
+
+When setting `pega_base_url`, use the environment root URL only. Do not include `/prweb` or any other path segment.
 
 ## Local Skills Override
 
