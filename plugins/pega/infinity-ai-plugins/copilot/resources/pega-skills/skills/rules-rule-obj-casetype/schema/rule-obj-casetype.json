@@ -81,7 +81,7 @@
       "description": "Controls how concurrent edits to case instances are handled. 'Default' = pessimistic locking (locks the case when opened for edit, preventing concurrent modifications). 'Optimistic' = allows concurrent edits and detects conflicts at save time. Use 'Optimistic' for high-concurrency scenarios like agile boards where multiple users update cases simultaneously."
     },
     "pyLockTimeout": {
-      "type": "integer",
+      "type": "string",
       "description": "Lock timeout value in minutes for pessimistic locking. When pyLockingMode is 'Default', this controls how long a case remains locked before the lock is automatically released. Prevents cases from being permanently locked when an operator leaves without saving."
     },
     "pyAllowRemoteInstantiation": {
@@ -105,7 +105,7 @@
       "x-pega-autoFill": "pyCaseManagementDefault"
     },
     "pyInitialCaseUrgency": {
-      "type": "integer",
+      "type": "string",
       "description": "Numeric urgency value assigned to new case instances (e.g., 10, 20). Urgency contributes to the case's priority calculation (priority = urgency + 100 - case age). Higher values = more urgent. Typical range is 10-100."
     },
     "pyOfflineEnabled": {
@@ -251,7 +251,7 @@
       "description": "Alternative display label stored as a property-level label. Observed on case types where the label is managed through property-based localization rather than the pyLabel field directly."
     },
     "pyCount": {
-      "type": "integer",
+      "type": "string",
       "description": "Numeric counter field used internally by the case designer to track the number of certain elements (e.g., local actions, processes). Auto-managed by the server."
     },
     "pyTempText": {
@@ -826,7 +826,7 @@
           "description": "Label for the 'add process' button in multi-channel stages (e.g., 'Add create process', 'Add channel process'). Only relevant when the stage supports multiple channels."
         },
         "pxFlowIDMax": {
-          "type": "integer",
+          "type": "string",
           "description": "Auto-incremented counter tracking the highest flow ID allocated within this stage (e.g., 2 means FLOW0 and FLOW1 exist). Managed by the case designer."
         },
         "pyProcesses": {

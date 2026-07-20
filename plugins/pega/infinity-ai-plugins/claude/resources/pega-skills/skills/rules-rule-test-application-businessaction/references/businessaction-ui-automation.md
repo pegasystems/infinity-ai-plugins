@@ -87,7 +87,9 @@ After `clickSubmit` — add ONLY to the LAST screen flow step (or the CreateCase
 ```typescript
 try {
 await page.getByTestId(':case-view:subheading').waitFor({ state: 'visible', timeout: 5000 });
-((config.outputParameters ??= {}) as Record<string, string>).UNIQUE_NAME = await page.getByTestId(':case-view:subheading').textContent();
+((config.outputParameters ??= {}) as Record<string, string>).UNIQUE_NAME = (await page.locator('[data-testid=":case-view:subheading"] li').count()) > 0
+  ? await page.locator('[data-testid=":case-view:subheading"] li').last().textContent()
+  : await page.locator('[data-testid=":case-view:subheading"]').textContent();
 }catch(error){
   console.log("Not a parent case ID to capture")
 }
@@ -96,6 +98,22 @@ await page.getByTestId(':case-view:subheading').waitFor({ state: 'visible', time
 - `UNIQUE_NAME` = `{CaseTypeName}CaseID` (e.g., `ExpenseCaseID`)
 - Screen flow: ONLY the LAST step captures. NOT intermediate steps.
   The screen flow modal stays open until the final submit — `:case-view:subheading` is not visible until the modal closes.
+
+## Child case ID capture (CaptureChildCase step)
+
+```typescript
+await userPortal.search(page, (config.outputParameters as Record<string, string>).PARENT_UNIQUE_NAME); await page.keyboard.press('Enter'); await page.waitForTimeout(2000);
+if(await page.locator(`//span[@data-testid=':case:id' and contains(text(),'${Child_Case_Prefix}')]`).count() > 0) {
+  ((config.outputParameters ??= {}) as Record<string, string>).UNIQUE_NAME = await page.locator(
+    `//span[@data-testid=':case:id' and contains(text(),'${Child_Case_Prefix}')]`).textContent();
+} else {
+  console.log("Not a child case ID to capture");
+}
+```
+
+- `PARENT_UNIQUE_NAME` = the parent case's unique parameter name from the test case — the `pyParameterUniqueName` of the parent `CreateCase` output (e.g., `FlightBookingCaseID`)
+- `UNIQUE_NAME` = `{ChildCaseTypeName}CaseID` (e.g., `BaggageClaimCaseID`) — the child case's unique parameter name used by subsequent keywords in the test case
+
 ---
 
 ## Form submission

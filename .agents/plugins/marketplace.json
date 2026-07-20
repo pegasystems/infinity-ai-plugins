@@ -6,7 +6,7 @@
   "plugins": [
     {
       "name": "pega-infinity-authoring",
-      "version": "0.0.2",
+      "version": "0.0.3",
       "source": {
         "source": "local",
         "path": "./plugins/pega/infinity-ai-plugins/codex"

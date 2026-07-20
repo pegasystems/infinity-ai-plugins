@@ -84,7 +84,7 @@ the mapping, input parameterization, and Playwright behavior.
 | `ObjectReference` | field reference, label, mode, value/selection key, display type, data source | Skip display-only `SemanticLink` values like any read-only field. |
 | `UserReference` | field reference, label, value, display type, data source | Treat as an interactive reference picker when not read-only. |
 | `reference` | context field, rule class, rule name, template, label | Fetch recursively when it points to an underlying view or layout section. |
-| `EmbeddedDataMulti` | page-list field, class, display/edit modes, columns or primary-fields view | Capture column metadata; fetch referenced primary-fields views when needed. |
+| `EmbeddedDataMulti` | page-list field, target class, display/edit modes, edit type, add/edit view or action, columns or primary-fields view | Resolve the row editor before mapping fields. For `editType: view`, capture `addEditView`. For `editType: action`, capture `addEditAction`/`editAction` and fetch that Flow Action to read `pyViewReference`. Columns/primary-fields describe existing-row table display, not the full row schema. |
 
 For every reference-like field, preserve the exact metadata found in the view:
 do not infer keys, labels, display style, or nested fields.
@@ -103,6 +103,11 @@ do not infer keys, labels, display style, or nested fields.
 - **Embedded data single vs layout sub-view:** Both appear as `reference` components.
   Distinguish by checking `pyClassContext` / `config.ruleClass` — if it points to a
   data class (not the parent case class), it is an embedded data single page.
+- **Fetch the `AdvancedSearch` sub-view via get-rule(detail="full") — MANDATORY for every advancedSearch field.** Never skip this call or assume the group structure. Extract:
+  - **ALL "Search by" groups** — enumerate every group, not just the first. For each group record: the exact criterion string (dropdown label value), and every filter field's label, `pyComponentName` (type), and property reference.
+  - Use an empty string as criterion when there is only one group (no "Search by" dropdown).
+  - The SimpleTableSelect result columns are display-only — exclude from pyInputParameters and pyForm.
+  - This data drives the mandatory per-group `if`/`else if` Playwright blocks (see `business-action-advanced-search` Mandatory picker view extraction).
 
 ---
 
@@ -172,3 +177,16 @@ Include one row per interactive field:
 
 **If any column is unknown or was not resolved, re-fetch the source rule now** —
 do not leave blanks to fill in later and do not guess as actual data is must for generated automation to work
+
+### advancedSearch per-group sub-table (MANDATORY)
+
+For every `advancedSearch` field, the single row above is not enough — attach a per-group
+sub-table (one block of rows per "Search by" group from the picker view):
+
+| Criterion (exact string) | Filter field label | Type | Property ref |
+|---|---|---|---|
+
+Enumerate **every** group from the picker `get-rule(detail="full")`. A multi-group picker
+recorded with one group **fails the checkpoint**. Use an empty-string criterion for a
+single-group picker. Drives the per-group Playwright blocks and the
+`{Label}_searchCriterion` input param (see `business-action-advanced-search`).

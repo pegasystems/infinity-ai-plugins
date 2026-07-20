@@ -31,7 +31,9 @@
     },
     "pyRuleName": {
       "type": "string",
-      "description": "Unique rule identifier within the applies-to class, typically matching the pyPurpose value."
+      "description": "Unique rule identifier within the applies-to class. Derived from pyPurpose and should not be set directly.",
+      "x-pega-autoDerived": true,
+      "x-pega-deriveFrom": "pyPurpose"
     },
     "pyRuleSet": {
       "type": "string",
@@ -70,10 +72,16 @@
     },
     "pyIntentActionPage": {
       "type": "object",
-      "description": "Configuration of the backing rule that executes when the tool is invoked. The pyRuleName must reference a valid rule instance matching the selected pyCategory.",
+      "description": "Configuration of the backing rule that executes when the tool is invoked.",
+      "required": [
+        "pxObjClass",
+        "pyCategory",
+        "pyRuleName"
+      ],
       "properties": {
         "pxObjClass": {
           "type": "string",
+          "const": "Embed-AI-Tool-Action",
           "description": "Embedded object class for the tool action configuration.",
           "x-pega-autoFill": "Embed-AI-Tool-Action"
         },
@@ -88,7 +96,19 @@
             "Rule-Obj-FlowAction",
             "Rule-Obj-CaseType"
           ],
-          "description": "Type of backing rule that provides the tool's implementation logic."
+          "description": "Type of backing rule that provides the tool's implementation logic.",
+          "x-pega-hints": {
+            "Activity": "Rule-Obj-Activity",
+            "Automation": "Rule-Obj-Activity",
+            "AI Agent": "Rule-AI-Agent",
+            "Agent": "Rule-AI-Agent",
+            "Buddy-backed": "Buddy",
+            "Case Type": "Rule-Obj-CaseType",
+            "Data Page": "Rule-Declare-Pages",
+            "Declare Page": "Rule-Declare-Pages",
+            "Flow Action": "Rule-Obj-FlowAction",
+            "Section": "Rule-HTML-Section"
+          }
         },
         "pyClassName": {
           "type": "string",
@@ -96,11 +116,7 @@
         },
         "pyRuleName": {
           "type": "string",
-          "description": "Name of the backing rule instance to invoke. Must correspond to a valid rule of the type specified by pyCategory.",
-          "x-pega-validation": {
-            "existenceCheck": "MANDATORY (except Buddy category) — Before creating the Rule-AI-Tool, use search-rules or list-rules to verify that a rule with this name exists for the rule type indicated by pyCategory. Do NOT proceed if the rule does not exist. For Buddy-category tools, pyRuleName must be one of: platform_buddy, sales_automation_buddy, customer_decision_hub_buddy, customer_service_buddy — validate against this list instead of rule APIs.",
-            "parameterCheck": "MANDATORY — If the backing rule has parameters, use get-rule to inspect its parameter definitions. All required parameters on the backing rule MUST have corresponding entries in the top-level pyParameters array."
-          }
+          "description": "Name of the backing rule instance to invoke."
         },
         "pyRuleInsName": {
           "type": "string",
@@ -116,7 +132,16 @@
             "Internal",
             "External"
           ],
-          "description": "Specifies whether the buddy is an internal Pega knowledge source or an external integration. Only applicable when pyCategory is Buddy."
+          "description": "Specifies whether the buddy is an internal Pega knowledge source or an external integration.",
+          "x-pega-autoFill": "Internal"
+        },
+        "pyBuddyTextOnlyChunks": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Controls whether Buddy-backed tools return text-only chunks."
         },
         "pyParameters": {
           "type": "array",
@@ -128,13 +153,7 @@
             ]
           }
         }
-      },
-      "required": [
-        "pxObjClass",
-        "pyCategory",
-        "pyClassName",
-        "pyRuleName"
-      ]
+      }
     },
     "pyGenAIDef": {
       "type": "object",
@@ -146,6 +165,7 @@
       "properties": {
         "pxObjClass": {
           "type": "string",
+          "const": "Embed-GenAI-Definition",
           "description": "Embedded object class for the GenAI definition.",
           "x-pega-autoFill": "Embed-GenAI-Definition"
         },
@@ -159,6 +179,7 @@
               "pxObjClass": {
                 "type": "string",
                 "description": "Embedded object class for each example entry.",
+                "const": "Embed-GenAI-Assistant-Example",
                 "x-pega-autoFill": "Embed-GenAI-Assistant-Example"
               },
               "pyExample": {
@@ -185,7 +206,7 @@
     },
     "pyAskConfirmationMessage": {
       "type": "string",
-      "description": "Custom confirmation prompt displayed to the user when pyAskConfirmation is true. Required in Pega 26+."
+      "description": "Custom confirmation prompt displayed to the user when pyAskConfirmation is true."
     },
     "pyRetentionPolicy": {
       "type": "string",
@@ -234,6 +255,211 @@
       }
     }
   },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "pyAskConfirmation": { "const": "true" }
+        },
+        "required": ["pyAskConfirmation"]
+      },
+      "else": {
+        "x-pega-condition": "pyAskConfirmationMessage is allowed only when pyAskConfirmation is 'true'.",
+        "not": { "required": ["pyAskConfirmationMessage"] }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "pyIntentActionPage": {
+            "properties": {
+              "pyCategory": { "const": "Rule-AI-Agent" }
+            },
+            "required": ["pyCategory"]
+          }
+        },
+        "required": ["pyIntentActionPage"]
+      },
+      "then": {
+        "x-pega-condition": "When pyIntentActionPage.pyCategory is 'Rule-AI-Agent', pyAskConfirmation must be 'false', pyIntentActionPage.pyClassName is required, and pyBuddyTextOnlyChunks and pyParameters must not be provided.",
+        "required": ["pyAskConfirmation"],
+        "properties": {
+          "pyAskConfirmation": { "const": "false" },
+          "pyIntentActionPage": {
+            "required": ["pyClassName"],
+            "not": {
+              "anyOf": [
+                { "required": ["pyBuddyTextOnlyChunks"] },
+                { "required": ["pyParameters"] }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "pyIntentActionPage": {
+            "properties": {
+              "pyCategory": { "const": "Rule-Obj-Activity" }
+            },
+            "required": ["pyCategory"]
+          }
+        },
+        "required": ["pyIntentActionPage"]
+      },
+      "then": {
+        "x-pega-condition": "When pyIntentActionPage.pyCategory is 'Rule-Obj-Activity', pyAskConfirmation is required, pyIntentActionPage.pyClassName is required, and pyBuddyTextOnlyChunks must not be provided.",
+        "required": ["pyAskConfirmation"],
+        "properties": {
+          "pyIntentActionPage": {
+            "required": ["pyClassName"],
+            "not": { "required": ["pyBuddyTextOnlyChunks"] }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "pyIntentActionPage": {
+            "properties": {
+              "pyCategory": { "const": "Buddy" }
+            },
+            "required": ["pyCategory"]
+          }
+        },
+        "required": ["pyIntentActionPage"]
+      },
+      "then": {
+        "x-pega-condition": "When pyIntentActionPage.pyCategory is 'Buddy', pyAskConfirmation is required, and pyIntentActionPage.pyClassName and pyParameters must not be provided.",
+        "required": ["pyAskConfirmation"],
+        "properties": {
+          "pyIntentActionPage": {
+            "not": {
+              "anyOf": [
+                { "required": ["pyClassName"] },
+                { "required": ["pyParameters"] }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "pyIntentActionPage": {
+            "properties": {
+              "pyCategory": { "const": "Rule-Obj-CaseType" }
+            },
+            "required": ["pyCategory"]
+          }
+        },
+        "required": ["pyIntentActionPage"]
+      },
+      "then": {
+        "x-pega-condition": "When pyIntentActionPage.pyCategory is 'Rule-Obj-CaseType', pyAskConfirmation must be 'false', and pyClassName, pyBuddyTextOnlyChunks, and pyParameters must not be provided on pyIntentActionPage.",
+        "required": ["pyAskConfirmation"],
+        "properties": {
+          "pyAskConfirmation": { "const": "false" },
+          "pyIntentActionPage": {
+            "not": {
+              "anyOf": [
+                { "required": ["pyClassName"] },
+                { "required": ["pyBuddyTextOnlyChunks"] },
+                { "required": ["pyParameters"] }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "pyIntentActionPage": {
+            "properties": {
+              "pyCategory": { "const": "Rule-Declare-Pages" }
+            },
+            "required": ["pyCategory"]
+          }
+        },
+        "required": ["pyIntentActionPage"]
+      },
+      "then": {
+        "x-pega-condition": "When pyIntentActionPage.pyCategory is 'Rule-Declare-Pages', pyAskConfirmation is required, and pyClassName and pyBuddyTextOnlyChunks must not be provided on pyIntentActionPage.",
+        "required": ["pyAskConfirmation"],
+        "properties": {
+          "pyIntentActionPage": {
+            "not": {
+              "anyOf": [
+                { "required": ["pyClassName"] },
+                { "required": ["pyBuddyTextOnlyChunks"] }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "pyIntentActionPage": {
+            "properties": {
+              "pyCategory": { "const": "Rule-Obj-FlowAction" }
+            },
+            "required": ["pyCategory"]
+          }
+        },
+        "required": ["pyIntentActionPage"]
+      },
+      "then": {
+        "x-pega-condition": "When pyIntentActionPage.pyCategory is 'Rule-Obj-FlowAction', pyAskConfirmation must be omitted, and pyClassName, pyBuddyTextOnlyChunks, and pyParameters must not be provided on pyIntentActionPage.",
+        "not": { "required": ["pyAskConfirmation"] },
+        "properties": {
+          "pyIntentActionPage": {
+            "not": {
+              "anyOf": [
+                { "required": ["pyClassName"] },
+                { "required": ["pyBuddyTextOnlyChunks"] },
+                { "required": ["pyParameters"] }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "pyIntentActionPage": {
+            "properties": {
+              "pyCategory": { "const": "Rule-HTML-Section" }
+            },
+            "required": ["pyCategory"]
+          }
+        },
+        "required": ["pyIntentActionPage"]
+      },
+      "then": {
+        "x-pega-condition": "When pyIntentActionPage.pyCategory is 'Rule-HTML-Section', pyAskConfirmation is required, and pyClassName, pyBuddyTextOnlyChunks, and pyParameters must not be provided on pyIntentActionPage.",
+        "required": ["pyAskConfirmation"],
+        "properties": {
+          "pyIntentActionPage": {
+            "not": {
+              "anyOf": [
+                { "required": ["pyClassName"] },
+                { "required": ["pyBuddyTextOnlyChunks"] },
+                { "required": ["pyParameters"] }
+              ]
+            }
+          }
+        }
+      }
+    }
+  ],
   "$defs": {
     "Embed-MethodParams": {
       "type": "object",
@@ -255,12 +481,7 @@
           "enum": [
             "STRING",
             "INTEGER",
-            "DECIMAL",
-            "DATETIME",
-            "DATE",
-            "BOOLEAN",
-            "PAGELIST",
-            "PAGE"
+            "BOOLEAN"
           ],
           "description": "Data type of the parameter value expected by the backing rule."
         },
@@ -287,6 +508,14 @@
         "pyParametersParamLabel": {
           "type": "string",
           "description": "Display label for the parameter shown in the tool configuration UI."
+        },
+        "pyParametersParamReadOnly": {
+          "type": "string",
+          "enum": [
+            "true",
+            "false"
+          ],
+          "description": "Indicates whether the parameter is read-only (true) or editable (false) in the tool configuration UI."
         },
         "pyParametersParamReq": {
           "type": "string",
@@ -316,7 +545,7 @@
         },
         "pyAutomationParamType": {
           "type": "string",
-          "description": "Data type of this automation parameter (e.g., String, Integer, Page)."
+          "description": "Data type of this automation parameter (e.g., String, Integer)."
         },
         "pyAutomationIOTextFormat": {
           "type": "string",

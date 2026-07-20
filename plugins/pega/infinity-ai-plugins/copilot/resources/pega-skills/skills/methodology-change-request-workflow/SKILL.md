@@ -139,39 +139,42 @@ must loop the case back to the appropriate stage:
 
 ## Case Properties Reference
 
-### Intake fields (set in Stage 1)
+### Intake parameters (passed to `initiate-authoring-change` in Step 1)
 
-| Property | Type | Description |
-|----------|------|-------------|
+These values are passed directly as parameters to `initiate-authoring-change` rather than
+submitted as a separate form action.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
 | `pyLabel` | Text | Short title for the change request (max 64 characters) |
-| `pyChangeDescription` | Text | Detailed description of what will change and why |
+| `pyChangeDescription` | Text | Summary of the change being authored (max 200 characters) |
 | `pyToDos` | Text | Step-by-step plan / to-do list for the changes |
-| `pyBranchID` | Text | Branch name for the changes. Must be 3-16 characters; the server rejects values outside this range. Must **not** start with `px`, `py`, or `pz` (case-insensitive) — Pega reserves these prefixes for non-Pega rulesets and rejects branch names that use them. **Verbatim relay:** Once chosen, this exact value must be returned to the parent and passed unchanged into all subsequent subtask delegations. Do not add suffixes (e.g., `br`, `branch`), do not abbreviate, and do not rephrase. The branch name, ruleset name, and ruleset version must all use this identical value. |
+| `pyBranchID` | Text | Optional branch name for the changes. Provide this only when the user explicitly supplied a branch name or explicitly referenced a work item ID (for example, "work on US-162", "pick up T-45", or "fix I-4009"). Branch names may contain letters, numbers, underscores (`_`), and hyphens (`-`), but must not start with `_` or `-`. When provided, it must be 3-16 characters and must **not** start with `px`, `py`, or `pz` (case-insensitive). Pega reserves these prefixes for non-Pega rulesets and rejects branch names that use them. **Verbatim relay:** Once chosen, this exact value must be returned to the parent and passed unchanged into all subsequent subtask delegations. Do not add suffixes (e.g., `br`, `branch`), do not abbreviate, and do not rephrase. The branch name, ruleset name, and ruleset version must all use this identical value. |
 
 **Note:** `pyPriority` and `pyTargetClass` are not valid properties on this case type.
-Do not include them in the intake submission — they cause undefined property errors.
+Do not include them — they cause undefined property errors.
 
 #### Branch ID Selection Rules
 
-The `pyBranchID` value is determined **at form-filling time** (Step 3 — Submit Intake),
-not before. Do not pre-select or decide on a Branch ID during the Pre-flight step or
-case creation. Apply the following priority order when filling the intake form:
+The `pyBranchID` value is optional and is only passed to `initiate-authoring-change`
+when the user explicitly provided a branch name or the request explicitly references
+a work item ID. In all other cases, omit `pyBranchID` and let the tool derive the
+branch name from `pyLabel`. Apply the following priority order:
 
 | Priority | Condition | Action |
 |----------|-----------|--------|
-| 1 | User explicitly provides a Branch ID | Use the user-provided value exactly as given (respecting the 3-16 character and prefix constraints). |
-| 2 | `pyBranchID` is already populated on the case (e.g., resuming a case) | Keep the existing value — do NOT override or re-select it. |
-| 3 | User's request references a work item ID (User Story, Task, Feedback, or Issue — e.g., "work on US-162", "pick up T-45", "fix I-4009") | Use that work item ID as the Branch ID (strip any characters that violate constraints if necessary). |
-| 4 | None of the above apply | The agent selects a concise, descriptive Branch ID derived from the change intent (e.g., `AddPhoneNum`, `FixSLALogic`). |
+| 1 | User explicitly provides a Branch ID | Pass the user-provided value exactly as given (respecting the 3-16 character and prefix constraints). |
+| 2 | User's request references a work item ID (User Story, Task, Feedback, or Issue — e.g., "work on US-162", "pick up T-45", "fix I-4009") | Pass that work item ID as the Branch ID (strip any characters that violate constraints if necessary). |
+| 3 | None of the above apply | Omit `pyBranchID` and let `initiate-authoring-change` derive the branch name from `pyLabel`. |
 
 **Key rules:**
-- **Never override a user-supplied or pre-existing Branch ID.** If the user said it or
-  the field already has a value, that value wins unconditionally.
+- **Never override a user-supplied Branch ID.** If the user said it, that value wins
+  unconditionally.
+- **`_` and `-` are valid Branch ID characters, but not as the first character.** Preserve them exactly when provided in non-leading positions.
 - **Work item IDs take precedence over agent-generated names.** If the user says
-  "work on US-162," the Branch ID is `US-162` — do not invent a different name.
-- **Agent-generated Branch IDs are the last resort.** Only generate one when the user
-  has not provided a Branch ID, no existing value is present, and no work item ID is
-  referenced in the request.
+  "work on US-162," pass `US-162` — do not invent a different name.
+- **Omit `pyBranchID` when neither condition applies.** The tool will derive a branch
+  name from `pyLabel`.
 
 ### Authoring tracking fields (updated incrementally in Stage 2)
 
@@ -200,83 +203,69 @@ Before creating the ChangeRequest case, determine which authoring path to take:
    as "create & update GenAI Connect Rules").
 2. **Match found** → check the workflow's stated **limitations** (in its description/scope).
    If the user's request requires capabilities that exceed those limitations, treat it
-   as **no match** and follow Path 2. Otherwise, record the workflow case type ID; follow
-   **Path 1** after intake.
-3. **No match OR limitations exceeded** → follow **Path 2** after intake.
+   as **no match** and follow Path 2. Otherwise, record the workflow label; follow
+   **Path 1** after Step 1.
+3. **No match OR limitations exceeded** → follow **Path 2** after Step 1.
 
 This matching is done once, upfront. Follow-up requests made while in `Open-Authoring`
 are handled separately via the MID-AUTHORING DECISION (see below).
 
-### Step 1: Create the ChangeRequest Case
+### Step 1: Initiate the Authoring Change
 
-**Tool:** `create-case`
-**Parameters:** `caseTypeID="PegaAccel-GenAI-ChangeRequest"`
+**Tool:** `initiate-authoring-change`
 
-This creates a new case and returns:
-- `caseID` -- the work object ID (e.g., `PXC-11`)
-- `caseTypeID` -- `PegaAccel-GenAI-ChangeRequest`
-- `nextAssignmentID` -- the assignment for Stage 1 (Intake), when one exists
-- `nextAssignment` -- the **full assignment payload** for Stage 1 (actions, content, and assignment metadata), when `nextAssignmentID` is present
-- `responseClass` -- the response class from the create-case API, when present
+This single call always creates the ChangeRequest case, submits the Intake stage
+(`pyCaptureChangeRequest`), and advances the case to Stage 2 (Authoring). It replaces
+the previous multi-step sequence of creating the case, fetching the intake assignment,
+and submitting the intake form.
 
-Record the `caseID` and `nextAssignmentID`. If `nextAssignment` is present, use it immediately instead of making an extra `get-assignment` call.
+**Before calling this tool**, determine whether to pass `pyBranchID` at all using the
+Branch ID Selection Rules above.
 
-### Step 2: Use the Embedded Intake Assignment
-
-After `create-case`, inspect `nextAssignment` from the response.
-
-This should already give you:
-- the Stage 1 assignment ID
-- available actions (should include `pyCaptureChangeRequest`)
-- current case data/content
-
-Confirm `pyCaptureChangeRequest` is available in `nextAssignment.actions`.
-
-### Step 2b: Fallback — Get the Intake Assignment Only If Needed
-
-**Tool:** `get-assignment`
-**Parameters:** `assignmentID="{nextAssignmentID}"`
-
-Call this only if one of the following is true:
-- `create-case` returned a `nextAssignmentID` but not a usable `nextAssignment`
-- you need to re-fetch the intake assignment because the workflow was resumed or the assignment may have changed
-- you are troubleshooting an unexpected intake state
-
-This returns:
-- Available actions (should include `pyCaptureChangeRequest`)
-- Current case data
-
-### Step 3: Submit Intake (Stage 1 -> Stage 2)
-
-**Tool:** `perform-action`
 **Parameters:**
-- `assignmentID="{nextAssignment.assignmentID}"` (or `{nextAssignmentID}` if you had to use Step 2b)
-- `actionID="pyCaptureChangeRequest"`
-- `content` -- JSON with intake fields (`pyLabel` must be under 64 characters):
 
-**Determine `pyBranchID` now** using the Branch ID Selection Rules (see Intake fields
-section above). Do not pre-select the Branch ID before this step.
+| Parameter | Required | Description |
+|-----------|----------|-------------|
+| `pyLabel` | Yes | Short title for the change (max 64 characters) |
+| `pyBranchID` | No | Optional branch name. Pass only when the user explicitly supplied the branch name or referenced a work item ID. Omit in all other cases so the tool can derive a branch name from `pyLabel`. |
+| `pyChangeDescription` | Yes | Summary of what will change and why (max 200 characters) |
+| `pyToDos` | Yes | Step-by-step plan for the changes |
+| `workFlowNames` | No | List of matched workflow labels from `list-available-authoring-workflows` (Path 1 only). Omit for skills-based authoring. |
 
-```json
-{
-  "pyLabel": "Add PhoneNumber property to Customer",
-  "pyChangeDescription": "Add a Text property with Phone format to the Customer data class for contact tracking.",
-  "pyToDos": "1. Create PhoneNumber property on Customer class\n2. Add to CustomerDetail view",
-  "pyBranchID": "AddPhoneNumber"
-}
+**Example call:**
+
+```
+initiate-authoring-change(
+  pyLabel: "Add PhoneNumber property to Customer",
+  pyBranchID: null,
+  pyChangeDescription: "Add a Text property with Phone format to the Customer data class for contact tracking.",
+  pyToDos: "1. Create PhoneNumber property on Customer class\n2. Add to CustomerDetail view",
+  workFlowNames: []
+)
 ```
 
-The response returns a new `nextAssignmentID` for Stage 2 (Authoring).
+**Response fields:**
 
-**Automatic branch record creation:** When `pyBranchID` is provided in the intake
-fields, submitting `pyCaptureChangeRequest` automatically creates the branch and
-adds it to the application. All subsequent rule authoring is scoped to the branch
-based on `pyBranchID`.
+| Field | Description |
+|-------|-------------|
+| `changeRequestID` | The ChangeRequest case ID (e.g., `PEGAACCEL PXC-11`). Pass to all subsequent `create-rule`, `update-rule`, and `copy-rule` calls. |
+| `branchName` | The effective branch ID used (may differ from the derived or supplied `pyBranchID` if the developer branch toggle overrides it). |
+| `nextAssignmentID` | The assignment ID for Stage 2 (Authoring). Use this in Step 2. |
+| `workflowNames` | Resolved workflow names (when `workFlowNames` was provided). |
+| `branchPrecedenceNote` | Present when the branch was overridden by the developer branch toggle. |
 
-### Step 4: Get the Authoring Assignment
+Record `changeRequestID`, `branchName`, and `nextAssignmentID` — you will need all three
+for subsequent steps.
+
+**Automatic branch record creation:** If you passed `pyBranchID`, that value is used
+to create the branch and add it to the application. If you omitted `pyBranchID`, the
+tool derives the branch name from `pyLabel`. All subsequent rule authoring is scoped
+to the branch based on `branchName`.
+
+### Step 2: Get the Authoring Assignment
 
 **Tool:** `get-assignment`
-**Parameters:** `assignmentID="{nextAssignmentID}"`
+**Parameters:** `assignmentID="{nextAssignmentID}"` (from Step 1 response)
 
 Confirm `pyAuthorRuleChanges` is available as an action.
 
@@ -292,7 +281,7 @@ When a workflow was matched in the pre-flight step, start it by creating the wor
    ```
    create-case(
      caseTypeID: "PegaAccel-AI-Work-Update-Toggle",
-     content: { "pyChangeRequestID": "PEGAACCEL PXCR-19" }
+     content: { "pyChangeRequestID": "PEGAACCEL PXC-19" }
    )
    ```
 
@@ -323,9 +312,9 @@ Applies whenever the user makes a new authoring request while the case is in
 
 3. **No match OR limitations exceeded** → load the relevant rule-type skill and author
    the rules using the write API. Track changes in `pyAuthoringNotes`.
-4. After completing the additional changes, proceed to Step 6 and Step 7.
+4. After completing the additional changes, proceed to Step 4 and Step 5.
 
-### Step 5: Perform the Actual Rule Authoring (Skills-Based)
+### Step 3: Perform the Actual Rule Authoring (Skills-Based)
 
 This step covers the **Path 2 fallback** when no workflow matched. Create and update
 rules using the write API selected for the target rule type.
@@ -336,10 +325,11 @@ reached or has already been submitted.
 
 #### Branch-scoped authoring (MANDATORY)
 
-Since `pyBranchID` is always set during Intake, all rules created or updated in this
-stage **must use the branch ruleset and version**, not the base ruleset. The branch
-ruleset is derived internally from `pyBranchID`. All rule write calls must pass the
-`changeRequestID` to scope changes to the correct branch.
+Since an effective branch is always established during Intake (either from supplied
+`pyBranchID` or from a branch derived from `pyLabel`), all rules created or updated in
+this stage **must use the branch ruleset and version**, not the base ruleset. The branch
+ruleset is derived internally from the effective branch (`branchName` in Step 1 response).
+All rule write calls must pass the `changeRequestID` to scope changes to the correct branch.
 
 **Never create or update rules in the base ruleset during a branched ChangeRequest.**
 The whole point of branching is to isolate changes for human review. Rules created or
@@ -359,14 +349,14 @@ If you need to modify an existing rule that is not already in the branch ruleset
 - Append to `pyAuthoringNotes`: decisions, observations, warnings encountered,
   and which rules were created or updated with their instance keys
 
-### Step 6: Create PegaUnit Test Cases (MANDATORY — Before Submitting Authoring)
+### Step 4: Create PegaUnit Test Cases (MANDATORY — Before Submitting Authoring)
 
 **⚠️ THIS STEP IS MANDATORY AND MUST NEVER BE SKIPPED when testable rules exist.**
 
 **After all application rules are authored and before submitting the Authoring stage**,
 create PegaUnit test cases for every testable authored rule.
 
-#### Step 6a: Capture Eligible Test Rulesets (MANDATORY PRE-CHECK)
+#### Step 4a: Capture Eligible Test Rulesets (MANDATORY PRE-CHECK)
 
 Before creating any unit test case, call `get-assignment` on the current Authoring
 assignment (`pyAuthorRuleChanges`) and inspect the response for the list of eligible
@@ -389,31 +379,31 @@ submitting the Authoring stage — logging only to `pyAuthoringNotes` is insuffi
    >
    > Proceeding to submit the Authoring stage without test cases.
 
-3. Record the same in `pyAuthoringNotes`, then proceed to Step 7.
+3. Record the same in `pyAuthoringNotes`, then proceed to Step 5.
 
 Do not attempt test case creation when no eligible rulesets exist — it will fail.
 
-**If eligible test rulesets exist**, proceed to Step 6b.
+**If eligible test rulesets exist**, proceed to Step 4b.
 
-#### Step 6b: Create Test Cases for Testable Rules
+#### Step 4b: Create Test Cases for Testable Rules
 
-1. Review the **complete** list of rules authored in Step 5.
+1. Review the **complete** list of rules authored in Step 3.
 2. For **every single rule** whose `pxObjClass` matches a testable type (see
    **Testing Strategy** above), you **MUST** create a `Rule-Test-Unit-Case` using
-   the `pyBranchID` and one of the eligible test rulesets identified in Step 6a.
+   the `pyBranchID` and one of the eligible test rulesets identified in Step 4a.
    Do not skip any testable rule — each one requires its own test case.
 3. **Only if zero authored rules match a testable type** (e.g., the entire authoring
    consisted solely of `Rule-Obj-Property` rules), then no PegaUnit tests are
    required. Document this explicitly in `pyAuthoringNotes` (e.g., "No testable
    rule types authored — PegaUnit tests not applicable").
 
-**Do NOT proceed to Step 7 (Submit Authoring) until all required test cases have
+**Do NOT proceed to Step 5 (Submit Authoring) until all required test cases have
 been created.** Submitting the Authoring stage without creating test cases for
 testable rules is a workflow violation.
 
 All test cases MUST be created using the `pyBranchID`, not the base ruleset.
 
-### Step 7: Submit Authoring (Stage 2 -> Stage 3)
+### Step 5: Submit Authoring (Stage 2 -> Stage 3)
 
 **Tool:** `perform-action`
 **Parameters:**
@@ -438,14 +428,14 @@ execution via API using the `pyBranchID`. This returns a **test execution ID** t
 can be used to track and retrieve test results. Record this test execution ID to
 include results in the review summary.
 
-### Step 8: Get the Review Assignment
+### Step 6: Get the Review Assignment
 
 **Tool:** `get-assignment`
 **Parameters:** `assignmentID="{reviewAssignmentID}"`
 
 Confirm `pyReviewAndApprove` is available as an action.
 
-### Step 9: Prepare the Change Summary (DO NOT CALL perform-action HERE)
+### Step 7: Prepare the Change Summary (DO NOT CALL perform-action HERE)
 
 Before presenting the review to the user, **compose** the `pyChangeSummary` text
 locally. Do **NOT** call `perform-action` in this step — any call to
@@ -456,7 +446,7 @@ locally. Do **NOT** call `perform-action` in this step — any call to
 headers with `#`, or any other markup. Use simple line breaks and indentation
 for structure.
 
-Example summary text (hold this for Step 11):
+Example summary text (hold this for Step 9):
 
 ```text
 Created PhoneNumber property on MyOrg-MyApp-Data-Customer class in branch ruleset.
@@ -469,15 +459,15 @@ Notes: Property created as Text/Phone format for contact tracking.
 
 **⚠️ CRITICAL: Do NOT call `perform-action` with `pyReviewAndApprove` at this
 point.** The summary and approval decision are submitted together in a **single**
-`perform-action` call in Step 11 — after the user has provided their decision.
+`perform-action` call in Step 9 — after the user has provided their decision.
 Any intermediate call without `pyApprovalDecision` will loop the case back to
 Authoring and require re-submitting through `pyAuthorRuleChanges` to return to
 Review.
 
-The user may request changes to `pyChangeSummary` during the review pause (Step 10)
-— incorporate those before the final submission in Step 11.
+The user may request changes to `pyChangeSummary` during the review pause (Step 8)
+— incorporate those before the final submission in Step 9.
 
-### Step 10: Present Review Summary to User (MANDATORY PAUSE)
+### Step 8: Present Review Summary to User (MANDATORY PAUSE)
 
 **STOP HERE.** Do not auto-approve. Present the following to the user:
 
@@ -498,7 +488,7 @@ Wait for the user's explicit response before proceeding.
   and does not clearly map to one of the above scenarios, ask the user to clarify
   their decision before submitting the review.
 
-### Step 11: Submit Review Decision (Stage 3 -> Complete, or back to Stage 2)
+### Step 9: Submit Review Decision (Stage 3 -> Complete, or back to Stage 2)
 
 **This is the ONLY `perform-action` call for the Review stage.** Do not call
 `perform-action` with `pyReviewAndApprove` at any earlier point — doing so without
@@ -535,7 +525,7 @@ additions to the current changes — for example, fixing an issue found during
 review, adding a missing rule, or refining the implementation. Both options
 preserve the branch and authored rules.
 
-### Step 12: Verify Completion
+### Step 10: Verify Completion
 
 After approval, the case resolves as `Resolved-Complete`. The branch is **not**
 automatically merged — all authored changes remain in the branch ruleset, which is
@@ -553,15 +543,17 @@ base ruleset happens separately through Pega's branch review/merge workflow.
 Analyze intent: create/update rule? -> yes: follow this recipe | no: answer directly
 
 Pre-flight: list-available-authoring-workflows -> semantic match
-  +-- [match found AND within limitations]   note workflow case type ID -> PATH 1
+  +-- [match found AND within limitations]   note workflow label -> PATH 1
   +-- [match found BUT exceeds limitations]  -> PATH 2
   +-- [no match]                             -> PATH 2
 
-create-case (ChangeRequest)
-  -> inspect embedded nextAssignment (Intake)
-  -> [fallback only if needed: get-assignment (Intake)]
-  -> perform-action pyCaptureChangeRequest (pyBranchID required)
-     -> get-assignment (Authoring / Open-Authoring)
+Determine pyBranchID (per Branch ID Selection Rules)
+
+initiate-authoring-change (ChangeRequest)
+  -> creates PegaAccel-GenAI-ChangeRequest case
+  -> submits intake (pyCaptureChangeRequest) internally
+  -> returns changeRequestID, branchName, nextAssignmentID (Authoring)
+  -> get-assignment (Authoring / Open-Authoring) to confirm pyAuthorRuleChanges
 
 PATH 1 — Workflow-Driven
   -> create-case (caseTypeID = matched workflow case type)
@@ -571,17 +563,17 @@ PATH 1 — Workflow-Driven
   -> workflow assignment screens (perform-action loop until complete)
   -> continue with main authoring case flow
   -> [user makes additional request? -> MID-AUTHORING DECISION]
-  -> Step 6: create PegaUnit test cases for testable rules
-        [Step 6a: if no eligible test rulesets -> emit user-visible warning before Step 7]
-  -> Step 7: perform-action pyAuthorRuleChanges -> advances to Open-Review
+  -> Step 4: create PegaUnit test cases for testable rules
+        [Step 4a: if no eligible test rulesets -> emit user-visible warning before Step 5]
+  -> Step 5: perform-action pyAuthorRuleChanges -> advances to Open-Review
 
 PATH 2 — Skills-Based
   -> load rule-type skill -> author rules via write API
   -> pyAuthoringNotes tracked incrementally
   -> [user makes additional request? -> MID-AUTHORING DECISION]
-  -> Step 6: create PegaUnit test cases for testable rules
-        [Step 6a: if no eligible test rulesets -> emit user-visible warning before Step 7]
-  -> Step 7: perform-action pyAuthorRuleChanges -> advances to Open-Review
+  -> Step 4: create PegaUnit test cases for testable rules
+        [Step 4a: if no eligible test rulesets -> emit user-visible warning before Step 5]
+  -> Step 5: perform-action pyAuthorRuleChanges -> advances to Open-Review
 
 MID-AUTHORING DECISION (any time user makes a new request while in Open-Authoring)
   list-available-authoring-workflows -> semantic match
@@ -591,7 +583,7 @@ MID-AUTHORING DECISION (any time user makes a new request while in Open-Authorin
   |                      -> use embedded nextAssignment, then workflow screens until complete
   +-- [match found BUT exceeds limitations] -> treat as no match, use skills path
   +-- [no match]      -> load rule-type skill -> author rules via write API
-  -> after changes complete: proceed to Step 6 and Step 7
+  -> after changes complete: proceed to Step 4 and Step 5
 
 [after Open-Review: post-processing auto-triggers PegaUnit test execution -> test execution ID]
   -> get-assignment (Review)
@@ -607,7 +599,7 @@ MID-AUTHORING DECISION (any time user makes a new request while in Open-Authorin
 
 When resuming a ChangeRequest case that was created in a previous session, you will
 not have the `nextAssignmentID` or embedded `nextAssignment` from a prior
-`create-case` or `perform-action` response. You must construct the assignment ID manually using the case ID (from
+`initiate-authoring-change` or `perform-action` response. You must construct the assignment ID manually using the case ID (from
 `list-cases`) and the flow name for the current stage.
 
 ### Assignment ID format
@@ -665,8 +657,9 @@ ASSIGN-WORKBASKET PEGAACCEL PXC-11!PZCHANGEREVIEW_FLOW
 
 The parent agent wraps its existing authoring delegation inside this workflow:
 
-1. **Before authoring:** Create the ChangeRequest case (Steps 1-3)
-   and use the embedded intake assignment returned by `create-case` when present.
+1. **Before authoring:** Call `initiate-authoring-change` (Step 1) — this creates the
+   ChangeRequest case and completes Intake in one call, returning `changeRequestID`,
+   `branchName`, and `nextAssignmentID` for the Authoring stage.
 2. **During authoring:** Pass the `changeRequestID` to every write call. Track authoring notes on the case.
 3. **After authoring:** Create PegaUnit test cases for testable authored rules
    (using `pyBranchID`), submit authoring (`pyAuthorRuleChanges`) which triggers
@@ -685,19 +678,20 @@ data.
 - **Rejected / Keep working:** Both `"Rejected"` and `"Keep working"` loop the case
   back to the Authoring stage (Stage 2), preserving the branch and all existing rules.
   The agent makes additional changes, then resubmits through Review again.
-- **Branch-scoped changes (always required):** `pyBranchID` must always be set during
-  intake. ALL rules must be created or updated in the branch ruleset, not the base
-  ruleset. The branch ruleset is derived internally from `pyBranchID`. Never create
-  or update rules directly in the base ruleset.
+- **Branch-scoped changes (always required):** An effective branch is always established
+  during intake (from supplied `pyBranchID` or from a derived value). ALL rules must be
+  created or updated in the branch ruleset, not the base ruleset. The branch ruleset is
+  derived internally from that effective branch (`branchName`). Never create or update
+  rules directly in the base ruleset.
 
 ## Troubleshooting
 
 | Problem | Cause | Fix |
 |---------|-------|-----|
 | `pyCaptureChangeRequest` action not available | Case not in Intake stage | Check `pyStatusWork`; case must not yet be in `Open-Authoring`. May need to create a new case |
-| `pyAuthorRuleChanges` action not available | Case not in Authoring stage (`Open-Authoring`) | Verify intake was submitted; check `nextAssignmentID` and confirm `pyStatusWork` is `Open-Authoring` |
+| `pyAuthorRuleChanges` action not available | Case not in Authoring stage (`Open-Authoring`) | Verify intake was submitted; check `nextAssignmentID` from `initiate-authoring-change` and confirm `pyStatusWork` is `Open-Authoring` |
 | Review assignment not appearing | Authoring stage didn't complete | Check that `pyAuthorRuleChanges` was submitted successfully |
-| A rule write call fails with "changeRequestID is required" | `changeRequestID` parameter was not passed to the selected write API | All rule authoring must pass the ChangeRequest case ID. Create a ChangeRequest case first using `create-case` with `caseTypeID='PegaAccel-GenAI-ChangeRequest'`. |
+| A rule write call fails with "changeRequestID is required" | `changeRequestID` parameter was not passed to the selected write API | All rule authoring must pass the ChangeRequest case ID returned by `initiate-authoring-change`. |
 | `get-assignment` returns error for a known case | Assignment ID is incorrectly constructed | Use the format `ASSIGN-WORKBASKET PEGAACCEL {CASE_ID}!{FLOW_NAME}` — no space before `!`, no numbered suffixes, no shape IDs. See "Resuming a Case from a Previous Session" section. |
 | Case loops back to Authoring after submitting review | `pyApprovalDecision` was omitted from the `perform-action` call | Always include `pyApprovalDecision` together with `pyChangeSummary` in the final review submission. Omitting it defaults to "Keep working" behavior. |
-| Test case creation silently skipped with no user notification | Step 6a's user-facing warning was omitted | When no eligible test rulesets exist, emit the "⚠️ PegaUnit test case creation skipped" message (see Step 6a) in your reply before submitting Authoring. `pyAuthoringNotes` alone is not sufficient. |
+| Test case creation silently skipped with no user notification | Step 4a's user-facing warning was omitted | When no eligible test rulesets exist, emit the "⚠️ PegaUnit test case creation skipped" message (see Step 4a) in your reply before submitting Authoring. `pyAuthoringNotes` alone is not sufficient. |

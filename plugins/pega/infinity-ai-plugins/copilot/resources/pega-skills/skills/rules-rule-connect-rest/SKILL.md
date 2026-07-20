@@ -152,18 +152,31 @@ connector payload.
 | `Query string parameters from PARAM and CLIPBOARD` | Multiple query parameters from PARAM and CLIPBOARD with `pyFirstItem`, `pyEmptyBehavior`, `pyDefaultValue` |
 | `Query string with PARAM and CONSTANT values` | Mixed PARAM + CONSTANT query parameters — runtime business input vs fixed protocol options |
 
-## Integration pipeline
+## Integration pipeline — mandatory execution order
 
-A REST connector is one part of a multi-rule integration pipeline. The full
-wiring sequence is:
+A REST connector is one part of a multi-rule integration pipeline. When creating
+an integration end-to-end, you **MUST** create rules in the following order.
+Do NOT skip ahead — each step depends on the previous ones existing.
 
-1. Properties on the data class (flat fields)
-2. Embedded class + properties for JSON arrays
-3. Page List property pointing to embedded class
-4. **REST Connector** (maps response to clipboard property)
-5. JSON Data Transform (deserializes JSON to clipboard)
-6. Regular Data Transform (calls JSON DT, copies flat values)
-7. Data Page (wires connector + response DT + parameters)
+1. **Properties on the data class** (flat scalar fields for the response)
+2. **Embedded class + properties** for JSON arrays (if the response contains arrays)
+3. **Page List property** pointing to the embedded class (if step 2 applies)
+4. **REST Connector** (maps response body to a clipboard property)
+5. **JSON Data Transform** (deserializes JSON into the properties from steps 1-3)
+6. **Regular Data Transform** (clipboard-format wrapper that calls the JSON DT)
+7. **Data Page** (wires connector + response DT + parameters)
+
+### Dependency constraint
+
+Before creating or updating a Data Transform (steps 5-6) that references
+properties via SET steps, **every target property must already exist** on the
+applies-to class. If creating both properties and DTs in the same session,
+create all properties first. If unsure whether a property exists, verify with
+`get-rule` before proceeding.
+
+**Failure mode when violated:** The `create-rule` or `update-rule` call for
+the Data Transform fails with a "property does not exist" error, forcing
+unnecessary retry cycles and confusing the user.
 
 ## Connector update and replacement
 

@@ -139,6 +139,15 @@
       "description": "How the data page is retrieved for association properties. 'MANUAL' (default) for embedded pages. 'AUTOMATIC' to refer to a data page (case reference). 'AUTOMATICNONREF' to copy data from a data page.",
       "x-pega-autoFill": "MANUAL"
     },
+    "pyIsRetrieveEachPageSeparately": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "When 'true' on a PageList property with pyDataRetrievalType 'AUTOMATIC', each page in the list is loaded individually from the data page. Required for PageList attachment properties (Embed-Attach-File with D_pzAttachmentFieldInfo) so that self-referencing parameter values like '.<PropertyName>.pxAttachmentKey' resolve correctly per page."
+    },
+    "pyCategoryName": {
+      "type": "string",
+      "description": "The attachment category name for attachment properties. Must match the pyCategoryName of the companion attachment category rule created for this property. Typically equal to the property name."
+    },
     "pyEditValidate": {
       "type": "string",
       "description": "Name of a validate rule to run when input is received for this property."

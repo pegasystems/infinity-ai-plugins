@@ -43,6 +43,21 @@ description: Schema and authoring guide for Pega Data Transform rules (Rule-Obj-
 
 ## Notes
 
+### Prerequisite — target properties must exist
+
+Before creating or updating a Data Transform with SET steps that target
+properties on the applies-to class, confirm each target property exists.
+If creating both properties and DTs in the same session, create all
+properties first.
+
+This is mandatory for response Data Transforms in integrations, where the
+DT maps external API fields to properties that may not yet exist on the
+data class. Skipping this check results in "property does not exist" errors
+on `create-rule` or `update-rule` and forces unnecessary retry cycles.
+
+If unsure whether a property exists, verify with `get-rule` on the property
+before proceeding with the DT.
+
 ### Conditional groups (WHEN / OTHERWISE_WHEN / OTHERWISE)
 
 - A conditional group always starts with `WHEN` and ends with `OTHERWISE`.

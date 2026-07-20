@@ -4,3 +4,4 @@ logs/
 build/
 .DS_Store
 *.log
+.idea/

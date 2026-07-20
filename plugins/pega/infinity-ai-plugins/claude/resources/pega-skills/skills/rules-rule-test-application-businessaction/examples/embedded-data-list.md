@@ -48,33 +48,61 @@ description: Load when a Business Action form has a embedded list. Contains exam
       "pyForm": [
         {
           "pyParameterName": "LineItemList",
-          "pyParameterType": "Multi-Reference",
-          "pyTestMultiReferenceList": [
+          "pyParameterType": "Embedded List",
+          "pyTestEmbeddedList": [
             {
-              "pyTestReferenceField": [
+              "pyTestEmbeddedObject": [
                 {
                   "pyMapActionParameterFrom": "Constant",
                   "pyParameterName": "ItemDescription",
+                  "pyParameterType": "String",
                   "pyParameterValue": "Airport taxi"
                 },
                 {
                   "pyMapActionParameterFrom": "Constant",
                   "pyParameterName": "Amount",
+                  "pyParameterType": "String",
                   "pyParameterValue": "45.00"
+                },
+                {
+                  "pyMapActionParameterFrom": "Constant",
+                  "pyParameterName": "Quantity",
+                  "pyParameterType": "String",
+                  "pyParameterValue": "4"
+                },
+                {
+                  "pyMapActionParameterFrom": "Constant",
+                  "pyParameterName": "Date",
+                  "pyParameterType": "String",
+                  "pyParameterValue": "2025-03-15"
                 }
               ]
             },
             {
-              "pyTestReferenceField": [
+              "pyTestEmbeddedObject": [
                 {
                   "pyMapActionParameterFrom": "Constant",
                   "pyParameterName": "ItemDescription",
+                  "pyParameterType": "String",
                   "pyParameterValue": "Hotel stay"
                 },
                 {
                   "pyMapActionParameterFrom": "Constant",
                   "pyParameterName": "Amount",
+                  "pyParameterType": "String",
                   "pyParameterValue": "120.00"
+                },
+                {
+                  "pyMapActionParameterFrom": "Constant",
+                  "pyParameterName": "Quantity",
+                  "pyParameterType": "String",
+                  "pyParameterValue": "5"
+                },
+                {
+                  "pyMapActionParameterFrom": "Constant",
+                  "pyParameterName": "Date",
+                  "pyParameterType": "String",
+                  "pyParameterValue": "2025-03-16"
                 }
               ]
             }

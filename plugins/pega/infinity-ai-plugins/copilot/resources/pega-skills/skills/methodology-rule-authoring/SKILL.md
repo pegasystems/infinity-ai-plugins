@@ -36,6 +36,7 @@ authored with `create-rule` / `update-rule`.
 | `Rule-Decision-DataSet` | `rules-rule-decision-dataset` | `create-rule` / `update-rule` |
 | `Rule-Edit-Validate` | `rules-rule-edit-validate` | `create-rule` / `update-rule` |
 | `Rule-Obj-Activity` | `rules-rule-obj-activity` | `create-rule` / `update-rule` |
+| `Rule-Obj-CaseType` | `rules-rule-obj-casetype` | `create-rule` / `update-rule` |
 | `Rule-Obj-Class` | `rules-rule-obj-class` | `create-rule` / `update-rule` |
 | `Rule-Obj-Corr` | `rules-rule-corrtype` | `create-rule` / `update-rule` |
 | `Rule-Obj-FieldValue` | `rules-rule-obj-fieldvalue` | `create-rule` / `update-rule` |

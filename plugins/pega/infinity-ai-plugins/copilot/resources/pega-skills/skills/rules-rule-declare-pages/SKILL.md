@@ -34,6 +34,8 @@ description: Schema and authoring guide for Pega data page rules (Rule-Declare-P
 | `pyDataSourceList entry — AggregateSources` | Minimum-viable aggregate-sources source entry. Combines results from multiple independent sub-sources into a single data page. Required field pyAggregatedDataSourceList (each nested entry is itself a DeclarePageSource of any type). Rare — used when one data page must merge multiple feeds. |
 | `pyDataSourceList entry — GenAI` | Minimum-viable GenAI source entry. Loads data via a Generative AI connector (Rule-Connect-GenerativeAI). Required field pyConnectorName. Server auto-sets pyLoadActivity to pxCallGenAI. |
 | `pyDataSourceList entry — KnowledgeBuddy` | Minimum-viable Knowledge Buddy source entry. Queries a Knowledge Buddy for AI-powered responses. Required field pyKBName. Optional pyKBQuery, pyKBQueryJSON, pyKBResponse. Server auto-sets pyLoadActivity to pxCallKnowledgeBuddy. |
+| `pyDataSourceList entry — RoboticAutomation` | Minimum-viable Robotic Automation source entry. Triggers a server-side robotic automation to load data. Required field pyRACaseType. Optional pyRAReqDTName, pyRARespDTName, pyRATimeout. Server auto-sets pyLoadActivity to pxCallRoboticAutomation. |
+| `pyDataSourceList entry — RoboticDesktopAutomation` | Minimum-viable RDA source entry. Triggers a desktop robotic automation to load data. Required field pyRDAAutomationId. Shares RA fields (pyRAReqDTName, pyRARespDTName, pyRATimeout). Server auto-sets pyLoadActivity to pxCallRoboticDesktopAutomation. |
 
 ## Authoring Notes
 
@@ -53,12 +55,16 @@ Pega convention requires data page names to start with `D_` (e.g., `D_CustomerLi
 | **Lookup (ObjOpen)** | `"ObjOpen"` | `pyLookupClassName`, `pyLookupName`, `pyClassKeyValueList` | Direct database object retrieval by key (e.g., operator info, org lookups) |
 | **Gen AI** | `"GenAI"` | `pyConnectorName` (required — Rule-Connect-GenerativeAI rule name) | Loading data via a Generative AI connector. Server auto-sets `pyLoadActivity: "pxCallGenAI"`. |
 | **Knowledge Buddy** | `"KnowledgeBuddy"` | `pyKBName` (required — KB rule name), `pyKBQuery` (optional — query text, e.g. `"Param.Query"`), `pyKBQueryJSON` (optional — structured JSON query), `pyKBResponse` (optional — dot-prefixed property for response, e.g. `".pyResponseData"`) | Querying a Knowledge Buddy for context-aware AI responses. Server auto-sets `pyLoadActivity: "pxCallKnowledgeBuddy"`. |
+| **Robotic Automation** | `"RoboticAutomation"` | `pyRACaseType` (required — RA case type), `pyRAReqDTName` (optional — request DT), `pyRARespDTName` (optional — response DT), `pyRATimeout` (optional — seconds) | Loading data from a server-side robotic automation. Server auto-sets `pyLoadActivity: "pxCallRoboticAutomation"`. |
+| **Robotic Desktop Automation** | `"RoboticDesktopAutomation"` | `pyRDAAutomationId` (required — automation ID, e.g. `"Param.AutomationName"`), `pyRAReqDTName` (optional), `pyRARespDTName` (optional), `pyRATimeout` (optional), `pyPassCurrentParamPageForRAReqDT`, `pyPassCurrentParamPageForRARespDT` | Loading data from a desktop robotic automation (RDA). Server auto-sets `pyLoadActivity: "pxCallRoboticDesktopAutomation"`. |
 
 > **Note:** For list-structure data pages (`pyStructure: "list"`), a LoadActivity source's activity must be defined on `Code-Pega-List`, not the data page's element class. The activity must populate the primary page that the data page engine passes in as the step page.
 
+> **Note:** Sub-source entries inside `pyAggregatedDataSourceList` do NOT have `pySourceWhen` — only the parent aggregate source carries the When condition.
+
 > `pyConnectorList` (required for Connector sources) specifies the connector rule type: `"Rule-Connect-REST"`, `"Rule-Connect-SOAP"`, `"Rule-Connect-dotNet"`, `"Rule-Connect-Java"`, or `"Rule-Connect-SAP"`.
 
-### GenAI and Knowledge Buddy sources
+### GenAI, Knowledge Buddy, Robotic Automation, and RDA sources
 
 These source types use dedicated internal load activities that the server auto-sets
 when `pyDeclarePagesDataSource` is configured:
@@ -67,13 +73,15 @@ when `pyDeclarePagesDataSource` is configured:
 |-------------|--------------------------|
 | GenAI | `pxCallGenAI` |
 | KnowledgeBuddy | `pxCallKnowledgeBuddy` |
+| RoboticAutomation | `pxCallRoboticAutomation` |
+| RoboticDesktopAutomation | `pxCallRoboticDesktopAutomation` |
 
 Agents should NOT set `pyLoadActivity` for these source types — the server
 derives it from `pyDeclarePagesDataSource`.
 
-`pyConnectorList` is irrelevant for GenAI and KnowledgeBuddy sources. The server
-auto-fills it as `"Rule-Connect-REST"` but it has no runtime effect. Do not set
-it explicitly.
+`pyConnectorList` is irrelevant for GenAI, KnowledgeBuddy, RoboticAutomation,
+and RoboticDesktopAutomation sources. The server auto-fills it as
+`"Rule-Connect-REST"` but it has no runtime effect. Do not set it explicitly.
 
 Both GenAI and KnowledgeBuddy sources use `pyConnectorName` to reference a
 `Rule-Connect-GenerativeAI` connector rule. No request/response data transforms
@@ -83,6 +91,21 @@ For **KnowledgeBuddy** sources, `pyKBQuery` typically wires from a data page
 parameter using `"Param.<ParamName>"` syntax. `pyKBResponse` uses dot-prefixed
 property notation (e.g., `".pyResponseData"`) to specify where the KB stores
 its response on the data page's primary page.
+
+For **RoboticAutomation** and **RoboticDesktopAutomation** sources, the
+request/response data transform pipeline uses RA-specific fields
+(`pyRAReqDTName`, `pyRARespDTName`, `pyRAReqDTParams`, `pyRARespDTParams`)
+instead of the standard `pyReqDataTransform`/`pyResDataTransform` used by
+Connector sources. Set `pyPassCurrentParamPageForRAReqDT` and
+`pyPassCurrentParamPageForRARespDT` to `"true"` to pass the data page's
+parameter page to the request and response data transforms.
+
+For **RoboticDesktopAutomation**, `pyRDAAutomationId` typically wires from a
+data page parameter using `"Param.<ParamName>"` syntax (e.g.,
+`"Param.AutomationName"`).
+
+For both RA and RDA sources, set `pyClassName` on the source entry to match the
+data page's target class.
 
 ### `Connector` source — `DataSource` named page contract
 

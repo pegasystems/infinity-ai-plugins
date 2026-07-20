@@ -27,34 +27,45 @@ Rule-AI-Tool defines tools that can be referenced by Rule-AI-Agent rules. Each t
 - **Intent action page** (`pyIntentActionPage`): The backing rule (Activity, Data Page, Buddy, etc.)
 - **Category** (`pyIntentActionPage.pyCategory`): Determines the type of backing rule
 
-Validate backing rules using `pyIntentActionPage.pyClassName`. The Rule-AI-Tool
-itself can live in a different applies-to class than the backing rule it invokes.
+Validate backing rules using the selected `pyIntentActionPage.pyClassName` and
+`pyIntentActionPage.pyRuleName` when the selected category uses a backing class.
+The Rule-AI-Tool itself can live in a different applies-to class than the backing
+rule it invokes.
+
+Category-specific field presence rules in this skill are intentional. Example
+payloads in this package are illustrative; if an older example differs, follow
+the category constraints documented in this skill.
 
 
 ### Tool Categories
-| Category | `pyIntentActionPage.pyCategory` value | `ruleType` to query | Description |
-|----------|--------------------|---------------------|-------------|
-| `Agent-backed` | `Rule-AI-Agent` | `Rule-AI-Agent` | Tool that delegates to another AI agent |
-| `Activity-backed` | `Rule-Obj-Activity` | `Rule-Obj-Activity` | Tool backed by an activity rule. Validate the referenced activity exists; do not assume `pyActivityType: "AUTOMATION"` is required. |
-| `Buddy-backed` | `Buddy` | N/A (not discoverable) | Tool backed by a Buddy identifier. `pyRuleName` must be one of: `platform_buddy`, `sales_automation_buddy`, `customer_decision_hub_buddy`, `customer_service_buddy`. These are platform-provided values not resolvable via `list-rules` or `search-rules`. |
-| `Case Type-backed` | `Rule-Obj-CaseType` | `Rule-Obj-CaseType` | Tool backed by a case type rule |
-| `Data Page-backed` | `Rule-Declare-Pages` | `Rule-Declare-Pages` | Tool backed by a data page |
-| `Flow Action-backed` | `Rule-Obj-FlowAction` | `Rule-Obj-FlowAction` | Tool backed by a flow action |
-| `Section-backed` | `Rule-HTML-Section` | `Rule-HTML-Section` | Tool backed by a UI section |
+| Category | `pyIntentActionPage.pyCategory` value | Description | `pyIntentActionPage.pyClassName` source | `pyIntentActionPage.pyRuleName` source |
+|----------|--------------------|-------------|------------------------------------------|-----------------------------------------|
+| `Agent-backed` | `Rule-AI-Agent` | Tool that delegates to another AI agent | Run data page `D_pzAgentResource` | Run data page `D_pzAgentsByClass` after selecting the class |
+| `Activity-backed` | `Rule-Obj-Activity` | Tool backed by an activity rule. Validate the referenced activity exists; do not assume `pyActivityType: "AUTOMATION"` is required. | Run data page `D_pzAutomationResource` | Run data page `D_pzAutomationsByClass` after selecting the class |
+| `Buddy-backed` | `Buddy` | Tool backed by a Buddy identifier. Default `pyIntentActionPage.pyBuddyType` to `"Internal"`; override only when the selected Buddy requires it. | Do not set | Run data page `D_pzListOfBuddies` |
+| `Case Type-backed` | `Rule-Obj-CaseType` | Tool backed by a case type rule. Keep `pyIntentActionPage.pyRuleInsName` when your environment returns it for the selected case type. | Do not set | Run data page `D_pzGetCaseTypesEligibleForCaseTypeTool` |
+| `Data Page-backed` | `Rule-Declare-Pages` | Tool backed by a data page | Do not set | Query with `ruleType` as  `Rule-Declare-Pages` |
+| `Flow Action-backed` | `Rule-Obj-FlowAction` | Tool backed by a flow action. Do not include `pyAskConfirmation` or `pyIntentActionPage.pyClassName`. | Do not set | Query with `ruleType` as  `Rule-Obj-FlowAction` |
+| `Section-backed` | `Rule-HTML-Section` | Tool backed by a UI section | Do not set | Query with `ruleType` as  `Rule-HTML-Section` |
 
 ### Key Fields
 - **`pyPurpose`** (Text): Functional identifier for the tool, used as a key when agents reference it (e.g., `pxGetCaseTypes`, `pzSearchRule`). Required.
-- **`pyAskConfirmation`** (String: `"true"` or `"false"`): Whether the agent should ask user confirmation before executing. Must use string values, not boolean.
-- **`pyAskConfirmationMessage`** (Text): Recommended when `pyAskConfirmation` is `"true"`. For Pega 26+, include a clear confirmation prompt message; for Pega 25 payloads, this field may be omitted.
+- **`pyAskConfirmation`** (String: `"true"` or `"false"`): Category-specific confirmation flag. Omit it for `Rule-Obj-FlowAction`; use `"false"` for `Rule-AI-Agent` and `Rule-Obj-CaseType`; otherwise set `"true"` or `"false"` as determined contextually for the selected category. Must use stringified boolean.
+- **`pyAskConfirmationMessage`** (Text): A clear confirmation prompt message. Only include when `pyAskConfirmation` is `"true"`; do not include it when `pyAskConfirmation` is `"false"` or absent. 
 - **`pyIntentDescription`** (Text): Detailed instructions for the AI — include purpose, when to use, input parameters, and output format
+- **`pyIntentActionPage.pyRuleName`** (Text): Required for every tool category. Do not leave it blank.
+- **`pyIntentActionPage.pyClassName`** (Text): Include only for categories that use a backing class to resolve the target rule. Set it for `Rule-AI-Agent` and `Rule-Obj-Activity` using the selected backing rule class. Exclude it for `Buddy`, `Rule-Obj-CaseType`, `Rule-Declare-Pages`, `Rule-Obj-FlowAction`, and `Rule-HTML-Section`.
+- **`pyIntentActionPage.pyBrowseClass`** (Text): Optional browse or scoping class used by some environments when resolving the backing resource. Include it only when the selected backing rule or environment requires that extra context.
+- **`pyIntentActionPage.pyRuleInsName`** (Text): Optional exact instance handle used most often with case type-backed tools. Preserve it when the selected case type lookup returns it or your environment requires exact rule resolution.
 - **`pyRetentionPolicy`**: Controls how long tool execution results are retained (`ALWAYS_RETAIN`, `RETAIN_UNTIL_ACTIONED`, `EPHEMERAL`)
+- **`pyIntentActionPage.pyBuddyTextOnlyChunks`** (String: `"true"` or `"false"`): Optional for Buddy-backed tools only; do not include it for any other category.
 
 ### Parameter Structures
 Rule-AI-Tool supports two distinct parameter arrays with different purposes:
 
 1. **Top-level `pyParameters`** (array of `Embed-MethodParams`): Parameters exposed by the Rule-AI-Tool rule itself to the AI agent. These define the interface that agents use when invoking the tool. Use this when the tool needs to accept inputs from the agent.
 
-2. **Nested `pyParameters` in `pyIntentActionPage`** (array of `Embed-AutomationRule-IO`): Parameters passed to the backing rule (Activity, Data Page, etc.) when the tool executes. These map the tool's inputs to the backing rule's parameter interface. Use this to translate top-level tool parameters into backing rule parameters, or to handle automation-specific parameter formats.
+2. **Nested `pyParameters` in `pyIntentActionPage`** (array of `Embed-AutomationRule-IO`): Parameters passed to the backing rule when the tool executes. In this skill package, use nested parameters only for `Rule-Obj-Activity` and `Rule-Declare-Pages` tools. These map the tool's inputs to the backing rule's parameter interface. Use this to translate top-level tool parameters into backing rule parameters, or to handle automation-specific parameter formats.
 
 **Required-flag difference:** `Embed-MethodParams` uses `pyParametersParamReq` with values `"-1"` (required) / `"0"` (optional). `Embed-AutomationRule-IO` uses `pyRequired` with values `"true"` / `"false"`. Do not mix up the two conventions.
 
@@ -71,11 +82,7 @@ When the user asks to create a tool (Rule-AI-Tool), the agent **must follow this
 
    Do NOT assume a category. Always ask the user to choose.
 
-2. **Identify the backing rule class and list existing backing rules of the selected category.** Based on the user's choice, use the **Tool Categories** table above to determine the correct `ruleType` to query with `list-rules` or `search-rules` from `pyIntentActionPage.pyClassName` (the class where the backing rule lives).
-
-   **Buddy-backed tools:** Skip rule lookup and validate the selected `pyRuleName`
-   against the allowed Buddy identifiers listed above.
-
+2. **Identify the backing rule class and list existing backing rules of the selected category.** Based on the user's choice, use the **Tool Categories** table above to determine the exact value of `pyIntentActionPage.pyRuleName` and whether `pyIntentActionPage.pyClassName` is used and it's exact value. If the table names a data page, run that data page and ask the user to choose from the returned values. If the table says to search for an instance class, use rule search for that class and determine or ask the user to choose from the matching rules.
    Present the list of available backing rules to the user so they can select one or decide to create a new backing rule.
 
 3. **Proceed with tool creation** using the selected category and backing rule, following the Backing Rule Validation steps below.
@@ -84,32 +91,35 @@ When the user asks to create a tool (Rule-AI-Tool), the agent **must follow this
 
 Before creating a Rule-AI-Tool, the agent **must validate** the backing rule referenced in `pyIntentActionPage.pyRuleName`:
 
-1. **Verify the rule exists — STOP if it does not.** Use `search-rules` or `list-rules` to confirm that the rule name specified in `pyIntentActionPage.pyRuleName` corresponds to an existing rule instance of the type indicated by `pyIntentActionPage.pyCategory`.
+1. **Verify the rule exists — STOP if it does not.** Use the discovery source in the **Tool Categories** table to confirm that the rule name specified in `pyIntentActionPage.pyRuleName` corresponds to an existing backing rule or platform-provided resource for the selected `pyIntentActionPage.pyCategory`.
 
    Validate the rule against `pyIntentActionPage.pyClassName`, not the AI Tool
    rule's own `pyClassName` unless both are intentionally the same.
 
-   **For Buddy-backed tools:** Validate `pyRuleName` against the allowed Buddy
-   identifiers instead of using rule APIs.
+   Validate the `pyIntentActionPage.pyRuleName` and `pyIntentActionPage.pyClassName` against their repective sources according to the **Tool Categories** table above. 
 
-   **If the rule does not exist, the agent MUST stop and ask the user** which of the following they prefer:
+   **If the rule does not exist, pause and ask the user** which of the following they prefer:
    - Provide an existing backing rule name to use instead
    - Have the agent create the backing rule first, then proceed with the AI Tool creation
 
-   **Do NOT proceed with Rule-AI-Tool creation if the backing rule does not exist.** Creating an AI Tool with a non-existent backing rule results in a broken tool that will fail at runtime. Never assume the backing rule will be created later — always resolve this before creating the tool.
+   **Stop Rule-AI-Tool creation if the backing rules does not exist.** Creating an AI Tool with a non-existent backing rule results in a broken tool that will fail at runtime. Never assume the backing rule will be created later — always resolve this before creating the tool.
 
-2. **Pass values to all required parameters.** If the backing rule has parameters, inspect the rule (via `get-rule`) to discover its parameter definitions. For every required parameter on the backing rule, ensure a corresponding entry exists in `pyParameters` (top-level) with:
-    - `pyParametersParamName` matching the backing rule's parameter name
-    - `pyParametersParamReq` set to `"-1"` (required) or `"0"` (optional) to match the backing rule's parameter requirement
-
-   If the tool also uses nested `pyIntentActionPage.pyParameters`, mirror the
-   same logical parameter names there and map them to `Param.<name>` or the
-   clipboard reference expected by the backing rule.
-
-
-   **Note on parameter flags:** Use `pyParametersParamReq` to indicate whether the parameter is mandatory (`"-1"`) or optional (`"0"`). This flag tells the Rule-AI-Tool whether the parameter must be provided when the tool is invoked.
-
-   Do not omit required parameters — the tool will fail at runtime if a required parameter is not mapped.
-
+2. **Pass values to all required parameters.** If the backing category supports parameters:
+   - Call `pzLoadRuleParameters` using:
+   - `pyIntentActionPage.pyClassName` + `pyIntentActionPage.pyRuleName` (if class exists), OR
+   - rule name + category class (if no class).
+   - From response, identify required/optional params.
+   - For each required param, add entry in `pyParameters`:
+      - `pyParametersParamName` = param name
+      - `pyParametersParamReq` = "-1" (required) / "0" (optional)
+   - If using nested `pyIntentActionPage.pyParameters`:
+      - Mirror same parameter names
+      - Map values to `Param.<name>` or expected clipboard references
+   - **Note on parameter flags:** 
+      - `pyParametersParamReq` defines requirement:
+         - "-1" = mandatory
+         - "0" = optional
+      - Rule-AI-Tool enforces this at execution.
+   - Do not skip required parameters — missing mappings cause runtime failure.
 ### Pega 25+ Requirement
 Rule-AI-Tool requires Pega Infinity 25+ (08-25-01 or later). The rule type may not be available in earlier versions.
