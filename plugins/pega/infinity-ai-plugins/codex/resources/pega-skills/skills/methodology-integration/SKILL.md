@@ -62,6 +62,25 @@ The four integration elements that work together for external CRUD:
 
 When you create a Data Object, Pega Platform automatically creates three default Data Pages: a **List page** (multiple records), a **Lookup page** (single record), and a **Savable page** (CRUD operations).
 
+## Authoring Order for New Integrations
+
+When building a new integration from scratch (all rules need to be created),
+follow this strict order:
+
+1. **Data model first** — Create all properties on the data class that the
+   integration will read from or write to. This includes both flat scalar
+   properties and Page/PageList properties for nested structures.
+2. **Connector second** — Create the REST Connector rule.
+3. **Data Transforms third** — Create the JSON DT and the clipboard wrapper DT.
+   These reference the properties from step 1 — they will fail if properties
+   don't exist.
+4. **Data Page last** — Wire the connector and response DT together.
+
+**Why this order matters:** Data Transforms validate property references at
+creation time. If the referenced properties don't exist on the class, the
+create/update call fails. Always ensure the data model is complete before
+authoring DTs that reference it.
+
 ## Common Integration Scenarios
 
 | Scenario | Example |

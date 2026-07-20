@@ -318,10 +318,15 @@
         "required": ["pyIntroductionMessageMode"]
       },
       "then": {
-        "required": ["pyUserPrompt", "pyInitialPromptInstructions"],
+        "required": ["pyInitialPromptInstructions", "pyGenAIDef"],
         "properties": {
-          "pyUserPrompt": {
-            "description": "Required when pyIntroductionMessageMode is 'Opening'. Must be a valid Rule-UI-Paragraph instance name."
+          "pyGenAIDef": {
+            "required": ["pyUserPrompt"],
+            "properties": {
+              "pyUserPrompt": {
+                "description": "Required when pyIntroductionMessageMode is 'Opening'. Must be a valid Rule-UI-Paragraph instance name."
+              }
+            }
           },
           "pyInitialPromptInstructions": {
             "description": "Required when pyIntroductionMessageMode is 'Opening'. Must be a valid Rule-UI-Paragraph instance name."

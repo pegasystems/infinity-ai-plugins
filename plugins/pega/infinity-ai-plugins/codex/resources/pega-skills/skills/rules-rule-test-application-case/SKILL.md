@@ -161,6 +161,6 @@ Use `pyInputParameters` and `pyOutputParameters` from the inventory (fetched via
 | `testcase-keyword-assert-validation` | Error assertion pattern |
 | `testcase-multi-case-aliasing` | Multiple CaseID aliases for cross-case wiring |
 | `testcase-getcase-persona-switch` | Login→GetCase→Assignment sequence after persona switch |
-| `testcase-keyword-child-capture` | Parent assignment capturing child CaseID for downstream wiring |
+| `testcase-keyword-child-case-capture` | Capture child case for downstream wiring |
 | `testcase-update-parameter` | Change keyword parameter value |
 | `testcase-update-append` | Append new keyword to test case |

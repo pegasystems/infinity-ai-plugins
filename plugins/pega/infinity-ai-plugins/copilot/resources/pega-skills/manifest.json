@@ -1781,6 +1781,22 @@
       "parent": "rules-rule-declare-pages"
     },
     {
+      "name": "pyDataSourceList entry — RoboticAutomation",
+      "description": "Minimum-viable Robotic Automation data page source entry. Triggers a server-side robotic automation to load data. Required field pyRACaseType. Optional pyRAReqDTName, pyRARespDTName, pyRATimeout. Server auto-sets pyLoadActivity to pxCallRoboticAutomation.",
+      "path": "skills/rules-rule-declare-pages/examples/pyDataSourceList/robotic-automation.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "rules-rule-declare-pages"
+    },
+    {
+      "name": "pyDataSourceList entry — RoboticDesktopAutomation",
+      "description": "Minimum-viable Robotic Desktop Automation (RDA) data page source entry. Triggers a desktop robotic automation to load data. Required field pyRDAAutomationId. Shares RA fields (pyRAReqDTName, pyRARespDTName, pyRATimeout). Server auto-sets pyLoadActivity to pxCallRoboticDesktopAutomation.",
+      "path": "skills/rules-rule-declare-pages/examples/pyDataSourceList/robotic-desktop-automation.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "rules-rule-declare-pages"
+    },
+    {
       "name": "pyParameters entry — DATE",
       "description": "Date-typed data page parameter (no time component). Used for calendar-day filters and date-range endpoints.",
       "path": "skills/rules-rule-declare-pages/examples/pyParameters/date.md",
@@ -3797,6 +3813,22 @@
       "parent": "rules-rule-obj-model"
     },
     {
+      "name": "Attachment Property (Page)",
+      "description": "Single-file attachment Page property of Embed-Attach-File with auto-derived parameter mapping. Prerequisite — create a `File-Only Attachment Category` first (see rules-rule-obj-attachmentcategory skill).",
+      "path": "skills/rules-rule-obj-property/examples/attachment-property-page.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "rules-rule-obj-property"
+    },
+    {
+      "name": "Attachment Property (PageList)",
+      "description": "Multi-file attachment PageList property of Embed-Attach-File with auto-derived parameter mapping. Prerequisite — create a `File-Only Attachment Category` first (see rules-rule-obj-attachmentcategory skill).",
+      "path": "skills/rules-rule-obj-property/examples/attachment-property-pagelist.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "rules-rule-obj-property"
+    },
+    {
       "name": "Copy Data from Data Page",
       "description": "Use when a property should copy values from a source data page once. Contains a Page/PageList example using pyDataRetrievalType=\"AUTOMATICNONREF\" (snapshot, not live reference).",
       "path": "skills/rules-rule-obj-property/examples/copy-from-data-page.md",
@@ -4413,6 +4445,14 @@
       "parent": "rules-rule-service-mcp"
     },
     {
+      "name": "business-action-child-case",
+      "description": "Load when creating a Business Action for a child case that is auto-created by the app. Shows CaptureChildCase + PerformAssignment steps. The BA lives on the child case class, receives the parent CaseID and ChildCasePrefix as inputs, and outputs ChildCaseIDAutoMapped.",
+      "path": "skills/rules-rule-test-application-businessaction/examples/child-case.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "rules-rule-test-application-businessaction"
+    },
+    {
       "name": "business-action-reference-conditional",
       "description": "Load when a Business Action form shows a reference picker only after another field is selected. Contains a choice field and a conditional reference.",
       "path": "skills/rules-rule-test-application-businessaction/examples/conditional-reference-field.md",
@@ -4440,6 +4480,14 @@
       "name": "business-action-embedded-data-single",
       "description": "Load when a Business Action form has an embedded page field. Shows filling all fields mentioned in the referenced form.",
       "path": "skills/rules-rule-test-application-businessaction/examples/embedded-data-single.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "rules-rule-test-application-businessaction"
+    },
+    {
+      "name": "business-action-multi-reference-field-advanced-search",
+      "description": "Load when a Business Action form lets the user choose several records from a reference picker that is displayed as advancedSearch. Contains sample DX API payload and UI playwright code for selecting multiple records where the search field also is a reference.",
+      "path": "skills/rules-rule-test-application-businessaction/examples/multi-reference-field-advanced-search.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-test-application-businessaction"
@@ -4480,6 +4528,14 @@
       "name": "business-action-perform-assignment",
       "description": "Load when creating a Business Action for a standard assignment. Shows PerformAssignment step type with form field mapping and input parameters.",
       "path": "skills/rules-rule-test-application-businessaction/examples/perform-assignment.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "rules-rule-test-application-businessaction"
+    },
+    {
+      "name": "business-action-single-reference-field-advanced-search",
+      "description": "Load when a Business Action form has one reference picker which is displayed as advancedSearch. Contains sample DX API payload and UI playwright code for selecting reference.",
+      "path": "skills/rules-rule-test-application-businessaction/examples/single-reference-field-advanced-search.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-test-application-businessaction"
@@ -4549,8 +4605,8 @@
       "parent": "rules-rule-test-application-case"
     },
     {
-      "name": "testcase-keyword-child-capture",
-      "description": "Load when a parent assignment triggers child case creation. Shows parent keyword capturing child CaseID as output for downstream child keywords.",
+      "name": "testcase-keyword-child-case-capture",
+      "description": "Load when the app auto-creates a child case. Shows the child case keyword capturing its case ID as output parameter with downstream child case keywords wiring CaseID from that output.",
       "path": "skills/rules-rule-test-application-case/examples/pyTestKeywords/child-case-capture.md",
       "category": "skill",
       "prompt": false,
@@ -5915,6 +5971,14 @@
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-obj-servicelevel"
+    },
+    {
+      "name": "business-action-advanced-search",
+      "description": "Load when a Business Action form has a search-and-select (an advanced search picker) reference field to look up record(s). Contains DX API mapping rules and Playwright automation patterns for selecting one or more records.",
+      "path": "skills/rules-rule-test-application-businessaction/references/advanced-search.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "rules-rule-test-application-businessaction"
     },
     {
       "name": "business-action-parameters",

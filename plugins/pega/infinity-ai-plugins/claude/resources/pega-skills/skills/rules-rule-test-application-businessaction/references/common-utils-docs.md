@@ -31,6 +31,41 @@ export class CommonUtils {
      */
     Handle_AutoComplete: (page: Page, label: string, input: string, rowLocator?: Locator) => Promise<void>;
 
+    
+    /**
+     * This method is used to handle advancedSearch single select
+     * @param page is playwright page
+     * @param label is the label of the advancedSearch field
+     * @param searchCriterion is the value to be selected in search by dropdown; pass an empty string when the picker has only one search group and set it only when multiple groups exist
+     * @param searchFields is the array of fields in advancedSearch
+     * @param searchPick is the value which want to select
+     * Let say for Search and Select with search by as Calendar year
+     * searchCriterion = "Calendar year"
+     * searchFields = [{label : "Calendar year", type : "pxAutoComplete", value : "2024"}, {label : "Code", type : "TextInput", value : "FY24"}, {label : "From Date", type : "pxDateTime", value : "06/01/2024"}]
+     * searchPick = "Name1:ID1" //Single select
+     *
+     * @example
+     * await commonUtils.Handle_SearchAndSelectSingle(page, 'Transaction search', "Search by transaction reference", [{label: "Transaction reference number", type: "TextInput", value: "1"}], "Powertronix:P1");
+     */
+    Handle_SearchAndSelectSingle = async (page: Page, label: string, searchCriterion: string, searchFields: any, searchPick: string): Promise<void>;
+
+    /**
+     * This method is used to handle advancedSearch multi select
+     * @param page is playwright page
+     * @param label is the label of the advancedSearch field
+     * @param searchCriterion is the value to be selected in search by dropdown; pass an empty string when the picker has only one search group and set it only when multiple groups exist
+     * @param searchFields is the array of fields in advancedSearch
+     * @param searchPicks are the values which want to select
+     * Let say for Search and Select with search by as Calendar year
+     * searchCriterion = "Calendar year"
+     * searchFields = [{label : "Calendar year", type : "pxAutoComplete", value : "2024"}, {label : "Code", type : "TextInput", value : "FY24"}, {label : "From Date", type : "pxDateTime", value : "06/01/2024"}]
+     * searchPicks = ["Name1", "Name2"] //Multi select
+     *
+     * @example
+     * await commonUtils.Handle_SearchAndSelectMulti(page, 'Transaction search', "Search by transaction reference", [{label: "Transaction reference number", type: "TextInput", value: "1"}], ["Powertronix", "Greentech"]);
+     */
+    Handle_SearchAndSelectMulti = async (page: Page, label: string, searchCriterion: string, searchFields: any, searchPicks: string[]): Promise<void>;
+
     /**
      * Handles rich text editor fields that are embedded in iframes.
      *
@@ -118,14 +153,14 @@ export class CommonUtils {
      * @param label - The label/identifier of the reference field
      * @param mode - Selection mode ('singleselect' or 'multiselect')
      * @param inputValue - The value(s) to select. Pass string for singleselect;
-     *                     pass string[] for multiselect even though sending single value.
+     *                     pass string[] for multiselect, even for a single value.
      *
      * @example
      * await commonUtils.Handle_ReferenceListMethods(page, 'autocomplete', 'Country', 'singleselect', 'USA');
      * await commonUtils.Handle_ReferenceListMethods(page, 'table', 'Products', 'multiselect', ['Mac Mini']);
      * await commonUtils.Handle_ReferenceListMethods(page, 'dropdown', 'Status', 'singleselect', 'Active');
      */
-    Handle_ReferenceListMethods: (page: Page, displayAs: string, label: string, mode: string, inputValue: string | string[]) => Promise<void>;
+    Handle_ReferenceListMethods: (page: Page, displayAs: string, label: string, mode: string, inputValue: any) => Promise<void>;
 
     /**
      * Handles multi-record/embedded list fields (tables with add/delete row).
@@ -135,15 +170,17 @@ export class CommonUtils {
      * @param label - The aria-label of the table/grid
      * @param displayAs - Display type (e.g., 'table', 'repeating view')
      * @param editMode - Edit mode ('tableRows' for inline, 'modal' for popup form)
-     * @param buttonLocator - XPath template for Add button (contains %s for label substitution)
-     * @param locators - Map of field names to their XPath locators within a row
+     * @param buttonLocator - Full XPath for the Add button, built from its aria-label
+     *                        (e.g. "//button[@aria-label='Add Employee']")
+     * @param locators - Map of field names to their row field test-id locator strings
+     *                   (e.g. "First Name:input:control")
      * @param inputValues - Array of row data objects (field name → value)
      *
      * @example
      * const locators = {
-     *   "First Name": "//input[@data-testid='First Name:input:control']",
-     *   "Salary": "//input[@data-testid='Salary:currency-input:control']",
-     *   "Age": "//input[@data-testid='Age:number-input:control']"
+     *   "First Name": "First Name:input:control",
+     *   "Salary": "Salary:currency-input:control",
+     *   "Age": "Age:number-input:control"
      * };
      * const data = [
      *   { "First Name": "John", "Salary": "2000", "Age": "18" },
@@ -151,7 +188,7 @@ export class CommonUtils {
      * ];
      * await commonUtils.Handle_MultiRecordMethods(
      *   page, 'Employees', 'table', 'tableRows',
-     *   "//button[@aria-label='Add row to %s']", locators, data
+     *   "//button[@aria-label='Add Employee']", locators, data
      * );
      */
     Handle_MultiRecordMethods: (page: Page, label: string, displayAs: string, editMode: string, buttonLocator: string, locators: any, inputValues: any) => Promise<void>;
@@ -183,19 +220,6 @@ export class CommonUtils {
      * await commonUtils.loginToPortal(page, config.url, username, password);
      */
     loginToPortal: (page: Page, url: string, username: string, password: string) => Promise<UserPortal>;
-
-    /**
-     * Selects the first row in a table by clicking its checkbox or radio button.
-     *
-     * @param page - The Playwright page instance
-     * @param mode - Selection mode: 'singleselect' (radio) or 'multiselect' (checkbox)
-     * @param label - The aria-label of the table/grid container
-     *
-     * @example
-     * await commonUtils.selectFirstRecordInTable(page, 'singleselect', 'Applicants');
-     * await commonUtils.selectFirstRecordInTable(page, 'multiselect', 'Documents');
-     */
-    selectFirstRecordInTable: (page: Page, mode: string, label: string) => Promise<void>;
 
     /**
      * Switches context to an iframe on the page.

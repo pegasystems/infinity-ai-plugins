@@ -48,16 +48,18 @@ description: Load when a Business Action form has an embedded page field. Shows 
       "pyForm": [
         {
           "pyParameterName": "ReviewerDetails",
-          "pyParameterType": "Reference",
-          "pyTestReferenceField": [
+          "pyParameterType": "Embedded Data",
+          "pyTestEmbeddedObject": [
             {
               "pyMapActionParameterFrom": "Constant",
               "pyParameterName": "ReviewerID",
+              "pyParameterType": "String",
               "pyParameterValue": "REV-401"
             },
             {
               "pyMapActionParameterFrom": "Constant",
               "pyParameterName": "ReviewerName",
+              "pyParameterType": "String",
               "pyParameterValue": "Jane Smith"
             }
           ]

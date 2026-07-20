@@ -27,11 +27,12 @@ If all inputs are present, proceed to the Procedure below.
 
 ## Critical Rules
 
-1. **One perform step per Business Action.** Exactly one `PerformAssignment` or `PerformAction` (optionally preceded by `CreateCase`). Never chain multiple.
+1. **One perform step per Business Action.** Exactly one `PerformAssignment` or `PerformAction` (optionally preceded by `CreateCase` or `CaptureChildCase`). Never chain multiple.
 2. **One Business Action per unique assignment.** Multiple scenarios = one parameterized Business Action with shared `pyInputParameters`. Never duplicate for different test data.
 3. **Approval shapes → two Business Actions.** One for Approve, one for Reject.
 4. **ScreenFlow → N Business Actions.** One per shape (`AssignmentSF1`…`AssignmentSFN`), each with its own view.
 5. **CreateCase steps carry NO form fields.** `pyForm` belongs exclusively to the PerformAssignment step. The CreateCase step only has `pyActionParameters` and `pyOutputParameters`.
+6. **CaptureChildCase steps carry NO form fields.** `pyForm` belongs exclusively to the following PerformAssignment step. The CaptureChildCase step only has `pyActionParameters` (CaseID from Input + ChildCasePrefix from Input) and `pyOutputParameters` (ChildCaseIDAutoMapped).
 
 ## Procedure
 
@@ -47,7 +48,8 @@ Call `get-application`, inspect `pyRuleSetList`, and call `get-rule(detail="full
 |-----------|------|
 | Case-wide/stage-wide action (Change stage, Reopen, Edit details) | PerformAction |
 | Approval shape | PerformApproval (two BAs: Approve + Reject) |
-| Assignment that creates a new case | CreateCase + PerformAssignment |
+| Assignment that creates a **top-level** case (user clicks Create in portal) | CreateCase + PerformAssignment |
+| Assignment on a **child case** auto-created by the app | CaptureChildCase + PerformAssignment |
 | Standard assignment | PerformAssignment |
 
 Evaluate top-to-bottom; use the first match. Then continue to Step 3.
@@ -57,7 +59,8 @@ Evaluate top-to-bottom; use the first match. Then continue to Step 3.
 | BA type | Pattern | Example |
 |---------|---------|---------|
 | Assignment | `{AssignmentNameNoSpaces}Assignment` | `LivingsituationAssignment` |
-| Case creation | `Create{CaseName}Case` | `CreateHomeloanCase` |
+| Case creation (top-level) | `Create{CaseName}Case` | `CreateHomeloanCase` |
+| Child case BA | `{ChildCaseName}ChildCase` | `SavingsAccountChildCase` |
 | Case-wide action | `{ActionNameNoSpaces}Action` | `ChangestageAction` |
 | Approval (approve) | `Approve{CaseName}Approval` | `ApproveHomeloanApproval` |
 | Approval (reject) | `Reject{CaseName}Approval` | `RejectHomeloanApproval` |
@@ -88,15 +91,14 @@ all interactive fields from the view rule response.
 
 > **Verification gate:** Confirm your field list was derived from the actual `get-rule`
 > response. Count the interactive (non-readOnly) fields; if zero, re-check your parsing.
-> Then produce the **field extraction checkpoint** table (see `business-action-view-field-extraction` §
-> Field extraction checkpoint)
+> Then produce the **field extraction checkpoint** table (see `business-action-view-field-extraction` Field extraction checkpoint)
 
 ### Step 5: Generate parameters
 
 Load `business-action-parameters` via `get-skill` and follow its generate → verify procedure.
 Its default selection order is mandatory: scenario/handover values, referenceList data pages for ObjectReference fields, resolved cases, dropdown options, then realistic sample data.
 
-If the field extraction checkpoint includes `ObjectReference`, `UserReference`, `reference`, or `EmbeddedDataMulti`, load `business-action-reference-field-mapping` now and apply it before generating `pyForm`, `pyInputParameters`, or Playwright code.
+If the field extraction checkpoint includes `ObjectReference`, `UserReference`, `reference`, or `EmbeddedDataMulti`, load `business-action-reference-field-mapping`; if any reference has `pyDisplayAs` / `config.displayAs` = `advancedSearch`, also load `business-action-advanced-search` before generating Playwright code.
 
 Load a matching example via `get-skill` before creating a Business Action — the example
 shows the full JSON structure including `pyTestSteps` and `pyActionParameters`:
@@ -104,12 +106,15 @@ shows the full JSON structure including `pyTestSteps` and `pyActionParameters`:
 | Business Action needed | Skill |
 |---|---|
 | Create Case (has CreateCase step) Business Action | `business-action-create-case` |
+| Child case Business Action (CaptureChildCase + PerformAssignment) | `business-action-child-case` |
 | Perform Assignment Business Action | `business-action-perform-assignment` |
 | Perform Action Business Action | `business-action-perform-action` |
 | Perform Approval Business Action (Approved) | `business-action-approval-approved` |
 | Perform Approval Business Action (Rejected) | `business-action-approval-rejected` |
 | Form with a single reference field | `business-action-single-reference-field` |
 | Form with a reference list (multi) | `business-action-multi-reference-field` |
+| Form with a single reference field with display as advancedSearch | `business-action-single-reference-field-advanced-search` |
+| Form with a reference list (multi) with display as advancedSearch | `business-action-multi-reference-field-advanced-search` |
 | Form with a UserReference search box | `business-action-user-reference-search-box` |
 | Form with an embedded data single (sub-view) | `business-action-embedded-data-single` |
 | Form with an embedded data list (multi-record table) | `business-action-embedded-data-list` |
@@ -141,10 +146,12 @@ Immediately call `get-rule(key="{createdKey}", detail="full")` and confirm:
 4. `pyForm` has entries for all non-checkbox, non-readOnly fields
 5. `pyInputParameters` includes CaseID (first), ALL interactive form fields, ValidationFails (last)
 6. `pyPlaywrightScript` has interaction lines for all interactive fields
-7. Reference, multi-reference, embedded page reference, and embedded data list fields follow `business-action-reference-field-mapping`; verify `pyForm`, `pyInputParameters`, and Playwright mappings against that reference.
-8. `pyOutputParameters`: Step-level and root-level must use the **same descriptive name** (e.g., `HomeLoanCaseID`). NEVER generic `CaseID`. Step-level has `pyParameterValue: "data$caseInfo$ID"`. Root-level has `pyMapOutputFrom: "Response"`. Exactly ONE entry at each level. Every entry must have a value — never empty.
+7. Reference, multi-reference, embedded single object (Embedded Data), and embedded data list (Embedded List) fields follow `business-action-reference-field-mapping`; verify `pyForm`, `pyInputParameters`, and Playwright mappings against that reference.
+8. `pyOutputParameters`: For **CreateCase BAs** — step-level and root-level use the same descriptive name (e.g., `HomeLoanCaseID`); NEVER generic `CaseID`; step-level has `pyParameterValue: "data$caseInfo$ID"`; root-level has `pyMapOutputFrom: "Response"`. For **child case BAs** (CaptureChildCase + PerformAssignment) — both levels use `ChildCaseIDAutoMapped` as the parameter name `pyParameterValue: ""`. Exactly ONE entry at each level.
 9. Every `pyInputParameters` entry (except CaseID and embedded reference fields represented only in `pyForm`) has a non-empty `pyParameterValue` with a meaningful test default — never blank, never a placeholder like `"TODO"` or `"value"`.
 10. **Approval Business Actions only:** `pyApprovalResult` in `pyForm` has `pyMapRequestFieldFrom: "Constant"` with value exactly `"Approved"` or `"Rejected"`.
+11. **Playwright script content verification** — cross-check `pyPlaywrightScript` against the loaded `business-action-ui-automation` and the matching example skill:
+Standalone → `clickGo(page, "ASSIGNMENT_NAME")` where `ASSIGNMENT_NAME` = exact `pyMOName` from the flow shape. Approval → `clickGo(page, "Get Approval")`. 
 
 **If ANY check fails:** fix via `update-rule` and re-verify before proceeding.
 
@@ -188,6 +195,7 @@ When you encounter an approval shape in a flow during Phase 3 lifecycle extracti
 | `business-action-view-field-extraction` | Step 4 | Field parsing from view rule |
 | `business-action-parameters` | Step 5 | Format constraints, field inclusion rules, label rules |
 | `business-action-reference-field-mapping` | Steps 5–6 | Identification, DX mapping, Playwright, and input parameterization for reference and embedded-data fields |
+| `business-action-advanced-search` | Steps 5–6 | Advanced search reference picker value formats and Playwright handlers |
 | `business-action-ui-automation` | Step 6 | Standard field-type-to-locator table, opener logic, CaseID capture |
 | `business-action-common-utils-api` | Step 6 | Utility method signatures (exact arg order) |
 

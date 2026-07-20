@@ -86,7 +86,7 @@ NEVER use generic `CaseID` — always use `{CaseTypeName}CaseID` (e.g., `HomeLoa
 | Scenario | Step-level | Root-level |
 |----------|-----------|-----------|
 | CreateCase BA | `{CaseTypeName}CaseID` with `pyParameterValue: "data$caseInfo$ID"` | Same name with `pyMapOutputFrom: "Response"` |
-| Child-case-creating assignment | `{ChildCaseTypeName}CaseID` with `pyParameterValue: "data$caseInfo$ID"` | Same name with `pyMapOutputFrom: "Response"` |
+| Child case BA (CaptureChildCase + PerformAssignment steps) | `ChildCaseIDAutoMapped` (`pyParameterValue: ""`) | `ChildCaseIDAutoMapped` with `pyMapOutputFrom: "Response"` |
 | Intermediate screenflow BA | None | None |
 | Standalone PerformAssignment | None | None |
 

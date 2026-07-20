@@ -120,6 +120,7 @@
       "items": {
         "oneOf": [
           { "$ref": "#/$defs/CreateCaseStep" },
+          { "$ref": "#/$defs/CaptureChildCaseStep" },
           { "$ref": "#/$defs/PerformAssignmentStep" },
           { "$ref": "#/$defs/AssertStageStep" },
           { "$ref": "#/$defs/PerformActionStep" },
@@ -194,6 +195,41 @@
         }
       }
     },
+    "CaptureChildCaseStep": {
+      "type": "object",
+      "description": "Captures a child case ID from the parent case context using a child case prefix. Used in child case Business Actions as the first step before PerformAssignment. No UI interaction — lookup is internal.",
+      "required": ["pxObjClass", "pyStepType", "pyStepDescription", "pyActionParameters"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-APIAutomation-Execution-CaptureChildCase",
+          "x-pega-autoFill": "Embed-APIAutomation-Execution-CaptureChildCase"
+        },
+        "pyStepType": {
+          "type": "string",
+          "x-pega-autoFill": "{pxObjClass}"
+        },
+        "pyStepDescription": {
+          "type": "string",
+          "description": "Human-readable step description. Example: Capture child case ID for Property Valuation"
+        },
+        "pyOutputParameters": {
+          "type": "array",
+          "description": "Captures ChildCaseIDAutoMapped from parent case context. Exactly ONE entry: ChildCaseIDAutoMapped with pyParameterValue=\"\".",
+          "maxItems": 1,
+          "items": {
+            "$ref": "#/$defs/OutputParameter"
+          }
+        },
+        "pyActionParameters": {
+          "type": "array",
+          "description": "Parameters passed to the DX API for child case lookup.",
+          "items": {
+            "$ref": "#/$defs/ActionParameter"
+          }
+        }
+      }
+    },
     "PerformAssignmentStep": {
       "type": "object",
       "description": "Fills and submits an assignment form via DX API.",
@@ -222,12 +258,14 @@
         },
         "pyForm": {
           "type": "array",
-          "description": "Maps input parameters to form fields for API submission. Standard fields use FormMapping; single-reference fields use ReferenceFormMapping; multi-reference fields use MultiReferenceFormMapping.",
+          "description": "Maps input parameters to form fields for API submission. Standard fields use FormMapping; single-reference fields use ReferenceFormMapping; multi-reference fields use MultiReferenceFormMapping; embedded single objects use EmbeddedDataFormMapping; embedded lists use EmbeddedListFormMapping.",
           "items": {
             "oneOf": [
               { "$ref": "#/$defs/FormMapping" },
               { "$ref": "#/$defs/ReferenceFormMapping" },
-              { "$ref": "#/$defs/MultiReferenceFormMapping" }
+              { "$ref": "#/$defs/MultiReferenceFormMapping" },
+              { "$ref": "#/$defs/EmbeddedDataFormMapping" },
+              { "$ref": "#/$defs/EmbeddedListFormMapping" }
             ]
           }
         },
@@ -298,12 +336,14 @@
         },
         "pyForm": {
           "type": "array",
-          "description": "Maps input parameters to form fields. Checkboxes are NEVER included in pyForm. Single-reference fields use ReferenceFormMapping; multi-reference fields use MultiReferenceFormMapping.",
+          "description": "Maps input parameters to form fields. Checkboxes are NEVER included in pyForm. Single-reference fields use ReferenceFormMapping; multi-reference fields use MultiReferenceFormMapping; embedded single objects use EmbeddedDataFormMapping; embedded lists use EmbeddedListFormMapping.",
           "items": {
             "oneOf": [
               { "$ref": "#/$defs/FormMapping" },
               { "$ref": "#/$defs/ReferenceFormMapping" },
-              { "$ref": "#/$defs/MultiReferenceFormMapping" }
+              { "$ref": "#/$defs/MultiReferenceFormMapping" },
+              { "$ref": "#/$defs/EmbeddedDataFormMapping" },
+              { "$ref": "#/$defs/EmbeddedListFormMapping" }
             ]
           }
         },
@@ -620,10 +660,130 @@
         }
       }
     },
-    "ActionParameter": {
+    "EmbeddedDataFormMapping": {
       "type": "object",
+      "description": "Form field mapping for an embedded single object (page property authored inline). Used when a view field is a reference with pyRuleType=view. The object's fields are authored directly — fetch the referenced view to enumerate them. Uses pyTestEmbeddedObject; fields may nest further references or embedded structures to any depth.",
+      "required": ["pyParameterName", "pyParameterType", "pyTestEmbeddedObject"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-TestParameter",
+          "x-pega-autoFill": "Embed-TestParameter"
+        },
+        "pyParameterName": {
+          "type": "string",
+          "description": "The embedded page property name from the parent view. Example: ReviewerDetails."
+        },
+        "pyParameterType": {
+          "type": "string",
+          "const": "Embedded Data",
+          "description": "Always Embedded Data for embedded single-object fields.",
+          "x-pega-autoFill": "Embedded Data"
+        },
+        "pyTestEmbeddedObject": {
+          "type": "array",
+          "description": "Field mappings for the embedded object. Each child carries its own pyParameterType (String, Reference, Multi-Reference, Embedded Data, Embedded List) for arbitrary nesting.",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/EmbeddedFieldParameter"
+          }
+        }
+      }
+    },
+    "EmbeddedListFormMapping": {
+      "type": "object",
+      "description": "Form field mapping for an embedded data list (PageList property authored inline). Used for EmbeddedDataMulti view fields. Uses pyTestEmbeddedList containing rows; each row's pyTestEmbeddedObject holds the fields of the resolved row-editor view. Resolve the editor by editType (config.editType/pyEditType): editType=view uses the Rule-UI-View named in addEditView; editType=action uses the Rule-UI-View named by pyViewReference on the Flow Action in addEditAction/editAction. pyColumns/pyPrimaryFields is existing-row table display only, not the row schema. Row fields may nest references or embedded structures to any depth. Nested single Reference may use Input or Constant; nested Multi-Reference, Embedded Data, and Embedded List are Constant-only.",
+      "required": ["pyParameterName", "pyParameterType", "pyTestEmbeddedList"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-TestParameter",
+          "x-pega-autoFill": "Embed-TestParameter"
+        },
+        "pyParameterName": {
+          "type": "string",
+          "description": "The PageList property name from the view (pyFieldReference). Example: LineItemList."
+        },
+        "pyParameterType": {
+          "type": "string",
+          "const": "Embedded List",
+          "description": "Always Embedded List (with space) for embedded data list fields.",
+          "x-pega-autoFill": "Embedded List"
+        },
+        "pyTestEmbeddedList": {
+          "type": "array",
+          "description": "List of embedded rows. Each entry contains a pyTestEmbeddedObject array of the row-editor fields.",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/EmbeddedListEntry"
+          }
+        }
+      }
+    },
+    "EmbeddedListEntry": {
+      "type": "object",
+      "description": "A row in pyTestEmbeddedList containing the embedded object's row-editor fields.",
+      "required": ["pyTestEmbeddedObject"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-TestParameter",
+          "x-pega-autoFill": "Embed-TestParameter"
+        },
+        "pyTestEmbeddedObject": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/EmbeddedFieldParameter"
+          }
+        }
+      }
+    },
+    "EmbeddedFieldParameter": {
+      "description": "A field inside an embedded object's pyTestEmbeddedObject. May be a scalar, a nested single reference, a nested multi reference, or a further embedded object/list — to any depth. Single Reference fields may use Input or Constant; Multi-Reference, Embedded Data, and Embedded List fields are Constant-only.",
+      "oneOf": [
+        { "$ref": "#/$defs/EmbeddedScalarParameter" },
+        { "$ref": "#/$defs/ReferenceFormMapping" },
+        { "$ref": "#/$defs/MultiReferenceFormMapping" },
+        { "$ref": "#/$defs/EmbeddedDataFormMapping" },
+        { "$ref": "#/$defs/EmbeddedListFormMapping" }
+      ]
+    },
+    "EmbeddedScalarParameter": {
+      "type": "object",
+      "description": "A scalar field inside an embedded object. Authored inline with a Constant source.",
       "required": ["pyParameterName", "pyParameterValue", "pyMapActionParameterFrom"],
       "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-TestParameter",
+          "x-pega-autoFill": "Embed-TestParameter"
+        },
+        "pyParameterName": {
+          "type": "string",
+          "description": "The embedded field name (pyFieldReference) from the underlying view."
+        },
+        "pyParameterType": {
+          "type": "string",
+          "const": "String",
+          "description": "Scalar fields use String.",
+          "x-pega-autoFill": "String"
+        },
+        "pyParameterValue": {
+          "type": "string",
+          "description": "Relevant test data value for this field. Must not be empty for scalar fields."
+        },
+        "pyMapActionParameterFrom": {
+          "type": "string",
+          "const": "Constant",
+          "description": "Always Constant for inline-authored embedded fields.",
+          "x-pega-autoFill": "Constant"
+        }
+      }
+    },
+    "ActionParameter": {
+      "type": "object",
+      "required": ["pyParameterName", "pyParameterValue", "pyMapActionParameterFrom"],      "properties": {
         "pxObjClass": {
           "type": "string",
           "const": "Embed-TestParameter",
@@ -690,4 +850,3 @@
     }
   }
 }
-

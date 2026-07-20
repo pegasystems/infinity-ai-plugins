@@ -446,8 +446,8 @@
         },
         "pyDeclarePagesDataSource": {
           "type": "string",
-          "enum": ["Connector", "DataTransform", "LoadActivity", "ObjOpen", "ReportDefinition", "AggregateSources", "GenAI", "KnowledgeBuddy", ""],
-          "description": "Source type. 'Connector' = REST/SOAP connector. 'DataTransform' = data transform. 'LoadActivity' = custom activity. 'ObjOpen' = lookup by key. 'ReportDefinition' = report definition. 'AggregateSources' = aggregates multiple sub-sources. 'GenAI' = Generative AI connector (server auto-sets pyLoadActivity to pxCallGenAI). 'KnowledgeBuddy' = Knowledge Buddy query (server auto-sets pyLoadActivity to pxCallKnowledgeBuddy)."
+          "enum": ["Connector", "DataTransform", "LoadActivity", "ObjOpen", "ReportDefinition", "AggregateSources", "GenAI", "KnowledgeBuddy", "RoboticAutomation", "RoboticDesktopAutomation", ""],
+          "description": "Source type. 'Connector' = REST/SOAP connector. 'DataTransform' = data transform. 'LoadActivity' = custom activity. 'ObjOpen' = lookup by key. 'ReportDefinition' = report definition. 'AggregateSources' = aggregates multiple sub-sources. 'GenAI' = Generative AI connector (server auto-sets pyLoadActivity to pxCallGenAI). 'KnowledgeBuddy' = Knowledge Buddy query (server auto-sets pyLoadActivity to pxCallKnowledgeBuddy). 'RoboticAutomation' = server-side robotic automation (server auto-sets pyLoadActivity to pxCallRoboticAutomation). 'RoboticDesktopAutomation' = desktop robotic automation (server auto-sets pyLoadActivity to pxCallRoboticDesktopAutomation)."
         },
         "pySourceWhen": {
           "type": "string",
@@ -658,7 +658,7 @@
         },
         "pyRATimeout": {
           "type": "string",
-          "description": "Timeout in seconds for source load (string-encoded integer, e.g., '30'). Found on ReportDefinition and LoadActivity sources."
+          "description": "Timeout in seconds for source load (string-encoded integer, e.g., '30'). Used on ReportDefinition, LoadActivity, RoboticAutomation, and RoboticDesktopAutomation sources."
         },
         "pySkipSummaryProcessing": {
           "type": "string",
@@ -697,6 +697,42 @@
         "pyKBResponse": {
           "type": "string",
           "description": "Dot-prefixed property reference where the Knowledge Buddy response is stored (e.g., '.pyResponseData')."
+        },
+        "pyRACaseType": {
+          "type": "string",
+          "description": "Robotic Automation case type. Required for RoboticAutomation sources."
+        },
+        "pyRAReqDTName": {
+          "type": "string",
+          "description": "Request data transform for RA/RDA sources. Prepares input before automation execution."
+        },
+        "pyRARespDTName": {
+          "type": "string",
+          "description": "Response data transform for RA/RDA sources. Maps automation output to the data page."
+        },
+        "pyRDAAutomationId": {
+          "type": "string",
+          "description": "RDA automation identifier. Required for RoboticDesktopAutomation sources. Typically 'Param.<ParamName>' to wire from a data page parameter."
+        },
+        "pyPassCurrentParamPageForRAReqDT": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Pass the data page parameter page to the RA/RDA request data transform."
+        },
+        "pyPassCurrentParamPageForRARespDT": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Pass the data page parameter page to the RA/RDA response data transform."
+        },
+        "pyRAReqDTParams": {
+          "type": "array",
+          "description": "Parameter mapping for the RA/RDA request data transform. Same shape as pyDTParamList.",
+          "items": { "$ref": "#/$defs/NameValuePair" }
+        },
+        "pyRARespDTParams": {
+          "type": "array",
+          "description": "Parameter mapping for the RA/RDA response data transform. Same shape as pyDTParamList.",
+          "items": { "$ref": "#/$defs/NameValuePair" }
         }
       },
       "allOf": [
@@ -778,6 +814,26 @@
           "then": {
             "x-pega-condition": "KnowledgeBuddy source requires pyKBName",
             "required": ["pyKBName"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "pyDeclarePagesDataSource": { "const": "RoboticAutomation" } },
+            "required": ["pyDeclarePagesDataSource"]
+          },
+          "then": {
+            "x-pega-condition": "RoboticAutomation source requires pyRACaseType",
+            "required": ["pyRACaseType"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "pyDeclarePagesDataSource": { "const": "RoboticDesktopAutomation" } },
+            "required": ["pyDeclarePagesDataSource"]
+          },
+          "then": {
+            "x-pega-condition": "RoboticDesktopAutomation source requires pyRDAAutomationId",
+            "required": ["pyRDAAutomationId"]
           }
         }
       ]

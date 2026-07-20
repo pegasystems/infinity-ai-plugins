@@ -72,3 +72,21 @@ Scalar fields (`pyCategoryName`, `pyEnableAttachmentLevelSecurity`, attachment t
 `pyActionPrivilegeList` and `pyActionWhensList` are PageList arrays and are **replaced wholesale** on update. Always `get-rule(detail="full")` first and re-send the complete array including entries you want to keep. A partial array silently drops omitted entries.
 
 Attachment type flags cannot be cleared by omission. To disable a flag, explicitly send `"false"`. Omitting it leaves the current value unchanged.
+
+### Companion attachment property
+
+When a user asks for an attachment-type property (Page or PageList of `Embed-Attach-File`),
+create the attachment category **first** so it exists when the property references it.
+**One category per attachment property.** Each attachment property requires its own
+dedicated attachment category. If creating multiple attachment properties, create a
+separate category for each one — the category name must match the property name.
+Do not reuse a single category across multiple attachment properties.
+Set `pyCategoryName` to match the property name exactly, on the same `pyClassName`.
+
+**File-only.** Companion attachment categories must allow only file uploads (see `File-Only Attachment Category` example).
+
+Then use the `rules-rule-obj-property` skill (see `Attachment Property (Page)` or `Attachment Property (PageList)` example) to
+create the property. The property's `pyDOParamList` has an `AttachmentCategory`
+parameter that references this category by name.
+
+

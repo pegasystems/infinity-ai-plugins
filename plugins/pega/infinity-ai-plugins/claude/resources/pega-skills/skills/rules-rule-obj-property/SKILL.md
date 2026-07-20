@@ -25,6 +25,8 @@ description: Schema and authoring guide for Pega property rules (Rule-Obj-Proper
 | `Currency Field` | String/Decimal property rendered with `pxCurrency` for currency-style input |
 | `Refer to Data Page` | Use when a Page/PageList property should stay linked to source data. Set `AUTOMATIC`; map `pyDOParamList` as `pyName: pyID`, `pyValue: <property path>`. |
 | `Copy Data from Data Page` | Use when a Page/PageList property should copy source data once. Set `AUTOMATICNONREF`; map `pyDOParamList` as `pyName: pyID`, `pyValue: <property path>`. |
+| `Attachment Property (Page)` | Single-file Page of Embed-Attach-File with D_pzAttachmentFieldInfo data page and 4 auto-derived parameters |
+| `Attachment Property (PageList)` | Multi-file PageList of Embed-Attach-File with D_pzAttachmentFieldInfo data page and 4 auto-derived parameters |
 
 ## References
 
@@ -152,3 +154,38 @@ To discover parameters, fetch the data page with `get-rule` (detail='full')
 and read `pyParameters`. If the data page has a single `pyID` parameter, auto-map
 it to `.<PropertyName>.pyID`. If there are multiple parameters, ask the user
 which properties on the current page should map to each parameter.
+
+### Attachment properties
+
+An attachment property is a **Page** or **PageList** of class `Embed-Attach-File` that
+refers to data page `D_pzAttachmentFieldInfo`. It always uses `pyDataRetrievalType`
+`"AUTOMATIC"`.
+For **PageList** mode, set `pyIsRetrieveEachPageSeparately` to `"true"` so that
+each page in the list is loaded individually — required because the `AttachmentKey`
+parameter uses a self-referencing value (`.<PropertyName>.pxAttachmentKey`).
+
+`D_pzAttachmentFieldInfo` requires **4 parameters** in `pyDOParamList`, all derived
+from the property name:
+
+| Parameter | Value | Derivation |
+|-----------|-------|------------|
+| `AttachmentFieldName` | `"<PropertyName>"` | Quoted property name |
+| `AttachmentKey` | `.<PropertyName>.pxAttachmentKey` | Dot-prefixed property reference |
+| `AttachmentCategory` | `"<PropertyName>"` | Quoted — must match a companion attachment category rule |
+| `ClassName` | `.pxObjClass` | Always `.pxObjClass` |
+
+**Set `pyCategoryName` on the property.** The attachment property itself must
+include `pyCategoryName` set to the companion attachment category's name
+(typically equal to the property name).
+
+**Companion attachment category rule required — one per property.** Every
+attachment property must have its own dedicated attachment category rule. Before
+creating each attachment property, create a **file-only** attachment category rule
+(via `rules-rule-obj-attachmentcategory`) with `pyCategoryName` equal to that
+property's name, on the same `pyClassName`. The category must disable Note, URL,
+Screenshot, and Scanned Document types — set `pyAvailableForNote`,
+`pyAvailableForUrl`, `pyAvailableForScreenshot`, and
+`pyAvailableForScannedDocument` to `"false"`. The `AttachmentCategory` parameter
+references this category by name. If creating multiple attachment properties,
+create a separate attachment category for each one — do not reuse a single
+category across multiple properties.
