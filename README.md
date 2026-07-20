@@ -19,10 +19,20 @@ For clients that support installing a marketplace from a git path, use this repo
 | Agent | CLI command |
 | --- | --- |
 | Claude Code | `claude plugin marketplace add https://github.com/pegasystems/infinity-ai-plugins.git`<br> `claude plugin install pega-infinity-authoring@Pega` |
-| GitHub Copilot CLI | `copilot plugin marketplace add https://github.com/pegasystems/infinity-ai-plugins.git`<br> `copilot plugin install pega-infinity-authoring@Pega`  <br> * Restart copilot for the plugin changes to take effect |
-| Codex | `codex plugin marketplace add https://github.com/pegasystems/infinity-ai-plugins.git`<br>Launch `codex`<br>Type `/plugins`<br>Navigate to `Pega` and install `Pega Infinity Authoring` plugin |
+| GitHub Copilot CLI | `copilot plugin marketplace add https://github.com/pegasystems/infinity-ai-plugins.git`<br> `copilot plugin install pega-infinity-authoring@Pega`  <br> * Restart Copilot CLI for the plugin changes to take effect |
+| Codex | `codex plugin marketplace add https://github.com/pegasystems/infinity-ai-plugins.git`<br> `codex plugin add pega-infinity-authoring@Pega`<br> Alternatively, launch `codex`, type `/plugins`, navigate to `Pega`, and install `Pega Infinity Authoring` |
 
 Alternatively, you can use SSH git URLs such as `git@github.com:pegasystems/infinity-ai-plugins.git`.
+
+## Update An Existing Install
+
+When this repository publishes a newer plugin build, refresh the installed plugin from the same marketplace source.
+
+| Agent | Update steps |
+| --- | --- |
+| Claude Code | Run `claude plugin marketplace update Pega` to refresh the marketplace catalog.<br>Then run `claude plugin update pega-infinity-authoring@Pega` to update the installed plugin.<br>Run `/reload-plugins` or start a new Claude session afterward. |
+| GitHub Copilot CLI | Run `copilot plugin marketplace update Pega` to refresh the marketplace catalog.<br>Then run `copilot plugin update pega-infinity-authoring@Pega` to update the installed plugin.<br>Quit and reopen Copilot CLI afterward. |
+| Codex | Run `codex plugin marketplace upgrade Pega` to refresh the marketplace catalog.<br>Then run `codex plugin add pega-infinity-authoring@Pega` to refresh the installed plugin, or use the `/plugins` browser to reinstall it from `Pega`.<br>Start a new Codex session afterward. |
 
 > [!TIP]
 > Adding the marketplace from this repository can fail with a long-path error saying "Filename too long". If that happens, enable Git long-path support and retry:
