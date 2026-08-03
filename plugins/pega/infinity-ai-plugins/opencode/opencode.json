@@ -1,0 +1,21 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "pega-infinity-authoring": {
+      "type": "local",
+      "command": [
+        "java",
+        "-jar",
+        "./resources/infinity-rules-mcp.jar",
+        "--spring.profiles.active=stdio"
+      ],
+      "cwd": "<absolute-path-to>/plugins/pega/infinity-ai-plugins/claude",
+      "environment": {
+        "PEGA_SKILLS_PATH": "./resources/pega-skills",
+        "PEGA_CLIENT_MODE": "opencode-plugin",
+        "PEGA_BASE_URL": "<your-pega-base-url>"
+      },
+      "enabled": true
+    }
+  }
+}

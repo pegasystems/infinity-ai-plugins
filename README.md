@@ -21,6 +21,7 @@ For clients that support installing a marketplace from a git path, use this repo
 | Claude Code | `claude plugin marketplace add https://github.com/pegasystems/infinity-ai-plugins.git`<br> `claude plugin install pega-infinity-authoring@Pega` |
 | GitHub Copilot CLI | `copilot plugin marketplace add https://github.com/pegasystems/infinity-ai-plugins.git`<br> `copilot plugin install pega-infinity-authoring@Pega`  <br> * Restart Copilot CLI for the plugin changes to take effect |
 | Codex | `codex plugin marketplace add https://github.com/pegasystems/infinity-ai-plugins.git`<br> `codex plugin add pega-infinity-authoring@Pega`<br> Alternatively, launch `codex`, type `/plugins`, navigate to `Pega`, and install `Pega Infinity Authoring` |
+| opencode | Clone this repository, then merge the `mcp` block from `plugins/pega/infinity-ai-plugins/opencode/opencode.json` into your `opencode.json` (setting `cwd` to the absolute path of the `opencode/` directory). Copy `plugins/pega/infinity-ai-plugins/opencode/skills/` into `.opencode/skills/` in your project. See `plugins/pega/infinity-ai-plugins/opencode/README.md` for full setup instructions. |
 
 Alternatively, you can use SSH git URLs such as `git@github.com:pegasystems/infinity-ai-plugins.git`.
 
@@ -33,6 +34,7 @@ When this repository publishes a newer plugin build, refresh the installed plugi
 | Claude Code | Run `claude plugin marketplace update Pega` to refresh the marketplace catalog.<br>Then run `claude plugin update pega-infinity-authoring@Pega` to update the installed plugin.<br>Run `/reload-plugins` or start a new Claude session afterward. |
 | GitHub Copilot CLI | Run `copilot plugin marketplace update Pega` to refresh the marketplace catalog.<br>Then run `copilot plugin update pega-infinity-authoring@Pega` to update the installed plugin.<br>Quit and reopen Copilot CLI afterward. |
 | Codex | Run `codex plugin marketplace upgrade Pega` to refresh the marketplace catalog.<br>Then run `codex plugin add pega-infinity-authoring@Pega` to refresh the installed plugin, or use the `/plugins` browser to reinstall it from `Pega`.<br>Start a new Codex session afterward. |
+| opencode | Run `git pull` in the cloned repository to get the latest files. Restart opencode afterward. |
 
 > [!TIP]
 > Adding the marketplace from this repository can fail with a long-path error saying "Filename too long". If that happens, enable Git long-path support and retry:
