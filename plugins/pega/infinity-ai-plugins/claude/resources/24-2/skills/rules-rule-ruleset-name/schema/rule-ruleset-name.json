@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-ruleset-name.json",
+  "title": "Rule-RuleSet-Name",
+  "description": "JSON schema for creating or updating a Pega ruleset name record (Rule-RuleSet-Name). This is an infrastructure rule type with no class association and no ruleset version. Only authored and identity fields are included; system-managed fields are omitted.",
+  "type": "object",
+  "required": [
+    "pxObjClass",
+    "pyRuleSetName",
+    "pyLabel",
+    "pyRuleSetType"
+  ],
+  "properties": {
+    "pxObjClass": {
+      "type": "string",
+      "const": "Rule-RuleSet-Name",
+      "description": "Rule type class — always 'Rule-RuleSet-Name'.",
+      "x-pega-autoFill": "Rule-RuleSet-Name"
+    },
+    "pyRuleSetName": {
+      "type": "string",
+      "description": "The canonical ruleset name (mixed case). Only alphanumeric, dash, and underscore characters are allowed; spaces are auto-stripped by the server."
+    },
+    "pyLabel": {
+      "type": "string",
+      "description": "Human-readable display label shown in Dev Studio."
+    },
+    "pyDescription": {
+      "type": "string",
+      "description": "Developer-facing description of the ruleset's purpose."
+    },
+    "pyUsage": {
+      "type": "string",
+      "description": "Brief usage note. For branch rulesets, set to the full branch ruleset name."
+    },
+    "pyRuleSetType": {
+      "type": "string",
+      "enum": ["STANDARD", "OVERRIDE", "COMPONENT", "SHARED", "PEGA", "PEGAFW", "BRANCH"],
+      "description": "Category of ruleset: STANDARD (normal application), BRANCH (parallel development), PEGA/PEGAFW (platform-owned), OVERRIDE (override ruleset), COMPONENT/SHARED (component framework).",
+      "x-pega-autoFill": "STANDARD",
+      "x-pega-hints": {
+        "standard": "STANDARD",
+        "Standard": "STANDARD",
+        "branch": "BRANCH",
+        "Branch": "BRANCH",
+        "pega": "PEGA",
+        "Pega": "PEGA",
+        "override": "OVERRIDE",
+        "Override": "OVERRIDE",
+        "component": "COMPONENT",
+        "Component": "COMPONENT",
+        "shared": "SHARED",
+        "Shared": "SHARED"
+      }
+    },
+    "pyLayerClassification": {
+      "type": "string",
+      "enum": ["Standard", "Pega", ""],
+      "description": "Classification for rule resolution layer. 'Standard' for custom rulesets, 'Pega' for platform rulesets, '' for unclassified."
+    },
+    "pyUseCheckOut": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "Require checkout before editing rules in this ruleset. Auto-set to 'false' for override rulesets."
+    },
+    "pyIsTestRuleSet": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "'true' for test-only rulesets excluded from production packaging."
+    },
+    "pyLocalRuleSet": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "'true' for rulesets scoped to a single node (rarely used)."
+    },
+    "pyAppBasedValidation": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "Enable application-based rule validation. Auto-reset to 'false' for SHARED and COMPONENT rulesets."
+    },
+    "pyApprovalClass": {
+      "type": "string",
+      "description": "Case class used for rule check-in approval workflow. Typically 'Work-RuleCheckIn'."
+    },
+    "pyApprovalFlow": {
+      "type": "string",
+      "description": "Flow used for rule approval routing. Must resolve to a valid Rule-Obj-Flow instance. Typically 'ApproveRuleChanges'."
+    },
+    "pyRuleAvailable": {
+      "type": "string",
+      "enum": ["Yes", "No", "Withdrawn"],
+      "description": "Availability status.",
+      "x-pega-autoFill": "Yes"
+    },
+    "pyBaseRule": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "'true' for branch rulesets and some base/root platform rulesets. 'false' or absent for most standard rulesets."
+    },
+    "pyBranchID": {
+      "type": "string",
+      "description": "Branch identifier (short name within the parent ruleset). Only for BRANCH rulesets."
+    },
+    "pyBranchOrigin": {
+      "type": "string",
+      "description": "Parent (base) ruleset this branch was created from. Only for BRANCH rulesets."
+    },
+    "pyRuleSet": {
+      "type": "string",
+      "description": "Self-referential — always equals pyRuleSetName. The server forces this on save.",
+      "x-pega-autoDerived": true,
+      "x-pega-deriveFrom": "pyRuleSetName"
+    },
+    "pyRuleSetVersion": {
+      "type": "string",
+      "const": "",
+      "description": "Always empty for Rule-RuleSet-Name (not versioned in the normal sense).",
+      "x-pega-autoDerived": true
+    }
+  }
+}

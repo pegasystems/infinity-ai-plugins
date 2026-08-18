@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-classmetadata.json",
+  "title": "Rule-ClassMetadata",
+  "description": "Pega class metadata. Carries pyPrimaryFields for a class and, for Data- subclasses, the data-page bindings (list/lookup/savable) plus their embedded Rule-Declare-Pages snapshots and any data-type local actions.",
+  "type": "object",
+  "required": ["pxObjClass", "pyClassName", "pyRuleName", "pyLabel", "pyRuleAvailable"],
+  "properties": {
+    "pxObjClass": { "type": "string", "const": "Rule-ClassMetadata", "x-pega-autoFill": "Rule-ClassMetadata" },
+    "pyClassName": { "type": "string", "description": "Fully qualified class this metadata applies to (e.g., 'MyOrg-MyApp-Work-MyCase'). Drives pyRuleName and pyLabel." },
+    "pyRuleName": { "type": "string", "description": "Always equal to pyClassName.", "x-pega-autoDerived": true, "x-pega-deriveFrom": "pyClassName" },
+    "pyLabel": { "type": "string", "description": "Always equal to pyClassName.", "x-pega-autoDerived": true, "x-pega-deriveFrom": "pyClassName" },
+    "pyRuleSet": { "type": "string", "description": "Auto-derived from the ChangeRequest branch context." },
+    "pyRuleSetVersion": { "type": "string", "description": "Auto-derived from the ChangeRequest branch context." },
+    "pyRuleAvailable": { "type": "string", "enum": ["Yes", "No", "Withdrawn", "Final", "Blocked"], "x-pega-autoFill": "Yes" },
+    "pyPrimaryFields": {
+      "type": "array",
+      "description": "Ordered list of primary fields. For Work- subclasses the conventional first four entries are pyID, pyLabel, pxUrgencyWork, pyStatusWork. Updates merge positionally — to truncate trailing entries, read existing list with get-rule and resend the full intended list.",
+      "items": { "$ref": "#/$defs/PegaFieldsEntry" }
+    },
+    "pyListDataPage":     { "type": "string", "description": "List data page backing this data object (Data- subclasses only, e.g., 'D_MyDataObjectList')." },
+    "pyLookUpDataPage":   { "type": "string", "description": "Lookup data page backing this data object (Data- subclasses only, e.g., 'D_MyDataObject')." },
+    "pySavableDataPage":  { "type": "string", "description": "Savable data page (Data- subclasses only, typically same as pyLookUpDataPage)." },
+    "pyListDataPageInfo":     { "$ref": "#/$defs/DeclarePagesInfo", "description": "Embedded snapshot of the list page (Data- subclasses only)." },
+    "pyLookUpDataPageInfo":   { "$ref": "#/$defs/DeclarePagesInfo", "description": "Embedded snapshot of the lookup page (Data- subclasses only). Carries pyDOParamList (typically a single pyGUID STRING IN parameter); pyIsAlternateKeyStorage is 'true'." },
+    "pySavableDataPageInfo":  { "$ref": "#/$defs/DeclarePagesInfo", "description": "Embedded snapshot of the savable page (Data- subclasses only). Same shape as pyLookUpDataPageInfo." },
+    "pyDataTypeLocalActions": {
+      "type": "array",
+      "description": "Optional data-object-level actions (e.g., the OOTB Edit action). Each entry is an Embed-Pega-DataTypeAction-* object whose subclass is action-specific.",
+      "items": { "$ref": "#/$defs/DataTypeAction" }
+    }
+  },
+  "$defs": {
+    "PegaFieldsEntry": {
+      "type": "object",
+      "required": ["pxObjClass", "pyPropertyName"],
+      "properties": {
+        "pxObjClass":     { "type": "string", "const": "Pega-Fields", "x-pega-autoFill": "Pega-Fields" },
+        "pyPropertyName": { "type": "string", "description": "Property name without a leading dot (e.g., 'pyID', 'MyCustomField')." }
+      }
+    },
+    "DeclarePagesInfo": {
+      "type": "object",
+      "required": ["pxObjClass"],
+      "properties": {
+        "pxObjClass":               { "type": "string", "const": "Rule-Declare-Pages", "x-pega-autoFill": "Rule-Declare-Pages" },
+        "pyPageName":               { "type": "string", "description": "Name of the data page this snapshot describes (e.g., 'D_MyDataObject')." },
+        "pyIsAlternateKeyStorage":  { "type": "string", "enum": ["true", "false", ""], "description": "'true' on lookup/savable info pages, omitted on list info pages." },
+        "pyDOParamList": {
+          "type": "array",
+          "description": "Parameters the data page accepts. Typically a single pyGUID STRING IN parameter on lookup/savable pages; absent on list pages.",
+          "items": { "$ref": "#/$defs/DOParam" }
+        }
+      }
+    },
+    "DOParam": {
+      "type": "object",
+      "required": ["pxObjClass", "pyName"],
+      "properties": {
+        "pxObjClass":            { "type": "string", "const": "Embed-NameValuePair", "x-pega-autoFill": "Embed-NameValuePair" },
+        "pyName":                { "type": "string", "description": "Parameter name (e.g., 'pyGUID')." },
+        "pyDescription":         { "type": "string", "description": "Human-readable parameter description." },
+        "pyValue":               { "type": "string", "description": "Default or bound value for the parameter." },
+        "pyParameterType": {
+          "type": "string",
+          "enum": ["STRING", "BOOLEAN", "INTEGER", "Decimal", ""],
+          "description": "Parameter data type. 'Decimal' is mixed-case — preserve verbatim.",
+          "x-pega-hints": { "String": "STRING", "Boolean": "BOOLEAN", "Integer": "INTEGER", "DECIMAL": "Decimal", "decimal": "Decimal" }
+        },
+        "pyParameterInOut": {
+          "type": "string",
+          "enum": ["IN", "OUT", "INOUT", ""],
+          "description": "Parameter direction. Data-page parameters are typically IN.",
+          "x-pega-hints": { "In": "IN", "Out": "OUT", "InOut": "INOUT", "in": "IN", "out": "OUT" }
+        },
+        "pyParameterRequired":   { "type": "string", "enum": ["-1", "0", "1", ""], "description": "Required flag as numeric-string. Lookup pages typically use '-1'." },
+        "pyIsActivityParameter": { "type": "string", "enum": ["true", "false", ""], "description": "'true' for activity-style parameters." },
+        "pyEditable":            { "type": "string", "enum": ["true", "false", ""], "description": "Whether the parameter is editable in the UI." }
+      }
+    },
+    "DataTypeAction": {
+      "type": "object",
+      "required": ["pxObjClass", "pyActionName", "pyActionType", "pyClassName"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "enum": ["Embed-Pega-DataTypeAction-UpdateDetails", "Embed-Pega-DataTypeAction-Add", "Embed-Pega-DataTypeAction-Delete", "Embed-Pega-DataTypeAction-Custom"],
+          "description": "Action subclass — varies per action. UpdateDetails is the OOTB Edit action."
+        },
+        "pyActionName":  { "type": "string", "description": "Action identifier (e.g., 'pyEdit')." },
+        "pyActionLabel": { "type": "string", "description": "Display label (e.g., 'Edit')." },
+        "pyActionType":  { "type": "string", "enum": ["UpdateDetails", "Add", "Delete", "Custom", ""], "description": "Usually matches the pxObjClass suffix." },
+        "pyClassName":   { "type": "string", "description": "The data class this action applies to — typically the same value as the rule-level pyClassName." },
+        "pyImage":       { "type": "string", "description": "Icon class string for the action button (e.g., 'pi pi-clipboard-content-icon actionDragDropIcon pi-cd-assignment')." }
+      }
+    }
+  }
+}

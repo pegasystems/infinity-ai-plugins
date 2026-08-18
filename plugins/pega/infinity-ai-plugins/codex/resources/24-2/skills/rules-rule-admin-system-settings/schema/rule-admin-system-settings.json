@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-admin-system-settings.json",
+  "title": "Rule-Admin-System-Settings",
+  "description": "JSON schema for creating and updating Pega application settings (Rule-Admin-System-Settings). Application settings store per-environment configuration values such as base URLs and authentication profile names. They are referenced by REST connectors via SETTING-based URL and auth profile configuration. On create, omit pySettingMetaData.pyCategoryName unless reusing a category name that already exists — inventing one fails validation.",
+  "type": "object",
+  "required": [
+    "pxObjClass",
+    "pyOwner",
+    "pyPurpose",
+    "pyLabel"
+  ],
+  "properties": {
+    "pxObjClass": {
+      "type": "string",
+      "const": "Rule-Admin-System-Settings",
+      "description": "Rule type class — always 'Rule-Admin-System-Settings'.",
+      "x-pega-autoFill": "Rule-Admin-System-Settings",
+      "x-pega-autoDerived": true
+    },
+    "pyRuleName": {
+      "type": "string",
+      "description": "Internal rule name — auto-derived as 'pyOwner pyPurpose' (e.g., 'Onboarding-Payroll BaseURL'). Do not set directly; supply pyOwner and pyPurpose instead.",
+      "x-pega-autoDerived": true,
+      "x-pega-deriveFrom": "pyOwner + ' ' + pyPurpose"
+    },
+    "pyLabel": {
+      "type": "string",
+      "description": "Display label for the setting, author-supplied. Independent of pyPurpose — a technical pyPurpose (e.g. 'pyBuddyAuthenticationProfile') may pair with a human-readable pyLabel (e.g. 'Buddy Authentication Profile')."
+    },
+    "pyDescription": {
+      "type": "string",
+      "description": "Description of the setting's purpose."
+    },
+    "pyOwner": {
+      "type": "string",
+      "description": "Owning context for the setting, typically '{Application}-{IntegrationSystem}' (e.g. 'Onboarding-Payroll'). Distinct from pyRuleSet (the actual ruleset, e.g. 'Onboarding')."
+    },
+    "pyPurpose": {
+      "type": "string",
+      "description": "The setting name within the owner context, e.g. 'BaseURL' or 'AuthProfile'. Never blank in practice."
+    },
+    "pyRuleAvailable": {
+      "type": "string",
+      "enum": ["Yes", "No", "Final", "Blocked", "Withdrawn"],
+      "description": "Availability status of the rule.",
+      "x-pega-autoFill": "Yes"
+    },
+    "pyRuleSet": {
+      "type": "string",
+      "description": "Ruleset containing this setting. Auto-derived to the branch ruleset.",
+      "x-pega-autoDerived": true
+    },
+    "pyRuleSetVersion": {
+      "type": "string",
+      "description": "Ruleset version. Auto-derived.",
+      "x-pega-autoDerived": true
+    },
+    "pyProductionLevel": {
+      "type": "array",
+      "description": "Array of 5 environment-tier entries. Each entry holds the setting value for that tier in pySetting. pyDescription values: '1 - Sandbox', '2 - Development', '3 - Quality assurance', '4 - Staging', '5 - Production'.",
+      "items": {
+        "$ref": "#/$defs/EnvironmentTier"
+      }
+    },
+    "pySettingMetaData": {
+      "type": "object",
+      "description": "Metadata about the setting including value type and category.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-SettingMetaData",
+          "x-pega-autoDerived": true
+        },
+        "pyCategoryName": {
+          "type": "string",
+          "description": "Category grouping for the setting. Validated server-side against existing category records — omit this field on create unless reusing the exact name of a category that already exists (e.g. one created by recipe-create-data-type-with-generator); an unrecognized name fails create with 'Selected category is invalid.'"
+        },
+        "pyValueType": {
+          "type": "string",
+          "enum": ["String", "Boolean", "Enum", "Class"],
+          "description": "Data type of the setting value. Matches the Application Setting UI's 'Value type' dropdown exactly (String/text, Boolean, Enumerated list = 'Enum', Class). 'Class' is used for auth profile references, where the value is an authentication profile name and pyValueClass names the target class."
+        },
+        "pyValueClass": {
+          "type": "string",
+          "description": "Required companion to pyValueType: 'Class' — the class the setting's value should resolve to. Confirmed live: 'Data-Admin-Security-AuthenticationProfile' for auth profile settings."
+        }
+      }
+    }
+  },
+  "$defs": {
+    "EnvironmentTier": {
+      "type": "object",
+      "description": "A single environment tier entry holding the setting value for that environment.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-System-Settings",
+          "x-pega-autoFill": "Embed-System-Settings"
+        },
+        "pyDescription": {
+          "type": "string",
+          "description": "Environment tier label, e.g. '1 - Sandbox', '2 - Development', '3 - Quality assurance', '4 - Staging', '5 - Production'."
+        },
+        "pyLabel": {
+          "type": "string",
+          "description": "Optional display label for this tier entry."
+        },
+        "pySetting": {
+          "type": "string",
+          "description": "The actual setting value for this environment tier. This is the field to update."
+        }
+      }
+    }
+  }
+}

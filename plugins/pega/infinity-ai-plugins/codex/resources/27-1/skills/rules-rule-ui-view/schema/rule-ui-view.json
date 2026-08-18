@@ -1,0 +1,1375 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-ui-view.json",
+  "title": "Rule-UI-View",
+  "description": "JSON schema for creating or updating a Pega Constellation view rule (Rule-UI-View). Only authored and identity fields are included; system-managed fields are omitted. All three surfaces (pyContent, pxViewMetadata, pxContextMetadata) must be sent together in a single update-rule call whenever the field layout changes.",
+  "type": "object",
+  "required": [
+    "pxObjClass",
+    "pyRuleName",
+    "pyLabel",
+    "pyClassName",
+    "pyTemplateName"
+  ],
+  "properties": {
+    "pxObjClass": {
+      "type": "string",
+      "const": "Rule-UI-View",
+      "description": "Rule type class — always 'Rule-UI-View'.",
+      "x-pega-autoFill": "Rule-UI-View"
+    },
+    "pyRuleName": {
+      "type": "string",
+      "description": "Internal name of the view (no spaces; commonly PascalCase, underscores also used). Well-known names: 'pyEdit' for edit action, 'pyReview' for case details, custom names for step forms."
+    },
+    "pyLabel": {
+      "type": "string",
+      "description": "Human-readable display label shown in the UI (e.g., 'Edit', 'Details', 'Collect Documentation')."
+    },
+    "pyClassName": {
+      "type": "string",
+      "description": "The Pega class this view belongs to (e.g., 'MyOrg-MyApp-Work-Case')."
+    },
+    "pyRuleSet": {
+      "type": "string",
+      "description": "Rule set the view is saved to."
+    },
+    "pyRuleSetVersion": {
+      "type": "string",
+      "pattern": "^\\d{2}-\\d{2}-\\d{2}$",
+      "description": "Rule set version (e.g., '01-01-01')."
+    },
+    "pyTemplateName": {
+      "type": "string",
+      "description": "Constellation DX template used to render this view. Most form/step/action views use 'DefaultForm'. Known templates: DefaultForm, OneColumn, TwoColumn, Confirmation, ListView, SimpleTable, DataReference, OneColumnTab, CaseView, CaseSummary, CasePreview, Details, DetailsSubTabs, DetailsTwoColumn, DetailsThreeColumn, SelfServiceCaseView, DashboardPage, TwoColumnDashboard, ListPage, ObjectPage, BannerPage, OneColumnPage, TabbedPage, WideNarrowPage, CategorySubPage, DynamicDashboard, InlineDashboardPage, MobileListView, MobileDetailsPage, DuplicateCases, ExploreDataPage, Glimpse, DynamicTabs, SubTabs, EmailManagerContainer, EmailCaseViewContainer, CoexistencePageTemplate."
+    },
+    "pxViewType": {
+      "type": "string",
+      "enum": [
+        "details", "datareference", "casetypelist", "multirecordlist", "page",
+        "mobilelistpage", "listpage", "landingpage", "mobiledetailspage",
+        "dashboard", "web_shell", "embeddedform", "summary"
+      ],
+      "description": "High-level view category for page-level views. Set 'details' for pyReview-style full-page case detail views. Set 'summary' for pyCaseSummary case summary views. Set 'embeddedform' for sub-form views embedded inside assignments/steps. Omit entirely for step forms and action views (pyEdit, step assignment forms)."
+    },
+    "pyDescription": {
+      "type": "string",
+      "description": "Developer-facing description of the view's purpose."
+    },
+    "pyDefaultHeading": {
+      "type": "string",
+      "description": "Default heading text displayed above the view."
+    },
+    "pyColumnCount": {
+      "type": "string",
+      "description": "Column count for the view layout. Default '2' for DefaultForm views. Maps to pxViewMetadata.config.NumCols.",
+      "default": "2"
+    },
+    "pyInheritParentLayout": {
+      "type": "boolean",
+      "description": "Whether to inherit layout from parent view. Default false. Maps to pxViewMetadata.config.inheritParentLayout.",
+      "default": false
+    },
+    "pyInstructionsOption": {
+      "type": "string",
+      "enum": ["casestep", "overridden", "none"],
+      "description": "How instructions are sourced: 'casestep' = from the flow step, 'overridden' = from the pyInstructions paragraph rule, 'none' = no instructions."
+    },
+    "pyInstructionsType": {
+      "type": "string",
+      "enum": ["text", "paragraph"],
+      "description": "'text' = static text content. 'paragraph' = content sourced from a Paragraph rule library."
+    },
+    "pyInstructions": {
+      "type": "string",
+      "description": "Name of the Paragraph rule that provides instruction text for this view. Only used when pyInstructionsOption = 'overridden'."
+    },
+    "pyCircumstanceType": {
+      "type": "string",
+      "enum": ["PROPERTY"],
+      "description": "Type of circumstancing — 'PROPERTY' means this variant is selected based on a property value."
+    },
+    "pyCircumstanceProp": {
+      "type": "string",
+      "description": "Property path used for circumstance-based variant selection (e.g., '.pxActiveChannelFromAPI')."
+    },
+    "pyCircumstanceVal": {
+      "type": "string",
+      "description": "Property value that selects this view variant (e.g., 'Mobile')."
+    },
+    "pyRuleAvailable": {
+      "type": "string",
+      "enum": ["Yes", "No", "Withdrawn", "Final", "Blocked"],
+      "description": "Availability status.",
+      "x-pega-autoFill": "Yes"
+    },
+    "pyContent": {
+      "type": "array",
+      "description": "Primary authored field defining the view's field layout. For DefaultForm-style views, contains ContentRegion objects. For DataReference views, may contain a mix of field entries and Regions at the top level. For page views, Regions contain widget entries. This is the source of truth — always update alongside pxViewMetadata and pxContextMetadata in the same call.",
+      "items": {
+        "anyOf": [
+          { "$ref": "#/$defs/ContentRegion" },
+          { "type": "object", "description": "Non-region top-level entry (field, widget, or other content node).", "required": ["pxObjClass"], "additionalProperties": true }
+        ]
+      }
+    },
+    "pxViewMetadata": {
+      "type": "string",
+      "description": "Constellation component tree for this view — a JSON-stringified object. MUST be a JSON string (use JSON.stringify), not an object. The Pega API rejects objects with 'Something went wrong with converting the json to a clipboard page'. Must be updated explicitly alongside pyContent when using the Agentic Authoring API (not auto-regenerated). See $defs/ViewMetadata for the internal structure. localeReference follows the pattern '@LR CLASSNAME!VIEW!RULENAME' with all segments uppercased and dots replaced by hyphens."
+    },
+    "pxContextMetadata": {
+      "type": "string",
+      "description": "View dependency summary — a JSON-stringified object. MUST be a JSON string (use JSON.stringify), not an object. The Pega API rejects objects with 'Something went wrong with converting the json to a clipboard page'. Must be updated explicitly alongside pyContent when using the Agentic Authoring API. Lists all properties, embedded views, and associated datasources referenced by this view. See $defs/ContextMetadata for the internal structure."
+    },
+    "pyPagesAndClasses": {
+      "type": "array",
+      "description": "Named pages used by this view, with their classes.",
+      "items": { "$ref": "#/$defs/PageAndClass" }
+    },
+    "pyListOfViewPrivileges": {
+      "type": "array",
+      "description": "Privilege rules required to access this view (usually empty).",
+      "items": { "type": "object" }
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "ContentRegion": {
+      "type": "object",
+      "description": "A layout region within the view (Pega-UI-Content-Region). Typically one region named 'Fields' containing all field entries.",
+      "required": ["pxObjClass", "pyName", "pyPromptClass", "pyComponentName", "pyContent"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Pega-UI-Content-Region",
+          "x-pega-autoFill": "Pega-UI-Content-Region"
+        },
+        "pyName": {
+          "type": "string",
+          "description": "Region name — typically 'Fields'.",
+          "x-pega-autoFill": "Fields"
+        },
+        "pyPromptClass": {
+          "type": "string",
+          "description": "Pega class context for this region (same as the view's pyClassName)."
+        },
+        "pyComponentName": {
+          "type": "string",
+          "const": "Region",
+          "x-pega-autoFill": "Region"
+        },
+        "pyDisplayLabel": {
+          "type": "string",
+          "const": "Region",
+          "x-pega-autoFill": "Region"
+        },
+        "pyContent": {
+          "type": "array",
+          "description": "Field entries inside this region. Each entry is one of the known field types.",
+          "items": {
+            "anyOf": [
+              { "$ref": "#/$defs/TextInputField" },
+              { "$ref": "#/$defs/TextAreaField" },
+              { "$ref": "#/$defs/CheckboxField" },
+              { "$ref": "#/$defs/DateField" },
+              { "$ref": "#/$defs/DateTimeField" },
+              { "$ref": "#/$defs/PicklistField" },
+              { "$ref": "#/$defs/DataReferenceField" },
+              { "$ref": "#/$defs/ObjectReferenceDataReferenceField" },
+              { "$ref": "#/$defs/EmbeddedDataMultiField" },
+              { "$ref": "#/$defs/DecimalField" },
+              { "$ref": "#/$defs/IntegerField" },
+              { "$ref": "#/$defs/URLField" },
+              { "$ref": "#/$defs/CurrencyField" },
+              { "$ref": "#/$defs/RadioButtonsField" },
+              { "$ref": "#/$defs/UserReferenceField" },
+              { "$ref": "#/$defs/GroupComponent" },
+              { "$ref": "#/$defs/GenericFieldEntry" },
+              { "type": "object", "description": "Non-field region entry (widget or other content node).", "required": ["pxObjClass"], "additionalProperties": true }
+            ]
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+
+    "GroupComponent": {
+      "type": "object",
+      "description": "A Group container within a Region (Pega-UI-Content-Group). Wraps fields with an optional heading, collapsibility, and instructions. Nests inside a ContentRegion's pyContent.",
+      "required": ["pxObjClass", "pyComponentName", "pyPromptClass", "pyContent"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Pega-UI-Content-Group",
+          "x-pega-autoFill": "Pega-UI-Content-Group"
+        },
+        "pyComponentName": {
+          "type": "string",
+          "const": "Group",
+          "x-pega-autoFill": "Group"
+        },
+        "pyLabel": {
+          "type": "string",
+          "description": "Group heading text."
+        },
+        "pyHeadingOption": {
+          "type": "string",
+          "enum": ["text", "paragraph"],
+          "description": "'text' = static text heading, 'paragraph' = heading sourced from a Paragraph rule."
+        },
+        "pyShowHeading": {
+          "type": "boolean",
+          "description": "Whether to display the group heading.",
+          "default": true
+        },
+        "pyCollapsible": {
+          "type": "boolean",
+          "description": "Whether the group can be collapsed by the user.",
+          "default": false
+        },
+        "pyExpanded": {
+          "type": "boolean",
+          "description": "Initial expanded state when collapsible is true.",
+          "default": true
+        },
+        "pyVisibilityOption": {
+          "type": "string",
+          "enum": ["always", "when", "expression"],
+          "description": "'always' = always visible, 'when' = conditional via When rule, 'expression' = conditional via expression."
+        },
+        "pyInstructionsOption": {
+          "type": "string",
+          "enum": ["none", "show"],
+          "description": "Group instructions: 'none' = no instructions, 'show' = display instructions."
+        },
+        "pyInstructions": {
+          "type": "string",
+          "description": "Instruction text or instruction source reference."
+        },
+        "pyPromptClass": {
+          "type": "string",
+          "description": "Pega class context (same as the view's pyClassName)."
+        },
+        "pyContent": {
+          "type": "array",
+          "description": "Field entries nested inside this group.",
+          "items": {
+            "anyOf": [
+              { "$ref": "#/$defs/TextInputField" },
+              { "$ref": "#/$defs/TextAreaField" },
+              { "$ref": "#/$defs/CheckboxField" },
+              { "$ref": "#/$defs/DateField" },
+              { "$ref": "#/$defs/DateTimeField" },
+              { "$ref": "#/$defs/PicklistField" },
+              { "$ref": "#/$defs/DataReferenceField" },
+              { "$ref": "#/$defs/ObjectReferenceDataReferenceField" },
+              { "$ref": "#/$defs/EmbeddedDataMultiField" },
+              { "$ref": "#/$defs/DecimalField" },
+              { "$ref": "#/$defs/IntegerField" },
+              { "$ref": "#/$defs/URLField" },
+              { "$ref": "#/$defs/CurrencyField" },
+              { "$ref": "#/$defs/RadioButtonsField" },
+              { "$ref": "#/$defs/UserReferenceField" },
+              { "$ref": "#/$defs/GenericFieldEntry" },
+              { "type": "object", "description": "Non-field entry.", "required": ["pxObjClass"], "additionalProperties": true }
+            ]
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+
+    "FieldEntryBase": {
+      "type": "object",
+      "description": "Common fields shared by all field entry types in pyContent.",
+      "required": ["pxObjClass", "pyComponentName", "pyFieldReference", "pyPromptClass"],
+      "properties": {
+        "pyFieldReference": {
+          "type": "string",
+          "description": "Property name WITHOUT dot prefix (e.g., 'StartDate', not '.StartDate')."
+        },
+        "pyValue": {
+          "type": "string",
+          "description": "Property reference WITH dot prefix (e.g., '.StartDate')."
+        },
+        "pyValueWithoutAnnotation": {
+          "type": "string",
+          "description": "Property reference without @P annotation — same as pyValue."
+        },
+        "pyLabel": {
+          "type": "string",
+          "description": "Label reference with dot prefix (e.g., '.StartDate'). The @FL annotation is added server-side at runtime."
+        },
+        "pyLabelOption": {
+          "type": "string",
+          "enum": ["field", "text", "paragraph"],
+          "description": "'field' = use the property rule's pyLabel via @FL (most common). 'text' = use pyLabel value directly. 'paragraph' = use a Paragraph rule for the label.",
+          "x-pega-autoFill": "field"
+        },
+        "pyPromptClass": {
+          "type": "string",
+          "description": "Pega class context for property resolution (same as the view's pyClassName)."
+        },
+        "pyDisplayLabel": {
+          "type": "string",
+          "description": "Human-readable type label for Dev Studio UI — cosmetic only, has no effect on rendering. Server-generated on save; does not need to be set on CREATE/UPDATE."
+        },
+        "pyRequiredOption": {
+          "type": "string",
+          "enum": ["never", "always", "when", "expression"],
+          "description": "Makes the field required. 'always' = unconditionally required (pair with 'required: true' in pxViewMetadata config). 'when' = required when a When rule evaluates to true. 'expression' = required when an expression evaluates to true."
+        },
+        "pyDisabledOption": {
+          "type": "string",
+          "description": "Disabled condition: 'never', 'always', or a When rule name."
+        },
+        "pyReadOnlyOption": {
+          "type": "string",
+          "description": "Read-only condition: 'auto', 'always', or a When rule name."
+        },
+        "pyVisibilityOption": {
+          "type": "string",
+          "description": "Visibility condition: 'always', 'never', or a When rule name."
+        }
+      },
+      "additionalProperties": true
+    },
+
+    "TextInputField": {
+      "description": "Single-line text input field (TextInput component). Also used for Checkbox (Boolean) fields — see CheckboxField.",
+      "allOf": [
+        { "$ref": "#/$defs/FieldEntryBase" },
+        {
+          "type": "object",
+          "properties": {
+            "pxObjClass": {
+              "type": "string",
+              "const": "Pega-UI-Content-Field-Text"
+            },
+            "pyComponentName": {
+              "type": "string",
+              "const": "TextInput"
+            }
+          },
+          "required": ["pxObjClass", "pyComponentName"]
+        }
+      ]
+    },
+
+    "TextAreaField": {
+      "description": "Multi-line text area field (TextArea component) for paragraph-length text.",
+      "allOf": [
+        { "$ref": "#/$defs/FieldEntryBase" },
+        {
+          "type": "object",
+          "properties": {
+            "pxObjClass": {
+              "type": "string",
+              "const": "Pega-UI-Content-Field-Text-Paragraph"
+            },
+            "pyComponentName": {
+              "type": "string",
+              "const": "TextArea"
+            }
+          },
+          "required": ["pxObjClass", "pyComponentName"]
+        }
+      ]
+    },
+
+    "CheckboxField": {
+      "description": "Boolean / checkbox field. IMPORTANT: Use pxObjClass 'Pega-UI-Content-Field-Text' (NOT 'Pega-UI-Content-Field-Boolean' or 'Pega-UI-Content-Field-Checkbox') — Boolean does not HTTP 500 on 26.1 but produces a broken rule (value binding dropped, $properties empty). Note: pyCaptionOption/pyCaptionText are declared on Pega-UI-Content-Field-Boolean in the class hierarchy, but the Agentic Authoring API requires Pega-UI-Content-Field-Text as pxObjClass and accepts these properties via the JSON content blob. The pxViewMetadata entry uses type 'Checkbox' with caption fields. Do NOT include pyLabel — Checkbox fields use pyCaptionText/pyCaptionOption for inline captions instead.",
+      "allOf": [
+        { "$ref": "#/$defs/FieldEntryBase" },
+        {
+          "type": "object",
+          "required": ["pxObjClass", "pyComponentName"],
+          "properties": {
+            "pxObjClass": {
+              "type": "string",
+              "const": "Pega-UI-Content-Field-Text"
+            },
+            "pyComponentName": {
+              "type": "string",
+              "const": "Checkbox"
+            },
+            "pyLabelOption": {
+              "type": "string",
+              "const": "text",
+              "description": "Must be 'text' for Checkbox fields.",
+              "x-pega-autoFill": "text"
+            },
+            "pyCaptionText": {
+              "type": "string",
+              "description": "Caption property reference with dot prefix (e.g., '.ManagerApprovalStatus')."
+            },
+            "pyCaptionOption": {
+              "type": "string",
+              "enum": ["field", "text", "paragraph"],
+              "description": "'field' = use the property rule's pyLabel via @FL. 'text' = use pyCaptionText value directly. 'paragraph' = source from a Paragraph rule library.",
+              "x-pega-autoFill": "field"
+            },
+            "pyHideLabel": {
+              "type": "string",
+              "description": "True to hide the outer row label (caption is shown inline instead).",
+              "x-pega-autoFill": "true"
+            },
+            "pyTrueLabel": {
+              "type": "string",
+              "description": "Display label for true state (e.g., 'Yes').",
+              "x-pega-autoFill": "Yes"
+            },
+            "pyFalseLabel": {
+              "type": "string",
+              "description": "Display label for false state (e.g., 'No').",
+              "x-pega-autoFill": "No"
+            }
+          }
+        }
+      ]
+    },
+
+    "DateField": {
+      "description": "Date-only field (Date component).",
+      "allOf": [
+        { "$ref": "#/$defs/FieldEntryBase" },
+        {
+          "type": "object",
+          "required": ["pxObjClass", "pyComponentName"],
+          "properties": {
+            "pxObjClass": {
+              "type": "string",
+              "const": "Pega-UI-Content-Field-Date"
+            },
+            "pyComponentName": {
+              "type": "string",
+              "const": "Date"
+            }
+          }
+        }
+      ]
+    },
+
+    "DateTimeField": {
+      "description": "Full date-and-time field (DateTime component).",
+      "allOf": [
+        { "$ref": "#/$defs/FieldEntryBase" },
+        {
+          "type": "object",
+          "required": ["pxObjClass", "pyComponentName"],
+          "properties": {
+            "pxObjClass": {
+              "type": "string",
+              "const": "Pega-UI-Content-Field-Date-Time",
+              "description": "DateTime field class — always hyphenated 'Pega-UI-Content-Field-Date-Time'. The non-hyphenated form 'Pega-UI-Content-Field-DateTime' is not accepted by the server."
+            },
+            "pyComponentName": {
+              "type": "string",
+              "const": "DateTime"
+            }
+          }
+        }
+      ]
+    },
+
+    "DecimalField": {
+      "description": "Decimal number field (Decimal component).",
+      "allOf": [
+        { "$ref": "#/$defs/FieldEntryBase" },
+        {
+          "type": "object",
+          "required": ["pxObjClass", "pyComponentName"],
+          "properties": {
+            "pxObjClass": {
+              "type": "string",
+              "const": "Pega-UI-Content-Field-Decimal"
+            },
+            "pyComponentName": {
+              "type": "string",
+              "const": "Decimal"
+            }
+          }
+        }
+      ]
+    },
+
+    "IntegerField": {
+      "description": "Integer number field (Integer component).",
+      "allOf": [
+        { "$ref": "#/$defs/FieldEntryBase" },
+        {
+          "type": "object",
+          "required": ["pxObjClass", "pyComponentName"],
+          "properties": {
+            "pxObjClass": {
+              "type": "string",
+              "const": "Pega-UI-Content-Field-Integer"
+            },
+            "pyComponentName": {
+              "type": "string",
+              "const": "Integer"
+            }
+          }
+        }
+      ]
+    },
+
+    "URLField": {
+      "description": "URL input field (URL component).",
+      "allOf": [
+        { "$ref": "#/$defs/FieldEntryBase" },
+        {
+          "type": "object",
+          "required": ["pxObjClass", "pyComponentName"],
+          "properties": {
+            "pxObjClass": {
+              "type": "string",
+              "const": "Pega-UI-Content-Field-Text-URL"
+            },
+            "pyComponentName": {
+              "type": "string",
+              "const": "URL"
+            }
+          }
+        }
+      ]
+    },
+
+    "CurrencyField": {
+      "description": "Currency field (Currency component). Uses Pega-UI-Content-Field-Decimal-Currency with a nested pyNumberDisplay object for ISO code configuration.",
+      "allOf": [
+        { "$ref": "#/$defs/FieldEntryBase" },
+        {
+          "type": "object",
+          "required": ["pxObjClass", "pyComponentName"],
+          "properties": {
+            "pxObjClass": {
+              "type": "string",
+              "const": "Pega-UI-Content-Field-Decimal-Currency"
+            },
+            "pyComponentName": {
+              "type": "string",
+              "const": "Currency"
+            },
+            "pyAllowDecimals": {
+              "type": "string",
+              "description": "Allow decimal places. String boolean: 'true' or 'false'.",
+              "default": "true"
+            },
+            "pyAlwaysShowISO": {
+              "type": "string",
+              "description": "Always display the ISO currency code inline. String boolean: 'true' or 'false'.",
+              "default": "false"
+            },
+            "pyNumberDisplay": {
+              "type": "object",
+              "description": "Currency ISO code configuration.",
+              "properties": {
+                "pxObjClass": {
+                  "type": "string",
+                  "const": "Pega-UI-Content-Field-NumberDisplay",
+                  "x-pega-autoFill": "Pega-UI-Content-Field-NumberDisplay"
+                },
+                "pyCurrencyISOCode": {
+                  "type": "string",
+                  "description": "Property reference for the ISO code (e.g., '.Currency'). Present only when pyCurrencyISOCodeType is 'propertyRef'."
+                },
+                "pyCurrencyISOCodeType": {
+                  "type": "string",
+                  "enum": ["propertyRef", "constant"],
+                  "description": "'propertyRef' = ISO code from a property reference. 'constant' = system default ISO code."
+                }
+              },
+              "required": ["pxObjClass", "pyCurrencyISOCodeType"]
+            }
+          }
+        }
+      ]
+    },
+
+    "RadioButtonsField": {
+      "description": "Radio buttons field (RadioButtons component). Same pxObjClass as Dropdown (Pega-UI-Content-Field-Picklist) but renders as radio buttons. Requires $associated wiring in pxContextMetadata.",
+      "allOf": [
+        { "$ref": "#/$defs/FieldEntryBase" },
+        {
+          "type": "object",
+          "required": [
+            "pxObjClass", "pyComponentName",
+            "pyDatasource", "pyDeferDatasource", "pyIsAssociated",
+            "pyJsonConfig", "pyListType"
+          ],
+          "properties": {
+            "pxObjClass": {
+              "type": "string",
+              "const": "Pega-UI-Content-Field-Picklist"
+            },
+            "pyComponentName": {
+              "type": "string",
+              "const": "RadioButtons"
+            },
+            "pyDatasource": {
+              "type": "string",
+              "const": ".",
+              "x-pega-autoFill": "."
+            },
+            "pyDeferDatasource": {
+              "type": "string",
+              "const": "true",
+              "x-pega-autoFill": "true"
+            },
+            "pyIsAssociated": {
+              "type": "string",
+              "const": "true",
+              "x-pega-autoFill": "true"
+            },
+            "pyJsonConfig": {
+              "type": "string",
+              "description": "JSON-encoded string: '{\"datasource\":\"@ASSOCIATED .PropertyName\"}'. Replace PropertyName with the actual property name including dot prefix."
+            },
+            "pyListType": {
+              "type": "string",
+              "const": "associated",
+              "x-pega-autoFill": "associated"
+            }
+          }
+        }
+      ]
+    },
+
+    "PicklistField": {
+      "description": "Associated dropdown / picklist field (Dropdown component). Requires all six datasource wiring fields. The associated property must have pyIsAssociation=true, pyTableOption='PromptList', and Rule-Obj-FieldValue rules defining the allowed values. Also update pxContextMetadata.$associated in the same call.",
+      "allOf": [
+        { "$ref": "#/$defs/FieldEntryBase" },
+        {
+          "type": "object",
+          "required": [
+            "pxObjClass", "pyComponentName",
+            "pyDatasource", "pyDeferDatasource", "pyIsAssociated",
+            "pyJsonConfig", "pyListType", "pyPlaceholder"
+          ],
+          "properties": {
+            "pxObjClass": {
+              "type": "string",
+              "const": "Pega-UI-Content-Field-Picklist"
+            },
+            "pyComponentName": {
+              "type": "string",
+              "const": "Dropdown",
+              "description": "Must be exactly 'Dropdown' (capital D, lowercase remainder)."
+            },
+            "pyDatasource": {
+              "type": "string",
+              "const": ".",
+              "x-pega-autoFill": "."
+            },
+            "pyDeferDatasource": {
+              "type": "string",
+              "const": "true",
+              "x-pega-autoFill": "true"
+            },
+            "pyIsAssociated": {
+              "type": "string",
+              "const": "true",
+              "x-pega-autoFill": "true"
+            },
+            "pyJsonConfig": {
+              "type": "string",
+              "description": "JSON-encoded string: '{\"datasource\":\"@ASSOCIATED .PropertyName\"}'. Replace PropertyName with the actual property name including dot prefix."
+            },
+            "pyListType": {
+              "type": "string",
+              "const": "associated",
+              "x-pega-autoFill": "associated"
+            },
+            "pyPlaceholder": {
+              "type": "string",
+              "description": "Placeholder text shown when no value is selected.",
+              "x-pega-autoFill": "Select..."
+            }
+          }
+        }
+      ]
+    },
+
+    "DataReferenceField": {
+      "description": "Data Reference template-view field (reference component). Use this pattern for Infinity 24/25 compatibility and when embedding a DataReference template view. The embedded view rule name must be listed in pxContextMetadata.$views. pyJsonConfig is a JSON-encoded string (not an inline object).",
+      "allOf": [
+        { "$ref": "#/$defs/FieldEntryBase" },
+        {
+          "type": "object",
+          "required": [
+            "pxObjClass", "pyComponentName",
+            "pyType", "pyTargetProperty", "pyJsonConfig"
+          ],
+          "properties": {
+            "pxObjClass": {
+              "type": "string",
+              "const": "Pega-UI-Content-Field-Data-Reference"
+            },
+            "pyComponentName": {
+              "type": "string",
+              "const": "reference"
+            },
+            "pyType": {
+              "type": "string",
+              "const": "Page",
+              "description": "Always 'Page' for data reference fields.",
+              "x-pega-autoFill": "Page"
+            },
+            "pyTargetProperty": {
+              "type": "string",
+              "description": "Name of the Page property WITHOUT dot prefix (e.g., 'LeaveCategory')."
+            },
+            "pyJsonConfig": {
+              "type": "string",
+              "description": "JSON-encoded string with embedded view configuration: '{\"authorContext\":\".PropertyName\",\"name\":\"ViewRuleName\",\"referenceType\":\"Data\",\"ruleClass\":\"ContextClass\",\"type\":\"view\"}'."
+            },
+            "pyRequiredOption": {
+              "type": "string",
+              "enum": ["never", "always", "when", "expression"],
+              "x-pega-autoFill": "never"
+            },
+            "pyRequiredValue": {
+              "type": "string",
+              "description": "Send as boolean on CREATE/UPDATE. The server normalizes to string ('false'/'true') on GET.",
+              "x-pega-autoFill": "false"
+            }
+          }
+        }
+      ]
+    },
+
+    "ObjectReferenceDataReferenceField": {
+      "description": "Infinity 26+ only: ObjectReference Data Reference field. Not available in Infinity 24 or Infinity 25. Uses direct data page binding with pyDataSource/target object fields instead of a DataReference template view.",
+      "allOf": [
+        { "$ref": "#/$defs/FieldEntryBase" },
+        {
+          "type": "object",
+          "required": [
+            "pxObjClass", "pyComponentName", "pyTargetProperty", "pyTargetObjectClass",
+            "pyTargetObjectType", "pyValue", "pyContextPage", "pyDisplayField",
+            "pyDataSource", "pyMode", "pyReferenceComponentType"
+          ],
+          "properties": {
+            "pxObjClass": {
+              "type": "string",
+              "const": "Pega-UI-Content-Field-Data-Reference"
+            },
+            "pyComponentName": {
+              "type": "string",
+              "const": "ObjectReference"
+            },
+            "pyTargetProperty": {
+              "type": "string",
+              "description": "Name of the Page property WITHOUT dot prefix (e.g., 'LeaveCategory')."
+            },
+            "pyTargetObjectClass": {
+              "type": "string",
+              "description": "Data class selected by the ObjectReference component."
+            },
+            "pyTargetObjectType": {
+              "type": "string",
+              "const": "data",
+              "description": "Observed value for data-object references."
+            },
+            "pyValue": {
+              "type": "string",
+              "description": "Stored key property path, usually '.PageProperty.pyGUID'."
+            },
+            "pyValueWithoutAnnotation": {
+              "type": "string",
+              "description": "Stored key property path without @P annotation."
+            },
+            "pyContextPage": {
+              "type": "string",
+              "description": "Context page property path, e.g. '.LeaveCategory'."
+            },
+            "pyDisplayField": {
+              "type": "string",
+              "description": "Data-class field displayed after selection, e.g. '.LeaveCategory.ApprovalRequired'."
+            },
+            "pyDataSource": {
+              "type": "string",
+              "description": "Data page name used as the lookup source, e.g. 'D_LeaveCategoryList'."
+            },
+            "pyMode": {
+              "type": "string",
+              "enum": ["single"],
+              "description": "Single-select ObjectReference mode observed in Infinity 26 XML."
+            },
+            "pyReferenceComponentType": {
+              "type": "string",
+              "enum": ["Combobox"],
+              "description": "ObjectReference UI component variant observed in Infinity 26 XML."
+            },
+            "pyAllowCreatingRecords": { "type": "boolean" },
+            "pyHideFieldLabels": { "type": "boolean" }
+          }
+        }
+      ]
+    },
+
+    "EmbeddedDataMultiField": {
+      "description": "Infinity 26+ only: EmbeddedDataMulti PageList table inside a DefaultForm. Not available in Infinity 24 or Infinity 25. Uses a PageList property, pyPrimaryFields columns, and pxContextMetadata.$pagelists actions/views wiring.",
+      "allOf": [
+        { "$ref": "#/$defs/FieldEntryBase" },
+        {
+          "type": "object",
+          "required": [
+            "pxObjClass", "pyComponentName", "pyTargetProperty", "pyTargetObjectClass",
+            "pyType", "pyPagelistValue", "pyDisplayAs", "pyAddEditAction",
+            "pyEditType", "pyEditModeConfig", "pyColumns"
+          ],
+          "properties": {
+            "pxObjClass": {
+              "type": "string",
+              "const": "Pega-UI-Content-Field-Data-Embedded"
+            },
+            "pyComponentName": {
+              "type": "string",
+              "const": "EmbeddedDataMulti"
+            },
+            "pyTargetProperty": {
+              "type": "string",
+              "description": "Name of the PageList property WITHOUT dot prefix."
+            },
+            "pyTargetObjectClass": {
+              "type": "string",
+              "description": "Data class for rows in the embedded PageList."
+            },
+            "pyType": {
+              "type": "string",
+              "const": "PageList"
+            },
+            "pyPagelistValue": {
+              "type": "string",
+              "description": "PageList property path with dot prefix, e.g. '.Timesheets'."
+            },
+            "pyDisplayAs": {
+              "type": "string",
+              "const": "table"
+            },
+            "pyModeOption": {
+              "type": "string",
+              "enum": ["editable", "readonly"]
+            },
+            "pyAddEditAction": {
+              "type": "string",
+              "description": "FlowAction used for add/edit rows, commonly 'pyEdit'."
+            },
+            "pyEditType": {
+              "type": "string",
+              "const": "action"
+            },
+            "pyEditModeConfig": {
+              "type": "string",
+              "const": "modal"
+            },
+            "pyTargetClassLabel": {
+              "type": "string",
+              "description": "Singular display label for row objects."
+            },
+            "pyTargetClassLabelOption": {
+              "type": "string",
+              "enum": ["default", "text", "paragraph"]
+            },
+            "pyColumns": {
+              "type": "array",
+              "description": "Column definitions. Infinity 26 XML shows a Pega-UI-Content-Reference column to pyPrimaryFields.",
+              "items": { "type": "object" }
+            }
+          }
+        }
+      ]
+    },
+
+    "UserReferenceField": {
+      "description": "Operator lookup field (UserReference component). Requires pyJsonConfig with referenceList.",
+      "allOf": [
+        { "$ref": "#/$defs/FieldEntryBase" },
+        {
+          "type": "object",
+          "required": ["pxObjClass", "pyComponentName"],
+          "properties": {
+            "pxObjClass": {
+              "type": "string",
+              "const": "Pega-UI-Content-Field-Text-UserReference"
+            },
+            "pyComponentName": {
+              "type": "string",
+              "const": "UserReference"
+            },
+            "pyPlaceholder": {
+              "type": "string",
+              "description": "Placeholder text shown in the lookup input."
+            },
+            "pyJsonConfig": {
+              "type": "string",
+              "description": "JSON-encoded string with referenceList configuration."
+            }
+          }
+        }
+      ]
+    },
+
+    "GenericFieldEntry": {
+      "description": "Fallback schema for field entry types not covered by the specific defs above (e.g., AutoComplete, RadioButtons, RichText). Set pxObjClass and pyComponentName correctly per the Field Type Patterns table.",
+      "allOf": [
+        { "$ref": "#/$defs/FieldEntryBase" },
+        {
+          "type": "object",
+          "properties": {
+            "pxObjClass": { "type": "string" },
+            "pyComponentName": { "type": "string" }
+          }
+        }
+      ]
+    },
+
+    "ViewMetadata": {
+      "type": "object",
+      "description": "Internal structure of the pxViewMetadata JSON string (documented here for reference — the top-level pxViewMetadata property must be sent as a JSON-stringified string, not an object). The top-level object represents the View node. Must mirror the pyContent structure exactly — each field in pyContent must have a corresponding entry in the children array at the same index.",
+      "required": ["name", "type", "config", "children"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "View rule name — same as pyRuleName."
+        },
+        "type": {
+          "type": "string",
+          "const": "View"
+        },
+        "config": {
+          "$ref": "#/$defs/ViewRootConfig"
+        },
+        "children": {
+          "type": "array",
+          "description": "Top-level Region nodes — one per ContentRegion in pyContent.",
+          "items": { "$ref": "#/$defs/ComponentNode" }
+        }
+      },
+      "additionalProperties": true
+    },
+
+    "ViewRootConfig": {
+      "type": "object",
+      "description": "Config object at the View root level of pxViewMetadata.",
+      "required": ["template", "ruleClass"],
+      "properties": {
+        "template": {
+          "type": "string",
+          "description": "Constellation template name — same as pyTemplateName."
+        },
+        "ruleClass": {
+          "type": "string",
+          "description": "Class context — same as pyClassName."
+        },
+        "localeReference": {
+          "type": "string",
+          "description": "Locale reference key. Pattern: '@LR CLASSNAME!VIEW!RULENAME' — class dots become hyphens, both segments uppercased. Example: class 'MyCo-MyApp-Work-Case', rule 'CollectInfo' → '@LR MYCO-MYAPP-WORK-CASE!VIEW!COLLECTINFO'. Optional in CREATE/UPDATE payloads; may be server-generated."
+        },
+        "NumCols": {
+          "type": "string",
+          "description": "Column count for the view layout. Default '2' for DefaultForm views. Maps to pyColumnCount rule-level field.",
+          "default": "2"
+        },
+        "inheritParentLayout": {
+          "type": "boolean",
+          "description": "Whether to inherit layout from parent view. Default false. Maps to pyInheritParentLayout rule-level field.",
+          "default": false
+        },
+        "instructions": {
+          "type": "string",
+          "description": "Paragraph instruction binding, e.g., '@PARAGRAPH ParagraphRuleName'. Required when pyInstructionsOption is 'overridden'."
+        },
+        "label": {
+          "type": "string",
+          "description": "View label binding, e.g., '@L Custom Label'. Uses @L annotation for localized literal text."
+        }
+      },
+      "additionalProperties": true
+    },
+
+    "ComponentNode": {
+      "type": "object",
+      "description": "A single component node in the pxViewMetadata tree. Regions wrap fields; field nodes have no children. Index ordering must match pyContent exactly — use empty objects ({}) as placeholders for existing entries when building update payloads.",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Component type: 'Region' for layout regions, or the DX component name for fields (e.g., 'TextInput', 'Date', 'Dropdown', 'TextArea', 'Checkbox', 'reference', 'DateTime', 'Decimal', 'UserReference')."
+        },
+        "name": {
+          "type": "string",
+          "description": "Logical name — required for Region nodes (e.g., 'Fields'), optional for field nodes."
+        },
+        "config": {
+          "$ref": "#/$defs/ComponentConfig"
+        },
+        "children": {
+          "type": "array",
+          "description": "Child nodes — present on Region and View nodes, absent on field nodes.",
+          "items": { "$ref": "#/$defs/ComponentNode" }
+        }
+      },
+      "additionalProperties": true
+    },
+
+    "ComponentConfig": {
+      "type": "object",
+      "description": "Component-specific configuration inside a pxViewMetadata node. Common properties are listed; additional properties vary by component type.",
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "Property data binding with @P annotation (e.g., '@P .StartDate')."
+        },
+        "label": {
+          "type": "string",
+          "description": "Display label: '@FL .PropName' for field labels, '@L Label Text' for literal localized text."
+        },
+        "labelOption": {
+          "type": "string",
+          "enum": ["default", "custom", "none"],
+          "description": "'default' = use the @FL field label."
+        },
+        "required": {
+          "type": "boolean",
+          "description": "True if the field is required. Must be paired with pyRequiredOption: 'always' in pyContent."
+        },
+        "readOnly": {
+          "type": "boolean",
+          "description": "True if the field is read-only."
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "True if the field is disabled."
+        },
+        "placeholder": {
+          "type": "string",
+          "description": "Placeholder text as a localized string (e.g., '@L Select...')."
+        },
+        "datasource": {
+          "description": "Data source binding. String for Dropdown fields (e.g., '@ASSOCIATED .PropertyName'). Object for widget datasources (e.g., {source, fields}).",
+          "oneOf": [
+            { "type": "string" },
+            { "type": "object" }
+          ]
+        },
+        "deferDatasource": {
+          "type": "boolean",
+          "description": "True to defer datasource loading. Required for Dropdown fields."
+        },
+        "listType": {
+          "type": "string",
+          "enum": ["associated", "datapage"],
+          "description": "List type — 'associated' for Dropdown fields, 'datapage' for DataReference AutoComplete/TableSelect."
+        },
+        "caption": {
+          "type": "string",
+          "description": "Checkbox caption label (e.g., '@FL .ManagerApprovalStatus')."
+        },
+        "captionOption": {
+          "type": "string",
+          "enum": ["default", "custom"],
+          "description": "Caption label source for Checkbox fields."
+        },
+        "trueLabel": {
+          "type": "string",
+          "description": "Localized label for true state (e.g., '@L Yes')."
+        },
+        "falseLabel": {
+          "type": "string",
+          "description": "Localized label for false state (e.g., '@L No')."
+        },
+        "hideLabel": {
+          "type": "boolean",
+          "description": "True to hide the outer row label on Checkbox fields."
+        },
+        "authorContext": {
+          "type": "string",
+          "description": "Data Reference: property path for the embedded page (e.g., '.LeaveCategory')."
+        },
+        "name": {
+          "type": "string",
+          "description": "Data Reference: embedded view rule name."
+        },
+        "referenceType": {
+          "type": "string",
+          "enum": ["Data", "Case"],
+          "description": "Data Reference: 'Data' for data types, 'Case' for case types / LDM entities."
+        },
+        "ruleClass": {
+          "type": "string",
+          "description": "Data Reference: class context for the embedded view."
+        },
+        "inheritedProps": {
+          "type": "array",
+          "description": "Data Reference: inherited property overrides passed to the embedded view.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "prop": { "type": "string" },
+              "value": {}
+            }
+          }
+        },
+        "allowCreatingRecords": {
+          "type": "boolean",
+          "description": "Infinity 26+ ObjectReference: true if users may create related records from the picker. Observed false."
+        },
+        "componentType": {
+          "type": "string",
+          "enum": ["Combobox"],
+          "description": "Infinity 26+ ObjectReference: picker component variant. Combobox observed in Infinity 26 XML."
+        },
+        "contextPage": {
+          "type": "string",
+          "description": "Infinity 26+ ObjectReference: selected object page binding, e.g. '@P .LeaveCategory'."
+        },
+        "displayField": {
+          "type": "string",
+          "description": "Infinity 26+ ObjectReference: display field binding, e.g. '@P .LeaveCategory.ApprovalRequired'."
+        },
+        "hideFieldLabels": {
+          "type": "boolean",
+          "description": "Infinity 26+ ObjectReference: whether field labels are hidden in the picker."
+        },
+        "mode": {
+          "type": "string",
+          "enum": ["single", "multi"],
+          "description": "ObjectReference or DataReference selection mode. ObjectReference single mode observed in Infinity 26 XML."
+        },
+        "referenceList": {
+          "type": "string",
+          "description": "Data page or property reference supplying selectable rows, e.g. 'D_LeaveCategoryList'."
+        },
+        "targetObjectClass": {
+          "type": "string",
+          "description": "Infinity 26+ ObjectReference: target data class for selected objects."
+        },
+        "targetObjectType": {
+          "type": "string",
+          "const": "data",
+          "description": "Infinity 26+ ObjectReference: target object type. 'data' observed."
+        },
+        "addEditAction": {
+          "type": "string",
+          "description": "Infinity 26+ EmbeddedDataMulti: FlowAction used to add/edit rows, e.g. 'pyEdit'."
+        },
+        "columns": {
+          "type": "array",
+          "description": "Column definitions for table-like components. EmbeddedDataMulti uses reference columns such as pyPrimaryFields.",
+          "items": { "type": "object" }
+        },
+        "displayAs": {
+          "type": "string",
+          "enum": ["table", "simpleTable"],
+          "description": "EmbeddedDataMulti display mode. 'table' observed in Infinity 26 XML."
+        },
+        "editMode": {
+          "type": "string",
+          "const": "modal",
+          "description": "EmbeddedDataMulti row edit mode."
+        },
+        "editType": {
+          "type": "string",
+          "const": "action",
+          "description": "EmbeddedDataMulti row edit type."
+        },
+        "pagelistValue": {
+          "type": "string",
+          "description": "EmbeddedDataMulti PageList binding, e.g. '@P .Timesheets'."
+        },
+        "targetClassLabel": {
+          "type": "string",
+          "description": "EmbeddedDataMulti row object label, e.g. '@L Timesheet'."
+        },
+        "targetClassLabelOption": {
+          "type": "string",
+          "enum": ["default", "text", "paragraph"],
+          "description": "EmbeddedDataMulti target class label source."
+        }
+      },
+      "additionalProperties": true
+    },
+
+    "ContextMetadata": {
+      "type": "object",
+      "description": "Internal structure of the pxContextMetadata JSON string (documented here for reference — the top-level pxContextMetadata property must be sent as a JSON-stringified string, not an object). Lists all properties, embedded views, and associated datasources used by the view. Must be updated alongside pyContent in the same call.",
+      "required": ["$properties"],
+      "properties": {
+        "$properties": {
+          "type": "array",
+          "description": "Property paths referenced by this view, each with dot prefix (e.g., '.StartDate'). Include every property shown in pyContent.",
+          "items": { "type": "string" }
+        },
+        "$fields": {
+          "type": "array",
+          "description": "Field references — one entry per property in $properties, same order.",
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Property path with dot prefix (e.g., '.StartDate')."
+              }
+            }
+          }
+        },
+        "$views": {
+          "type": "array",
+          "description": "Embedded view rules referenced by Data Reference fields. One entry per unique embedded view.",
+          "items": {
+            "type": "object",
+            "required": ["name", "ruleClass"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "View rule name (e.g., 'Edit_LeaveCategory')."
+              },
+              "ruleClass": {
+                "type": "string",
+                "description": "Class context of the embedded view (e.g., 'MyCo-MyApp-Work-Case')."
+              },
+              "context": {
+                "type": "string",
+                "description": "Page path for the embedded view context (e.g., '.LeaveCategory', '.PartyDock.PartyData'). Matches the authorContext/context value in pyJsonConfig."
+              }
+            }
+          }
+        },
+        "$associated": {
+          "type": "array",
+          "description": "Associated datasource entries for Dropdown fields. One entry per Dropdown field. REQUIRED for dropdowns — omitting causes the dropdown to render without options.",
+          "items": {
+            "type": "object",
+            "required": ["name", "deferDatasource"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Property path with dot prefix (e.g., '.Priority')."
+              },
+              "deferDatasource": {
+                "type": "string",
+                "const": "true",
+                "x-pega-autoFill": "true"
+              }
+            }
+          }
+        },
+        "$insights": {
+          "type": "array",
+          "description": "Insight widgets referenced by this view (usually empty).",
+          "items": { "type": "object" }
+        },
+        "$genAICoaches": {
+          "type": "array",
+          "description": "GenAI coach configurations (usually empty).",
+          "items": { "type": "object" }
+        },
+        "$AIAgents": {
+          "type": "array",
+          "description": "AI agent names referenced by this view (e.g., 'pzInsightAgent').",
+          "items": { "type": "string" }
+        },
+        "$attachments": {
+          "type": "array",
+          "description": "Attachment widget configurations (usually empty).",
+          "items": { "type": "object" }
+        },
+        "$widgets": {
+          "type": "array",
+          "items": { "type": "object" }
+        },
+        "$addresses": {
+          "type": "array",
+          "items": { "type": "object" }
+        },
+        "$users": {
+          "type": "array",
+          "description": "User reference property paths (e.g., '.AssignedOperator').",
+          "items": { "type": "string" }
+        },
+        "$classesmetadata": {
+          "type": "array",
+          "items": { "type": "object" }
+        },
+        "$pagelists": {
+          "type": "array",
+          "description": "PageList and data page dependencies. EmbeddedDataMulti entries may include $actions, $views, pagelist, $fields, and includePrimaryFields.",
+          "items": { "type": "object" }
+        },
+        "$whens": {
+          "type": "array",
+          "description": "When rule names referenced for conditional visibility/required logic. Simple string for scalar fields; object with nested $views for conditionally-visible embedded data.",
+          "items": {
+            "oneOf": [
+              {"type": "string", "description": "Simple When rule name for scalar field visibility."},
+              {
+                "type": "object",
+                "description": "When rule with nested sub-view dependencies for conditionally-visible embedded data.",
+                "required": ["name"],
+                "properties": {
+                  "name": {"type": "string", "description": "When rule name."},
+                  "$views": {
+                    "type": "array",
+                    "description": "Sub-views that are conditionally shown by this When rule. These do NOT appear in top-level $views.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {"type": "string"},
+                        "context": {"type": "string"},
+                        "ruleClass": {"type": "string"}
+                      },
+                      "required": ["name", "ruleClass"]
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "$paragraphs": {
+          "type": "array",
+          "description": "Paragraph rule references (e.g., for instructions). Each entry uses the shape {\"name\": \"ParagraphRuleName\"}.",
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Paragraph rule name."
+              }
+            }
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+
+    "PageAndClass": {
+      "type": "object",
+      "description": "A named page declaration for this view.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-PagesAndClasses"
+        },
+        "pyPagesAndClassesPage": {
+          "type": "string",
+          "description": "Clipboard page name."
+        },
+        "pyPagesAndClassesClass": {
+          "type": "string",
+          "description": "Class of the page."
+        },
+        "pyPagesAndClassesMode": {
+          "type": "string",
+          "description": "Page mode."
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

@@ -1,0 +1,243 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-test-application-case.json",
+  "title": "Rule-Test-Application-Case",
+  "description": "JSON schema for creating or updating a Pega Application Test Case (Rule-Test-Application-Case). Composes Business Actions into end-to-end test sequences.",
+  "type": "object",
+  "required": [
+    "pxObjClass",
+    "pyClassName",
+    "pyPurpose",
+    "pyLabel",
+    "pyTestKeywords",
+    "pyRuleAvailable"
+  ],
+  "properties": {
+    "pxObjClass": {
+      "type": "string",
+      "const": "Rule-Test-Application-Case",
+      "description": "Rule type class.",
+      "x-pega-autoFill": "Rule-Test-Application-Case"
+    },
+    
+    "pyClassName": {
+      "type": "string",
+      "description": "For Case-level tests: the applies-to work class (e.g., 'MyOrg-MyApp-Work-MyCase'). For Application-level tests: 'Work-'."
+    },
+    "pyPurpose": {
+      "type": "string",
+      "description": "Descriptive test case ID (KEY2 field). Convention: '{ScenarioName without spaces}' (e.g., 'HomeLoan_HappyPath')."
+    },
+    "pyLabel": {
+      "type": "string",
+      "description": "Descriptive label (e.g., 'Create and complete MyCase - Happy Path')."
+    },
+    "pyDescription": {
+      "type": "string",
+      "description": "High-level scenario description — maps to Gherkin scenario comment lines summarizing the decision path and expected outcome."
+    },
+    "pyRuleSet": {
+      "type": "string",
+      "description": "Test ruleset name."
+    },
+    "pyRuleSetVersion": {
+      "type": "string",
+      "pattern": "^\\d{2}-\\d{2}-\\d{2}$",
+      "description": "Ruleset version (e.g., '01-01-01')."
+    },
+    "pyRuleAvailable": {
+      "type": "string",
+      "enum": ["Yes", "No", "Withdrawn", "Final", "Blocked"],
+      "description": "Availability status.",
+      "x-pega-autoFill": "Yes"
+    },
+    "pyTestType": {
+      "type": "string",
+      "enum": ["Case", "Application"],
+      "description": "Test type — 'Case' for case-type tests, 'Application' for application-level tests."
+    },
+    "pyTestContext": {
+      "type": "string",
+      "description": "Context identifier. For Case-level tests: 'Case Type: {CaseTypeName}'. For Application-level tests: 'Application: {ApplicationName}'."
+    },
+    "pyApplicationName": {
+      "type": "string",
+      "description": "Application name (e.g., 'MyApp')."
+    },
+    "pyApplicationVersion": {
+      "type": "string",
+      "description": "Application version (e.g., '01.01.01')."
+    },
+    "pyAutomationStatus": {
+      "type": "string",
+      "enum": ["Pending-Review", "Approved", "In-Progress", "Automated", ""],
+      "description": "Automation review status.",
+      "x-pega-autoFill": "Pending-Review"
+    },
+    "pyReviewCompleted": {
+      "type": "string",
+      "enum": ["Yes", "No"],
+      "x-pega-autoFill": "No"
+    },
+    "pyStepPageReference": {
+      "type": "string",
+      "x-pega-autoFill": "RH_1"
+    },
+    "pySkipValidations": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "x-pega-autoFill": "false"
+    },
+    "pyBaseRule": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "x-pega-autoFill": "false"
+    },
+    "pySortDateCircumWithinRSMajor": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "x-pega-autoFill": "true"
+    },
+    "pyTestKeywords": {
+      "type": "array",
+      "description": "Ordered list of keyword steps composing the test case.",
+      "items": {
+        "$ref": "#/$defs/TestKeyword"
+      }
+    },
+    "pyPagesAndClasses": {
+      "type": "array",
+      "description": "Additional clipboard pages.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "pxObjClass": {
+            "type": "string",
+            "const": "Embed-PagesAndClasses",
+            "x-pega-autoFill": "Embed-PagesAndClasses"
+          }
+        }
+      }
+    },
+    "pySetup": {
+      "type": "array",
+      "description": "Pre-test setup steps."
+    },
+    "pyMemo": {
+      "type": "string",
+      "description": "Free-text memo."
+    }
+  },
+  "$defs": {
+    "TestKeyword": {
+      "type": "object",
+      "description": "A single keyword step referencing a Business Action.",
+      "required": ["pxObjClass", "pyPurpose", "pyClassName", "pyKeywordType"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Rule-Test-Application-BusinessAction",
+          "x-pega-autoFill": "Rule-Test-Application-BusinessAction"
+        },
+        "pyPurpose": {
+          "type": "string",
+          "description": "Business Action purpose/name (e.g., 'Login', 'CreateMyCase', 'AssertCaseStage')."
+        },
+        "pyClassName": {
+          "type": "string",
+          "description": "Class of the Business Action — 'Work-' for built-ins, work class for case-specific actions."
+        },
+        "pyKeywordType": {
+          "type": "string",
+          "enum": ["GIVEN", "WHEN", "THEN", "AND", "Given", "When", "Then", "And"],
+          "description": "BDD keyword type."
+        },
+        "pyKeywordDescription": {
+          "type": "string",
+          "description": "Gherkin step description."
+        },
+        "pyLabel": {
+          "type": "string",
+          "description": "Human-readable label for this keyword step."
+        },
+        "pyStageName": {
+          "type": "string",
+          "description": "Stage name — only for AssertCaseStage keywords."
+        },
+        "pyStatusValue": {
+          "type": "string",
+          "description": "Expected status — only for AssertCaseStatus keywords (e.g., 'Resolved-Completed')."
+        },
+        "pyInputParameters": {
+          "type": "array",
+          "description": "Input parameters wired to this keyword step.",
+          "items": {
+            "$ref": "#/$defs/TestKeywordInput"
+          }
+        },
+        "pyOutputParameters": {
+          "type": "array",
+          "description": "Output parameters captured from this keyword step.",
+          "items": {
+            "$ref": "#/$defs/TestKeywordOutput"
+          }
+        }
+      }
+    },
+    "TestKeywordInput": {
+      "type": "object",
+      "description": "Input parameter for a keyword step.",
+      "required": ["pxObjClass", "pyParameterName", "pyMapTestInputFrom"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-TestParameter",
+          "x-pega-autoFill": "Embed-TestParameter"
+        },
+        "pyParameterName": {
+          "type": "string",
+          "description": "Parameter name (e.g., 'CaseID', 'ValidationFails', 'StageName')."
+        },
+        "pyParameterValue": {
+          "type": "string",
+          "description": "Value — literal for Constant, unique name for Keyword Output, config key for Global Test Data."
+        },
+        "pyMapTestInputFrom": {
+          "type": "string",
+          "enum": ["Constant", "Keyword Output", "Global Test Data"],
+          "description": "Source: 'Constant' = literal value, 'Keyword Output' = previous keyword output, 'Global Test Data' = global config."
+        },
+        "pyParameterType": {
+          "type": "string",
+          "enum": ["String", "Integer", "Boolean", "DateTime"],
+          "description": "Data type."
+        }
+      }
+    },
+    "TestKeywordOutput": {
+      "type": "object",
+      "description": "Output parameter captured from a keyword step.",
+      "required": ["pxObjClass", "pyParameterName"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-TestParameter",
+          "x-pega-autoFill": "Embed-TestParameter"
+        },
+        "pyParameterName": {
+          "type": "string",
+          "description": "Standard parameter name (e.g., 'CaseID')."
+        },
+        "pyParameterUniqueName": {
+          "type": "string",
+          "description": "Unique alias for referencing in subsequent keywords (e.g., 'MyCaseID')."
+        },
+        "pyMapOutputFrom": {
+          "type": "string",
+          "enum": ["Response"],
+          "description": "Output source — 'Response' captures from API response."
+        }
+      }
+    }
+  }
+}
