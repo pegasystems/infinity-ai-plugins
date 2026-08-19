@@ -1,0 +1,378 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-obj-corr.json",
+  "title": "Rule-Obj-Corr",
+  "description": "Validates Rule-Obj-Corr (Correspondence) payloads for Pega Infinity. Correspondence rules define outbound communication content -- email bodies, letter templates, and document merge content -- associated with a correspondence type (Rule-CorrType).",
+  "type": "object",
+  "required": [
+    "pxObjClass",
+    "pyClassName",
+    "pyLabel",
+    "pyCorrType",
+    "pyStreamName"
+  ],
+  "dependentRequired": {
+    "pyEmailTemplateName": [
+      "pyEmailTemplateStream"
+    ]
+  },
+  "properties": {
+    "pxObjClass": {
+      "type": "string",
+      "description": "Identifies this as a Correspondence rule. Must always be 'Rule-Obj-Corr'. Auto-derived from the rule type.",
+      "x-pega-autoDerived": true,
+      "x-pega-autoFill": "Rule-Obj-Corr"
+    },
+    "pyClassName": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The Applies-To class — the Pega class context in which this correspondence rule executes. Determines which properties, pages, and referenced rules are available. Example: 'MyOrg-MyApp-Work-Order'."
+    },
+    "pyRuleName": {
+      "type": "string",
+      "description": "Internal rule identifier. IMPORTANT: Must follow the format '<name> <corrType>' where <corrType> matches the pyCorrType value exactly (e.g., 'WelcomeNotification Email', 'ApprovalLetter Mail'). The correspondence type suffix is part of the rule identity.",
+      "x-pega-autoFill": "{pyStreamName} {pyCorrType}"
+    },
+    "pyLabel": {
+      "type": "string",
+      "description": "Human-readable display name shown in the Correspondence rule form and in rule galleries. Distinct from pyRuleName — can contain spaces and punctuation (e.g., 'Welcome Notification Email')."
+    },
+    "pyDescription": {
+      "type": "string",
+      "description": "Developer-facing description explaining the purpose of this correspondence rule. Visible in the rule header and used for documentation purposes."
+    },
+    "pyCorrType": {
+      "type": "string",
+      "description": "The correspondence type that defines the behavior and available features. Must match an existing Rule-CorrType rule name (e.g., 'Email' for email correspondence, 'Mail' for printed letters). Controls which editing modes and fields are available."
+    },
+    "pySourceStream": {
+      "type": "string",
+      "description": "The HTML body content of the correspondence. Supports Pega markup directives for dynamic content: property references via <<.propertyName>> or <pega:reference name='.propertyName'>, embedded rules via <pega:include> (sections, paragraphs, nested correspondence, fragments), conditional rendering via <pega:when name='WhenRuleName'>, and page context switching via <pega:withPage> and <pega:withEmbedded>. This is the primary content field for all correspondence types."
+    },
+    "pyNextAction": {
+      "type": "string",
+      "enum": [
+        "Send",
+        "Verify",
+        "Attach"
+      ],
+      "description": "Controls what happens after the correspondence is generated. Determines the post-generation behavior.",
+      "x-pega-autoFill": "Send"
+    },
+    "pyFormSizeHoriz": {
+      "type": "string",
+      "description": "The width of the correspondence editor in characters (default 60). Controls the initial display size of the HTML source editor. Only affects the authoring UI, not the rendered output.",
+      "x-pega-autoFill": "60"
+    },
+    "pyFormSizeVert": {
+      "type": "string",
+      "description": "The height of the correspondence editor in characters (default 80). Controls the initial display size of the HTML source editor. Only affects the authoring UI, not the rendered output.",
+      "x-pega-autoFill": "80"
+    },
+    "pyFormPrinter": {
+      "type": "string",
+      "description": "Name of a Rule-COS-Admin-Printer instance that designates the physical or network printer for Mail-type correspondence output. Referenced when generating printable documents or letters. Only applicable when pyCorrType is 'Mail'."
+    },
+    "pyFormPrintMethod": {
+      "type": "string",
+      "description": "Name of a Rule-Obj-Activity that handles specialized printing logic for Mail-type correspondence. This activity is called to perform custom print operations, post-processing, or integration with external print systems. Only applicable when pyCorrType is 'Mail'."
+    },
+    "pyEmailViewMode": {
+      "type": "string",
+      "enum": [
+        "basic",
+        "source",
+        "templated"
+      ],
+      "description": "Controls the email editing experience in Process Authorer. Relevant only when pyCorrType is 'Email'. 'basic' uses the rich text editor (WYSIWYG), 'source' provides raw HTML editing for full control, 'templated' uses a named template (requires pyEmailTemplateName and pyEmailTemplateStream).",
+      "x-pega-autoFill": "basic"
+    },
+    "pyEmailTemplateName": {
+      "type": "string",
+      "description": "The name of the email template used when pyEmailViewMode is 'templated'. Defines the structure, branding, and layout. Must be accompanied by pyEmailTemplateStream. Example: 'StandardWelcomeTemplate'."
+    },
+    "pyEmailTemplateStream": {
+      "type": "string",
+      "description": "The HTML template structure defining regions for templated emails. Contains <region name='regionName'/> elements that map to pyEmailRegions content. Required when pyEmailTemplateName is provided. Example: '<template><region name=\"Header\"/><region name=\"Body\"/><region name=\"Footer\"/></template>'."
+    },
+    "pyVerifyCorr": {
+      "type": "string",
+      "enum": [
+        "true",
+        "false"
+      ],
+      "description": "When 'true', requires user verification before the correspondence is sent or finalized. Presents a preview to the user for review and possible editing. Commonly used with pyNextAction: 'Verify' for sensitive communications.",
+      "x-pega-autoFill": "false"
+    },
+    "pyTopLevelCorr": {
+      "type": "string",
+      "enum": [
+        "true",
+        "false"
+      ],
+      "description": "Indicates whether this is a top-level correspondence rule ('true') or a nested/referenced correspondence ('false'). Top-level correspondence can be invoked directly; nested correspondence is included via <pega:include type='Rule-Obj-Corr'>.",
+      "x-pega-autoFill": "false"
+    },
+    "pyUserEdit": {
+      "type": "string",
+      "enum": [
+        "NoEdit",
+        "MayDisplay",
+        "MayEdit",
+        "MustEdit"
+      ],
+      "description": "Controls the user's ability to edit the correspondence at runtime. 'NoEdit' = read-only, 'MayDisplay' = view-only with display, 'MayEdit' = editing allowed but not required, 'MustEdit' = user must edit before proceeding.",
+      "x-pega-autoFill": "NoEdit"
+    },
+    "pySourceOnlyMode": {
+      "type": "string",
+      "enum": [
+        "true",
+        "false"
+      ],
+      "description": "When 'true', the correspondence uses source-only editing mode with raw HTML (no rich text editor). Common for Mail-type correspondence and when precise HTML control is needed. Often paired with pyEmailViewMode: 'source' for Email type.",
+      "x-pega-autoFill": "false"
+    },
+    "pyWordTemplate": {
+      "type": "string",
+      "description": "Name of a Rule-Template-Word instance used to generate the correspondence as a Microsoft Word document. The Word template defines styles, headers, footers, and merge fields. Useful for contracts, letters, and formal documents. Only applicable when pyCorrType is 'Mail'."
+    },
+    "pyCompact": {
+      "type": "string",
+      "enum": [
+        "true",
+        "false"
+      ],
+      "description": "When 'true', the correspondence output is compacted by removing unnecessary whitespace and formatting. Reduces output size but may affect readability. Typically 'false' for human-readable correspondence.",
+      "x-pega-autoFill": "false"
+    },
+    "pyUsage": {
+      "type": "string",
+      "description": "Brief usage notes or context about when and how this correspondence rule should be used. Appears in the rule header and helps other developers understand the rule's purpose within the application."
+    },
+    "pyMemo": {
+      "type": "string",
+      "description": "Internal change memo or notes documenting what was changed and why. Auto-populated when saving the rule in Process Authorer. Useful for tracking change history and rationale."
+    },
+    "pyRuleAvailable": {
+      "type": "string",
+      "enum": [
+        "Yes",
+        "No",
+        "Blocked",
+        "Final",
+        "Withdrawn"
+      ],
+      "description": "Controls the availability of the rule. 'Yes' = available for use, 'No' = unavailable, 'Blocked' = blocked from use, 'Final' = locked (cannot be modified without checkout), 'Withdrawn' = withdrawn from use. Most application rules use 'Yes'.",
+      "x-pega-autoFill": "Yes"
+    },
+    "pyMethodStatus": {
+      "type": "string",
+      "enum": ["API", "Deprecated", "Extension", "Internal", "Template", ""],
+      "description": "Indicates the status of this rule in the platform. Empty = standard application rule, 'API' = public API rule, 'Deprecated' = should not be used for new development, 'Extension' = extension point, 'Internal' = internal platform use, 'Template' = template rule.",
+      "x-pega-autoFill": ""
+    },
+    "pyStreamName": {
+      "type": "string",
+      "description": "Internal stream identifier for the correspondence content. Historically used by the system to reference the correspondence stream. Typically matches pyRuleName without the correspondence type suffix."
+    },
+    "pyHTMLPrompt": {
+      "type": "string",
+      "description": "Name of a Rule-HTML-Prompt rule that defines editable regions for user-customizable correspondence. When specified, users can modify specific parts of the correspondence at runtime before sending. Must be accessible from the applies-to class."
+    },
+    "pyPromptValidate": {
+      "type": "string",
+      "description": "Name of a Rule-Obj-Validate rule that validates user input when editing correspondence via pyHTMLPrompt. Ensures required content is present and formatting is correct before the correspondence is sent."
+    },
+    "pyShowDescription": {
+      "type": "string",
+      "enum": [
+        "true",
+        "false"
+      ],
+      "description": "When 'true', displays the pyDescription field in the correspondence editor UI. Helps authors understand the rule's purpose while editing.",
+      "x-pega-autoFill": "false"
+    },
+    "pyShowSectionPreview": {
+      "type": "string",
+      "enum": [
+        "true",
+        "false"
+      ],
+      "description": "When 'true', shows a preview of referenced sections and paragraphs in the correspondence editor. Helps authors visualize the final output while editing.",
+      "x-pega-autoFill": "false"
+    },
+    "pzCorrTypeClass": {
+      "type": "string",
+      "enum": [
+        "Data-Corr-Email",
+        "Data-Corr-Fax",
+        "Data-Corr-Letter",
+        "Data-Corr-PhoneText"
+      ],
+      "description": "The Pega data class for the selected correspondence type. Observed values in this repo are Data-Corr-Email, Data-Corr-Fax, Data-Corr-Letter, and Data-Corr-PhoneText. Determines which properties and behavior are available."
+    },
+    "pyPagesAndClasses": {
+      "type": "array",
+      "description": "Page definitions and class mappings used in the correspondence content. Include this when pySourceStream or pyEmailRegions references named clipboard pages via <pega:withPage> directives.",
+      "items": {
+        "$ref": "#/$defs/EmbedPagesAndClasses"
+      }
+    },
+    "pyPrivilegeList": {
+      "type": "array",
+      "description": "Access control list of privileges required to use this correspondence rule. Users must hold at least one of the listed privileges to access or invoke the correspondence. Each entry references a Rule-Obj-Privilege rule.",
+      "items": {
+        "$ref": "#/$defs/EmbedPrivilegeSecurity"
+      }
+    },
+    "pyWhensList": {
+      "type": "array",
+      "description": "List of when condition rules (Rule-Obj-When) referenced in the correspondence content via <pega:when> directives. Declaring them here ensures proper dependency tracking and rule references. Each entry references a when rule by name.",
+      "items": {
+        "$ref": "#/$defs/EmbedWhens"
+      }
+    },
+    "pyPageRTE": {
+      "$ref": "#/$defs/EmbedRTE",
+      "description": "Rich Text Editor (RTE) configuration for the correspondence body. Controls the RTE toolbar, available formats, and behavior when editing the correspondence in basic mode."
+    },
+    "pyEmailRegions": {
+      "type": "object",
+      "description": "Defines content for named regions in templated emails. Map where each key is a region identifier (e.g., 'header', 'contentbody', 'footer') matching a <region> element in pyEmailTemplateStream. Used with pyEmailViewMode: 'templated' to populate template regions with HTML content.",
+      "additionalProperties": {
+        "$ref": "#/$defs/EmbedEmailRegion"
+      }
+    }
+  },
+  "$defs": {
+    "EmbedPagesAndClasses": {
+      "type": "object",
+      "description": "Embed-PagesAndClasses -- declares a named clipboard page and its class context. Used when the correspondence references properties from pages other than the primary page (pyWorkPage). Required for <pega:withPage name='PageName'> directives to work correctly.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "description": "Identifies this as an Embed-PagesAndClasses object. Auto-populated by the system.",
+          "x-pega-autoFill": "Embed-PagesAndClasses"
+        },
+        "pyPagesAndClassesPage": {
+          "type": "string",
+          "description": "The clipboard page name referenced in the correspondence (e.g., 'CustomerPage', 'pyWorkPage'). Must match the page name used in <pega:withPage> directives."
+        },
+        "pyPagesAndClassesClass": {
+          "type": "string",
+          "description": "The Pega class associated with the page name (e.g., 'MyOrg-MyApp-Data-Customer'). Determines which properties are available on this page."
+        },
+        "pyPagesAndClassesMode": {
+          "type": "string",
+          "enum": [
+            "",
+            "Prompt"
+          ],
+          "description": "Controls special handling for this page. Empty = standard page (exists in clipboard), 'Prompt' = prompt the user to provide the page at runtime."
+        }
+      }
+    },
+    "EmbedPrivilegeSecurity": {
+      "type": "object",
+      "description": "Embed-Rule-PrivilegeSecurity -- an access control entry that restricts who can use this correspondence. Users must hold at least one of the listed privileges to access or invoke the correspondence rule.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "description": "Identifies this as an Embed-Rule-PrivilegeSecurity object. Auto-populated by the system.",
+          "x-pega-autoFill": "Embed-Rule-PrivilegeSecurity"
+        },
+        "pyPrivilegeName": {
+          "type": "string",
+          "description": "The name of the privilege rule (Rule-Obj-Privilege) required to access this correspondence (e.g., 'CanSendCorrespondence')."
+        },
+        "pyPrivilegeClass": {
+          "type": "string",
+          "description": "The Pega class where the privilege is defined (e.g., 'MyOrg-MyApp-Work-Order'). Typically matches or is a parent of the correspondence rule's pyClassName."
+        }
+      }
+    },
+    "EmbedWhens": {
+      "type": "object",
+      "description": "Embed-Rule-Whens -- declares a when condition rule referenced in the correspondence content. When rules are used with <pega:when name='WhenRuleName'> directives for conditional content rendering. Declaring them here ensures proper dependency tracking.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "description": "Identifies this as an Embed-Rule-Whens object. Auto-populated by the system.",
+          "x-pega-autoFill": "Embed-Rule-Whens"
+        },
+        "pyWhenName": {
+          "type": "string",
+          "description": "The name of the when condition rule (Rule-Obj-When) used in <pega:when> directives (e.g., 'IsHighPriority', 'HasAttachments'). Must be accessible from the correspondence rule's pyClassName."
+        }
+      }
+    },
+    "EmbedRTE": {
+      "type": "object",
+      "description": "Embed-RTE -- Rich Text Editor configuration for the correspondence body when using pyEmailViewMode: 'basic'. Controls which formatting tools are available and how the editor behaves.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "description": "Identifies this as an Embed-RTE object. Auto-populated by the system.",
+          "x-pega-autoFill": "Embed-RTE"
+        },
+        "pyName": {
+          "type": "string",
+          "description": "The RTE component identifier. Maps to a specific RTE configuration in the system."
+        },
+        "pyType": {
+          "type": "string",
+          "description": "The RTE component type. Determines which toolbar buttons and features are available."
+        },
+        "pyFormat": {
+          "type": "string",
+          "description": "The display format for the RTE content. Controls how the rich text is rendered in the editor."
+        },
+        "pyTooltip": {
+          "type": "string",
+          "description": "Tooltip text displayed when hovering over the RTE component in the authoring UI."
+        },
+        "pyAdvanced": {
+          "type": "string",
+          "enum": [
+            "",
+            "true",
+            "false"
+          ],
+          "description": "When 'true', enables advanced RTE features like HTML source editing, custom CSS, and extended formatting options."
+        },
+        "pyUsingPage": {
+          "type": "string",
+          "description": "The clipboard page context for the RTE. Overrides the default page context for property references within the editor."
+        },
+        "pyVisibleWhen": {
+          "type": "string",
+          "description": "Name of a when condition rule that controls the visibility of the RTE component in the authoring UI."
+        },
+        "pyTemplateButton": {
+          "type": "string",
+          "description": "Configuration for template buttons in the RTE toolbar. Defines custom insert options for the user."
+        }
+      }
+    },
+    "EmbedEmailRegion": {
+      "type": "object",
+      "description": "Embed-EmailRegion -- defines the content for a named region in a templated email. Each region corresponds to a <region name='regionName'/> element in pyEmailTemplateStream. Used with pyEmailViewMode: 'templated' to populate template regions with specific HTML content.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "description": "Identifies this as an Embed-EmailRegion object. Auto-populated by the system.",
+          "x-pega-autoFill": "Embed-EmailRegion"
+        },
+        "pyRegionName": {
+          "type": "string",
+          "description": "The display name of the region (e.g., 'Header', 'Content body', 'Footer', 'Preheader'). Must match a region name defined in the email template's <region> elements."
+        },
+        "pyRegionContent": {
+          "type": "string",
+          "description": "The HTML content for this region. Supports all Pega markup directives: property references (<<.prop>>), <pega:include> for embedded rules, <pega:when> for conditional content, and <pega:withPage> for page context switching."
+        }
+      }
+    }
+  }
+}

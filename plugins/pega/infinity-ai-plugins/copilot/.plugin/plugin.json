@@ -1,13 +1,13 @@
 {
   "name": "pega-infinity-authoring",
   "description": "Pega Infinity Authoring with bundled MCP tools and runtime skills.",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "author": {
     "name": "Pegasystems",
     "url": "https://github.com/pegasystems"
   },
   "repository": "https://github.com/pegasystems/infinity-ai-plugins",
-  "license": "Apache-2.0",
+  "license": "Pega Infinity AI Plugins License Version 1.0",
   "keywords": [
     "pega",
     "mcp",

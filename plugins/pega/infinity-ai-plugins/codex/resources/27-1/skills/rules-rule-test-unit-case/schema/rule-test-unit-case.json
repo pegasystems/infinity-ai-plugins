@@ -1,0 +1,1069 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-test-unit-case.json",
+  "title": "Rule-Test-Unit-Case",
+  "description": "JSON schema for creating or updating a PegaUnit test case (Rule-Test-Unit-Case). Eleven assertion types supported, with availability depending on pyRuleUnderTestType.",
+  "type": "object",
+  "required": [
+    "pxObjClass",
+    "pyClassName",
+    "pyPurpose",
+    "pyLabel",
+    "pyRuleUnderTest",
+    "pyExpectedResults"
+  ],
+  "properties": {
+    "pxObjClass": {
+      "type": "string",
+      "const": "Rule-Test-Unit-Case",
+      "description": "Rule type class — always 'Rule-Test-Unit-Case'.",
+      "x-pega-autoFill": "Rule-Test-Unit-Case"
+    },
+    "pxInsName": {
+      "type": "string",
+      "description": "Instance name — set to the rule-under-test name (e.g., 'VerifyDataCompleteness')."
+    },
+    "pyClassName": {
+      "type": "string",
+      "description": "Applies-to class (mixed-case, e.g., 'MyOrg-MyApp-Work-MyCase' or '@baseclass')."
+    },
+    "pyClassContext": {
+      "type": "string",
+      "description": "Class context — same value as pyClassName. Auto-derived from pyClassName.",
+      "x-pega-autoDerived": true,
+      "x-pega-deriveFrom": "pyClassName"
+    },
+    "pyPurpose": {
+      "type": "string",
+      "description": "Test case name (KEY2 field). Convention: prefix with 'TC_' (e.g., 'TC_MyTestName')."
+    },
+    "pyLabel": {
+      "type": "string",
+      "description": "Short description / display label for the test case."
+    },
+    "pyDescription": {
+      "type": "string",
+      "description": "Developer-facing description of the test's purpose."
+    },
+    "pyRuleSet": {
+      "type": "string",
+      "description": "Ruleset name — must be a test-automation-enabled ruleset."
+    },
+    "pyRuleSetVersion": {
+      "type": "string",
+      "pattern": "^\\d{2}-\\d{2}-\\d{2}$",
+      "description": "Ruleset version (e.g., '01-01-02')."
+    },
+    "pyRuleAvailable": {
+      "type": "string",
+      "enum": ["Yes", "No", "Withdrawn", "Final", "Blocked"],
+      "description": "Availability status.",
+      "x-pega-autoFill": "Yes"
+    },
+    "pyCleanUpTestData": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Whether Pega cleans up clipboard data after test execution."
+    },
+    "pyIsInactive": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Set 'true' to disable this test case (skipped during test runs)."
+    },
+    "pyTemporaryObject": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Controls whether the test page is a temporary clipboard object."
+    },
+    "pyHideBanner": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Whether to hide the test banner in the UI.",
+      "x-pega-autoFill": "true"
+    },
+    "pyPrimaryPageForRUT": {
+      "type": "string",
+      "description": "Custom primary page name for the rule under test (e.g., 'RH_1'). Supports dot-paths and indexed page list references."
+    },
+    "pyMemo": {
+      "type": "string",
+      "description": "Free-text memo/notes about the test case."
+    },
+    "pyUsage": {
+      "type": "string",
+      "description": "Describes how/when this test case is used."
+    },
+    "pyColor": {
+      "type": "string",
+      "description": "Page name context for assertion display. Typically matches pyPrimaryPageForRUT."
+    },
+    "pySelectedPageName": {
+      "type": "string",
+      "description": "Currently selected page name for the test."
+    },
+    "pySelectedPageNameForDisplay": {
+      "type": "string",
+      "description": "Display version of the selected page name."
+    },
+    "pyHasIncludedPage": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Whether the test includes additional pages."
+    },
+    "pyAddedClassName": {
+      "type": "string",
+      "description": "Page class of the rule-under-test output. For list data pages use 'Code-Pega-List'. For single-object data pages use the concrete class (e.g., 'Work-Channel-Triage'). For non-data-page tests this is typically the applies-to class or omitted."
+    },
+    "pyThreadName": {
+      "type": "string",
+      "description": "Thread or category name for the rule under test (e.g., 'Standard', 'New', 'pySendEmail')."
+    },
+    "pyReloadForm": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Whether to reload the form after test execution."
+    },
+    "pyFailTestBasedonRuntime": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Set 'true' to enable runtime-based test failure. Used with ExpectedRuntime assertion type."
+    },
+    "pyPageDesc": {
+      "type": "string",
+      "description": "Free-text description of the setup page."
+    },
+    "pyDisplayMode": {
+      "type": "string",
+      "description": "How the setup page data is provided: 'clone' or absent."
+    },
+    "pyCustomClassName": {
+      "type": "string",
+      "description": "Additional custom class name context."
+    },
+    "pySetupPageName": {
+      "type": "string",
+      "description": "Top-level field naming the setup page for the test."
+    },
+    "pyClipboardPageSelected": {
+      "type": "string",
+      "description": "Name of the clipboard page selected for setup (e.g., 'pyWorkPage', 'pyDisplayHarness', 'RH_1')."
+    },
+    "pyTypeOfSetupPageSelection": {
+      "type": "string",
+      "enum": ["CLIPBOARDPAGES", "CUSTOMPAGES", ""],
+      "description": "How setup pages are selected: 'CLIPBOARDPAGES' or 'CUSTOMPAGES'."
+    },
+    "pyBaseRule": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Always 'false' for new test cases.",
+      "x-pega-autoFill": "false"
+    },
+    "pyIsUpgradedTestCase": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Always 'true' for current test cases.",
+      "x-pega-autoFill": "true"
+    },
+    "pyElapsedTimeForAutomatedTest": {
+      "type": "string",
+      "description": "Runtime threshold in seconds (e.g., '10.0'). Used with pyFailTestBasedonRuntime."
+    },
+    "pyFocusKey": {
+      "type": "string",
+      "const": "pyPurpose",
+      "description": "Always 'pyPurpose' — identifies the key field.",
+      "x-pega-autoFill": "pyPurpose"
+    },
+    "pyFocusKeyRemoveSpaces": {
+      "type": "string",
+      "const": "true",
+      "description": "Always 'true'.",
+      "x-pega-autoFill": "true"
+    },
+    "pyHasKeyFocusKey": {
+      "type": "string",
+      "const": "true",
+      "description": "Always 'true'.",
+      "x-pega-autoFill": "true"
+    },
+    "pyRefToFocusKey": {
+      "type": "string",
+      "description": "Must match pyPurpose value. Auto-derived from pyPurpose.",
+      "x-pega-autoDerived": true,
+      "x-pega-deriveFrom": "pyPurpose"
+    },
+    "pyRefToFocusKeyLabel": {
+      "type": "string",
+      "const": "Test Case Name",
+      "description": "Always 'Test Case Name'.",
+      "x-pega-autoFill": "Test Case Name"
+    },
+    "pyEditedName": {
+      "type": "string",
+      "const": "false",
+      "description": "Always 'false' for new test cases.",
+      "x-pega-autoFill": "false"
+    },
+    "pyObjClassLabel": {
+      "type": "string",
+      "const": "Test Case",
+      "description": "Always 'Test Case'.",
+      "x-pega-autoFill": "Test Case"
+    },
+    "pyRuleFormStatus": {
+      "type": "string",
+      "const": "Good",
+      "description": "Always 'Good'.",
+      "x-pega-autoFill": "Good"
+    },
+    "pyRuleFormType": {
+      "type": "string",
+      "const": "Harness",
+      "description": "Always 'Harness'.",
+      "x-pega-autoFill": "Harness"
+    },
+    "pyRuleHarness": {
+      "type": "string",
+      "const": "RuleForm",
+      "description": "Always 'RuleForm'.",
+      "x-pega-autoFill": "RuleForm"
+    },
+    "pyRulePrefix": {
+      "type": "string",
+      "const": "pz",
+      "description": "Always 'pz'.",
+      "x-pega-autoFill": "pz"
+    },
+    "pyToolbarSaveLabel": {
+      "type": "string",
+      "const": "Save",
+      "description": "Always 'Save'.",
+      "x-pega-autoFill": "Save"
+    },
+    "pySortDateCircumWithinRSMajor": {
+      "type": "string",
+      "const": "true",
+      "description": "Always 'true'.",
+      "x-pega-autoFill": "true"
+    },
+    "pyStepPageReference": {
+      "type": "string",
+      "const": "pyNewResults",
+      "description": "Always 'pyNewResults'.",
+      "x-pega-autoFill": "pyNewResults"
+    },
+    "pzSectionForEditView": {
+      "type": "string",
+      "const": "pzAssertionCards",
+      "description": "Always 'pzAssertionCards'.",
+      "x-pega-autoFill": "pzAssertionCards"
+    },
+    "pzShowSideBar": {
+      "type": "string",
+      "const": "false",
+      "description": "Always 'false'.",
+      "x-pega-autoFill": "false"
+    },
+    "pzSideBarDataContext": {
+      "type": "string",
+      "const": "pyWorkPage.pyRulePage.pyBrowseDPResultsPage",
+      "description": "Always 'pyWorkPage.pyRulePage.pyBrowseDPResultsPage'.",
+      "x-pega-autoFill": "pyWorkPage.pyRulePage.pyBrowseDPResultsPage"
+    },
+    "pzSideBarDetails": {
+      "type": "string",
+      "const": "pzSideBarDetails",
+      "description": "Always 'pzSideBarDetails'.",
+      "x-pega-autoFill": "pzSideBarDetails"
+    },
+    "pxLimitedAccess": {
+      "type": "string",
+      "description": "Access level — typically 'Dev'.",
+      "x-pega-autoFill": "Dev"
+    },
+    "pyRuleUnderTest": {
+      "$ref": "#/$defs/RuleUnderTest",
+      "description": "Embedded page linking this test to the rule being tested."
+    },
+    "pyExpectedResults": {
+      "type": "array",
+      "description": "Top-level assertion entries. Each entry is an assertion group. Valid pyAssertionType values depend on pyRuleUnderTestType.",
+      "items": { "$ref": "#/$defs/ExpectedResults" },
+      "x-pega-autoFill": [{"pxObjClass": "Embed-ExpectedResults"}]
+    },
+    "pyUnexpectedResults": {
+      "type": "array",
+      "description": "Top-level negative assertions — conditions that should NOT be true after rule execution.",
+      "items": { "$ref": "#/$defs/ExpectedResults" }
+    },
+    "pyPagesAndClasses": {
+      "type": "array",
+      "description": "Named clipboard pages and their associated classes.",
+      "items": { "$ref": "#/$defs/PagesAndClasses" },
+      "x-pega-autoFill": [{"pxObjClass": "Embed-PagesAndClasses"}]
+    },
+    "pySetup": {
+      "type": "array",
+      "description": "Setup activities to run before test execution.",
+      "items": { "$ref": "#/$defs/TestcaseRuleDetails" }
+    },
+    "pySetupPages": {
+      "type": "array",
+      "description": "Pre-configured clipboard pages loaded before the test runs.",
+      "items": { "$ref": "#/$defs/SetupPage" }
+    },
+    "pyCleanup": {
+      "type": "array",
+      "description": "Cleanup activities to run after test execution.",
+      "items": { "$ref": "#/$defs/TestcaseRuleDetails" }
+    },
+    "pyPostRuleRunActions": {
+      "type": "array",
+      "description": "Actions to run after the rule under test completes but before assertions are evaluated.",
+      "items": { "$ref": "#/$defs/TestcaseRuleDetails" }
+    },
+    "pySimulation": {
+      "type": "array",
+      "description": "Simulation configuration for mock data."
+    },
+    "pyBrowseDPResultsPage": {
+      "type": "object",
+      "description": "Browse data page results page — required embedded page.",
+      "x-pega-autoFill": {"pxObjClass": "Embed-ExpectedResults", "pyPageName": "RunRecordPrimaryPage"}
+    },
+    "pyCustomFields": {
+      "type": "object",
+      "description": "Custom fields page — required embedded page.",
+      "x-pega-autoFill": {"empty": {"pxObjClass": "Embed-CustomFieldsList", "pxSubscript": "empty"}}
+    },
+    "pyRMAction": {
+      "type": "object",
+      "description": "Rule management action page — required embedded page.",
+      "x-pega-autoFill": {"pxObjClass": "Embed-RuleManagement"}
+    },
+    "pyRulePage": {
+      "type": "object",
+      "description": "Rule page — required embedded page (empty object).",
+      "x-pega-autoFill": {}
+    },
+    "pyHistoryObject": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Whether this is a history object."
+    },
+    "pyValueChanged": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Whether a value has been changed on this rule."
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "pyRuleUnderTest": {
+            "properties": {
+              "pyDetails": {
+                "properties": {
+                  "pyRuleUnderTestType": { "const": "Rule-Obj-Activity" }
+                },
+                "required": ["pyRuleUnderTestType"]
+              }
+            }
+          }
+        },
+        "required": ["pyRuleUnderTest"]
+      },
+      "then": {
+        "properties": {
+          "pyExpectedResults": {
+            "items": {
+              "properties": {
+                "pyAssertionType": {
+                  "enum": ["Property", "Page", "List", "ResultCount", "ExpectedRuntime", "ActivityStatus", ""]
+                }
+              }
+            }
+          }
+        },
+        "x-pega-condition": "pyRuleUnderTestType is 'Rule-Obj-Activity'"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "pyRuleUnderTest": {
+            "properties": {
+              "pyDetails": {
+                "properties": {
+                  "pyRuleUnderTestType": { "enum": ["Rule-Declare-DecisionTable", "Rule-Declare-DecisionTree", "Rule-Declare-Expressions", "Rule-Obj-When"] }
+                },
+                "required": ["pyRuleUnderTestType"]
+              }
+            }
+          }
+        },
+        "required": ["pyRuleUnderTest"]
+      },
+      "then": {
+        "properties": {
+          "pyExpectedResults": {
+            "items": {
+              "properties": {
+                "pyAssertionType": {
+                  "enum": ["Property", "Page", "List", "ResultCount", "ExpectedRuntime", "Decision", ""]
+                }
+              }
+            }
+          }
+        },
+        "x-pega-condition": "pyRuleUnderTestType is 'Rule-Declare-DecisionTable', 'Rule-Declare-DecisionTree', 'Rule-Declare-Expressions', or 'Rule-Obj-When'"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "pyRuleUnderTest": {
+            "properties": {
+              "pyDetails": {
+                "properties": {
+                  "pyRuleUnderTestType": {
+                    "enum": ["Rule-Obj-Model", "Rule-Declare-Pages", "Rule-Obj-Report-Definition"]
+                  }
+                },
+                "required": ["pyRuleUnderTestType"]
+              }
+            }
+          }
+        },
+        "required": ["pyRuleUnderTest"]
+      },
+      "then": {
+        "properties": {
+          "pyExpectedResults": {
+            "items": {
+              "properties": {
+                "pyAssertionType": {
+                  "enum": ["Property", "Page", "List", "ResultCount", "ExpectedRuntime", ""]
+                }
+              }
+            }
+          }
+        },
+        "x-pega-condition": "pyRuleUnderTestType is not Activity, DecisionTable, DecisionTree, Expressions, or When"
+      }
+    }
+  ],
+  "$defs": {
+    "RuleUnderTest": {
+      "type": "object",
+      "description": "Links this test case to the rule it validates (Embed-RuleUnderTest).",
+      "required": ["pxObjClass", "pyDetails"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-RuleUnderTest",
+          "x-pega-autoFill": "Embed-RuleUnderTest"
+        },
+        "pyDetails": {
+          "$ref": "#/$defs/RuleUnderTestDetails"
+        },
+        "pyParameters": {
+          "type": "array",
+          "description": "Parameters to pass to the rule under test.",
+          "items": { "$ref": "#/$defs/MethodParams" }
+        },
+        "pyTempText": {
+          "type": "string",
+          "description": "Temporary text field — holds a page reference or property reference."
+        }
+      }
+    },
+    "RuleUnderTestDetails": {
+      "type": "object",
+      "description": "Details about the target rule (Embed-RuleUnderTest-Details).",
+      "required": ["pxObjClass", "pyRuleUnderTestType", "pyRuleUnderTestInsName", "pyRuleUnderTestName", "pyRuleUnderTestObjClass"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-RuleUnderTest-Details",
+          "x-pega-autoFill": "Embed-RuleUnderTest-Details"
+        },
+        "pyRuleUnderTestType": {
+          "type": "string",
+          "enum": [
+            "Rule-Obj-Activity",
+            "Rule-Obj-When",
+            "Rule-Obj-Model",
+            "Rule-Declare-DecisionTable",
+            "Rule-Declare-DecisionTree",
+            "Rule-Declare-Expressions",
+            "Rule-Declare-Pages",
+            "Rule-Obj-Report-Definition"
+          ],
+          "description": "Rule type class of the target rule."
+        },
+        "pyRuleUnderTestInsName": {
+          "type": "string",
+          "description": "UPPERCASE-CLASS!UPPERCASE-RULENAME (e.g., 'MYORG-MYAPP-WORK-MYCASE!MYRULENAME'). For data pages (Rule-Declare-Pages) use bare uppercase name without class prefix (e.g., 'D_MYCUSTOMERS'). For declare expressions (Rule-Declare-Expressions) use CLASS!.PROPERTYNAME! format (e.g., 'MYORG-MYAPP-WORK!.PYRULESWITHOUTRELEASENOTE!')."
+        },
+        "pyRuleUnderTestName": {
+          "type": "string",
+          "description": "Display name of the target rule (mixed-case)."
+        },
+        "pyRuleUnderTestObjClass": {
+          "type": "string",
+          "description": "Applies-to class (mixed-case)."
+        },
+        "pyIsSinglePageImplementation": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Must be 'true' for Rule-Declare-Pages (data page) tests. Use 'false' for all other rule types.",
+          "x-pega-autoFill": "false"
+        },
+        "pyRuleUnderTestLabel": {
+          "type": "string",
+          "description": "Rule label — typically empty-quoted string '\"\"' or absent.",
+          "x-pega-autoFill": "\"\""
+        }
+      }
+    },
+    "ExpectedResults": {
+      "type": "object",
+      "description": "An assertion entry (Embed-ExpectedResults). Structure varies by pyAssertionType. Self-referential for nested assertion levels.",
+      "required": ["pxObjClass"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-ExpectedResults",
+          "x-pega-autoFill": "Embed-ExpectedResults"
+        },
+        "pyAssertionType": {
+          "type": "string",
+          "enum": ["Property", "ActivityStatus", "Decision", "Page", "List", "ResultCount", "ExpectedRuntime", ""],
+          "description": "Assertion type. Determines which other fields are required. Valid values depend on pyRuleUnderTestType — see root-level allOf conditions."
+        },
+        "pyComparator": {
+          "type": "string",
+          "enum": [
+            "Is Equals To",
+            "IS Not Equals TO",
+            "Starts With",
+            "Contains",
+            "Ends With",
+            "Is Empty",
+            "Is Not Empty",
+            "Is In",
+            "Is Not In",
+            "Is Less Than",
+            "Is Greater Than",
+            "Is Less Than Or Equal To",
+            "Is Greater Than Or Equal To",
+            "Is True",
+            "Is False",
+            "Exists",
+            "Not exists",
+            "has errors",
+            "has no errors",
+            "has error with message",
+            "has error message that contains",
+            ""
+          ],
+          "description": "Comparison operator. Valid values depend on pyAssertionType and pyPropertyMode. Note: 'IS Not Equals TO' has mixed caps. See allOf conditions below for valid combinations.",
+          "x-pega-hints": {
+            "is equals to": "Is Equals To",
+            "equals": "Is Equals To",
+            "is not equals to": "IS Not Equals TO",
+            "Is Not Equals To": "IS Not Equals TO",
+            "Is Not Equals TO": "IS Not Equals TO",
+            "not equals": "IS Not Equals TO",
+            "starts with": "Starts With",
+            "contains": "Contains",
+            "ends with": "Ends With",
+            "is empty": "Is Empty",
+            "is not empty": "Is Not Empty",
+            "is in": "Is In",
+            "is not in": "Is Not In",
+            "is less than": "Is Less Than",
+            "is greater than": "Is Greater Than",
+            "is less than or equal to": "Is Less Than Or Equal To",
+            "is greater than or equal to": "Is Greater Than Or Equal To",
+            "is true": "Is True",
+            "is false": "Is False",
+            "exists": "Exists",
+            "not Exists": "Not exists",
+            "Not Exists": "Not exists",
+            "Has errors": "has errors",
+            "Has no errors": "has no errors",
+            "Has Errors": "has errors",
+            "Has No Errors": "has no errors"
+          }
+        },
+        "pyExpectedValue": {
+          "type": "string",
+          "description": "Expected value. Text/Date/DateTime values must use escaped inner quotes (e.g., '\"my text\"'). DateTime uses Pega format '\"yyyyMMddTHHmmss.SSS GMT\"' (e.g., '\"20200520T091028.850 GMT\"'), NOT ISO 8601. Numeric and TrueFalse must NOT use inner quotes."
+        },
+        "pyPropertyType": {
+          "type": "string",
+          "enum": ["Decision Result", "input", "result", ""],
+          "description": "Decision assertions: 'Decision Result' at Level 1, 'input' or 'result' at Level 3."
+        },
+        "pyPropertyMode": {
+          "type": "string",
+          "enum": ["Text", "Date", "DateTime", "Integer", "Decimal", "TrueFalse", "True-False", "Identifier", "String", "Page List", "decimal", "text", "date", ""],
+          "description": "Property data type. Property assertions use Title Case ('Text', 'TrueFalse'). Decision assertions use lowercase ('decimal', 'text')."
+        },
+        "pyPropertyName": {
+          "type": "string",
+          "description": "Property name. For standard props: name without dot (e.g., 'pyNote'). For Param assertions: 'Param.PropertyName'. For Decision: dot-prefixed (e.g., '.AssessmentCompleteness') or 'Result'."
+        },
+        "pyPropertyRealName": {
+          "type": "string",
+          "description": "Real property name — same as pyPropertyName for simple props, base name without index for indexed props."
+        },
+        "pyPropertyAbsolutePath": {
+          "type": "string",
+          "description": "Full property path. For standard props: dot-prefixed (e.g., '.pyNote'). For Param assertions: 'Param.PropertyName' (no dot prefix). For Decision result: 'Result'."
+        },
+        "pyPropertyApplyToClass": {
+          "type": "string",
+          "description": "Class the property belongs to."
+        },
+        "pyClassName": {
+          "type": "string",
+          "description": "Class name context."
+        },
+        "pyPageName": {
+          "type": "string",
+          "description": "Page name for the assertion. For Decision L2: always 'rowLevelPage'. Supports indexed references (e.g., 'RunRecordPrimaryPage.pyContent(1)')."
+        },
+        "pzListObjectClass": {
+          "type": "string",
+          "description": "List object class."
+        },
+        "pyStepPageName": {
+          "type": "string",
+          "description": "Page to assert against (e.g., 'RunRecordPrimaryPage', 'RH_1'). May be absent on some assertion types."
+        },
+        "pyStepPageClass": {
+          "type": "string",
+          "description": "Class of the assertion page."
+        },
+        "pyStepPageMethodName": {
+          "type": "string",
+          "description": "Page expression method name (e.g., 'PageExpression_1')."
+        },
+        "pyStepPageNameActual": {
+          "type": "string",
+          "description": "Runtime-resolved page name — may differ from pyStepPageName."
+        },
+        "pyCardApplyToClass": {
+          "type": "string",
+          "description": "Class context for the assertion card."
+        },
+        "pyDisplayLabel": {
+          "type": "string",
+          "description": "Human-readable label. Used in Decision L3 entries."
+        },
+        "pyDisableDelete": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Whether deletion is disabled in the UI."
+        },
+        "pyIsValidateStatusMsg": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Whether to validate the status message."
+        },
+        "pyAllowMultipleInputCombinations": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Decision assertions: 'true' for multiple test rows, 'false' for single-row."
+        },
+        "pyActivityStatusComparator": {
+          "type": "string",
+          "description": "Redundant comparator field for ActivityStatus and ExpectedRuntime assertions."
+        },
+        "pyComment": {
+          "type": "string",
+          "description": "Free-text comment explaining the assertion group's purpose."
+        },
+        "pyListContext": {
+          "type": "string",
+          "description": "Dot-prefixed path to the page list property (e.g., '.pxResults'). Used by ResultCount and List assertions."
+        },
+        "pyFilterClass": {
+          "type": "string",
+          "description": "Class of list elements to filter by. Used by ResultCount assertions."
+        },
+        "pyNumberOfAppearances": {
+          "type": "string",
+          "enum": ["InAnyInstance", ""],
+          "description": "List assertions: how many items must match. 'InAnyInstance' = at least one."
+        },
+        "pyParentPropertyMode": {
+          "type": "string",
+          "enum": ["ValueList", ""],
+          "description": "Parent property mode — present when asserting on indexed value list elements."
+        },
+        "pyLabel": {
+          "type": "string",
+          "description": "Display label for the property."
+        },
+        "pyIsFlatList": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Whether this is a flat list property."
+        },
+        "pySelected": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "Whether the assertion is selected/active."
+        },
+        "pxWarningsToDisplay": {
+          "type": "array",
+          "description": "Warnings — empty for new assertions."
+        },
+        "pyExpressionGadget": {
+          "$ref": "#/$defs/ExpressionGadget",
+          "description": "Expression builder configuration."
+        },
+        "pyExpectedResults": {
+          "type": "array",
+          "description": "Nested assertion entries. Self-referential for multi-level nesting.",
+          "items": { "$ref": "#/$defs/ExpectedResults" }
+        },
+        "pyUnexpectedResults": {
+          "type": "array",
+          "description": "Nested negative assertions — conditions that should NOT be true.",
+          "items": { "$ref": "#/$defs/ExpectedResults" }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "pyAssertionType": { "const": "Page" } },
+            "required": ["pyAssertionType"]
+          },
+          "then": {
+            "properties": {
+              "pyComparator": {
+                "enum": ["Exists", "Not exists", "has errors", "has no errors", "has error with message", "has error message that contains", ""]
+              }
+            },
+            "x-pega-condition": "pyAssertionType is 'Page'"
+          }
+        },
+        {
+          "if": {
+            "properties": { "pyAssertionType": { "const": "ExpectedRuntime" } },
+            "required": ["pyAssertionType"]
+          },
+          "then": {
+            "properties": {
+              "pyComparator": {
+                "enum": ["Is Less Than Or Equal To", ""]
+              }
+            },
+            "x-pega-condition": "pyAssertionType is 'ExpectedRuntime'"
+          }
+        },
+        {
+          "if": {
+            "properties": { "pyAssertionType": { "const": "ActivityStatus" } },
+            "required": ["pyAssertionType"]
+          },
+          "then": {
+            "properties": {
+              "pyComparator": {
+                "enum": ["Is Equals To", "IS Not Equals TO", ""]
+              }
+            },
+            "x-pega-condition": "pyAssertionType is 'ActivityStatus'"
+          }
+        },
+        {
+          "if": {
+            "properties": { "pyPropertyMode": { "enum": ["Text", "String", "Identifier", "text"] } },
+            "required": ["pyPropertyMode"]
+          },
+          "then": {
+            "properties": {
+              "pyComparator": {
+                "enum": [
+                  "Is Equals To", "IS Not Equals TO", "Starts With", "Contains", "Ends With",
+                  "Is Empty", "Is Not Empty", "Is In", "Is Not In",
+                  "Exists", "Not exists", "has errors", "has no errors",
+                  "has error with message", "has error message that contains", ""
+                ]
+              }
+            },
+            "x-pega-condition": "pyPropertyMode is a string type (Text, String, Identifier)"
+          }
+        },
+        {
+          "if": {
+            "properties": { "pyPropertyMode": { "enum": ["Integer", "Decimal", "decimal"] } },
+            "required": ["pyPropertyMode"]
+          },
+          "then": {
+            "properties": {
+              "pyComparator": {
+                "enum": [
+                  "Is Equals To", "IS Not Equals TO",
+                  "Is Less Than", "Is Greater Than", "Is Less Than Or Equal To", "Is Greater Than Or Equal To",
+                  "Is In", "Is Not In",
+                  "Exists", "Not exists", "has errors", "has no errors",
+                  "has error with message", "has error message that contains", ""
+                ]
+              }
+            },
+            "x-pega-condition": "pyPropertyMode is a numeric type (Integer, Decimal)"
+          }
+        },
+        {
+          "if": {
+            "properties": { "pyPropertyMode": { "enum": ["Date", "DateTime", "date"] } },
+            "required": ["pyPropertyMode"]
+          },
+          "then": {
+            "properties": {
+              "pyComparator": {
+                "enum": [
+                  "Is Equals To", "IS Not Equals TO",
+                  "Is Less Than", "Is Greater Than", "Is Less Than Or Equal To", "Is Greater Than Or Equal To",
+                  "Exists", "Not exists", "has errors", "has no errors",
+                  "has error with message", "has error message that contains", ""
+                ]
+              }
+            },
+            "x-pega-condition": "pyPropertyMode is a date type (Date, DateTime)"
+          }
+        },
+        {
+          "if": {
+            "properties": { "pyPropertyMode": { "enum": ["TrueFalse", "True-False"] } },
+            "required": ["pyPropertyMode"]
+          },
+          "then": {
+            "properties": {
+              "pyComparator": {
+                "enum": [
+                  "Is True", "Is False",
+                  "Exists", "Not exists", "has errors", "has no errors",
+                  "has error with message", "has error message that contains", ""
+                ]
+              }
+            },
+            "x-pega-condition": "pyPropertyMode is boolean (TrueFalse, True-False)"
+          }
+        },
+        {
+          "if": {
+            "properties": { "pyPropertyMode": { "const": "Page List" } },
+            "required": ["pyPropertyMode"]
+          },
+          "then": {
+            "properties": {
+              "pyComparator": {
+                "enum": ["Exists", "Not exists", ""]
+              }
+            },
+            "x-pega-condition": "pyPropertyMode is 'Page List'"
+          }
+        }
+      ]
+    },
+    "MethodParams": {
+      "type": "object",
+      "description": "A parameter entry for the rule under test (Embed-MethodParams).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-MethodParams",
+          "x-pega-autoFill": "Embed-MethodParams"
+        },
+        "pyParametersParamName": {
+          "type": "string",
+          "description": "Parameter name."
+        },
+        "pyParametersParamValue": {
+          "type": "string",
+          "description": "Parameter value to pass."
+        },
+        "pyParametersParamType": {
+          "type": "string",
+          "enum": ["STRING", "BOOLEAN", "INTEGER", "PAGE", "Text", ""],
+          "description": "Parameter data type."
+        },
+        "pyParametersParamDesc": {
+          "type": "string",
+          "description": "Human-readable description."
+        },
+        "pyParametersParamDefaultValue": {
+          "type": "string",
+          "description": "Default value if none provided."
+        }
+      }
+    },
+    "SetupPage": {
+      "type": "object",
+      "description": "A pre-configured clipboard page for the test (Embed-Testcase-SetupPages).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-Testcase-SetupPages",
+          "x-pega-autoFill": "Embed-Testcase-SetupPages"
+        },
+        "pySetupPageName": {
+          "type": "string",
+          "description": "Name of the clipboard page to create (e.g., 'RH_1', 'pyWorkPage')."
+        },
+        "pyPageDesc": {
+          "type": "string",
+          "description": "Description of the setup page's purpose."
+        },
+        "pxWarningsToDisplay": {
+          "type": "array",
+          "description": "Warnings."
+        },
+        "pyPageDetails": {
+          "type": "object",
+          "description": "Complete clipboard page snapshot (full rule instance or work object)."
+        }
+      }
+    },
+    "TestcaseRuleDetails": {
+      "type": "object",
+      "description": "A setup, cleanup, or post-rule-run action entry (Embed-Testcase-RuleDetails).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-Testcase-RuleDetails",
+          "x-pega-autoFill": "Embed-Testcase-RuleDetails"
+        },
+        "pyRuleName": {
+          "type": "string",
+          "description": "Name of the rule to run."
+        },
+        "pyClassName": {
+          "type": "string",
+          "description": "Class the rule belongs to."
+        },
+        "pyRuleType": {
+          "type": "string",
+          "description": "Rule type (e.g., 'Rule-Obj-Activity', 'Rule-Obj-Model', 'Load-Object')."
+        },
+        "pyComments": {
+          "type": "string",
+          "description": "Free-text comment describing what this step does."
+        },
+        "pySetupParams": {
+          "type": "string",
+          "description": "Serialized parameter string (comma-separated key=value pairs, or 'None')."
+        },
+        "pySetupParameters": {
+          "type": "string",
+          "description": "Alternate setup parameters field."
+        },
+        "pyRuleTypeCleanUp": {
+          "type": "string",
+          "description": "Rule type for cleanup steps — typically matches pyRuleType."
+        },
+        "pyPostRUTActionsRuleType": {
+          "type": "string",
+          "description": "Rule type for post-RUT actions."
+        },
+        "pyLoadOnPageName": {
+          "type": "string",
+          "description": "Page name to load the object onto — used with Load-Object."
+        },
+        "pyParameters": {
+          "type": "array",
+          "description": "Parameters to pass."
+        },
+        "pyParametersDetails": {
+          "type": "array",
+          "description": "Detailed parameter metadata.",
+          "items": { "$ref": "#/$defs/MethodParams" }
+        },
+        "pyClassKeyValueList": {
+          "type": "array",
+          "description": "Key-value pairs for object loading."
+        },
+        "pzHasAtleastOneParameterValue": {
+          "type": "string",
+          "enum": ["true", "false", ""],
+          "description": "'true' when at least one parameter has a value set."
+        }
+      }
+    },
+    "PagesAndClasses": {
+      "type": "object",
+      "description": "A named page declaration (Embed-PagesAndClasses).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-PagesAndClasses",
+          "x-pega-autoFill": "Embed-PagesAndClasses"
+        },
+        "pyPagesAndClassesPage": {
+          "type": "string",
+          "description": "Page name."
+        },
+        "pyPagesAndClassesClass": {
+          "type": "string",
+          "description": "Class for the page."
+        }
+      }
+    },
+    "ExpressionGadget": {
+      "type": "object",
+      "description": "Expression builder UI configuration (PegaGadget-ExpressionBuilder).",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "PegaGadget-ExpressionBuilder",
+          "x-pega-autoFill": "PegaGadget-ExpressionBuilder"
+        },
+        "pyEditable": {
+          "type": "string",
+          "enum": ["true", "false", ""]
+        },
+        "pyIsLaunchAsOverlay": {
+          "type": "string",
+          "enum": ["true", "false", ""]
+        },
+        "pyShowCustomPages": {
+          "type": "string",
+          "enum": ["true", "false", ""]
+        },
+        "pyShowLocalVariables": {
+          "type": "string",
+          "enum": ["true", "false", ""]
+        },
+        "pyShowParameters": {
+          "type": "string",
+          "enum": ["true", "false", ""]
+        },
+        "pyResultOfSelection": {
+          "type": "string",
+          "enum": ["true", "false", ""]
+        },
+        "pyExpression": {
+          "type": "string",
+          "description": "Full expression text."
+        },
+        "pyExpressionMapNew": {
+          "type": "object",
+          "description": "Expression map."
+        },
+        "pyExpressionBulderFields": {
+          "type": "array",
+          "description": "Field metadata for expression builder (note: canonical Pega typo in field name)."
+        }
+      }
+    }
+  }
+}

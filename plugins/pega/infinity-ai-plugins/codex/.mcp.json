@@ -9,12 +9,13 @@
     ],
     "cwd": "./",
     "env": {
-      "PEGA_SKILLS_PATH": "./resources/pega-skills",
+      "PEGA_SKILLS_PATH": "./resources",
       "PEGA_CLIENT_MODE": "codex-plugin"
     },
     "env_vars": [
       "PEGA_BASE_URL",
       "PEGA_OAUTH_CLIENT_ID",
+      "PEGA_INFINITY_VERSION",
       "PEGA_OAUTH_REDIRECT_PORT",
       "PEGA_LOCAL_SKILLS_PATH"
     ],
