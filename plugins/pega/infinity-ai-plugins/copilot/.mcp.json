@@ -12,8 +12,7 @@
       ],
       "env": {
         "PEGA_SKILLS_PATH": "${PLUGIN_ROOT}/resources",
-        "PEGA_CLIENT_MODE": "copilot-plugin",
-        "PEGA_LOCAL_SKILLS_PATH": "${PEGA_LOCAL_SKILLS_PATH}"
+        "PEGA_CLIENT_MODE": "copilot-plugin"
       }
     }
   }
