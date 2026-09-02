@@ -74,19 +74,3 @@ verifying the connection and completing configuration.
 
 - Java 17 or later must be installed and `java` must be on the PATH.
 
-## Local Skills Override
-
-To test local `infinity-skills`, set `PEGA_LOCAL_SKILLS_PATH` in the `environment` block of
-your opencode MCP config:
-
-```json
-"environment": {
-  "PEGA_SKILLS_PATH": "./resources/pega-skills",
-  "PEGA_CLIENT_MODE": "opencode-plugin",
-  "PEGA_BASE_URL": "https://your-pega-environment.example.com",
-  "PEGA_LOCAL_SKILLS_PATH": "/path/to/infinity-skills"
-}
-```
-
-Point `PEGA_LOCAL_SKILLS_PATH` at the directory that contains `manifest.json`. The `cwd` for
-the MCP server is the `claude/` directory, so all relative paths resolve from there.
