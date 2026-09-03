@@ -12,20 +12,29 @@ This repository packages Pega Infinity AI plugins for multiple AI clients. It co
 - Pega Infinity 25.1.3+ (consult Pega)
 - Pega Infinity 24.2.5+ (consult Pega)
 
-## Install From This Repository
+## Install From Marketplace
 
-For clients that support installing a marketplace from a git path, use this repository as the marketplace source.
+For clients that support installing a marketplace from a git path, use this repository as source.
 
 | Agent | CLI command |
 | --- | --- |
 | Claude Code | `claude plugin marketplace add https://github.com/pegasystems/infinity-ai-plugins.git`<br> `claude plugin install pega-infinity-authoring@Pega` |
 | GitHub Copilot CLI | `copilot plugin marketplace add https://github.com/pegasystems/infinity-ai-plugins.git`<br> `copilot plugin install pega-infinity-authoring@Pega`  <br> * Restart Copilot CLI for the plugin changes to take effect |
 | Codex | `codex plugin marketplace add https://github.com/pegasystems/infinity-ai-plugins.git`<br> `codex plugin add pega-infinity-authoring@Pega`<br> Alternatively, launch `codex`, type `/plugins`, navigate to `Pega`, and install `Pega Infinity Authoring` |
-| opencode | Clone this repository, then merge the `mcp` block from `plugins/pega/infinity-ai-plugins/opencode/opencode.json` into your `opencode.json` (setting `cwd` to the absolute path of the `opencode/` directory). Copy `plugins/pega/infinity-ai-plugins/opencode/skills/` into `.opencode/skills/` in your project. See `plugins/pega/infinity-ai-plugins/opencode/README.md` for full setup instructions. |
 
 Alternatively, you can use SSH git URLs such as `git@github.com:pegasystems/infinity-ai-plugins.git`.
 
-## Update An Existing Install
+## Manual Setup
+
+For the following clients, we do not currently provide a plugin in this repository. Clone the repository and configure the MCP server and skills manually.
+
+| Agent | Setup instructions |
+| --- | --- |
+| Devin | Configure the bundled MCP server in Devin's MCP metadata and copy the shared Pega skills into a Devin skill directory. See [Devin setup instructions](plugins/pega/infinity-ai-plugins/devin/README.md). |
+| opencode | Merge the `mcp` block from `plugins/pega/infinity-ai-plugins/opencode/opencode.json` into your `opencode.json`, setting `cwd` to the absolute path of the `opencode/` directory. Copy `plugins/pega/infinity-ai-plugins/opencode/skills/` into `.opencode/skills/` in your project. See [opencode setup instructions](plugins/pega/infinity-ai-plugins/opencode/README.md). |
+
+
+## Update Marketplace Install
 
 When this repository publishes a newer plugin build, refresh the installed plugin from the same marketplace source.
 
@@ -34,11 +43,16 @@ When this repository publishes a newer plugin build, refresh the installed plugi
 | Claude Code | Run `claude plugin marketplace update Pega` to refresh the marketplace catalog.<br>Then run `claude plugin update pega-infinity-authoring@Pega` to update the installed plugin.<br>Run `/reload-plugins` or start a new Claude session afterward. |
 | GitHub Copilot CLI | Run `copilot plugin marketplace update Pega` to refresh the marketplace catalog.<br>Then run `copilot plugin update pega-infinity-authoring@Pega` to update the installed plugin.<br>Quit and reopen Copilot CLI afterward. |
 | Codex | Run `codex plugin marketplace upgrade Pega` to refresh the marketplace catalog.<br>Then run `codex plugin add pega-infinity-authoring@Pega` to refresh the installed plugin, or use the `/plugins` browser to reinstall it from `Pega`.<br>Start a new Codex session afterward. |
+
+## Update Manual Setup
+
+| Agent | Update steps |
+| --- | --- |
+| Devin | Run `git pull` in the cloned repository, then start a new Devin session. Recopy the shared Pega skills if they changed. See [Devin setup instructions](plugins/pega/infinity-ai-plugins/devin/README.md). |
 | opencode | Run `git pull` in the cloned repository to get the latest files. Restart opencode afterward. |
 
 > [!TIP]
-> Adding the marketplace from this repository can fail with a long-path error saying "Filename too long". If that happens, enable Git long-path support and retry:
-
+> Adding the marketplace from this repository or cloning this repository can fail with a long-path error saying "Filename too long". If that happens, enable Git long-path support and retry:
 
 ```bash
 git config --system core.longpaths true
@@ -47,9 +61,10 @@ git config --system core.longpaths true
 ## Setup After Install
 
 Claude Code, GitHub Copilot CLI, and Codex plugins ship with a built-in
-`pega-setup` skill for first-time configuration and troubleshooting.
+`pega-setup` skill for first-time configuration and troubleshooting. Devin users
+can install the same shared skills using the [manual Devin setup instructions](plugins/pega/infinity-ai-plugins/devin/README.md).
 
-After the plugin is installed, start a new session and ask the assistant to run
+After installing a marketplace plugin or completing manual setup, start a new session and ask the assistant to run
 `pega-setup`.
 
 The skill:
