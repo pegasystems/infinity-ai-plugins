@@ -1,21 +1,21 @@
-# Pega Infinity Authoring opencode Plugin
+# Pega Infinity Authoring OpenCode Plugin
 
-This directory contains the source template for the opencode plugin variant of Pega Infinity Authoring.
+This directory contains the source template for the Pega Infinity Authoring plugin for OpenCode.
 
-The opencode plugin reuses the `claude/` plugin directory for the bundled MCP server JAR and
-runtime skills payload. Only opencode-specific skills and MCP wiring are kept here.
+The OpenCode plugin reuses the `claude/` plugin directory for the bundled MCP server JAR and the
+runtime skills payload. This directory contains only OpenCode-specific skills and MCP wiring.
 
 This source tree is not the final packaged artifact.
 
 ## Setup
 
-opencode does not have a plugin marketplace yet. Configure the MCP server manually by merging
+OpenCode does not have a plugin marketplace yet. Configure the MCP server manually by merging
 the `opencode.json` snippet from this directory into your project's `opencode.json` or the
 global `~/.config/opencode/opencode.json`.
 
 ### 1. Add the MCP server
 
-Copy the `mcp` block from `opencode.json` into your opencode config and set `cwd` to the
+Copy the `mcp` block from `opencode.json` into your OpenCode config and set `cwd` to the
 absolute path of the `claude/` sibling directory, which contains the bundled JAR and runtime
 skills:
 
@@ -61,9 +61,9 @@ cp -r skills/pega-assistant ~/.config/opencode/skills/
 cp -r skills/pega-setup ~/.config/opencode/skills/
 ```
 
-### 3. Restart opencode
+### 3. Restart OpenCode
 
-Restart opencode for the MCP server and skills to take effect.
+Restart OpenCode to load the MCP server and skills.
 
 ### 4. Verify and configure
 
@@ -72,5 +72,5 @@ verifying the connection and completing configuration.
 
 ## Prerequisites
 
-- Java 17 or later must be installed and `java` must be on the PATH.
+- Install Java 17 or later and add `java` to the PATH.
 
