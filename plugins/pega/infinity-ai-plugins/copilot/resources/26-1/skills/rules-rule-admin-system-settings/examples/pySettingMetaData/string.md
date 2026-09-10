@@ -1,5 +1,5 @@
 ---
-name: System Setting Value Type — String
+name: admin-system-settings-value-type-string
 description: "pySettingMetaData shape for a String-typed Application Setting, e.g. a base URL."
 ---
 

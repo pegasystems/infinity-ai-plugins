@@ -1,6 +1,6 @@
 ---
 name: rules-rule-obj-property
-description: Schema and authoring guide for Pega property rules (Rule-Obj-Property), including scalar, page, page list, and dropdown prompt list patterns
+description: Authoring guide for Pega property rules (Rule-Obj-Property), including scalar, page, page list, and dropdown prompt list patterns
 ---
 
 **Prerequisite:** Load `methodology-rule-authoring` first
@@ -107,7 +107,8 @@ or values are ignored.
 ### `Embed-PropertyPromtValues` has an intentional Pega typo
 
 The embed class for prompt list entries is `Embed-PropertyPromtValues` — missing
-the 'p' in "Prompt". This typo is preserved exactly in the schema and examples.
+the 'p' in "Prompt". This typo is required by Pega and is preserved exactly in
+the examples.
 Using the correct spelling `Embed-PropertyPromptValues` creates an empty prompt list
 without an error message. The correct field names for each entry are:
 - `pyLocalizedValue` — the display label (not `pyTableDescription`)

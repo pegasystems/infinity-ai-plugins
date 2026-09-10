@@ -1,5 +1,5 @@
 ---
-name: POST Connector with SETTING URL
+name: rest-post-setting-url
 description: REST Connector POST using an Application Setting for the base URL, with request body mapping from clipboard and multiple request headers. Data-page-sourced; pyMapToKey uses .pyResponseData on the connector step page per the response-landing-page contract.
 ---
 

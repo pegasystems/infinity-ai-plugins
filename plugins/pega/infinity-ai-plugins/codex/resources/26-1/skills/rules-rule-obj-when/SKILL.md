@@ -1,6 +1,6 @@
 ---
 name: rules-rule-obj-when
-description: Schema and authoring guide for Pega When rules (Rule-Obj-When), including condition clauses and pyLogic combinators. Per-alias function templates live in `library-function-builder`.
+description: Authoring guide for Pega When rules (Rule-Obj-When), including condition clauses and pyLogic combinators. Per-alias function templates live in `library-function-builder`.
 ---
 
 **Prerequisites:**
@@ -12,10 +12,9 @@ description: Schema and authoring guide for Pega When rules (Rule-Obj-When), inc
   `PropertyHasValue`, `compareTwoStrings`, `pxIsInListOfValues`,
   `MathGreaterThan`, `Rule-Obj-When`, etc.) along with their
   `pyFunctionData` shapes and `pyCallParams` keys. The When-rule supported
-  subset (65 aliases) is enumerated in the schema's
-  `$defs/FunctionAliasName`, referenced from `pyConditionValue1Purpose`,
-  `UserFunction.pyName`, and `FunctionAlias.pyPurpose`. This skill no longer
-  duplicates per-alias templates.
+   supported aliases are documented in the `library-function-builder` examples
+   and referenced by `pyConditionValue1Purpose`, `UserFunction.pyName`, and
+   `FunctionAlias.pyPurpose`. This skill no longer duplicates per-alias templates.
 
 ## Authoring Notes
 
@@ -36,7 +35,7 @@ Every condition entry must include all of:
 | `pyConditionFieldName` | The primary property reference the condition operates on (e.g., `".Priority"`). Used by Pega's change-tracking and by the form designer.                                                                                                                                                         |
 | `pyConditionOperation` | The operator symbol (e.g., `"="`, `">"`, `"<="`). For non-comparison aliases (e.g. `PropertyHasValue`) use `"="`.                                                                                                                                                                                |
 | `pyConditionValue1` | The compiled Pega expression — built from the alias's `pySignature` template by substituting in `pyCallParams` values. Example: `"@(Pega-RULES:ExpressionEvaluators).compareTwoValues(.Priority, \"=\", \"High\")"`.                                                                             |
-| `pyConditionValue1Purpose` | Function alias name (e.g., `"CompareTwoValues"`). Must be one of the 65 aliases enumerated in `$defs/FunctionAliasName`.                                                                                                                                                                         |
+| `pyConditionValue1Purpose` | Function alias name (e.g., `"CompareTwoValues"`). Use an alias documented in the `library-function-builder` examples.                                                                                                                                                                         |
 | `pyCallParams` | Named parameters for the alias (varies by purpose). Keys/types are defined by the alias example in `library-function-builder/examples/`.                                                                                                                                                         |
 | `pyFunctionData` | Full embedded structure (see library example). Required for the rule to render correctly in the form designer. Copy verbatim from the alias example, then substitute `pyParametersParamValue` on each `pyParameters[i]` and `pyUIParameters[j]` entry to match the actual `pyCallParams` values. |
 | `pyConditionValue1String` | Human-readable rendering of the condition (e.g., `".Priority = \"High\" "`). Used by the form designer.                                                                                                                                                                                          |
@@ -106,7 +105,7 @@ symbolic forms (matching `pyAllowedValues` on the parameter):
 | `>=` | Greater than or equal to |
 | `<=` | Less than or equal to |
 
-Word-form aliases like `Equals`, `NotEquals`, `GreaterThan` will pass schema
+Word-form aliases like `Equals`, `NotEquals`, `GreaterThan` may pass MCP
 validation and create the rule, but the rule will not evaluate correctly at
 runtime. Always use the symbolic form for `CompareTwoValues`.
 
@@ -116,26 +115,23 @@ own allowed-values list — see the corresponding library example. For example
 
 ### Function templates live in `library-function-builder`
 
-The schema intentionally does **not** embed per-alias function templates — it
-defines only the rule container shape (`Rule-Obj-When` properties plus the
-`Embed-WhenConditions` / `Embed-UserFunction` / `Embed-MethodParams` structural
-defs). The catalogue of supported boolean function aliases — their
-`pySignature`, `pyEcho`, parameter list, and UI layout — is owned by
+The catalogue of supported boolean function aliases — their `pySignature`,
+`pyEcho`, parameter list, and UI layout — is owned by
 `library-function-builder/examples/`. Copy `pyFunctionData` from there into
-your `pyCondition[]` entry.
+your `pyCondition[]` entry. MCP validates the completed rule payload when you
+create or update the rule.
 
 ### `Embed-MethodParams` is used in two different contexts
 
 The same `Embed-MethodParams` class (and the `pyParametersParam*` field family)
 appears in **two unrelated places** in a When rule. Treat them as separate
-shapes — the schema models them as two distinct `$defs` (`MethodParam` vs
-`RuleParameter`) and the same property name (`pyParametersParamType`) carries
-a **different enum** in each.
+payload shapes, and the same property name (`pyParametersParamType`) carries
+a different set of values in each.
 
-| Context | Schema `$def` | Where it lives | `pyParametersParamType` enum | Purpose |
-|---------|---------------|----------------|------------------------------|---------|
-| **A. Function-call slot** | `MethodParam` | `pyCondition[].pyFunctionData.pyParameters` / `.pyUIParameters` / `.pyCallParams` | `Freeform`, `Values`, `HTMLProperty`, `Label`, `Alias`, `Textbox`, `Read`, `None`, `""` | **UI-rendering hint** for one argument slot of a function alias. Also carries `pyParametersParamValue`, `pyParametersParamDropdownValues`, `pyReference`, `pyNodeCaption`. Copied verbatim from a `library-function-builder` example. |
-| **B. Rule-level Parameters tab** | `RuleParameter` | Top-level `pyParameters` on the rule | `Text`, `Date`, `DateTime`, `Integer`, `Decimal`, `TimeofDay`, `TrueFalse`, `Double`, `Page`, `""` | **Pega data type** of an input parameter the caller passes in (referenced at runtime as `Param.<name>`). Carries only name / type / description / default / direction / required — no `pyParametersParamValue`, no dropdown config, no `pyReference`. |
+| Context | Where it lives | `pyParametersParamType` values | Purpose |
+|---------|----------------|--------------------------------|---------|
+| **A. Function-call slot** | `pyCondition[].pyFunctionData.pyParameters` / `.pyUIParameters` / `.pyCallParams` | `Freeform`, `Values`, `HTMLProperty`, `Label`, `Alias`, `Textbox`, `Read`, `None`, `""` | **UI-rendering hint** for one argument slot of a function alias. Also carries `pyParametersParamValue`, `pyParametersParamDropdownValues`, `pyReference`, `pyNodeCaption`. Copied verbatim from a `library-function-builder` example. |
+| **B. Rule-level Parameters tab** | Top-level `pyParameters` on the rule | `Text`, `Date`, `DateTime`, `Integer`, `Decimal`, `TimeofDay`, `TrueFalse`, `Double`, `Page`, `""` | **Pega data type** of an input parameter the caller passes in (referenced at runtime as `Param.<name>`). Carries only name / type / description / default / direction / required — no `pyParametersParamValue`, no dropdown config, no `pyReference`. |
 
 Practical implications when authoring:
 

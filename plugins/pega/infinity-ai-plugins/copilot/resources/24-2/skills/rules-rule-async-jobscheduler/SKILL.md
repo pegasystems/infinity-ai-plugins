@@ -1,6 +1,6 @@
 ---
 name: rules-rule-async-jobscheduler
-description: Schema and authoring guide for Pega Job Scheduler rules (Rule-Async-JobScheduler), including schedule types, scope, and examples
+description: Authoring guide for Pega Job Scheduler rules (Rule-Async-JobScheduler), including schedule types, scope, and examples
 ---
 
 **Prerequisite:** Load `methodology-rule-authoring` first

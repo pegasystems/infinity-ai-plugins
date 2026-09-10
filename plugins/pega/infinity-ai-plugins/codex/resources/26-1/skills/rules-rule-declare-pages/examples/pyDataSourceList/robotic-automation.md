@@ -1,5 +1,5 @@
 ---
-name: pyDataSourceList entry — RoboticAutomation
+name: declare-pages-source-robotic-automation
 description: Minimum-viable Robotic Automation data page source entry. Triggers a server-side robotic automation to load data. Required field pyRACaseType. Optional pyRAReqDTName, pyRARespDTName, pyRATimeout. Server auto-sets pyLoadActivity to pxCallRoboticAutomation.
 ---
 

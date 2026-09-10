@@ -1,6 +1,6 @@
 ---
 name: rules-rule-ui-view
-description: Schema and authoring guide for Pega Constellation views (Rule-UI-View), including three-surface updates and field wiring patterns
+description: Authoring guide for Pega Constellation views (Rule-UI-View), including three-surface updates and field wiring patterns
 ---
 
 **Prerequisites:**
@@ -32,8 +32,8 @@ introduces new fields:
    list-rules(ruleType="Rule-Obj-Property", className="<target-class>", ruleName="<PropertyName>")
    ```
    If the result set is empty the property does not exist.
-3. Create every missing property using `rules-rule-obj-property` (schema +
-   examples) before proceeding. Do not batch property creation with the view
+3. Create every missing property using `rules-rule-obj-property` (authoring
+    guidance and examples) before proceeding. Do not batch property creation with the view
    create — each property must succeed independently first.
 4. Re-read the view rule and append field entries for all requested properties.
 
@@ -231,7 +231,7 @@ The structure is a recursive tree of `ComponentNode` objects:
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `type` | String | DX component type (see Field Type Patterns in JSON schema `$defs`) |
+| `type` | String | DX component type. See `view-field-type-selection` for the complete mapping and examples. |
 | `name` | String | Logical name (required for Regions, optional otherwise) |
 | `config` | Object | Component-specific configuration (see below) |
 | `children` | Array | Nested child ComponentNodes |

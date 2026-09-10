@@ -15,6 +15,7 @@ description: Smallest valid create payload. When adding columns, populate BOTH p
     "pyReportContentPageName": "pyReportContentPage",
     "pyReportingDbDropdown": "Standard",
     "pyUseAlternateDb": "false",
+    "pyIgnoreSkinPDFExport": "true",
     "pyChart": {
       "pyEnableChart": "false",
       "pyGraphType": "Column"
@@ -36,11 +37,12 @@ description: Smallest valid create payload. When adding columns, populate BOTH p
         }
       ],
       "pyUIFilters": {
-        "pyFilterLogic": "",
+        "pyFilterLogic": "F1",
         "pyFilter": []
       }
     },
     "pyUserInteractions": {
+      "pyDesignModeActualResults": "true",
       "pyPagingParams": {
         "pyPagingEnabled": "true",
         "pyPageSize": "50",
@@ -70,7 +72,7 @@ description: Smallest valid create payload. When adding columns, populate BOTH p
       ]
     },
     "pyFilters": {
-      "pyFilterLogic": "",
+      "pyFilterLogic": "F1",
       "pyFilter": []
     },
     "pyReportRank": {

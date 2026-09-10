@@ -98,7 +98,7 @@ These fields are NOT in library examples (server- or runtime-populated, never pe
 
 | Rule type | Purpose field | Reusable fields from this library | Rule-local fields |
 |---|---|---|---|
-| `Rule-Obj-When` | `pyCondition[].pyConditionValue1Purpose` | `pyCallParams`; builder/schema derives `pyFunctionData` from the purpose | `pyConditionLabel`, `pyCondValueCategory`, `pyLogic`, rule identity |
+| `Rule-Obj-When` | `pyCondition[].pyConditionValue1Purpose` | `pyCallParams`; builder derives `pyFunctionData` from the purpose | `pyConditionLabel`, `pyCondValueCategory`, `pyLogic`, rule identity |
 | `Rule-Obj-Validate` | `pyValidWhen.pyCondition[].pyConditionValue1Purpose` or `pyRequiredWhen.pyCondition[].pyConditionValue1Purpose` | `pyCallParams`, `pyFunctionData`, rendered condition labels | Validation property, required/error behavior, messages, validate-rule chaining |
 | `Rule-Declare-DecisionTree` | `pyLogic[].pyExpressionPurpose` | `pyCallParams`, `pyFunctionData`, function signature and parameter metadata | `pyExpression`, `pyExpressionString`, `pyExpressionStringLabel`, `pyAction`, `pyResult`, `pyDelegatedRestrictions` |
 
@@ -298,10 +298,10 @@ without arguments and always evaluates with empty strings.
    Either choose a numeric property, or use literal numeric values on both
    sides. String-family functions (`compareTwoStrings`, `StringEquals`, etc.)
    work with String properties or quoted string literals.
-8. **`pyIsOptional` is a JSON string, not a boolean.** The v2 builder schema
-   declares `pyIsOptional` as `type: string` with enum `["true", "false",
-   ""]` and the on-the-wire format Pega stores is a quoted string. Always
-   emit `"true"` / `"false"` (with quotes), not bare `true` / `false`.
+8. **`pyIsOptional` is a JSON string, not a boolean.** The v2 builder requires
+    `pyIsOptional` as one of `"true"`, `"false"`, or `""`, and the on-the-wire
+    format Pega stores is a quoted string. Always emit `"true"` / `"false"
+    (with quotes), not bare `true` / `false`.
    Verified against live `Rule-Obj-When` instances (e.g.
    `pyParameters[i].pyIsOptional: "false"`) and matches every example file
    in this directory.
@@ -406,4 +406,3 @@ For the full catalogue of validated Pega expression functions
 
 See `examples/1-free-form-expression-boolean.md` for the full pitfalls section
 and copy-ready expression patterns.
-

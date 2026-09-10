@@ -1,6 +1,6 @@
 ---
 name: Filter — Equality with parameter reference
-description: A single pyFilter entry using `=` against a Param.* value.
+description: A single pyFilter entry using `=` against a Param.* value. pyLogicLabel defaults to "F1" for the first filter; pyFilterLogic must match.
 ---
 
 ```json
@@ -10,7 +10,7 @@ description: A single pyFilter entry using `=` against a Param.* value.
   "pyFilterOperation": "=",
   "pyFilterValue": "Param.OperatorID",
   "pyDataType": "Text",
-  "pyLogicLabel": "A",
+  "pyLogicLabel": "F1",
   "pyPromptType": "NoAccess"
 }
 ```

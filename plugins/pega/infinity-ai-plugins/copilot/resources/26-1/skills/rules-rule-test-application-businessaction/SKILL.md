@@ -75,28 +75,43 @@ Evaluate top-to-bottom; use the first match. Then continue to Step 3.
 | Duplicate `pyPurpose` | Same purpose+class exists | Use `update-rule` or choose unique `pyPurpose` |
 | Truncated `pyLabel`/`pyPurpose` | Exceeds 64 chars | Shorten the name |
 
-### Step 4: Read view rule
+### Step 4: Read view details
 
-> **MANDATORY:** You MUST call `get-rule detail="full"` on the view and parse the
-> actual `pxViewMetadata` or `pyContent` from the response. NEVER assume or infer
-> which fields a view contains. Missing even one interactive field invalidates the
-> entire Business Action. Complete Step 4 fully for each view before proceeding to Step 5.
->
-> **TriggerOptionalProcess BAs — skip this step.** No view exists. Proceed directly to Step 5.
+> **TriggerOptionalProcess only:** Skip this step. No view exists; proceed to Step 5.
 
-**Fetch:**
+For every other Business Action, use the following retrieval sequence. Do not call the
+fallback unless the recommended approach does not produce usable view content.
+
+#### Recommended: Get view content from the data page
+
+1. Call `run-data-page`:
 ```
-list-rules ruleType="Rule-UI-View" className="<Class Name>" ruleName="<View Name>"
-get-rule key="<viewInsKey>" detail="full"
+run-data-page(
+  dataPage="D_pzGetViewDetails",
+  dataPageType="page",
+  payload="{\"ViewID\":\"{ViewName}\",\"CaseClass\":\"{CaseClass}\"}"
+)
 ```
-For case-wide actions: `search-rules searchText="<viewId>" ruleType="Rule-UI-View"`
+2. **If the response contains non-blank `pyViewContent`,** use it as the view source and continue to **Extract fields**.
+3. **Otherwise** (the data page is unavailable, returns an error/404, or `pyViewContent` is blank or missing), use the fallback.
 
-Load `business-action-view-field-extraction` via `get-skill` and follow its procedure to extract
-all interactive fields from the view rule response.
+#### Fallback: Get the view rule
 
-> **Verification gate:** Confirm your field list was derived from the actual `get-rule`
-> response. Count the interactive (non-readOnly) fields; if zero, re-check your parsing.
-> Then produce the **field extraction checkpoint** table (see `business-action-view-field-extraction` Field extraction checkpoint)
+1. Call `list-rules ruleType="Rule-UI-View" className="<Class Name>" ruleName="<View Name>"`.
+2. Call `get-rule key="<viewInsKey>" detail="full"` for the returned view rule.
+3. Use `pxViewMetadata` or `pyContent` as the view source, then continue to **Extract fields**.
+4. Recurse through referenced views for discovery
+
+#### Extract fields
+
+Use the selected view source. But map only fields in editable form templates. Any template whose name starts with `Details` (for example, `Details` or `DetailsTwoColumn`) is display-only: exclude all descendants from `pyForm`, `pyInputParameters`, and `pyPlaywrightScript`. Include every interactive field from the editable form context; missing one invalidates the BA.
+
+Load `business-action-view-field-extraction` via `get-skill` and follow its procedure to extract all interactive fields from the returned view metadata (or fallback view rule content).
+
+> **Verification gate:** Confirm your field list was derived from the actual `D_pzGetViewDetails`
+> response (or fallback `get-rule` response). Count the interactive (non-readOnly) fields; if zero,
+> re-check your parsing. Then produce the **field extraction checkpoint** table (see
+> `business-action-view-field-extraction` Field extraction checkpoint)
 
 ### Step 5: Generate parameters
 
@@ -143,7 +158,7 @@ Set `pyPlaywrightScript` to TypeScript body statements only. `page`, `browser`, 
 
 ### Step 7: Create or update rule
 
-Assemble all outputs from Steps 2–6 plus metadata referring to schema and call `create-rule` or `update-rule`.
+Assemble all outputs from Steps 2–6 plus the rule metadata, then call `create-rule` or `update-rule`.
 
 - Pass test ruleset via `ruleSet` parameter on `create-rule` (NOT inside `content` JSON).
 - Identity key: `pyPurpose` + `pyClassName`. Both max 64 characters.

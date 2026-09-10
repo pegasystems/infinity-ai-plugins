@@ -1,6 +1,6 @@
 ---
 name: rules-rule-classmetadata
-description: Schema and authoring guide for Pega class metadata rules (Rule-ClassMetadata) — primary fields lists for work classes and data-page bindings (list / lookup / savable) for data-object classes
+description: Authoring guide for Pega class metadata rules (Rule-ClassMetadata) — primary fields lists for work classes and data-page bindings (list / lookup / savable) for data-object classes
 ---
 
 **Prerequisite:** Load `methodology-rule-authoring` first
@@ -9,19 +9,19 @@ description: Schema and authoring guide for Pega class metadata rules (Rule-Clas
 
 | Skill | Description |
 |-------|-------------|
-| `Stub ClassMetadata` | Minimal class metadata record — smallest valid create payload |
-| `With Primary Fields` | Work-class metadata with an ordered `pyPrimaryFields` list |
-| `Data Class Metadata` | Data-object metadata with `pyListDataPage` / `pyLookUpDataPage` / `pySavableDataPage`, embedded `Rule-Declare-Pages` snapshots, and `pyDataTypeLocalActions` |
-| `UpdateDetails Action` | Single `Embed-Pega-DataTypeAction-UpdateDetails` entry — the OOTB Edit action |
-| `Add Action` | OOTB Add action (`Embed-Pega-DataTypeAction-Add`) |
-| `Delete Action` | OOTB Delete action (`Embed-Pega-DataTypeAction-Delete`) |
-| `Custom Action` | Custom data-type action (`Embed-Pega-DataTypeAction-Custom`) |
+| `classmetadata-stub` | Minimal class metadata record — smallest valid create payload |
+| `classmetadata-with-primary-fields` | Work-class metadata with an ordered `pyPrimaryFields` list |
+| `classmetadata-data-class` | Data-object metadata with `pyListDataPage` / `pyLookUpDataPage` / `pySavableDataPage`, embedded `Rule-Declare-Pages` snapshots, and `pyDataTypeLocalActions` |
+| `classmetadata-local-action-update-details` | Single `Embed-Pega-DataTypeAction-UpdateDetails` entry — the OOTB Edit action |
+| `classmetadata-local-action-add` | OOTB Add action (`Embed-Pega-DataTypeAction-Add`) |
+| `classmetadata-local-action-delete` | OOTB Delete action (`Embed-Pega-DataTypeAction-Delete`) |
+| `classmetadata-local-action-custom` | Custom data-type action (`Embed-Pega-DataTypeAction-Custom`) |
 
 ## References
 
 | Skill | Description |
 |-------|-------------|
-| `Primary Fields reference` | What `pyPrimaryFields` is — design-time metadata that drives Case Designer, default views, and agent reliability. |
+| `classmetadata-primary-fields` | What `pyPrimaryFields` is — design-time metadata that drives Case Designer, default views, and agent reliability. |
 
 ## Authoring notes
 
@@ -53,7 +53,7 @@ Extract the `pyPrimaryFields` array.
 
 #### 4. Append new property and send the complete array:
 
-Load skill `With Primary Fields` for the example payload.
+Load skill `classmetadata-with-primary-fields` for the example payload.
 
 **IMPORTANT:** Include ALL existing entries — arrays are replaced wholesale by
 deep merge, not appended to.
@@ -76,22 +76,27 @@ there is for Work-; choose based on what best identifies *this* class's
 records.
 
 **Always pair this with the view layer.** A freshly-built Data Type's
-`pySummary` view ships with an empty "Primary fields" region by design —
-confirmed live (the region exists but holds zero content entries until
-populated). Infinity Studio's Data Designer UI labels this region
+`pySummary` view ships with an empty "Primary fields" region by design.
+Infinity Studio's Data Designer UI labels this region
 **"Highlighted fields"** — the same label used for the analogous region on
 a Work class's `pyCaseSummary` (see `view-update-workflow`'s Operational
 Notes).
 
 Setting `Rule-ClassMetadata.pyPrimaryFields` alone does not populate this
-region. Data- classes use the same two-layer pattern as Work classes (see
+region. Data classes use the same two-layer pattern as Work classes (see
 `view-update-workflow`'s "Primary Fields — Two-Layer Pattern"): the metadata
-array plus a separate `pyPrimaryFields` **view** rule — confirmed live that
-a Data- class can have `pySummary`, `pyPrimaryFields`, and `pyReview`
-(Details tab) as three distinct `Rule-UI-View` instances. Use
-`list-rules(ruleType="Rule-UI-View", className="{DataClass}")` to check
-which of these exist; **create** any that are missing (not update) with the
-matching field set. See `view-update-workflow` for the full pattern.
+array and a separate `pyPrimaryFields` **view** rule are both required.
+
+A Data class can have three distinct `Rule-UI-View` instances:
+
+- `pySummary` — summary view
+- `pyPrimaryFields` — highlighted/primary fields view
+- `pyReview` — Details tab
+
+Use `list-rules(ruleType="Rule-UI-View", className="{DataClass}")` to check
+which of these exist. **Create** any that are missing, rather than updating
+an unrelated view, and use the matching field set. See `view-update-workflow`
+for the full pattern.
 
 ### Data-class shape — three coupled blocks
 
@@ -118,6 +123,6 @@ subclass that matches the action type. Inspect a sibling data class with
 
 ## See also
 
-- `Primary Fields reference` — what `pyPrimaryFields` is and what it drives.
+- `classmetadata-primary-fields` — what `pyPrimaryFields` is and what it drives.
 - `view-update-workflow` — how to update the `pyPrimaryFields` view after
   changing class metadata.

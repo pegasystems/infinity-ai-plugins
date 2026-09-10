@@ -1,5 +1,5 @@
 ---
-name: Stub Data Page (Single)
+name: declare-pages-stub-single
 description: Minimal connector-backed single/page Data Page — smallest valid create payload for a single-record lookup by key (pyPageType "normal", one IN parameter, single Connector source).
 ---
 
@@ -14,7 +14,7 @@ description: Minimal connector-backed single/page Data Page — smallest valid c
   "pyParameters": [
     {
       "pyParametersParamName": "CustomerID",
-      "pyParametersParamType": "String",
+      "pyParametersParamType": "STRING",
       "pyParametersParamInOut": "IN",
       "pyParametersParamReq": "-1"
     }

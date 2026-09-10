@@ -43,7 +43,7 @@ page even though they do not route work. Include all for byte-level parity:
 | `pyUseCaseApplication` | `""` |
 | `pyUseCaseName` | `""` |
 | `pyRuleCallParamsClass` | `""` (blank on notify-wrapper Utility shapes — always emit, even when empty) |
-| `pyPageAliases` | `[]` (empty list — schema is an array; report data shows server may serialize as `{}` empty page in some contexts, but `[]` is the schema-valid representation) |
+| `pyPageAliases` | `[]` (empty list — use the array representation; report data shows the server may serialize it as `{}` empty page in some contexts) |
 | `pzRuleParameters` | `[]` (when no parameters declared) |
 | `pyContextRefs` | `[]` |
 | `pyRouterProp` | `{ "pxObjClass": "Data-MO-Activity-Router" }` (minimal stub — same shape as Start, End, degenerate-Decision) |
@@ -123,7 +123,7 @@ variants but those use different `pyImplementation` activities).
 > `@Utilities.pxGetStepPageReference` expression. Do **not** use `PageRef`
 > (that is not a server-observed key on this smart shape).
 
-**`pzRuleParameters` declared-parameter rows** (6 rows, full schema with
+**`pzRuleParameters` declared-parameter rows** (6 rows, complete shape with
 `pyParametersParamDesc` populated):
 
 | # | `pyParametersParamName` | `pyParametersParamType` | `pyParametersParamInOut` | `pyParametersParamDesc` |
@@ -180,7 +180,7 @@ All other shape-level fields (`pyImplementation`, `pyActivityType`,
 as Variant A. The variant is determined entirely by the author's stage-
 change-mode choice in the smart-shape configuration.
 
-### `pzNotifyWrapper` smart-shape sub-variant — `pzRuleParameters` row schema
+### `pzNotifyWrapper` smart-shape sub-variant — `pzRuleParameters` row shape
 
 Notify-wrapper `pzRuleParameters` rows use a **10-field shape** that
 **replaces `pyParametersParamSize`** (carried by approval-bundle rows — see
@@ -265,4 +265,3 @@ other fields are blank or absent.
 `pxWarningsToDisplay[0]` index-position placeholder.
 
 See `examples/utility-plain-activity.md` for the full worked shape.
-

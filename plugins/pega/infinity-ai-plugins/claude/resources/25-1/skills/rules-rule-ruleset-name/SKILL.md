@@ -1,6 +1,6 @@
 ---
 name: rules-rule-ruleset-name
-description: Schema and authoring guide for Pega ruleset name records (Rule-RuleSet-Name), including standard versus branch rulesets, identity fields, and branch-specific flags.
+description: Authoring guide for Pega ruleset name records (Rule-RuleSet-Name), including standard versus branch rulesets, identity fields, and branch-specific flags.
 ---
 
 **Prerequisite:** Load `methodology-rule-authoring` first.
@@ -26,7 +26,3 @@ description: Schema and authoring guide for Pega ruleset name records (Rule-Rule
 |------|------------|
 | Standard ruleset | `pyRuleSetName`, `pyLabel`, `pyRuleSetType: "STANDARD"` |
 | Branch ruleset | `pyRuleSetName`, `pyLabel`, `pyRuleSetType: "BRANCH"`, `pyBranchID`, `pyBranchOrigin` |
-
-### Schema
-
-Load `rules-rule-ruleset-name/schema/rule-ruleset-name` before creating or updating this rule type.

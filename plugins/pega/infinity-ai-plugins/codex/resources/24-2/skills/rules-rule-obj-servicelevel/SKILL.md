@@ -1,6 +1,6 @@
 ---
 name: rules-rule-obj-servicelevel
-description: Schema and authoring guide for Pega Service Level Agreement rules (Rule-Obj-ServiceLevel), including goal/deadline/late escalations, urgency, timing, and wiring to flows
+description: Authoring guide for Pega Service Level Agreement rules (Rule-Obj-ServiceLevel), including goal/deadline/late escalations, urgency, timing, and wiring to flows
 ---
 
 **Prerequisite:** Load `methodology-rule-authoring` first.

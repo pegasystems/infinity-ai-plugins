@@ -1,6 +1,6 @@
 ---
 name: rules-rule-decision-dataset
-description: Schema and authoring guide for Pega dataset rules (Rule-Decision-DataSet), including Database Table type configuration with keys, partition keys, and table mapping
+description: Authoring guide for Pega dataset rules (Rule-Decision-DataSet), including Database Table type configuration with keys, partition keys, and table mapping
 ---
 
 **Prerequisite:** Load `methodology-rule-authoring` first.

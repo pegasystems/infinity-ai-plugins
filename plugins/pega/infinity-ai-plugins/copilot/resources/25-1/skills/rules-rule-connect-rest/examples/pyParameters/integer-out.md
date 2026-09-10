@@ -1,5 +1,5 @@
 ---
-name: Optional INTEGER OUT parameter
+name: rest-param-integer-out
 description: REST Connector pyParameters entry — optional INTEGER OUT parameter returning a numeric value to the calling data page.
 ---
 

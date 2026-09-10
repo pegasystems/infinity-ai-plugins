@@ -1,5 +1,5 @@
 ---
-name: Direct base URL (minimum pyEmbeddedURL shape)
+name: rest-url-direct-base-url
 description: REST Connector pyEmbeddedURL minimum shape -- direct URL with pyBaseURL only, no path or query parameters.
 ---
 

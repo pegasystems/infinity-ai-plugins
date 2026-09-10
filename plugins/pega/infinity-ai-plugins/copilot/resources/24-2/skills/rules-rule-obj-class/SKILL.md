@@ -1,6 +1,6 @@
 ---
 name: rules-rule-obj-class
-description: Schema and authoring guide for Pega class definition rules (Rule-Obj-Class), including work subclasses, data classes, and inheritance patterns
+description: Authoring guide for Pega class definition rules (Rule-Obj-Class), including work subclasses, data classes, and inheritance patterns
 ---
 
 **Prerequisite:** Load `methodology-rule-authoring` first
@@ -9,14 +9,14 @@ description: Schema and authoring guide for Pega class definition rules (Rule-Ob
 
 | Skill | Description |
 |-------|-------------|
-| `Stub Class` | Minimal class definition -- smallest valid create payload |
-| `Work Subclass` | Work class with class group assignment (HASCLASSGROUP) |
-| `Data Class Definition` | Data class (NOCLASSGROUP) |
-| `Abstract Class` | Abstract class without a trailing dash |
-| `Embed Class` | Concrete embedded class deriving from Embed- |
-| `Class Group Root (ISCLASSGROUP)` | Class group root (ISCLASSGROUP) -- subclasses point back to this class |
-| `pyKeyDefList — Single Property Key` | Class business key made of one property |
-| `pyKeyDefList — Composite Key` | Class business key made of multiple properties |
+| `obj-class-stub` | Minimal class definition -- smallest valid create payload |
+| `obj-class-work-subclass` | Work class with class group assignment (HASCLASSGROUP) |
+| `obj-class-data` | Data class (NOCLASSGROUP) |
+| `obj-class-abstract` | Abstract class without a trailing dash |
+| `obj-class-embed` | Concrete embedded class deriving from Embed- |
+| `obj-class-group-root` | Class group root (ISCLASSGROUP) -- subclasses point back to this class |
+| `obj-class-key-single-property` | Class business key made of one property |
+| `obj-class-key-composite` | Class business key made of multiple properties |
 
 ## Authoring notes
 
@@ -79,16 +79,16 @@ workaround once this state is reached for a given class.
 
 **Known platform limitation, tracked for a separate future fix (not
 actionable from `infinity-skills`/`infinity-rules-mcp` — this is Pega
-platform validation logic, not something this MCP server or schema
-controls):** the validation should be relaxed to allow a class key change
+platform validation logic, not something this MCP server controls):** the
+validation should be relaxed to allow a class key change
 even when a physical table already exists, provided (1) the production
 level is `Dev`, and (2) the values in the column that would become the new
 key are unique across all existing rows in the table. Until that change
 ships, the only mitigation is discipline: **always set the real key on
 `pyKeyDefList` in the very first `create-rule` call for a new Data Type
 class**, before any Data Page, simulated source, or Data Table conversion
-touches it. See `pyKeyDefList — Single Property Key` and
-`pyKeyDefList — Composite Key` for the payload shape.
+touches it. See `obj-class-key-single-property` and
+`obj-class-key-composite` for the payload shape.
 
 ### Empty placeholder arrays in full API responses
 

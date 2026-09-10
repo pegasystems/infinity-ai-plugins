@@ -9,7 +9,11 @@
     "pyClassName",
     "pyServiceName",
     "pyExpectedResponseEntity",
-    "pyResponseFields"
+    "pyResponseFields",
+    "pyPromptName",
+    "pyGenAIDef",
+    "pyGenAIConfig",
+    "pyDescription"
   ],
   "properties": {
     "pxObjClass": {
@@ -140,6 +144,7 @@
     "GenAIDef": {
       "type": "object",
       "description": "Prompt and use-case definition (Embed-GenAI-Definition). Present on v2 rules (Pega 24.2+). Contains prompt FieldValue references, use-case type, and the attachment field reference.",
+      "required": ["pxObjClass", "pyUserPrompt", "pySystemPrompt"],
       "properties": {
         "pxObjClass": {
           "type": "string",
@@ -154,12 +159,12 @@
         },
         "pyUserPrompt": {
           "type": "string",
-          "description": "User-prompt FieldValue name, mirroring pyPromptName (e.g., 'pyGenerativeAIPromptTemplate').",
+          "description": "User-prompt FieldValue name, mirroring pyPromptName (e.g., 'pyGenerativeAIPromptTemplate'). The value must exist as a Rule-Obj-FieldValue with pyFieldName='pyGenerativeAIPrompt' in the ruleset stack — Pega validates this on save. Call list-rules with ruleType='Rule-Obj-FieldValue', ruleName='pyGenerativeAIPrompt', className=<connector's pyClassName> to confirm the named entry exists before setting this field.",
           "x-pega-autoFill": "pyGenerativeAIPromptTemplate"
         },
         "pySystemPrompt": {
           "type": "string",
-          "description": "System-prompt FieldValue name, mirroring pySystemPromptName (e.g., 'pzDefaultSystemPrompt').",
+          "description": "System-prompt FieldValue name, mirroring pySystemPromptName (e.g., 'pzDefaultSystemPrompt'). The value must exist as a Rule-Obj-FieldValue with pyFieldName='pyGenerativeAISystemPrompt' in the ruleset stack — Pega validates this on save. Call list-rules with ruleType='Rule-Obj-FieldValue', ruleName='pyGenerativeAISystemPrompt', className=<connector's pyClassName> to confirm the named entry exists before setting this field. When pyCustomizeSystemPrompt is 'true', always ask the user what value to use — do not default to 'pzDefaultSystemPrompt' or any other value.",
           "x-pega-autoFill": "pzDefaultSystemPrompt"
         },
         "pyImageAttachRefValue": {
@@ -197,6 +202,7 @@
     "GenAIModel": {
       "type": "object",
       "description": "Selected GenAI model and runtime parameters (Embed-GenAI-Model).",
+      "required": ["pxObjClass", "pyModelId", "pyModelName", "pyProvider"],
       "properties": {
         "pxObjClass": {
           "type": "string",
@@ -267,6 +273,7 @@
     "GenAIModelParameter": {
       "type": "object",
       "description": "A model runtime parameter override (Embed-GenAI-Model-Parameters). Temperature is the most common entry.",
+      "required": ["pxObjClass", "pyName", "pyType", "pyValue"],
       "properties": {
         "pxObjClass": {
           "type": "string",
@@ -307,7 +314,7 @@
     "ResponseField": {
       "type": "object",
       "description": "A response field mapping (Embed-Fields) — maps AI output to a clipboard property.",
-      "required": ["pyFieldName"],
+      "required": ["pxObjClass", "pyFieldName"],
       "properties": {
         "pxObjClass": {
           "type": "string",
@@ -317,7 +324,7 @@
         },
         "pyFieldName": {
           "type": "string",
-          "description": "Dot-prefixed clipboard property path where the AI output is written (e.g., '.pyResponseData', '.pyJsonData', '.pyMessage')."
+          "description": "Dot-prefixed clipboard property path where the AI output is written (e.g., '.pyResponseData', '.pyJsonData', '.pyMessage'). Each name (without the dot) must exist as a Rule-Obj-Property on the connector's applies-to class — Pega validates this on save. Call list-rules with ruleType='Rule-Obj-Property' for each entry and create any missing properties before creating the connector."
         }
       }
     }

@@ -1,6 +1,6 @@
 ---
 name: pega-assistant
-description: Use when working with Pega Infinity through the bundled Pega Infinity Authoring opencode plugin. Start with the MCP server, load runtime skills first, confirm application context early, and use ChangeRequest-based authoring flows for write operations.
+description: Use when working with Pega Infinity through the bundled opencode plugin. Start with the MCP server, load runtime skills first, confirm application context early, and use ChangeRequest-based authoring flows for write operations.
 ---
 
 # Pega Assistant

@@ -1,5 +1,5 @@
 ---
-name: Data Class Metadata
+name: classmetadata-data-class
 description: Data-object metadata with pyListDataPage / pyLookUpDataPage / pySavableDataPage bindings, embedded Rule-Declare-Pages snapshots, and pyDataTypeLocalActions.
 ---
 

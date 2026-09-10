@@ -1,6 +1,6 @@
 ---
 name: rules-rule-ruleset-version
-description: Schema and authoring guide for Pega ruleset version records (Rule-RuleSet-Version), including version identity, dependency declarations, and branch-version constraints.
+description: Authoring guide for Pega ruleset version records (Rule-RuleSet-Version), including version identity, dependency declarations, and branch-version constraints.
 ---
 
 **Prerequisite:** Load `methodology-rule-authoring` first.
@@ -25,7 +25,3 @@ description: Schema and authoring guide for Pega ruleset version records (Rule-R
 
 - Populate `pyRequiresRuleSetVersion` with `{RuleSetName}:{Version}` strings when prerequisites are required.
 - Let the server mirror those values into `pyRequiresRuleSetVersionPageList`.
-
-### Schema
-
-Load `rules-rule-ruleset-version/schema/rule-ruleset-version` before creating or updating this rule type.

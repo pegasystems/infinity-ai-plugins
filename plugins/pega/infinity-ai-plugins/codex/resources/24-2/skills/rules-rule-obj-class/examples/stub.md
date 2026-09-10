@@ -1,5 +1,5 @@
 ---
-name: Stub Class
+name: obj-class-stub
 description: Minimal class definition — smallest valid create payload.
 ---
 

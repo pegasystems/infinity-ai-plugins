@@ -1,5 +1,5 @@
 ---
-name: Primary Fields reference
+name: classmetadata-primary-fields
 description: "What pyPrimaryFields is — design-time metadata that drives Case Designer, default views, and agent reliability. What it is NOT (not keys, not required, not enforced)."
 ---
 # Primary Fields

@@ -1,6 +1,6 @@
 ---
 name: rules-rule-corrtype
-description: Schema and authoring guide for Pega Correspondence Type rules (Rule-CorrType), including delivery channels, address classes, and correspondence classes
+description: Authoring guide for Pega Correspondence Type rules (Rule-CorrType), including delivery channels, address classes, and correspondence classes
 ---
 
 **Prerequisite:** Load `methodology-rule-authoring` first

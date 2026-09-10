@@ -1,5 +1,5 @@
 ---
-name: Delete Action
+name: classmetadata-local-action-delete
 description: The OOTB Delete action — removes the selected data record after confirmation.
 ---
 

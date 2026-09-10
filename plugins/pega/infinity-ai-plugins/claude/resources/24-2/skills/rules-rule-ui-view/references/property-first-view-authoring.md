@@ -53,8 +53,8 @@ introduces new fields:
    list-rules(ruleType="Rule-Obj-Property", className="<target-class>", ruleName="<PropertyName>")
    ```
    If the result set is empty the property does not exist.
-3. Create every missing property using `rules-rule-obj-property` (schema +
-   examples) before proceeding. Do not batch property creation with the view
+3. Create every missing property using `rules-rule-obj-property` (authoring
+    guidance and examples) before proceeding. Do not batch property creation with the view
    create — each property must succeed independently first.
 4. Re-read the view rule and append field entries for all requested properties.
 

@@ -1,5 +1,5 @@
 ---
-name: Add Action
+name: classmetadata-local-action-add
 description: The OOTB Add action — opens the data record in create form to add a new instance.
 ---
 

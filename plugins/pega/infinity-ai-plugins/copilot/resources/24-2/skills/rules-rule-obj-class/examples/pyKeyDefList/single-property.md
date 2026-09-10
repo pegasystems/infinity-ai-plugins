@@ -1,5 +1,5 @@
 ---
-name: pyKeyDefList — Single Property Key
+name: obj-class-key-single-property
 description: pyKeyDefList shape for a class business key made of one property.
 ---
 

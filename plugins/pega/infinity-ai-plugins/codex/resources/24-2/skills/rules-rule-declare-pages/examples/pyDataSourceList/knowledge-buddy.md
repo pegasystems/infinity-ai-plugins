@@ -1,5 +1,5 @@
 ---
-name: pyDataSourceList entry — KnowledgeBuddy
+name: declare-pages-source-knowledge-buddy
 description: Minimum-viable Knowledge Buddy source entry. Queries a Knowledge Buddy for AI-powered responses. Required field pyKBName. Optional pyKBQuery, pyKBQueryJSON, pyKBResponse. Server auto-sets pyLoadActivity to pxCallKnowledgeBuddy.
 ---
 

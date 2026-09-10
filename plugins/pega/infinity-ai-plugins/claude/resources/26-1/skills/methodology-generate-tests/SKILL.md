@@ -36,9 +36,7 @@ Given a target behavior, generate high-value tests that cover:
 | `methodology-change-request-workflow` | Mandatory safe authoring lifecycle |
 | `methodology-rule-authoring` | Create and update rule calls when workflow fallback is needed |
 | `rules-rule-test-unit-case` | PegaUnit rule authoring guidance |
-| `rules-rule-test-application-case` | Application Test rule guidance for end-to-end scenarios |
-| `rules-rule-test-application-businessaction` | Business Action rule guidance when app tests require actions |
-| `methodology-application-tests` | Deep lifecycle extraction and scenario generation for broad app-level asks |
+| `methodology-application-tests` | Handles case-level or end-to-end application-test orchestration |
 
 ## Inputs Needed
 
@@ -61,7 +59,7 @@ Given a target behavior, generate high-value tests that cover:
 Decision guide:
 
 - Rule-level logic validation -> prefer `Rule-Test-Unit-Case`
-- End-to-end case lifecycle validation -> use Application Test + Business Actions
+- Case type or end-to-end/application test intent → load `methodology-application-tests` and hand off (`Rule-Test-Application-Case`, `Rule-Test-Application-BusinessAction`)
 
 ### Phase 2: Analyze behavior before authoring
 

@@ -11,7 +11,7 @@ Continue from Shared Steps in `rules-rule-ui-view/references/data-field-decision
 ## Step B4 — Create the Data Page (if missing)
 
 The data page provides the lookup source for the DataReference picker.
-Load `rules-rule-declare-pages` for schema guidance.
+Load `rules-rule-declare-pages` for Data Page authoring guidance.
 
 ```
 create-rule(ruleType="Rule-Declare-Pages", content={...}, changeRequestID="{crKey}")

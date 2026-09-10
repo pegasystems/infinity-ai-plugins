@@ -1,6 +1,6 @@
 ---
 name: rules-rule-edit-validate
-description: Schema and authoring guide for Pega edit validate rules (Rule-Edit-Validate), including Java validation code, error messaging, and property-level validation patterns
+description: Authoring guide for Pega edit validate rules (Rule-Edit-Validate), including Java validation code, error messaging, and property-level validation patterns
 ---
 
 **Prerequisite:** Load `methodology-rule-authoring` first

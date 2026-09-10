@@ -1,5 +1,5 @@
 ---
-name: Optional BOOLEAN IN parameter
+name: rest-param-boolean-in
 description: REST Connector pyParameters entry — optional BOOLEAN IN parameter used as a flag to control connector behavior.
 ---
 

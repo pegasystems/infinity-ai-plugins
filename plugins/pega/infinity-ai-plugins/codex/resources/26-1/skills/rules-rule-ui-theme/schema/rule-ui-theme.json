@@ -2,42 +2,26 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "rule-ui-theme.json",
   "title": "Rule-UI-Theme",
-  "description": "JSON schema for the Rule-UI-Theme class definition (Rule-Obj-Class). Only authored and identity fields are included; system-managed runtime and provenance fields are intentionally omitted.",
+  "description": "JSON schema for a Pega Theme rule instance (Rule-UI-Theme). A theme defines the Constellation/Cosmos design-token set (base tokens and per-component overrides) consumed at runtime. Only authored and identity fields are included; system-managed runtime and provenance fields are intentionally omitted. This describes a named theme instance (e.g. 'pzAuriga'), not the RULE-OBJ-CLASS RULE-UI-THEME class-definition record (a platform-owned artifact that application teams do not author).",
   "type": "object",
   "required": [
     "pxObjClass",
     "pyClassName",
     "pyRuleName",
     "pyLabel",
-    "pyDescription",
-    "pyDerivesFrom",
-    "pyClassType",
-    "pyUsage",
-    "pyClassGroup",
-    "pyClassGroupIndicator",
-    "pyClassInheritance",
-    "pyPatternInheritance",
-    "pyRuleSet",
-    "pyRuleAvailable",
-    "pyPreventSubClassing",
-    "pyCreateDedicatedTable",
-    "pyExcludeFromFTIndex",
-    "pyEncryptBLOB",
-    "pyFormType",
-    "pyDisplayMode",
-    "pyBaseRule"
+    "pyDefinition",
+    "pyRuleAvailable"
   ],
   "properties": {
     "pxObjClass": {
       "type": "string",
-      "const": "Rule-Obj-Class",
-      "description": "Rule type class — always 'Rule-Obj-Class'.",
-      "x-pega-autoFill": "Rule-Obj-Class"
-    },
-    "pyClassName": {
-      "type": "string",
       "const": "Rule-UI-Theme",
-      "description": "The fully qualified class name being defined."
+      "description": "Rule type — always 'Rule-UI-Theme'.",
+      "x-pega-autoFill": "Rule-UI-Theme"
+    },
+    "pyRuleName": {
+      "type": "string",
+      "description": "Internal name of the theme instance, e.g. 'pzAuriga'. Also used (upper-cased) as pxInsName and as the token in the instance key: 'RULE-UI-THEME <PYRULENAME> #<timestamp>'."
     },
     "pyRuleName": {
       "type": "string",
@@ -46,58 +30,24 @@
     },
     "pyLabel": {
       "type": "string",
-      "const": "Theme",
-      "description": "Display label shown in Dev Studio class browser."
+      "description": "Human-readable display label shown in App Studio's theme picker, e.g. 'Auriga (2026)'."
     },
     "pyDescription": {
       "type": "string",
-      "const": "View Definition Class",
-      "description": "Human-readable description of the class purpose."
+      "description": "Developer-facing description of the theme's purpose or brand."
     },
-    "pyDerivesFrom": {
-      "type": "string",
-      "const": "Rule-UI-",
-      "description": "Parent class."
-    },
-    "pyClassType": {
-      "type": "string",
-      "const": "Concrete",
-      "description": "Class type."
-    },
-    "pyClassGroup": {
-      "type": "string",
-      "const": "Rule-UI-Theme",
-      "description": "Class group value returned by the live theme class record."
-    },
-    "pyClassGroupIndicator": {
-      "type": "string",
-      "const": "NOCLASSGROUP",
-      "description": "Class group indicator returned by the live theme class record."
-    },
-    "pyClassInheritance": {
+    "pyIsOTBTheme": {
       "type": "string",
       "const": "true",
-      "description": "Class-based inheritance flag."
+      "description": "Present and 'true' only on OOTB-shipped themes. Omit for app-authored themes; do not set this on a custom theme."
     },
-    "pyPatternInheritance": {
+    "pyDefinition": {
       "type": "string",
-      "const": "true",
-      "description": "Pattern inheritance flag."
-    },
-    "pyUsage": {
-      "type": "string",
-      "const": "View Definition Class",
-      "description": "Usage note for the class definition."
-    },
-    "pyInitialVersion": {
-      "type": "string",
-      "const": "01-01-01",
-      "x-pega-autoDerived": true,
-      "description": "Initial ruleset version."
+      "description": "The most important field on this rule. A JSON-encoded object with two confirmed top-level sections: 'base' (global tokens — colors, palette, typography, spacing, hit-area, shadow, z-index, breakpoints, etc.) and 'components' (per-component overrides, e.g. button, card, table, app-shell, form-control). Two value shapes are confirmed: a flat literal shape (raw values) and a richer shape where every leaf is {$type: 'literal'|'inherited', $value: ...} — 'inherited' means an alias to another dot-path token. Always fetch the current value with get-rule(detail=\"full\") before update, detect which shape is present, and merge changes into it in that same shape — never replace it with a partial or empty value, never convert between shapes, and never invent sub-keys beyond those confirmed against a live instance. See references/theme-definition-token-inventory.md for the confirmed key list."
     },
     "pyRuleSet": {
       "type": "string",
-      "description": "Ruleset for the current instance. The OOTB source is typically Pega-UIEngine; a branch copy should resolve in the active branch ruleset."
+      "description": "Ruleset for the current instance. OOTB themes resolve in Pega-UIEngine; a new or branched theme should resolve in the active application/branch ruleset."
     },
     "pyRuleSetName": {
       "type": "string",
@@ -109,72 +59,10 @@
     },
     "pyRuleAvailable": {
       "type": "string",
-      "const": "Yes",
-      "description": "Availability status returned by the live theme class record.",
+      "enum": ["Yes", "No", "Final", "Withdrawn", "Blocked"],
+      "description": "Availability status. Observed as 'Final' on a shipped OOTB theme.",
       "x-pega-autoFill": "Yes"
-    },
-    "pyAllowLocking": {
-      "type": "string",
-      "const": "false",
-      "description": "Locking flag for the class definition."
-    },
-    "pyAppletHarness": {
-      "type": "string",
-      "const": "RuleForm",
-      "description": "Harness used by the class form."
-    },
-    "pyAutogeneratedKey": {
-      "type": "string",
-      "const": "false",
-      "description": "Autogenerated key flag for the class definition."
-    },
-    "pyBaseRule": {
-      "type": "string",
-      "const": "false",
-      "description": "Base-rule flag for the class definition."
-    },
-    "pyCreateDedicatedTable": {
-      "type": "string",
-      "const": "true",
-      "description": "Dedicated-table flag for the class definition."
-    },
-    "pyPreventSubClassing": {
-      "type": "string",
-      "const": "false",
-      "description": "Subclass-prevention flag for the class definition."
-    },
-    "pyExcludeFromFTIndex": {
-      "type": "string",
-      "const": "false",
-      "description": "Full-text-index exclusion flag for the class definition."
-    },
-    "pyEncryptBLOB": {
-      "type": "string",
-      "const": "false",
-      "description": "BLOB encryption flag for the class definition."
-    },
-    "pyOrgDivision": {
-      "type": "string",
-      "description": "Organization division context for the class rule."
-    },
-    "pyFormType": {
-      "type": "string",
-      "const": "Harness",
-      "description": "Form type returned by the live theme class."
-    },
-    "pyDisplayMode": {
-      "type": "string",
-      "const": "clone",
-      "description": "Display mode for the class form."
-    },
-    "pyDecisioningBaseClassName": {
-      "type": "string",
-      "description": "Decisioning base class name when the platform populates it for this class."
-    },
-    "pyMTInstanceOverrideAndVisibility": {
-      "type": "string",
-      "const": "OVERRIDE_DISABLED",
-      "description": "Instance override and visibility setting for the class definition."
     }
   }
 }
+

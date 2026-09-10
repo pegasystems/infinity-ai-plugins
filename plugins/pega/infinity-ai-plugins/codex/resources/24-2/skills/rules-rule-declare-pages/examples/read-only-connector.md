@@ -1,5 +1,5 @@
 ---
-name: Read-Only Connector-Backed Data Page
+name: declare-pages-read-only-connector
 description: Complete read-only (non-savable) data page sourced from a REST connector. Uses pyPageType "normal" which derives pyType="normal", pyIsSavable="false", pyUseNewGenPageForEditableDataPage="false". Do NOT use pyPageType "loadonly" — it causes the page to appear editable in the UI.
 ---
 
@@ -19,7 +19,7 @@ description: Complete read-only (non-savable) data page sourced from a REST conn
     {
       "pxObjClass": "Embed-MethodParams",
       "pyParametersParamName": "ProductID",
-      "pyParametersParamType": "String",
+      "pyParametersParamType": "STRING",
       "pyParametersParamInOut": "IN",
       "pyParametersParamReq": "-1"
     }

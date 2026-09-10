@@ -1,12 +1,9 @@
 ---
 name: rules-rule-obj-casetype
-description: Schema and authoring guide for Pega case type rules (Rule-Obj-CaseType), including lifecycle stages, local actions, child cases, and process configuration
+description: Authoring guide for Pega case type rules (Rule-Obj-CaseType), including lifecycle stages, local actions, child cases, and process configuration
 ---
 
 **Prerequisite:** Load `methodology-rule-authoring` first
-
-For the full field-level contract (types, required flags, allowed
-values), see `schema/rule-obj-casetype.json`.
 
 ## Examples
 

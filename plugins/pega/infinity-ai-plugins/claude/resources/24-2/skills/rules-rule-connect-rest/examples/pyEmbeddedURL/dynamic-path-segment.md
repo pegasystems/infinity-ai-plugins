@@ -1,5 +1,5 @@
 ---
-name: Dynamic {param} URL path segment
+name: rest-url-dynamic-path-segment
 description: REST Connector pyEmbeddedURL with a runtime placeholder path segment -- {param} via CONSTANT, valued by a matching pyParameters entry at the rule root.
 ---
 

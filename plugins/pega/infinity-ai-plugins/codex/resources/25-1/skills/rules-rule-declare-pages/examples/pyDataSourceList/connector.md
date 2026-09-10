@@ -1,5 +1,5 @@
 ---
-name: pyDataSourceList entry — Connector
+name: declare-pages-source-connector
 description: Minimum-viable connector source entry. Required fields pyConnectorName, pyConnectorClassName, pyConnectorList; typically accompanied by request/response data transforms. The bound connector's py{METHOD}ResponseDataList[*].pyMapToKey must use '.pyResponseData' with pyMapTo='Clipboard' — this maps the response body onto the connector's step page. The DP framework then passes this step page as the DataSource PAGE parameter to the response DT. pyResDataTransform must be a clipboard-format wrapper DT, not a JSON-format DT directly.
 ---
 

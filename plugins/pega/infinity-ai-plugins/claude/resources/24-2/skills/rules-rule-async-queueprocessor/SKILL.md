@@ -1,6 +1,6 @@
 ---
 name: rules-rule-async-queueprocessor
-description: Schema and authoring guide for Pega Queue Processor rules (Rule-Async-QueueProcessor), including creation fields, rule form configuration, and examples
+description: Authoring guide for Pega Queue Processor rules (Rule-Async-QueueProcessor), including creation fields, rule form configuration, and examples
 ---
 
 **Prerequisite:** Load `methodology-rule-authoring` first
@@ -56,7 +56,7 @@ The builder unconditionally auto-fills `pyLongRunningInterruptThreshold` to
 `900000` (15 minutes, milliseconds). The server validates this field regardless
 of `pyIsAlertThresholdManuallyEnabled`. The UI variant
 (`pyLongRunningInterruptThresholdUI`) is server-computed and cannot be set
-via API — it is not included in the schema.
+via API.
 
 ### Manual alert thresholds are conditional
 

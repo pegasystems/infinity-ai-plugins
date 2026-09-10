@@ -1,5 +1,5 @@
 ---
-name: Multi-Source Data Page (When-Routed with Always Fallback)
+name: declare-pages-multi-source-when-routed
 description: Data page with 3 conditional sources — two DataTransform sources gated by When rules and one Connector fallback using "Always". Demonstrates the When-routed multi-source pattern with parameter passing to When rules.
 ---
 
@@ -14,14 +14,14 @@ description: Data page with 3 conditional sources — two DataTransform sources 
   "pyParameters": [
     {
       "pyParametersParamName": "fileID",
-      "pyParametersParamType": "String",
+      "pyParametersParamType": "STRING",
       "pyParametersParamInOut": "IN",
       "pyParametersParamReq": "-1",
       "pyParametersParamDesc": "The ID of the file to delete"
     },
     {
       "pyParametersParamName": "permanent",
-      "pyParametersParamType": "Boolean",
+      "pyParametersParamType": "BOOLEAN",
       "pyParametersParamInOut": "IN",
       "pyParametersParamReq": "0",
       "pyParametersParamDesc": "Whether to permanently delete"

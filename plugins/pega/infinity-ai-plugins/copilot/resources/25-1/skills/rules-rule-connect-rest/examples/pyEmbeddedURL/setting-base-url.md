@@ -1,5 +1,5 @@
 ---
-name: SETTING base URL via Application Setting
+name: rest-url-setting-base-url
 description: REST Connector pyEmbeddedURL with SETTING-based URL -- pyBaseURLSetting reference, pyNote for documentation, no pyBaseURL/pyEndpointURL.
 ---
 

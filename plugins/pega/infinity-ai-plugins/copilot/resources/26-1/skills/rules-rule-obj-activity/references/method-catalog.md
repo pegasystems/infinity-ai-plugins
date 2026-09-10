@@ -1,5 +1,5 @@
 ---
-name: Method Catalog
+name: activity-method-catalog
 description: Load when choosing which method to use in a step. Lists all 108 valid pyStepsActivityName values with brief usage notes and constraints.
 ---
 

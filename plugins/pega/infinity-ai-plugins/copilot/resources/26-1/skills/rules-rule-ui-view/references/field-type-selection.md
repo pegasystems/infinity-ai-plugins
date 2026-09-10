@@ -32,7 +32,7 @@ extra pxContextMetadata wiring based on the Pega property type. Skill names are 
 | PageList (Embedded, SimpleTable delegation) | `reference` | `reference` | `rules-rule-ui-view/examples/pyContent/embedded-data-pagelist` | `rules-rule-ui-view/examples/pxViewMetadata/embedded-data-pagelist` | `$views` |
 | PageList (Embedded table, Infinity 26+ only) | `EmbeddedDataMulti` | `EmbeddedDataMulti` | `rules-rule-ui-view/examples/pyContent/embedded-data-multi` | `rules-rule-ui-view/examples/pxViewMetadata/embedded-data-multi` | `$classesmetadata`, `$pagelists` |
 
-**How to use:** Given a property's Pega type (from the property rule or schema), find
+**How to use:** Given a property's Pega type from the property rule, find
 the matching row. Load both the pyContent and pxViewMetadata files for that type,
 adapt the field/property names, and wire any listed pxContextMetadata sections. For a
 full end-to-end append payload, load the matching `rules-rule-ui-view/examples/append/*`

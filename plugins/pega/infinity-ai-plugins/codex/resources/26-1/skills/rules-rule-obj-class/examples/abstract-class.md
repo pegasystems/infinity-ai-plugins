@@ -1,5 +1,5 @@
 ---
-name: Abstract Class
+name: obj-class-abstract
 description: Abstract class without a trailing dash -- parent for a family of API or utility classes.
 ---
 

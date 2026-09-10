@@ -1,12 +1,12 @@
 ---
-name: pyParameters entry — Boolean
-description: Boolean-typed data page parameter. pyParametersParamType value is the literal string "Boolean" (Title Case), matching the Infinity Studio "Data type" dropdown.
+name: declare-pages-param-boolean
+description: Boolean-typed data page parameter. pyParametersParamType value is the literal string "BOOLEAN", matching the Infinity Studio "Data type" dropdown.
 ---
 
 ```json
 {
   "pyParametersParamName": "includeDeprecated",
-  "pyParametersParamType": "Boolean",
+  "pyParametersParamType": "BOOLEAN",
   "pyParametersParamInOut": "IN",
   "pyParametersParamReq": "0",
   "pyParametersParamDefaultValue": "false",

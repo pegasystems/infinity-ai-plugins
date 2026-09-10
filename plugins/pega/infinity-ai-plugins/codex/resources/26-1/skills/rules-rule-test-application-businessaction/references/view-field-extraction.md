@@ -5,7 +5,6 @@ description: Load when extracting interactive fields from a view rule for Busine
 
 # View Field Extraction
 
-Extracts interactive fields from a view rule's `get-rule detail="full"` response.
 Produces a field list used by Steps 3–5 of the Business Action procedure.
 
 For full `pxViewMetadata` structure and annotation reference, load `rules-rule-ui-view`
@@ -33,9 +32,9 @@ be treated as interactive — even when the view does not mark them as `readOnly
 
 ---
 
-## Field source selection
+## Extracting Data Page `pyViewContent`
 
-The view rule has two representations of its fields. Use whichever is available:
+The Business Action skill selects the source and calls `D_pzGetViewDetails`. Use its usable `pyViewContent` here. If that skill supplies a fallback `get-rule detail="full"` response because the Data Page was unavailable or blank, skip this section and use the `pxViewMetadata`/`pyContent` sections below. Do not merge the two responses.
 
 | Source | When to use | Field location |
 |--------|-------------|----------------|
@@ -86,7 +85,7 @@ the mapping, input parameterization, and Playwright behavior.
 | `ObjectReference` | field reference, label, mode, value/selection key, display type, data source | Skip display-only `SemanticLink` values like any read-only field. |
 | `UserReference` | field reference, label, value, display type, data source | Treat as an interactive reference picker when not read-only. |
 | `reference` | context field, rule class, rule name, template, label | Fetch recursively when it points to an underlying view or layout section. |
-| `EmbeddedDataMulti` | page-list field, target class, display/edit modes, edit type, add/edit view or action, columns or primary-fields view | Resolve the row editor before mapping fields. For `editType: view`, capture `addEditView`. For `editType: action`, capture `addEditAction`/`editAction` and fetch that Flow Action to read `pyViewReference`. Columns/primary-fields describe existing-row table display, not the full row schema. |
+| `EmbeddedDataMulti` | page-list field, target class, display/edit modes, edit type, add/edit view or action, columns or primary-fields view | Resolve the row editor before mapping fields. For `editType: view`, capture `addEditView`. For `editType: action`, capture `addEditAction`/`editAction` and fetch that Flow Action to read `pyViewReference`. Columns/primary-fields describe existing-row table display, not the complete row structure. |
 
 For every reference-like field, preserve the exact metadata found in the view:
 do not infer keys, labels, display style, or nested fields.

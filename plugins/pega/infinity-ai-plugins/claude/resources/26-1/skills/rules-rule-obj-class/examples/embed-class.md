@@ -1,5 +1,5 @@
 ---
-name: Embed Class
+name: obj-class-embed
 description: Concrete embedded class deriving from Embed- -- used for structured page lists and page groups.
 ---
 

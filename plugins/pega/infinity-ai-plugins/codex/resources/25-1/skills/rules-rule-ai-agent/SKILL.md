@@ -1,6 +1,6 @@
 ---
 name: rules-rule-ai-agent
-description: Schema and authoring guide for Pega AI Agent rules (Rule-AI-Agent), including GenAI configuration, system prompts, tools, data sources, and agent examples. Requires Pega Infinity 25+ (08-25-01+).
+description: Authoring guide for Pega AI Agent rules (Rule-AI-Agent), including GenAI configuration, system prompts, tools, data sources, and agent examples. Requires Pega Infinity 25+ (08-25-01+).
 ---
 
 **Prerequisite:** Load `methodology-rule-authoring` first
@@ -110,7 +110,7 @@ Row-shape guidance:
 - `pzCaseTypeTools` rows use display `pyCategory: "Case type"`. Follow the example shape and verify against sibling rules in your app when possible.
 - `pzAIDataSources` rows use Embed-DataPage shape with `pyCategory`, optional `pyApplyDataTransform`, optional `pyDPParams`, and optional `pzRuleParameters`. These rows do not use `pyIntentActionPage`.
 - `pzExternalAgents` rows use Rule-Connect-Agent shape.
-- `pzMCPClients` rows use Rule-Connect-MCP shape. The included example is schema-based because no non-empty live rows were available in the inspected environment.
+- `pzMCPClients` rows use Rule-Connect-MCP shape.
 - When a data source parameter is required (`pyParametersParamReq` non-zero), include the matching key in `pyDPParams`.
 
 ### Decision Guide: pzAIDataSources vs pzKnowledgeTools

@@ -1,5 +1,5 @@
 ---
-name: Static literal URL path segments
+name: rest-url-static-path-segments
 description: REST Connector pyEmbeddedURL with static path segments -- multiple CONSTANT entries forming a literal /v1/items path.
 ---
 

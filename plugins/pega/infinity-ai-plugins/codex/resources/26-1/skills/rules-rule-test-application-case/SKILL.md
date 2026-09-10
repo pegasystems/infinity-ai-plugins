@@ -63,8 +63,6 @@ Pass the identified test ruleset as `ruleSet` parameter when creating the rule.
 
 ### Step 3 — Build Test Case Rule
 
-Refer to schema at `schema/rule-test-application-case.json` for full field definitions.
-
 #### 3a. Set identity fields
 
 | Field | Value |

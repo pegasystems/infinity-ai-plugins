@@ -392,8 +392,8 @@
         },
         "pyParametersParamType": {
           "type": "string",
-          "enum": ["Boolean", "Decimal", "Integer", "String", ""],
-          "description": "Parameter data type. Use Title Case (Boolean/Decimal/Integer/String) -- see rules-rule-declare-pages SKILL.md 'Data Page parameters' for the full explanation and the all-caps failure mode."
+          "enum": ["STRING", "INTEGER", "Decimal", "BOOLEAN", ""],
+          "description": "Parameter data type. Valid stored values are all-caps 'STRING', 'INTEGER', and 'BOOLEAN', plus Title Case 'Decimal'. Do not use Title Case 'String', 'Integer', or 'Boolean'."
         },
         "pyParametersParamInOut": {
           "type": "string",
@@ -1113,7 +1113,7 @@
         },
         "pyDTName": {
           "type": "string",
-          "description": "Data transform for the save operation. Required (non-empty) for 'robotic_automation' and 'robotic_desktop_automation' save options — server-side rule-form validation rejects an empty value with 'Data transform name cannot be empty' (confirmed live). Optional for other save option types."
+          "description": "Data transform for the save operation. Required (non-empty) for 'robotic_automation' and 'robotic_desktop_automation' save options — server-side rule-form validation rejects an empty value with 'Data transform name cannot be empty'. Optional for other save option types."
         },
         "pyValidateRule": {
           "type": "string",
@@ -1222,7 +1222,7 @@
             "required": ["pySaveOptionType"]
           },
           "then": {
-            "x-pega-condition": "robotic_automation save option requires pyRACaseType and pyDTName (server-side rule-form validation rejects empty pyDTName: 'Data transform name cannot be empty' — confirmed live 2026-07-24)",
+            "x-pega-condition": "robotic_automation save option requires pyRACaseType and pyDTName (server-side rule-form validation rejects empty pyDTName: 'Data transform name cannot be empty' ",
             "required": ["pyRACaseType", "pyDTName"]
           }
         },

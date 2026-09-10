@@ -1206,7 +1206,8 @@
         "pyIgnoreSkinPDFExport": {
           "type": "string",
           "enum": ["true", "false", ""],
-          "description": "Ignore skin/theme on PDF export."
+          "description": "Ignore skin/theme on PDF export.",
+          "x-pega-autoFill": "true"
         },
         "pySplitPDFExport": {
           "type": "string",
@@ -1426,7 +1427,7 @@
           "const": "Embed-ReportUserInteractions",
           "x-pega-autoFill": "Embed-ReportUserInteractions"
         },
-        "pyDesignModeActualResults": { "type": "string", "enum": ["true", "false", ""] },
+        "pyDesignModeActualResults": { "type": "string", "enum": ["true", "false", ""], "x-pega-autoFill": "true" },
         "pyDisableDrillDown":        { "type": "string", "enum": ["true", "false", ""] },
         "pyDrillDownReportName":     { "type": "string", "description": "Default 'pyDefaultReport'." },
         "pyEnableAddFilters":        { "type": "string", "enum": ["true", "false", ""] },

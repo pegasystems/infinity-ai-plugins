@@ -1,5 +1,5 @@
 ---
-name: Data Page with Post-Load Activity
+name: declare-pages-post-load-activity
 description: Data page that runs a custom activity after the source loads — used for enrichment, cross-page joins, or derived field computation. Configured via pyPostActivity, pyPostActivityParams, and pyPassCurrentParamPageForPostActivity.
 ---
 
@@ -14,7 +14,7 @@ description: Data page that runs a custom activity after the source loads — us
   "pyParameters": [
     {
       "pyParametersParamName": "customerID",
-      "pyParametersParamType": "String",
+      "pyParametersParamType": "STRING",
       "pyParametersParamInOut": "IN",
       "pyParametersParamReq": "-1",
       "pyParametersParamDesc": "Customer ID"

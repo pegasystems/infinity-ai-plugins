@@ -1,6 +1,6 @@
 ---
 name: rules-rule-test-unit-case
-description: Schema and authoring guide for PegaUnit test cases (Rule-Test-Unit-Case), including assertion types, assertion nesting, setup/cleanup, and examples
+description: Authoring guide for PegaUnit test cases (Rule-Test-Unit-Case), including assertion types, assertion nesting, setup/cleanup, and examples
 ---
 
 **Prerequisite:** Load `methodology-rule-authoring` first
@@ -62,7 +62,7 @@ DecisionTree, Expressions, and When rules. ActivityStatus is exclusive to activi
 | `Report Definition Test (Complex Test with Setup/Cleanup)` | Report definition with List assertion, setup/cleanup activities, setup pages, RUT parameters, and pages-and-classes. Setup/cleanup patterns are RUT-type-agnostic. |
 | `Data Page Test (Single Object)` | Single-object data page with parameter, bare InsName format, `pyIsSinglePageImplementation` |
 | `Data Page Test (List)` | List data page with ResultCount and List assertions on `.pxResults` |
-| `Data Page Test (Connector-Backed List)` | Connector-backed live API list data page; use ResultCount-first assertions and avoid fragile nested list-item checks on live connector results. |
+| `unit-test-data-page-connector` | Connector-backed live API list data page; use ResultCount-first assertions and avoid fragile nested list-item checks on live connector results. |
 
 ### Assertion-level
 
@@ -131,7 +131,7 @@ omitted.
   uses Pega's internal format `yyyyMMddTHHmmss.SSS GMT`, NOT ISO 8601. Numeric and
   TrueFalse values must NOT use inner quotes. For **Decision** assertions: all
   `pyExpectedValue` values are bare strings without inner quotes (e.g., `"High"`, `"true"`,
-  `"100"`, `"Incomplete"`). See the schema description on `pyExpectedValue` for the full rule.
+  `"100"`, `"Incomplete"`). Follow the assertion-specific quoting rules above.
 - **`pyExpectedResults` is reused at two levels — do not confuse them.** The top-level
   `pyExpectedResults` array holds assertion groups (ActivityStatus, Property, Decision,
   etc.). Inside a Property assertion group, the same field name `pyExpectedResults` holds
@@ -140,9 +140,8 @@ omitted.
   `Property Assertion` or `Property Assertion on a Custom Page` for the two-level Property pattern.
 - **`pyPropertyMode` casing differs by assertion type.** Property assertions use Title Case
   (`Text`, `TrueFalse`, `Identifier`). Decision assertions use lowercase (`decimal`, `text`).
-- **`pyComparator` casing is irregular.** Use exact values from the schema enum (e.g.,
-  `IS Not Equals TO` has mixed caps). The schema includes `x-pega-hints` to correct
-  common casing mistakes.
+- **`pyComparator` casing is irregular.** Use the exact documented values (e.g.,
+  `IS Not Equals TO` has mixed caps). Do not normalize the casing.
 - **`Exists` comparator does not work inside List assertions.** When checking that a
   property is present and non-empty on list items (e.g., `.pxResults`), use
   `"pyComparator": "IS Not Equals TO"` with `"pyExpectedValue": "\"\""` instead of
@@ -177,8 +176,8 @@ omitted.
   `Decision Table Test with Parameter Inputs`. Property-backed decision tables
   (`Decision Assertion Test`) keep using friendly display labels -- the two
   patterns differ only in the input rows.
-- **Decision assertion `pyPropertyMode` enum is narrow.** The schema only
-  accepts `text`, `decimal`, `date` (lowercase) -- there is no `truefalse`,
+- **Decision assertion `pyPropertyMode` values are narrow.** Use only
+  `text`, `decimal`, or `date` (lowercase) -- there is no `truefalse`,
   `integer`, or `datetime` mode for Decision assertions, even when the
   decision table column itself is one of those types. For boolean parameter
   columns (`truefalse`), use `pyPropertyMode: "text"` with `pyExpectedValue`
@@ -213,7 +212,7 @@ omitted.
   list Data Page, plus a separate single-record lookup Data Page test
   asserting specific property values there, over nested list-item
   assertions on the connector-backed list Data Page. See
-  `Data Page Test (Connector-Backed List)`.
+  `unit-test-data-page-connector`.
 
 ## Test failure triage
 

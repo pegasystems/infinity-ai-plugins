@@ -1,5 +1,5 @@
 ---
-name: Savable Data Page with Multi-Option Save Plan
+name: declare-pages-savable-multi-option
 description: Savable data page with a conditional save plan chaining dbDelete, simplepatch, and simplesave routed by When rules. Demonstrates the multi-save-option pattern used when different caller actions need different persistence paths.
 ---
 
@@ -15,14 +15,14 @@ description: Savable data page with a conditional save plan chaining dbDelete, s
   "pyParameters": [
     {
       "pyParametersParamName": "ID",
-      "pyParametersParamType": "String",
+      "pyParametersParamType": "STRING",
       "pyParametersParamInOut": "IN",
       "pyParametersParamReq": "-1",
       "pyParametersParamDesc": "Employee identifier"
     },
     {
       "pyParametersParamName": "pyGUID",
-      "pyParametersParamType": "String",
+      "pyParametersParamType": "STRING",
       "pyParametersParamInOut": "IN",
       "pyParametersParamReq": "0",
       "pyParametersParamDesc": "Alternate storage key",

@@ -1,10 +1,10 @@
 # Pega Infinity Authoring for Devin CLI
 
-To set up Pega Infinity Authoring for Devin, manually configure the MCP server and install the skills. Devin uses the bundled MCP run time and skills in the `claude/` directory of this repository.
+Devin supports the Pega Infinity Authoring MCP server through manual MCP and skill setup. It reuses the bundled MCP runtime and skills from the `claude/` directory in this repository.
 
 ## Prerequisites
 
-- Install Java 17 or later and make it available as `java` in the environment where Devin runs the MCP server.
+- Java 17 or later must be installed and available as `java` in the environment where Devin runs the MCP server.
 - Clone this repository where Devin can access it.
 - Configure the target Pega Infinity environment URL and version.
 
@@ -59,11 +59,11 @@ Set `pega_infinity_version` to the directory name that matches the target enviro
 - Pega Infinity 26.1: `26-1`
 - Pega Infinity 27.1: `27-1`
 
-At runtime, the MCP reads the Pega connection settings from this file. Set `pega_base_url` to the Pega environment root URL only; do not include `/prweb` or another path segment. Use a different `pega_oauth_client_id` only when the Pega environment requires a custom client ID.
+The MCP runtime reads the Pega connection settings from this file. Set `pega_base_url` to the Pega environment root URL only; do not include `/prweb` or another path segment. Use a different `pega_oauth_client_id` only when the Pega environment requires a custom client ID.
 
 ## 3. Install the Devin skills
 
-Copy the shared Pega setup and assistant skills into a Devin skill discovery path. For a project, use `.devin/skills/`; to make the skills available globally, use `~/.config/devin/skills/` on macOS or Linux, or `%APPDATA%\devin\skills\` on Windows. If the `skills` directory does not already exist, create it.
+Copy the shared Pega setup and assistant skills into a Devin skill discovery path. For a project, use `.devin/skills/`; to make the skills available globally, use `~/.config/devin/skills/` on macOS or Linux, or `%APPDATA%\devin\skills\` on Windows. If `skills` directory does not exist already, please create a new directory.
 
 From the repository root, copy the following directories:
 
@@ -80,7 +80,7 @@ cp -r plugins/pega/infinity-ai-plugins/claude/claude-skills/pega-setup .devin/sk
 cp -r plugins/pega/infinity-ai-plugins/claude/claude-skills/pega-assistant .devin/skills/
 ```
 
-The MCP server exposes version-specific Pega authoring skills through its `list-skills` and `get-skill` tools. The copied Devin skills guide initial configuration and general Pega assistance.
+The MCP server also exposes version-specific Pega authoring skills through its `list-skills` and `get-skill` tools. The copied Devin skills guide initial configuration and general Pega assistance.
 
 ## 4. Verify the setup
 
@@ -89,10 +89,10 @@ Start a new Devin session after changing MCP metadata or skills. Confirm that th
 1. Use `list-skills` to confirm the bundled Pega skills are available.
 2. Use `list-available-applications` or `get-application` to confirm that Devin can connect to the configured Pega environment.
 
-If the server does not start, run `java -version` to confirm that Java 17 or later is available. Confirm that the JAR path exists and that `PEGA_SKILLS_PATH` points to the repository's `claude/resources/` directory.
+If the server does not start, run `java -version` to confirm that Java 17 or later is available. Also confirm that the JAR path exists and that `PEGA_SKILLS_PATH` points to the repository's `claude/resources/` directory.
 
 ## Updating
 
-Run `git pull` in your local clone, keep the MCP JAR and skill paths pointed to it, and start a new Devin session. Copy the two shared skill directories again if they changed.
+Run `git pull` in the cloned repository, keep the MCP JAR and skills paths pointed at that clone, and start a new Devin session. Recopy the two shared skill directories if they changed.
 
 For Devin MCP metadata locations and configuration details, see the [Devin MCP configuration documentation](https://docs.devin.ai/cli/extensibility/mcp/configuration.md). For Devin skill discovery paths, see the [Devin Skills documentation](https://docs.devin.ai/product-guides/skills.md).

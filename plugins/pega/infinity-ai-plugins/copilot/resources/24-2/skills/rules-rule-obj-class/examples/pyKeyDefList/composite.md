@@ -1,5 +1,5 @@
 ---
-name: pyKeyDefList — Composite Key
+name: obj-class-key-composite
 description: pyKeyDefList shape for a class business key made of multiple properties.
 ---
 
