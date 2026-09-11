@@ -13,7 +13,7 @@ from UI or flow logic.
 
 Each HTTP method (GET, POST, PUT, PATCH, DELETE) has its own set of request/response
 mapping arrays. All five method array sets must be present on the persisted rule.
-The schema autofills empty stubs for any method you omit, so populate only the
+The builder fills empty stubs for any method you omit, so populate only the
 methods you actually use.
 
 **Scope:** This skill targets REST connectors that use `pyEmbeddedURL` for URL
@@ -53,8 +53,8 @@ See `rest-request-response-mapping` for the full mapping reference.
 
 ### All five method array sets
 
-All five method array sets must be present on the persisted rule. The schema
-autofills empty stubs for any method you omit -- only populate methods you
+All five method array sets must be present on the persisted rule. The builder
+fills empty stubs for any method you omit -- only populate methods you
 actually use. Do NOT add headers, body mappings, or response mappings to a
 method you don't intend to use.
 
@@ -142,8 +142,8 @@ connector to `"Final"`, use `update-rule` after creation.
 
 Only meaningful on data list entries (`pyPOSTRequestDataList`,
 `pyGETResponseDataList`, etc.) -- never on headers, request parameters,
-response headers, or resource parameters. The schema autofills `"false"` on
-data list entries when missing.
+response headers, or resource parameters. The builder defaults data list entries
+to `"false"` when this field is missing.
 
 ### `pyIntegrationSystemId` (NOT `pyIntegrationSystem`)
 
@@ -159,13 +159,13 @@ Set `pyIntegrationSystemId` — a plain string — to the ID of an **existing** 
 
 | Skill | Description |
 |-------|-------------|
-| `Stub REST Connector` | Minimal GET connector -- smallest valid create payload with a static URL |
-| `GET Connector with Dynamic Path and Query Parameters` | GET connector with dynamic `{param}` path segment and query string parameter |
-| `POST Connector with SETTING URL` | POST connector with SETTING-based URL, request body from clipboard, Authorization header |
-| `Authenticated Connector with SETTING Auth Profile` | Authenticated connector with SETTING auth profile, CLIPBOARD path param, GET+POST methods |
+| `rest-stub` | Minimal GET connector -- smallest valid create payload with a static URL |
+| `rest-get-dynamic-path` | GET connector with dynamic `{param}` path segment and query string parameter |
+| `rest-post-setting-url` | POST connector with SETTING-based URL, request body from clipboard, Authorization header |
+| `rest-auth-setting-profile` | Authenticated connector with SETTING auth profile, CLIPBOARD path param, GET+POST methods |
 | `rest-endpoint-grouped-collection` | Collection connector (LIST + CREATE) for the endpoint-grouped manual CRUD pattern |
 | `rest-endpoint-grouped-instance` | Instance connector (LOOKUP + UPDATE + DELETE) for the endpoint-grouped manual CRUD pattern |
-| `CRUD Connector with Direct URL (Activity-Invoked)` | GET/POST/PUT/PATCH CRUD connector with direct base URL and conditional-update response header mapping |
+| `rest-crud-direct-url` | GET/POST/PUT/PATCH CRUD connector with direct base URL and conditional-update response header mapping |
 
 ### `pyEmbeddedURL` partial shapes
 
@@ -175,13 +175,21 @@ connector payload.
 
 | Skill | Description |
 |-------|-------------|
-| `Direct base URL (minimum pyEmbeddedURL shape)` | Minimum direct URL -- `pyBaseURL` only, no path or query parameters |
-| `SETTING base URL via Application Setting` | Application-setting-based URL -- `pyBaseURLSetting` reference with `pyNote` |
-| `Static literal URL path segments` | Multiple CONSTANT segments forming a literal path |
-| `Dynamic {param} URL path segment` | Runtime placeholder `{param}` segment paired with `pyParameters` |
-| `URL path segment from a clipboard property` | Path segment sourced from a clipboard property with `pyEncoding: "NONE"` |
-| `Query string parameters from PARAM and CLIPBOARD` | Multiple query parameters from PARAM and CLIPBOARD with `pyFirstItem`, `pyEmptyBehavior`, `pyDefaultValue` |
-| `Query string with PARAM and CONSTANT values` | Mixed PARAM + CONSTANT query parameters — runtime business input vs fixed protocol options |
+| `rest-url-direct-base-url` | Minimum direct URL -- `pyBaseURL` only, no path or query parameters |
+| `rest-url-setting-base-url` | Application-setting-based URL -- `pyBaseURLSetting` reference with `pyNote` |
+| `rest-url-static-path-segments` | Multiple CONSTANT segments forming a literal path |
+| `rest-url-dynamic-path-segment` | Runtime placeholder `{param}` segment paired with `pyParameters` |
+| `rest-url-clipboard-path-segment` | Path segment sourced from a clipboard property with `pyEncoding: "NONE"` |
+| `rest-url-query-string-parameters` | Multiple query parameters from PARAM and CLIPBOARD with `pyFirstItem`, `pyEmptyBehavior`, `pyDefaultValue` |
+| `rest-url-query-string-param-and-constant` | Mixed PARAM + CONSTANT query parameters — runtime business input vs fixed protocol options |
+
+### `pyParameters` entries
+
+| Skill | Description |
+|-------|-------------|
+| `rest-param-string-in` | Required STRING IN parameter matching a `{param}` PARAM placeholder |
+| `rest-param-boolean-in` | Optional BOOLEAN IN parameter used as a flag to control connector behavior |
+| `rest-param-integer-out` | Optional INTEGER OUT parameter returning a numeric value to the calling data page |
 
 ## Integration pipeline — mandatory execution order
 

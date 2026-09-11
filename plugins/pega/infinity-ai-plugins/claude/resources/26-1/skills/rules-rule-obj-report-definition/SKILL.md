@@ -1,6 +1,6 @@
 ---
 name: rules-rule-obj-report-definition
-description: Schema and authoring guide for Pega Report Definition rules (Rule-Obj-Report-Definition), including list reports, summary/aggregate reports, filters, joins, sub-reports, parameters, ranking/window functions, paging, and chart configuration
+description: Authoring guide for Pega Report Definition rules (Rule-Obj-Report-Definition), including list reports, summary/aggregate reports, filters, joins, sub-reports, parameters, ranking/window functions, paging, and chart configuration
 ---
 
 **Prerequisite:** Load `methodology-rule-authoring` first
@@ -57,7 +57,7 @@ description: Schema and authoring guide for Pega Report Definition rules (Rule-O
 | Summary/aggregate report | Groups rows and applies aggregate functions (COUNT, SUM, AVG, MIN, MAX, COUNTDISTINCT) | Set `pxIsSummary="true"` in `pyContent`, `pyReportMetaData`, and `pyUI.pzIsSummary`. Leave `pyListFields` empty. GroupBy is optional for scalar aggregates. |
 | Pagination | Controls page-based result retrieval | Mirror in both `pyContent.pyPaging` and `pyUI.pyUserInteractions.pyPagingParams`. Paging and `pyMaxRecords` are mutually exclusive — enabling paging ignores `pyMaxRecords`. |
 | Max records | Limits the number of result rows returned | Disable paging in BOTH layers first. Mirror `pyMaxRecords` in both `pyContent` and `pyUI` — omitting `pyUI` mirror resets value to `"500"`. Do not auto-populate `pyQueryTimeoutValue` or export fields unless explicitly requested. |
-| Filters | Restricts rows using conditions on properties | Each filter needs a unique `pyLogicLabel`. `pyFilterLogic` must reference all labels. Declare parameters in both top-level `pyParameters[]` and `pyContent.pyParameters[]`. |
+| Filters | Restricts rows using conditions on properties | Each filter needs a unique `pyLogicLabel`. Default `pyLogicLabel` to `F1` for the first filter, `F2` for the second, etc. Default `pyFilterLogic` to `"F1"` even when no filters are present. `pyFilterLogic` must reference all labels. Declare parameters in both top-level `pyParameters[]` and `pyContent.pyParameters[]`. |
 | Direct table joins (`pyJoinInfo`) | SQL JOIN to another class via inline ON condition | Mirror `pyJoinInfo[]` identically in `pyContent.pySource` and `pyUI.pySource`. Declare a `pyPagesAndClasses` entry for each join prefix. Reference LEFT OUTER joins from at least one field/filter to prevent silent removal on save. |
 | Sub-report joins (`pySubReportInfo`) | JOIN to another Report Definition | Do NOT add a `pyPagesAndClasses` entry for sub-report prefixes (auto-registered). Both `pyClassName` and `pySubClassName` are required. `pyUsageInfo` is mandatory. |
 | Associations (`pyAssociations`) | JOIN via a `Rule-Obj-Association` rule | Always author explicitly via DX API — do not rely on auto-population. Mirror in both `pyContent.pySource` and `pyUI.pySource`. Add `pyPagesAndClasses` entry with purpose name as page alias. |
@@ -89,6 +89,8 @@ a list report (`pyContent.pyFields.pyListFields[]` AND
   `pyRankField`, **and** the matching `pyUI.pyBody.pyReportRank` with
   `pyRankUIField`. Missing them →
   `The reference Primary.pyUI.pzIsSummary == true || .pyRankType == "" is not valid. Reason: FUAInstance-NullMyStepPage`.
+- **`pyUI.pyUserInteractions.pyDesignModeActualResults`** — always set to `"true"`. Controls whether the report viewer shows live data in design mode. Omitting it defaults to no live preview, which causes unexpected empty results when the report is opened in the viewer.
+- **`pyUI.pyIgnoreSkinPDFExport`** — always set to `"true"`. Prevents the application skin/theme from being applied during PDF export, ensuring clean output. Omitting it causes PDF exports to inherit skin styles which often produce garbled or unstyled documents.
 
 ### ValidationMap (read-only artifact)
 `pyContent.ValidationMap` is a server-managed base64-serialized HashMap. Do
@@ -104,9 +106,9 @@ populated, the `Param.*` reference in `pyUI.pyBody.pyUIFilters` cannot
 resolve and the filter is silently dropped on save.
 
 ### pyUI auto-fill
-The schema includes an `x-pega-autoFill` default for `pyUI` that provides
-the minimum stub (chart disabled, empty rank, empty fields/filters). If the
-agent omits `pyUI` entirely, the validator injects this stub automatically.
+The builder supplies a default `pyUI` minimum stub (chart disabled, empty rank,
+empty fields/filters). If the agent omits `pyUI` entirely, the validator injects
+this stub automatically.
 However, for list reports you MUST still populate `pyUI.pyBody.pyUIFields[]`
 and `pyUI.pyBody.pyUIFilters` explicitly (the auto-fill only provides empty
 arrays). For summary reports, set `pyUI.pzIsSummary` to `"true"` — the
@@ -121,7 +123,7 @@ structures are mirrored at multiple locations and must be kept consistent:
 |---|---|---|---|
 | `pyParameters` | top-level | `pyContent.pyParameters` | identical |
 | `pyPagesAndClasses` | top-level | `pyContent.pyPagesAndClasses` | identical |
-| `pySource` | `pyContent.pySource` | `pyUI.pySource` | UI mirror is reduced for most fields, but `pyJoinInfo[]`, `pySubReportInfo[]`, and `pyRowKeyInfo` must be mirrored identically — DX API rejects payloads that put joins only in `pyUI.pySource` with HTTP 400, and `pyRowKeyInfo` is rebuilt from `pyUI.pySource` on save (so omitting it there causes empty `pyRowKeys` and runtime `StringIndexOutOfBoundsException`). Both `pyContent.pySource` and `pyUI.pySource` have schema auto-fill for `pyRowKeyInfo` so agents do not need to provide it explicitly. |
+| `pySource` | `pyContent.pySource` | `pyUI.pySource` | UI mirror is reduced for most fields, but `pyJoinInfo[]`, `pySubReportInfo[]`, and `pyRowKeyInfo` must be mirrored identically — DX API rejects payloads that put joins only in `pyUI.pySource` with HTTP 400, and `pyRowKeyInfo` is rebuilt from `pyUI.pySource` on save (so omitting it there causes empty `pyRowKeys` and runtime `StringIndexOutOfBoundsException`). Both `pyContent.pySource` and `pyUI.pySource` receive `pyRowKeyInfo` automatically, so agents do not need to provide it explicitly. |
 | `pyFilters` | `pyContent.pyFilters` | `pyUI.pyBody.pyUIFilters` | UI uses `pyUI*` prefix |
 | `pyHavingFilters` | `pyContent.pyHavingFilters` | `pyUI.pyBody.pyUIHavingFilters` | UI uses `pyUI*` prefix |
 | `pyPaging` | `pyContent.pyPaging` | `pyUI.pyUserInteractions.pyPagingParams` | identical shape |
@@ -133,7 +135,8 @@ structures are mirrored at multiple locations and must be kept consistent:
 
 ### Filter logic
 - Every filter in `pyFilter[]` needs a unique `pyLogicLabel`, and `pyFilterLogic` must reference all of them.
-- Logic labels use two namespaces: alphabetic (`A`, `B`, `C`, ...) and the parallel numbered family (`F1`, `F2`, `F3`, ...). The two can coexist (e.g. `A AND F1`).
+- **Default `pyFilterLogic` to `"F1"`** even when `pyFilter[]` is empty — never leave it as `""`. This avoids a runtime edge case where Pega resets filter logic on the first save.
+- **Default the first filter's `pyLogicLabel` to `"F1"`**. Logic labels use two namespaces: alphabetic (`A`, `B`, `C`, ...) and the parallel numbered family (`F1`, `F2`, `F3`, ...). The two can coexist (e.g. `F1 AND F2`). Prefer the `F`-numbered family for new reports.
 - Whitespace and parentheses in `pyFilterLogic` are preserved verbatim — Pega does not re-render the expression.
 - Operators include `=`, `!=`, `StartsWith`, `NotStartsWith`, `Contains`, `NotContain`, `IsTrue`, `IsFalse`, `<`, `<=`, `>`, `>=`, `IS NULL`, `IS NOT NULL`. `IsTrue`/`IsFalse` need no `pyFilterValue`.
 - Function-as-operand: set `pyIsRightOperandAFunction="true"` and populate `pyRightOperandFunction` (Embed-UserFunction). Symmetric for left.
@@ -212,7 +215,6 @@ Each GroupBy and Aggregate column needs a corresponding UIField entry:
 ### DX-API write quirks for joins / index-joins (verified empirically)
 - **`pyJoinInfo[]` / `pyIndexInfo[]` must be mirrored identically in `pyContent.pySource` AND `pyUI.pySource` on input.** Sending the join only in `pyUI.pySource` returns HTTP 400 "malformed syntax". Same applies to `pySubReportInfo[]`.
 - **`LEFT OUTER` joins are stripped on save unless the join's `pyPrefix` is referenced by at least one `pyListFields`, `pyAggregate`, `pyGroupBy`, or `pyFilter` entry.** The save activity treats an unreferenced LEFT OUTER as "dead" and silently removes the row — no error returned. To make a LEFT OUTER join persist, project at least one column or add at least one filter that uses the join prefix. `INNER` and `RIGHT OUTER` follow a more permissive code path but reference any join you add as a matter of practice.
-- **Server-managed audit fields must be omitted from input.** `pzStatus`, `pxCreateOperator`, `pxCreateDateTime`, `pxCreateSystemID`, `pxCreateOpName` appear on read-back but cause HTTP 400 if sent on input. Only `pxObjClass` is required and accepted at the join row level (and even that is auto-filled by the schema).
 
 ### DX-API write quirks for sub-reports (verified empirically)
 - **Both `pyClassName` AND `pySubClassName` are required** (same value — the `pyAppliesToClass` of the referenced report). Sending only `pyClassName` returns `pySubClassName is required`.

@@ -1,5 +1,5 @@
 ---
-name: Stub REST Connector
+name: rest-stub
 description: REST Connector minimal GET with a static URL -- smallest valid create payload. Data-page-sourced; pyMapToKey uses .pyResponseData on the connector step page per the response-landing-page contract.
 ---
 

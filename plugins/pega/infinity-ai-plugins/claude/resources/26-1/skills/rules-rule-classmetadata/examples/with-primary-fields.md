@@ -1,5 +1,5 @@
 ---
-name: With Primary Fields
+name: classmetadata-with-primary-fields
 description: Work-class metadata defining Primary fields in pyPrimaryFields. Used to indicate that these properties are the most important fields for the case type identified by pyClassName — they drive Case Designer authoring, default view generation, and AI-assisted field placement.
 ---
 

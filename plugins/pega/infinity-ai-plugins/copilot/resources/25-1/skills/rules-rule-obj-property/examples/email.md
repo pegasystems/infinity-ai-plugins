@@ -10,7 +10,7 @@ description: String/Text property rendered with pxEmail and validated with Valid
   "pyClassName": "ORA332-HomeHealth-Work-HHClaimPricing",
   "pyPropertyMode": "String",
   "pyStringType": "Text",
-  "pyMaxLength": 256,
+  "pyMaxLength": "256",
   "pyStreamName": "pxEmail",
   "pyEditValidate": "ValidEmailAddress"
 }

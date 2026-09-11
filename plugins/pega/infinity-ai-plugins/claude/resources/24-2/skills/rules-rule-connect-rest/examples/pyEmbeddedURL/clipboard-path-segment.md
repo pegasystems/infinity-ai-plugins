@@ -1,5 +1,5 @@
 ---
-name: URL path segment from a clipboard property
+name: rest-url-clipboard-path-segment
 description: REST Connector pyEmbeddedURL with a clipboard-sourced path segment -- pyMapFrom CLIPBOARD with pyEncoding NONE for raw property values.
 ---
 

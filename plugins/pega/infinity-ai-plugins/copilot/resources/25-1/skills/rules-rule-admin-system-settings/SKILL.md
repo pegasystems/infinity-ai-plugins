@@ -1,6 +1,6 @@
 ---
 name: rules-rule-admin-system-settings
-description: Schema and authoring guide for Pega Application Settings (Rule-Admin-System-Settings) used by integrations for environment-specific base URLs, authentication profile names, and similar configuration values. Use when creating a new Application Setting, updating an existing one, or wiring REST connectors to SETTING-based URL/auth references.
+description: Authoring guide for Pega Application Settings (Rule-Admin-System-Settings) used by integrations for environment-specific base URLs, authentication profile names, and similar configuration values. Use when creating a new Application Setting, updating an existing one, or wiring REST connectors to SETTING-based URL/auth references.
 ---
 
 Application Settings store application-level configuration values that vary by
@@ -12,8 +12,8 @@ REST connectors reference them with:
 - `pyAuthProfileSelectionType: "SETTING"`
 - `pyAuthenticationProfileForSetting: "{SettingName}"`
 
-For connector-side wiring examples, see `SETTING base URL via Application Setting`
-and `Authenticated Connector with SETTING Auth Profile` in `rules-rule-connect-rest`.
+For connector-side wiring examples, see `rest-url-setting-base-url`
+and `rest-auth-setting-profile` in `rules-rule-connect-rest`.
 
 ## Authoring support
 
@@ -51,8 +51,8 @@ Do not confuse Application Settings with Dynamic System Settings:
 | Skill | Description |
 |---|---|
 | `admin-system-settings-stub` | Minimal, full valid Rule-Admin-System-Settings create payload |
-| `System Setting Value Type — String` | `pySettingMetaData` shape for a String-typed setting (e.g. a base URL); `pySetting` holds the raw string directly |
-| `System Setting Value Type — Class` | `pySettingMetaData` shape for a Class-typed setting (e.g. an auth profile reference), including the required `pyValueClass` companion field |
+| `admin-system-settings-value-type-string` | `pySettingMetaData` shape for a String-typed setting (e.g. a base URL); `pySetting` holds the raw string directly |
+| `admin-system-settings-value-type-class` | `pySettingMetaData` shape for a Class-typed setting (e.g. an auth profile reference), including the required `pyValueClass` companion field |
 
 The referenced Application Setting must already exist before a connector can save
 successfully in `SETTING` mode.

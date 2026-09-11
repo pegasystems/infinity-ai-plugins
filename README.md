@@ -1,17 +1,18 @@
 # Infinity AI Plugins
 
-This repository packages Pega Infinity AI plugins for multiple AI clients. It contains the client-specific plugin payloads, marketplace layouts, and checked-in bootstrap metadata for producing installable artifacts.
+This repository packages Pega Infinity AI plugins for multiple AI clients. It contains the client-specific plugin payloads, marketplace layouts, and checked-in runtime and skills artifacts for producing installable artifacts.
 
 ## Prerequisites
 
-- Java 17 or later is required to run the bundled bootstrap launcher and MCP server.
-  - run `java -version` to confirm that Java 17 or later is available.
+- Java 17 or later is required to run the bundled MCP server.
 
 ## Supported Pega Infinity Versions
 
+[Pega Documentation - Developing aapplications with external agents](https://docs.pega.com/bundle/platform/page/platform/gen-ai/building-pega-through-mcp.html)
+
 - Pega Infinity 26.1+
-- Pega Infinity 25.1.3+ (consult Pega)
-- Pega Infinity 24.2.5+ (consult Pega)
+- Pega Infinity 25.1.3+ (please contact [Pega Support](https://pegasupport.pega.com))
+- Pega Infinity 24.2.5+ (please contact [Pega Support](https://pegasupport.pega.com))
 
 ## Install From Marketplace
 
@@ -27,12 +28,12 @@ Alternatively, you can use SSH git URLs such as `git@github.com:pegasystems/infi
 
 ## Manual Setup
 
-For the following clients, we do not currently provide a plugin in this repository. Clone the repository and configure the MCP server and skills manually.
+For the following clients, we do not currently provide a marketplace plugin in this repository. Clone the repository and configure the MCP server and skills manually.
 
 | Agent | Setup instructions |
 | --- | --- |
 | Devin | Configure the bundled MCP server in Devin's MCP metadata and copy the shared Pega skills into a Devin skill directory. See [Devin setup instructions](plugins/pega/infinity-ai-plugins/devin/README.md). |
-| opencode | Merge the `mcp` block from `plugins/pega/infinity-ai-plugins/opencode/opencode.json` into your `opencode.json`, setting `cwd` to the absolute path of the `opencode/` directory. Copy `plugins/pega/infinity-ai-plugins/opencode/skills/` into `.opencode/skills/` in your project. See [opencode setup instructions](plugins/pega/infinity-ai-plugins/opencode/README.md). |
+| opencode | Merge the `mcp` block from `plugins/pega/infinity-ai-plugins/opencode/opencode.json` into your `opencode.json`, setting `cwd` to the absolute path of the sibling `claude/` directory. Copy `plugins/pega/infinity-ai-plugins/opencode/skills/` into `.opencode/skills/` in your project. See [opencode setup instructions](plugins/pega/infinity-ai-plugins/opencode/README.md). |
 
 
 ## Update Marketplace Install
@@ -62,8 +63,9 @@ git config --system core.longpaths true
 ## Setup After Install
 
 Claude Code, GitHub Copilot CLI, and Codex plugins ship with a built-in
-`pega-setup` skill for first-time configuration and troubleshooting. Devin users
-can install the same shared skills using the [manual Devin setup instructions](plugins/pega/infinity-ai-plugins/devin/README.md).
+`pega-setup` skill for first-time configuration and troubleshooting. Devin and OpenCode users
+can install the same shared skills using the [Devin setup instructions](plugins/pega/infinity-ai-plugins/devin/README.md)
+and [OpenCode setup instructions](plugins/pega/infinity-ai-plugins/opencode/README.md).
 
 After installing a marketplace plugin or completing manual setup, start a new session and ask the assistant to run
 `pega-setup`.
@@ -78,7 +80,7 @@ When setting `pega_base_url`, use the environment root URL only. Do not include 
 
 ## Local Skills Override
 
-To test local `infinity-skills` with Claude Code, GitHub Copilot CLI, or Codex, set the `pega_skills_path` entry in `~/.infinity-rules-mcp/config.json` or `%USERPROFILE%\.infinity-rules-mcp\config.json` to the directory that contains `manifest.json` before starting the client.
+To test local `infinity-skills` with Claude Code, GitHub Copilot CLI, or Codex, set the `pega_skills_path` entry in `~/.infinity-rules-mcp/config.json` or `%USERPROFILE%\.infinity-rules-mcp\config.json` to the parent directory containing the version directories before starting the client.
 
 ```json
 {
@@ -87,6 +89,7 @@ To test local `infinity-skills` with Claude Code, GitHub Copilot CLI, or Codex, 
 }
 ```
 
-Point `pega_skills_path` at the directory that contains `manifest.json`.
+Point `pega_skills_path` at the parent directory containing the selected version directory, and set
+`pega_infinity_version` to the matching directory name.
 
 If `pega_skills_path` is missing or empty, the plugin uses the normal bundled or cached skills payload.

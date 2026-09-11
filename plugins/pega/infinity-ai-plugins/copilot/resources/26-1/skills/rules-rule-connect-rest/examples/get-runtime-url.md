@@ -1,5 +1,5 @@
 ---
-name: CRUD Connector with Direct URL (Activity-Invoked)
+name: rest-crud-direct-url
 description: Activity-invoked CRUD connector with a direct base URL and response header mapping for conditional update support. pyMapToKey targets the calling page (.pyResponseData) — the same pattern used for data-page-sourced connectors; see rest-request-response-mapping for the full contract.
 ---
 

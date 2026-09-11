@@ -185,7 +185,7 @@
     },
     {
       "name": "methodology-rule-authoring",
-      "description": "General instructions for creating and updating Pega rules using the schema-backed authoring tools",
+      "description": "General instructions for creating and updating Pega rules",
       "path": "skills/methodology-rule-authoring/SKILL.md",
       "category": "skill",
       "prompt": false
@@ -205,57 +205,50 @@
       "prompt": false
     },
     {
-      "name": "prove-pr-change-with-evals",
-      "description": "Use when a goal in infinity-skills or infinity-rules-mcp should be turned into a grounded eval scenario, run, reported, and refined for future reruns.",
-      "path": "skills/prove-pr-change-with-evals/SKILL.md",
-      "category": "skill",
-      "prompt": false
-    },
-    {
       "name": "rules-rule-admin-system-settings",
-      "description": "Schema and authoring guide for Pega Application Settings (Rule-Admin-System-Settings) used by integrations for environment-specific base URLs, authentication profile names, and similar configuration values. Use when creating a new Application Setting, updating an existing one, or wiring REST connectors to SETTING-based URL/auth references.",
+      "description": "Authoring guide for Pega Application Settings (Rule-Admin-System-Settings) used by integrations for environment-specific base URLs, authentication profile names, and similar configuration values. Use when creating a new Application Setting, updating an existing one, or wiring REST connectors to SETTING-based URL/auth references.",
       "path": "skills/rules-rule-admin-system-settings/SKILL.md",
       "category": "skill",
       "prompt": false
     },
     {
       "name": "rules-rule-ai-agent",
-      "description": "Schema and authoring guide for Pega AI Agent rules (Rule-AI-Agent), including GenAI configuration, system prompts, tools, data sources, and agent examples. Requires Pega Infinity 25+ (08-25-01+).",
+      "description": "Authoring guide for Pega AI Agent rules (Rule-AI-Agent), including GenAI configuration, system prompts, tools, data sources, and agent examples. Requires Pega Infinity 25+ (08-25-01+).",
       "path": "skills/rules-rule-ai-agent/SKILL.md",
       "category": "skill",
       "prompt": false
     },
     {
       "name": "rules-rule-ai-tool",
-      "description": "Schema and authoring guide for Pega AI Tool rules (Rule-AI-Tool), including backing-rule categories, parameter mapping, and GenAI definitions. Requires Pega Infinity 25+ (08-25-01+).",
+      "description": "Authoring guide for Pega AI Tool rules (Rule-AI-Tool), including backing-rule categories, parameter mapping, and GenAI definitions. Requires Pega Infinity 25+ (08-25-01+).",
       "path": "skills/rules-rule-ai-tool/SKILL.md",
       "category": "skill",
       "prompt": false
     },
     {
       "name": "rules-rule-async-jobscheduler",
-      "description": "Schema and authoring guide for Pega Job Scheduler rules (Rule-Async-JobScheduler), including schedule types, scope, and examples",
+      "description": "Authoring guide for Pega Job Scheduler rules (Rule-Async-JobScheduler), including schedule types, scope, and examples",
       "path": "skills/rules-rule-async-jobscheduler/SKILL.md",
       "category": "skill",
       "prompt": false
     },
     {
       "name": "rules-rule-async-queueprocessor",
-      "description": "Schema and authoring guide for Pega Queue Processor rules (Rule-Async-QueueProcessor), including creation fields, rule form configuration, and examples",
+      "description": "Authoring guide for Pega Queue Processor rules (Rule-Async-QueueProcessor), including creation fields, rule form configuration, and examples",
       "path": "skills/rules-rule-async-queueprocessor/SKILL.md",
       "category": "skill",
       "prompt": false
     },
     {
       "name": "rules-rule-classmetadata",
-      "description": "Schema and authoring guide for Pega class metadata rules (Rule-ClassMetadata) — primary fields lists for work classes and data-page bindings (list / lookup / savable) for data-object classes",
+      "description": "Authoring guide for Pega class metadata rules (Rule-ClassMetadata) — primary fields lists for work classes and data-page bindings (list / lookup / savable) for data-object classes",
       "path": "skills/rules-rule-classmetadata/SKILL.md",
       "category": "skill",
       "prompt": false
     },
     {
       "name": "rules-rule-connect-generativeai",
-      "description": "Schema and authoring guide for Pega GenerativeAI connector rules (Rule-Connect-GenerativeAI), including model configuration, prompt FieldValue references, response mappings, and examples",
+      "description": "Authoring guide for Pega GenerativeAI connector rules (Rule-Connect-GenerativeAI), including model configuration, prompt FieldValue references, response mappings, and examples",
       "path": "skills/rules-rule-connect-generativeai/SKILL.md",
       "category": "skill",
       "prompt": false
@@ -269,84 +262,84 @@
     },
     {
       "name": "rules-rule-corrtype",
-      "description": "Schema and authoring guide for Pega Correspondence Type rules (Rule-CorrType), including delivery channels, address classes, and correspondence classes",
+      "description": "Authoring guide for Pega Correspondence Type rules (Rule-CorrType), including delivery channels, address classes, and correspondence classes",
       "path": "skills/rules-rule-corrtype/SKILL.md",
       "category": "skill",
       "prompt": false
     },
     {
       "name": "rules-rule-decision-dataset",
-      "description": "Schema and authoring guide for Pega dataset rules (Rule-Decision-DataSet), including Database Table type configuration with keys, partition keys, and table mapping",
+      "description": "Authoring guide for Pega dataset rules (Rule-Decision-DataSet), including Database Table type configuration with keys, partition keys, and table mapping",
       "path": "skills/rules-rule-decision-dataset/SKILL.md",
       "category": "skill",
       "prompt": false
     },
     {
       "name": "rules-rule-declare-decision-table",
-      "description": "Schema and authoring guide for Pega Decision Table rules (Rule-Declare-DecisionTable), including column structure, delegated restrictions, multi-result property columns, page list macros, and examples",
+      "description": "Authoring guide for Pega Decision Table rules (Rule-Declare-DecisionTable), including column structure, delegated restrictions, multi-result property columns, page list macros, and examples",
       "path": "skills/rules-rule-declare-decision-table/SKILL.md",
       "category": "skill",
       "prompt": false
     },
     {
       "name": "rules-rule-declare-pages",
-      "description": "Schema and authoring guide for Pega data page rules (Rule-Declare-Pages), including connector, simulated, report definition, ObjOpen, data transform, and activity source patterns",
+      "description": "Authoring guide for Pega data page rules (Rule-Declare-Pages), including connector, simulated, report definition, ObjOpen, data transform, and activity source patterns",
       "path": "skills/rules-rule-declare-pages/SKILL.md",
       "category": "skill",
       "prompt": false
     },
     {
       "name": "rules-rule-edit-validate",
-      "description": "Schema and authoring guide for Pega edit validate rules (Rule-Edit-Validate), including Java validation code, error messaging, and property-level validation patterns",
+      "description": "Authoring guide for Pega edit validate rules (Rule-Edit-Validate), including Java validation code, error messaging, and property-level validation patterns",
       "path": "skills/rules-rule-edit-validate/SKILL.md",
       "category": "skill",
       "prompt": false
     },
     {
       "name": "rules-rule-notification",
-      "description": "Schema and authoring guide for Pega notification rules (Rule-Notification), including the value-conditional recipient model (CURRENTPAGE / DATAPAGE / PAGELIST), the three delivery channels (Email, Gadget, MobilePush), data-page parameter mapping, message parameters, and side-by-side examples for each recipient context.",
+      "description": "Authoring guide for Pega notification rules (Rule-Notification), including the value-conditional recipient model (CURRENTPAGE / DATAPAGE / PAGELIST), the three delivery channels (Email, Gadget, MobilePush), data-page parameter mapping, message parameters, and side-by-side examples for each recipient context.",
       "path": "skills/rules-rule-notification/SKILL.md",
       "category": "skill",
       "prompt": false
     },
     {
       "name": "rules-rule-obj-activity",
-      "description": "Schema and authoring guide for Pega activity rules (Rule-Obj-Activity), including step methods, parameters, pages, and examples",
+      "description": "Authoring guide for Pega activity rules (Rule-Obj-Activity), including step methods, parameters, pages, and examples",
       "path": "skills/rules-rule-obj-activity/SKILL.md",
       "category": "skill",
       "prompt": false
     },
     {
       "name": "rules-rule-obj-attachmentcategory",
-      "description": "Schema and authoring guide for Pega Attachment Category rules (Rule-Obj-AttachmentCategory), including attachment type flags, category naming, and attachment-level security configuration",
+      "description": "Authoring guide for Pega Attachment Category rules (Rule-Obj-AttachmentCategory), including attachment type flags, category naming, and attachment-level security configuration",
       "path": "skills/rules-rule-obj-attachmentcategory/SKILL.md",
       "category": "skill",
       "prompt": false
     },
     {
       "name": "rules-rule-obj-casetype",
-      "description": "Schema and authoring guide for Pega case type rules (Rule-Obj-CaseType), including lifecycle stages, local actions, child cases, and process configuration",
+      "description": "Authoring guide for Pega case type rules (Rule-Obj-CaseType), including lifecycle stages, local actions, child cases, and process configuration",
       "path": "skills/rules-rule-obj-casetype/SKILL.md",
       "category": "skill",
       "prompt": false
     },
     {
       "name": "rules-rule-obj-class",
-      "description": "Schema and authoring guide for Pega class definition rules (Rule-Obj-Class), including work subclasses, data classes, and inheritance patterns",
+      "description": "Authoring guide for Pega class definition rules (Rule-Obj-Class), including work subclasses, data classes, and inheritance patterns",
       "path": "skills/rules-rule-obj-class/SKILL.md",
       "category": "skill",
       "prompt": false
     },
     {
       "name": "rules-rule-obj-corr",
-      "description": "Schema and authoring guide for Pega Correspondence rules (Rule-Obj-Corr), including email and mail content templates, email view modes, and templated email configuration",
+      "description": "Authoring guide for Pega Correspondence rules (Rule-Obj-Corr), including email and mail content templates, email view modes, and templated email configuration",
       "path": "skills/rules-rule-obj-corr/SKILL.md",
       "category": "skill",
       "prompt": false
     },
     {
       "name": "rules-rule-obj-fieldvalue",
-      "description": "Schema and authoring guide for Pega field value rules (Rule-Obj-FieldValue), including localizable text, message parameters, common field name patterns, notification messages, and GenAI prompts",
+      "description": "Authoring guide for Pega field value rules (Rule-Obj-FieldValue), including localizable text, message parameters, common field name patterns, notification messages, and GenAI prompts",
       "path": "skills/rules-rule-obj-fieldvalue/SKILL.md",
       "category": "skill",
       "prompt": false
@@ -360,49 +353,49 @@
     },
     {
       "name": "rules-rule-obj-flowaction",
-      "description": "Schema and authoring guide for Pega flow action rules (Rule-Obj-FlowAction), including view wiring, lifecycle hooks, guards, and examples",
+      "description": "Authoring guide for Pega flow action rules (Rule-Obj-FlowAction), including view wiring, lifecycle hooks, guards, and examples",
       "path": "skills/rules-rule-obj-flowaction/SKILL.md",
       "category": "skill",
       "prompt": false
     },
     {
       "name": "rules-rule-obj-model",
-      "description": "Schema and authoring guide for Pega Data Transform rules (Rule-Obj-Model), including action types, expression patterns, and examples",
+      "description": "Authoring guide for Pega Data Transform rules (Rule-Obj-Model), including action types, expression patterns, and examples",
       "path": "skills/rules-rule-obj-model/SKILL.md",
       "category": "skill",
       "prompt": false
     },
     {
       "name": "rules-rule-obj-property",
-      "description": "Schema and authoring guide for Pega property rules (Rule-Obj-Property), including scalar, page, page list, and dropdown prompt list patterns",
+      "description": "Authoring guide for Pega property rules (Rule-Obj-Property), including scalar, page, page list, and dropdown prompt list patterns",
       "path": "skills/rules-rule-obj-property/SKILL.md",
       "category": "skill",
       "prompt": false
     },
     {
       "name": "rules-rule-obj-report-definition",
-      "description": "Schema and authoring guide for Pega Report Definition rules (Rule-Obj-Report-Definition), including list reports, summary/aggregate reports, filters, joins, sub-reports, parameters, ranking/window functions, paging, and chart configuration",
+      "description": "Authoring guide for Pega Report Definition rules (Rule-Obj-Report-Definition), including list reports, summary/aggregate reports, filters, joins, sub-reports, parameters, ranking/window functions, paging, and chart configuration",
       "path": "skills/rules-rule-obj-report-definition/SKILL.md",
       "category": "skill",
       "prompt": false
     },
     {
       "name": "rules-rule-obj-servicelevel",
-      "description": "Schema and authoring guide for Pega Service Level Agreement rules (Rule-Obj-ServiceLevel), including goal/deadline/late escalations, urgency, timing, and wiring to flows",
+      "description": "Authoring guide for Pega Service Level Agreement rules (Rule-Obj-ServiceLevel), including goal/deadline/late escalations, urgency, timing, and wiring to flows",
       "path": "skills/rules-rule-obj-servicelevel/SKILL.md",
       "category": "skill",
       "prompt": false
     },
     {
       "name": "rules-rule-obj-validate",
-      "description": "Schema and authoring guide for Pega validate rules (Rule-Obj-Validate), including the declarative validation grid (pyValidationValues), embedded when conditions, validate-rule chaining, compiled activity steps, and per-condition examples",
+      "description": "Authoring guide for Pega validate rules (Rule-Obj-Validate), including the declarative validation grid (pyValidationValues), embedded when conditions, validate-rule chaining, compiled activity steps, and per-condition examples",
       "path": "skills/rules-rule-obj-validate/SKILL.md",
       "category": "skill",
       "prompt": false
     },
     {
       "name": "rules-rule-obj-when",
-      "description": "Schema and authoring guide for Pega When rules (Rule-Obj-When), including condition clauses and pyLogic combinators. Per-alias function templates live in `library-function-builder`.",
+      "description": "Authoring guide for Pega When rules (Rule-Obj-When), including condition clauses and pyLogic combinators. Per-alias function templates live in `library-function-builder`.",
       "path": "skills/rules-rule-obj-when/SKILL.md",
       "category": "skill",
       "prompt": false
@@ -416,14 +409,14 @@
     },
     {
       "name": "rules-rule-ruleset-name",
-      "description": "Schema and authoring guide for Pega ruleset name records (Rule-RuleSet-Name), including standard versus branch rulesets, identity fields, and branch-specific flags.",
+      "description": "Authoring guide for Pega ruleset name records (Rule-RuleSet-Name), including standard versus branch rulesets, identity fields, and branch-specific flags.",
       "path": "skills/rules-rule-ruleset-name/SKILL.md",
       "category": "skill",
       "prompt": false
     },
     {
       "name": "rules-rule-ruleset-version",
-      "description": "Schema and authoring guide for Pega ruleset version records (Rule-RuleSet-Version), including version identity, dependency declarations, and branch-version constraints.",
+      "description": "Authoring guide for Pega ruleset version records (Rule-RuleSet-Version), including version identity, dependency declarations, and branch-version constraints.",
       "path": "skills/rules-rule-ruleset-version/SKILL.md",
       "category": "skill",
       "prompt": false
@@ -451,21 +444,21 @@
     },
     {
       "name": "rules-rule-test-unit-case",
-      "description": "Schema and authoring guide for PegaUnit test cases (Rule-Test-Unit-Case), including assertion types, assertion nesting, setup/cleanup, and examples",
+      "description": "Authoring guide for PegaUnit test cases (Rule-Test-Unit-Case), including assertion types, assertion nesting, setup/cleanup, and examples",
       "path": "skills/rules-rule-test-unit-case/SKILL.md",
       "category": "skill",
       "prompt": false
     },
     {
       "name": "rules-rule-ui-theme",
-      "description": "Schema and authoring guide for the Pega UI theme class (Rule-UI-Theme), including class definition handling, branch-safe updates, and related token references",
+      "description": "Authoring guide for Pega Theme rules (Rule-UI-Theme), including the pyDefinition design-token content field, instance discovery, and branch-safe updates",
       "path": "skills/rules-rule-ui-theme/SKILL.md",
       "category": "skill",
       "prompt": false
     },
     {
       "name": "rules-rule-ui-view",
-      "description": "Schema and authoring guide for Pega Constellation views (Rule-UI-View), including three-surface updates and field wiring patterns",
+      "description": "Authoring guide for Pega Constellation views (Rule-UI-View), including three-surface updates and field wiring patterns",
       "path": "skills/rules-rule-ui-view/SKILL.md",
       "category": "skill",
       "prompt": false
@@ -1396,26 +1389,26 @@
     },
     {
       "name": "rules-rule-admin-system-settings/examples/pySettingMetaData/class",
-      "label": "System Setting Value Type — Class",
+      "label": "admin-system-settings-value-type-class",
       "description": "pySettingMetaData shape for a Class-typed Application Setting, used for authentication profile references.",
       "path": "skills/rules-rule-admin-system-settings/examples/pySettingMetaData/class.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-admin-system-settings",
       "aliases": [
-        "System Setting Value Type — Class"
+        "admin-system-settings-value-type-class"
       ]
     },
     {
       "name": "rules-rule-admin-system-settings/examples/pySettingMetaData/string",
-      "label": "System Setting Value Type — String",
+      "label": "admin-system-settings-value-type-string",
       "description": "pySettingMetaData shape for a String-typed Application Setting, e.g. a base URL.",
       "path": "skills/rules-rule-admin-system-settings/examples/pySettingMetaData/string.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-admin-system-settings",
       "aliases": [
-        "System Setting Value Type — String"
+        "admin-system-settings-value-type-string"
       ]
     },
     {
@@ -1828,86 +1821,86 @@
     },
     {
       "name": "rules-rule-classmetadata/examples/data-class",
-      "label": "Data Class Metadata",
+      "label": "classmetadata-data-class",
       "description": "Data-object metadata with pyListDataPage / pyLookUpDataPage / pySavableDataPage bindings, embedded Rule-Declare-Pages snapshots, and pyDataTypeLocalActions.",
       "path": "skills/rules-rule-classmetadata/examples/data-class.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-classmetadata",
       "aliases": [
-        "Data Class Metadata"
+        "classmetadata-data-class"
       ]
     },
     {
       "name": "rules-rule-classmetadata/examples/pyDataTypeLocalActions/add",
-      "label": "Add Action",
+      "label": "classmetadata-local-action-add",
       "description": "The OOTB Add action — opens the data record in create form to add a new instance.",
       "path": "skills/rules-rule-classmetadata/examples/pyDataTypeLocalActions/add.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-classmetadata",
       "aliases": [
-        "Add Action"
+        "classmetadata-local-action-add"
       ]
     },
     {
       "name": "rules-rule-classmetadata/examples/pyDataTypeLocalActions/custom",
-      "label": "Custom Action",
+      "label": "classmetadata-local-action-custom",
       "description": "A Custom data-type action — pick this subclass when the action is not one of the OOTB UpdateDetails / Add / Delete operations. Wire pyActionName / pyActionLabel to the application-specific behaviour.",
       "path": "skills/rules-rule-classmetadata/examples/pyDataTypeLocalActions/custom.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-classmetadata",
       "aliases": [
-        "Custom Action"
+        "classmetadata-local-action-custom"
       ]
     },
     {
       "name": "rules-rule-classmetadata/examples/pyDataTypeLocalActions/delete",
-      "label": "Delete Action",
+      "label": "classmetadata-local-action-delete",
       "description": "The OOTB Delete action — removes the selected data record after confirmation.",
       "path": "skills/rules-rule-classmetadata/examples/pyDataTypeLocalActions/delete.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-classmetadata",
       "aliases": [
-        "Delete Action"
+        "classmetadata-local-action-delete"
       ]
     },
     {
       "name": "rules-rule-classmetadata/examples/pyDataTypeLocalActions/update-details",
-      "label": "UpdateDetails Action",
+      "label": "classmetadata-local-action-update-details",
       "description": "The OOTB Edit action — opens the data record in update form.",
       "path": "skills/rules-rule-classmetadata/examples/pyDataTypeLocalActions/update-details.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-classmetadata",
       "aliases": [
-        "UpdateDetails Action"
+        "classmetadata-local-action-update-details"
       ]
     },
     {
       "name": "rules-rule-classmetadata/examples/stub",
-      "label": "Stub ClassMetadata",
+      "label": "classmetadata-stub",
       "description": "Minimal create payload — just pyClassName. The smallest valid Rule-ClassMetadata rule.",
       "path": "skills/rules-rule-classmetadata/examples/stub.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-classmetadata",
       "aliases": [
-        "Stub ClassMetadata"
+        "classmetadata-stub"
       ]
     },
     {
       "name": "rules-rule-classmetadata/examples/with-primary-fields",
-      "label": "With Primary Fields",
+      "label": "classmetadata-with-primary-fields",
       "description": "Work-class metadata defining Primary fields in pyPrimaryFields. Used to indicate that these properties are the most important fields for the case type identified by pyClassName — they drive Case Designer authoring, default view generation, and AI-assisted field placement.",
       "path": "skills/rules-rule-classmetadata/examples/with-primary-fields.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-classmetadata",
       "aliases": [
-        "With Primary Fields"
+        "classmetadata-with-primary-fields"
       ]
     },
     {
@@ -2044,14 +2037,14 @@
     },
     {
       "name": "rules-rule-connect-rest/examples/auth-setting-profile",
-      "label": "Authenticated Connector with SETTING Auth Profile",
+      "label": "rest-auth-setting-profile",
       "description": "REST Connector with SETTING-based URL and SETTING-based authentication profile, dynamic CLIPBOARD path parameter, and GET+POST methods. Data-page-sourced; pyMapToKey uses .pyResponseData on the connector step page per the response-landing-page contract. Auth is handled by the referenced auth profile, not by a hardcoded Authorization header.",
       "path": "skills/rules-rule-connect-rest/examples/auth-setting-profile.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-connect-rest",
       "aliases": [
-        "Authenticated Connector with SETTING Auth Profile"
+        "rest-auth-setting-profile"
       ]
     },
     {
@@ -2080,170 +2073,170 @@
     },
     {
       "name": "rules-rule-connect-rest/examples/get-dynamic-path",
-      "label": "GET Connector with Dynamic Path and Query Parameters",
+      "label": "rest-get-dynamic-path",
       "description": "REST Connector GET with a dynamic {param} path segment, a query string parameter, and Accept header. Data-page-sourced; pyMapToKey uses .pyResponseData on the connector step page per the response-landing-page contract.",
       "path": "skills/rules-rule-connect-rest/examples/get-dynamic-path.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-connect-rest",
       "aliases": [
-        "GET Connector with Dynamic Path and Query Parameters"
+        "rest-get-dynamic-path"
       ]
     },
     {
       "name": "rules-rule-connect-rest/examples/get-runtime-url",
-      "label": "CRUD Connector with Direct URL (Activity-Invoked)",
+      "label": "rest-crud-direct-url",
       "description": "Activity-invoked CRUD connector with a direct base URL and response header mapping for conditional update support. pyMapToKey targets the calling page (.pyResponseData) — the same pattern used for data-page-sourced connectors; see rest-request-response-mapping for the full contract.",
       "path": "skills/rules-rule-connect-rest/examples/get-runtime-url.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-connect-rest",
       "aliases": [
-        "CRUD Connector with Direct URL (Activity-Invoked)"
+        "rest-crud-direct-url"
       ]
     },
     {
       "name": "rules-rule-connect-rest/examples/post-setting-url",
-      "label": "POST Connector with SETTING URL",
+      "label": "rest-post-setting-url",
       "description": "REST Connector POST using an Application Setting for the base URL, with request body mapping from clipboard and multiple request headers. Data-page-sourced; pyMapToKey uses .pyResponseData on the connector step page per the response-landing-page contract.",
       "path": "skills/rules-rule-connect-rest/examples/post-setting-url.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-connect-rest",
       "aliases": [
-        "POST Connector with SETTING URL"
+        "rest-post-setting-url"
       ]
     },
     {
       "name": "rules-rule-connect-rest/examples/pyEmbeddedURL/clipboard-path-segment",
-      "label": "URL path segment from a clipboard property",
+      "label": "rest-url-clipboard-path-segment",
       "description": "REST Connector pyEmbeddedURL with a clipboard-sourced path segment -- pyMapFrom CLIPBOARD with pyEncoding NONE for raw property values.",
       "path": "skills/rules-rule-connect-rest/examples/pyEmbeddedURL/clipboard-path-segment.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-connect-rest",
       "aliases": [
-        "URL path segment from a clipboard property"
+        "rest-url-clipboard-path-segment"
       ]
     },
     {
       "name": "rules-rule-connect-rest/examples/pyEmbeddedURL/direct-base-url",
-      "label": "Direct base URL (minimum pyEmbeddedURL shape)",
+      "label": "rest-url-direct-base-url",
       "description": "REST Connector pyEmbeddedURL minimum shape -- direct URL with pyBaseURL only, no path or query parameters.",
       "path": "skills/rules-rule-connect-rest/examples/pyEmbeddedURL/direct-base-url.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-connect-rest",
       "aliases": [
-        "Direct base URL (minimum pyEmbeddedURL shape)"
+        "rest-url-direct-base-url"
       ]
     },
     {
       "name": "rules-rule-connect-rest/examples/pyEmbeddedURL/dynamic-path-segment",
-      "label": "Dynamic {param} URL path segment",
+      "label": "rest-url-dynamic-path-segment",
       "description": "REST Connector pyEmbeddedURL with a runtime placeholder path segment -- {param} via CONSTANT, valued by a matching pyParameters entry at the rule root.",
       "path": "skills/rules-rule-connect-rest/examples/pyEmbeddedURL/dynamic-path-segment.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-connect-rest",
       "aliases": [
-        "Dynamic {param} URL path segment"
+        "rest-url-dynamic-path-segment"
       ]
     },
     {
       "name": "rules-rule-connect-rest/examples/pyEmbeddedURL/query-string-param-and-constant",
-      "label": "Query string with PARAM and CONSTANT values",
+      "label": "rest-url-query-string-param-and-constant",
       "description": "REST Connector pyEmbeddedURL with mixed query parameters — runtime business input as PARAM, fixed protocol options as CONSTANT. Prevents \"required parameter is empty\" failures from over-parameterized connectors.",
       "path": "skills/rules-rule-connect-rest/examples/pyEmbeddedURL/query-string-param-and-constant.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-connect-rest",
       "aliases": [
-        "Query string with PARAM and CONSTANT values"
+        "rest-url-query-string-param-and-constant"
       ]
     },
     {
       "name": "rules-rule-connect-rest/examples/pyEmbeddedURL/query-string-parameters",
-      "label": "Query string parameters from PARAM and CLIPBOARD",
+      "label": "rest-url-query-string-parameters",
       "description": "REST Connector pyEmbeddedURL with multiple query string parameters -- PARAM-sourced and CLIPBOARD-sourced values, pyFirstItem on the first entry, pyEmptyBehavior SKIP and pyDefaultValue.",
       "path": "skills/rules-rule-connect-rest/examples/pyEmbeddedURL/query-string-parameters.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-connect-rest",
       "aliases": [
-        "Query string parameters from PARAM and CLIPBOARD"
+        "rest-url-query-string-parameters"
       ]
     },
     {
       "name": "rules-rule-connect-rest/examples/pyEmbeddedURL/setting-base-url",
-      "label": "SETTING base URL via Application Setting",
+      "label": "rest-url-setting-base-url",
       "description": "REST Connector pyEmbeddedURL with SETTING-based URL -- pyBaseURLSetting reference, pyNote for documentation, no pyBaseURL/pyEndpointURL.",
       "path": "skills/rules-rule-connect-rest/examples/pyEmbeddedURL/setting-base-url.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-connect-rest",
       "aliases": [
-        "SETTING base URL via Application Setting"
+        "rest-url-setting-base-url"
       ]
     },
     {
       "name": "rules-rule-connect-rest/examples/pyEmbeddedURL/static-path-segments",
-      "label": "Static literal URL path segments",
+      "label": "rest-url-static-path-segments",
       "description": "REST Connector pyEmbeddedURL with static path segments -- multiple CONSTANT entries forming a literal /v1/items path.",
       "path": "skills/rules-rule-connect-rest/examples/pyEmbeddedURL/static-path-segments.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-connect-rest",
       "aliases": [
-        "Static literal URL path segments"
+        "rest-url-static-path-segments"
       ]
     },
     {
       "name": "rules-rule-connect-rest/examples/pyParameters/boolean-in",
-      "label": "Optional BOOLEAN IN parameter",
+      "label": "rest-param-boolean-in",
       "description": "REST Connector pyParameters entry — optional BOOLEAN IN parameter used as a flag to control connector behavior.",
       "path": "skills/rules-rule-connect-rest/examples/pyParameters/boolean-in.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-connect-rest",
       "aliases": [
-        "Optional BOOLEAN IN parameter"
+        "rest-param-boolean-in"
       ]
     },
     {
       "name": "rules-rule-connect-rest/examples/pyParameters/integer-out",
-      "label": "Optional INTEGER OUT parameter",
+      "label": "rest-param-integer-out",
       "description": "REST Connector pyParameters entry — optional INTEGER OUT parameter returning a numeric value to the calling data page.",
       "path": "skills/rules-rule-connect-rest/examples/pyParameters/integer-out.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-connect-rest",
       "aliases": [
-        "Optional INTEGER OUT parameter"
+        "rest-param-integer-out"
       ]
     },
     {
       "name": "rules-rule-connect-rest/examples/pyParameters/string-in",
-      "label": "Required STRING IN parameter",
+      "label": "rest-param-string-in",
       "description": "REST Connector pyParameters entry — required STRING IN parameter matching a {productId} PARAM placeholder in pyResourcePathParameters.",
       "path": "skills/rules-rule-connect-rest/examples/pyParameters/string-in.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-connect-rest",
       "aliases": [
-        "Required STRING IN parameter"
+        "rest-param-string-in"
       ]
     },
     {
       "name": "rules-rule-connect-rest/examples/stub",
-      "label": "Stub REST Connector",
+      "label": "rest-stub",
       "description": "REST Connector minimal GET with a static URL -- smallest valid create payload. Data-page-sourced; pyMapToKey uses .pyResponseData on the connector step page per the response-landing-page contract.",
       "path": "skills/rules-rule-connect-rest/examples/stub.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-connect-rest",
       "aliases": [
-        "Stub REST Connector"
+        "rest-stub"
       ]
     },
     {
@@ -2428,350 +2421,290 @@
     },
     {
       "name": "rules-rule-declare-pages/examples/multi-source-when-routed",
-      "label": "Multi-Source Data Page (When-Routed with Always Fallback)",
+      "label": "declare-pages-multi-source-when-routed",
       "description": "Data page with 3 conditional sources — two DataTransform sources gated by When rules and one Connector fallback using \"Always\". Demonstrates the When-routed multi-source pattern with parameter passing to When rules.",
       "path": "skills/rules-rule-declare-pages/examples/multi-source-when-routed.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-declare-pages",
       "aliases": [
-        "Multi-Source Data Page (When-Routed with Always Fallback)"
+        "declare-pages-multi-source-when-routed"
       ]
     },
     {
       "name": "rules-rule-declare-pages/examples/page-by-key",
-      "label": "List Data Page with Key-Based Retrieval",
+      "label": "declare-pages-list-by-key",
       "description": "List-structure data page that supports fetching a single entry by key via pyEnableRetrievePageByKey + pyKeysForPageList, instead of requiring the caller to load the full list. Only valid when pyStructure is \"list\" and pyPageType is \"normal\".",
       "path": "skills/rules-rule-declare-pages/examples/page-by-key.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-declare-pages",
       "aliases": [
-        "List Data Page with Key-Based Retrieval"
+        "declare-pages-list-by-key"
       ]
     },
     {
       "name": "rules-rule-declare-pages/examples/post-load-activity",
-      "label": "Data Page with Post-Load Activity",
+      "label": "declare-pages-post-load-activity",
       "description": "Data page that runs a custom activity after the source loads — used for enrichment, cross-page joins, or derived field computation. Configured via pyPostActivity, pyPostActivityParams, and pyPassCurrentParamPageForPostActivity.",
       "path": "skills/rules-rule-declare-pages/examples/post-load-activity.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-declare-pages",
       "aliases": [
-        "Data Page with Post-Load Activity"
+        "declare-pages-post-load-activity"
       ]
     },
     {
       "name": "rules-rule-declare-pages/examples/pyDataSourceList/aggregate-sources",
-      "label": "pyDataSourceList entry — AggregateSources",
+      "label": "declare-pages-source-aggregate",
       "description": "Minimum-viable aggregate-sources source entry. Combines results from multiple independent sub-sources into a single data page. Required field pyAggregatedDataSourceList (each nested entry is itself a DeclarePageSource of any type). Rare — used when one data page must merge multiple feeds.",
       "path": "skills/rules-rule-declare-pages/examples/pyDataSourceList/aggregate-sources.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-declare-pages",
       "aliases": [
-        "pyDataSourceList entry — AggregateSources"
+        "declare-pages-source-aggregate"
       ]
     },
     {
       "name": "rules-rule-declare-pages/examples/pyDataSourceList/connector-with-params",
-      "label": "pyDataSourceList entry — Connector with parameter mapping",
+      "label": "declare-pages-source-connector-with-params",
       "description": "Connector source entry with pyConnectorParamList mapping data page parameters to connector query-string parameters. pyIsActivityParameter must be \"false\" for connector params (query string, path, headers); \"true\" only for pxCallConnector activity-level overrides.",
       "path": "skills/rules-rule-declare-pages/examples/pyDataSourceList/connector-with-params.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-declare-pages",
       "aliases": [
-        "pyDataSourceList entry — Connector with parameter mapping"
+        "declare-pages-source-connector-with-params"
       ]
     },
     {
       "name": "rules-rule-declare-pages/examples/pyDataSourceList/connector",
-      "label": "pyDataSourceList entry — Connector",
+      "label": "declare-pages-source-connector",
       "description": "Minimum-viable connector source entry. Required fields pyConnectorName, pyConnectorClassName, pyConnectorList; typically accompanied by request/response data transforms. The bound connector's py{METHOD}ResponseDataList[*].pyMapToKey must use '.pyResponseData' with pyMapTo='Clipboard' — this maps the response body onto the connector's step page. The DP framework then passes this step page as the DataSource PAGE parameter to the response DT. pyResDataTransform must be a clipboard-format wrapper DT, not a JSON-format DT directly.",
       "path": "skills/rules-rule-declare-pages/examples/pyDataSourceList/connector.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-declare-pages",
       "aliases": [
-        "pyDataSourceList entry — Connector"
+        "declare-pages-source-connector"
       ]
     },
     {
       "name": "rules-rule-declare-pages/examples/pyDataSourceList/data-transform",
-      "label": "pyDataSourceList entry — DataTransform",
+      "label": "declare-pages-source-data-transform",
       "description": "Minimum-viable data-transform source entry. Simplest source type; only pyDTName is required.",
       "path": "skills/rules-rule-declare-pages/examples/pyDataSourceList/data-transform.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-declare-pages",
       "aliases": [
-        "pyDataSourceList entry — DataTransform"
+        "declare-pages-source-data-transform"
       ]
     },
     {
       "name": "rules-rule-declare-pages/examples/pyDataSourceList/genai",
-      "label": "pyDataSourceList entry — GenAI",
+      "label": "declare-pages-source-genai",
       "description": "Minimum-viable GenAI source entry. Loads data via a Generative AI connector (Rule-Connect-GenerativeAI). Required field pyConnectorName. Server auto-sets pyLoadActivity to pxCallGenAI.",
       "path": "skills/rules-rule-declare-pages/examples/pyDataSourceList/genai.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-declare-pages",
       "aliases": [
-        "pyDataSourceList entry — GenAI"
+        "declare-pages-source-genai"
       ]
     },
     {
       "name": "rules-rule-declare-pages/examples/pyDataSourceList/knowledge-buddy",
-      "label": "pyDataSourceList entry — KnowledgeBuddy",
+      "label": "declare-pages-source-knowledge-buddy",
       "description": "Minimum-viable Knowledge Buddy source entry. Queries a Knowledge Buddy for AI-powered responses. Required field pyKBName. Optional pyKBQuery, pyKBQueryJSON, pyKBResponse. Server auto-sets pyLoadActivity to pxCallKnowledgeBuddy.",
       "path": "skills/rules-rule-declare-pages/examples/pyDataSourceList/knowledge-buddy.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-declare-pages",
       "aliases": [
-        "pyDataSourceList entry — KnowledgeBuddy"
+        "declare-pages-source-knowledge-buddy"
       ]
     },
     {
       "name": "rules-rule-declare-pages/examples/pyDataSourceList/load-activity",
-      "label": "pyDataSourceList entry — LoadActivity",
+      "label": "declare-pages-source-load-activity",
       "description": "Minimum-viable load-activity source entry. Use when load logic cannot be expressed as a data transform. Required field pyLoadActivity.",
       "path": "skills/rules-rule-declare-pages/examples/pyDataSourceList/load-activity.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-declare-pages",
       "aliases": [
-        "pyDataSourceList entry — LoadActivity"
+        "declare-pages-source-load-activity"
       ]
     },
     {
       "name": "rules-rule-declare-pages/examples/pyDataSourceList/obj-open",
-      "label": "pyDataSourceList entry — ObjOpen",
+      "label": "declare-pages-source-obj-open",
       "description": "Minimum-viable ObjOpen (Lookup) source entry. Retrieves a single record by key. Required fields pyLookupClassName and pyClassKeyValueList. Server auto-sets pyLoadActivity to pxCallObjOpen.",
       "path": "skills/rules-rule-declare-pages/examples/pyDataSourceList/obj-open.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-declare-pages",
       "aliases": [
-        "pyDataSourceList entry — ObjOpen"
+        "declare-pages-source-obj-open"
       ]
     },
     {
       "name": "rules-rule-declare-pages/examples/pyDataSourceList/report-definition",
-      "label": "pyDataSourceList entry — ReportDefinition",
+      "label": "declare-pages-source-report-definition",
       "description": "Minimum-viable report-definition source entry. Required fields pyLoadReportDefinition and pyReportDefinitionClass. Server auto-sets pyLoadActivity to pxCallRetrieveReportData.",
       "path": "skills/rules-rule-declare-pages/examples/pyDataSourceList/report-definition.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-declare-pages",
       "aliases": [
-        "pyDataSourceList entry — ReportDefinition"
+        "declare-pages-source-report-definition"
       ]
     },
     {
       "name": "rules-rule-declare-pages/examples/pyDataSourceList/robotic-automation",
-      "label": "pyDataSourceList entry — RoboticAutomation",
+      "label": "declare-pages-source-robotic-automation",
       "description": "Minimum-viable Robotic Automation data page source entry. Triggers a server-side robotic automation to load data. Required field pyRACaseType. Optional pyRAReqDTName, pyRARespDTName, pyRATimeout. Server auto-sets pyLoadActivity to pxCallRoboticAutomation.",
       "path": "skills/rules-rule-declare-pages/examples/pyDataSourceList/robotic-automation.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-declare-pages",
       "aliases": [
-        "pyDataSourceList entry — RoboticAutomation"
+        "declare-pages-source-robotic-automation"
       ]
     },
     {
       "name": "rules-rule-declare-pages/examples/pyDataSourceList/robotic-desktop-automation",
-      "label": "pyDataSourceList entry — RoboticDesktopAutomation",
+      "label": "declare-pages-source-robotic-desktop-automation",
       "description": "Minimum-viable Robotic Desktop Automation (RDA) data page source entry. Triggers a desktop robotic automation to load data. Required field pyRDAAutomationId. Shares RA fields (pyRAReqDTName, pyRARespDTName, pyRATimeout). Server auto-sets pyLoadActivity to pxCallRoboticDesktopAutomation.",
       "path": "skills/rules-rule-declare-pages/examples/pyDataSourceList/robotic-desktop-automation.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-declare-pages",
       "aliases": [
-        "pyDataSourceList entry — RoboticDesktopAutomation"
-      ]
-    },
-    {
-      "name": "rules-rule-declare-pages/examples/pyParameters/date",
-      "label": "pyParameters entry — DATE",
-      "description": "Date-typed data page parameter (no time component). Used for calendar-day filters and date-range endpoints.",
-      "path": "skills/rules-rule-declare-pages/examples/pyParameters/date.md",
-      "category": "skill",
-      "prompt": false,
-      "parent": "rules-rule-declare-pages",
-      "aliases": [
-        "pyParameters entry — DATE"
-      ]
-    },
-    {
-      "name": "rules-rule-declare-pages/examples/pyParameters/datetime",
-      "label": "pyParameters entry — DATETIME",
-      "description": "DateTime-typed data page parameter (date + time). Used for point-in-time snapshots and timestamp filters.",
-      "path": "skills/rules-rule-declare-pages/examples/pyParameters/datetime.md",
-      "category": "skill",
-      "prompt": false,
-      "parent": "rules-rule-declare-pages",
-      "aliases": [
-        "pyParameters entry — DATETIME"
+        "declare-pages-source-robotic-desktop-automation"
       ]
     },
     {
       "name": "rules-rule-declare-pages/examples/pyParameters/decimal",
-      "label": "pyParameters entry — Decimal",
+      "label": "declare-pages-param-decimal",
       "description": "Decimal-typed data page parameter (fixed-precision). Used for monetary amounts, percentages, and other exact numeric values. pyParametersParamType must be Title Case \"Decimal\", not all-caps \"DECIMAL\" — all-caps is silently accepted by the API but renders as Boolean in Infinity Studio and blocks save with \"Boolean parameters cannot be marked required\" if the parameter is required.",
       "path": "skills/rules-rule-declare-pages/examples/pyParameters/decimal.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-declare-pages",
       "aliases": [
-        "pyParameters entry — Decimal"
-      ]
-    },
-    {
-      "name": "rules-rule-declare-pages/examples/pyParameters/double",
-      "label": "pyParameters entry — DOUBLE",
-      "description": "Double-precision floating-point data page parameter. Used for scientific or statistical values where decimal precision is not critical.",
-      "path": "skills/rules-rule-declare-pages/examples/pyParameters/double.md",
-      "category": "skill",
-      "prompt": false,
-      "parent": "rules-rule-declare-pages",
-      "aliases": [
-        "pyParameters entry — DOUBLE"
+        "declare-pages-param-decimal"
       ]
     },
     {
       "name": "rules-rule-declare-pages/examples/pyParameters/integer",
-      "label": "pyParameters entry — Integer",
-      "description": "Integer-typed data page parameter. Used for counts, limits, page sizes, numeric IDs stored as whole numbers. pyParametersParamType must be Title Case \"Integer\", not all-caps \"INTEGER\" — see the Decimal example for the casing failure mode this avoids.",
+      "label": "declare-pages-param-integer",
+      "description": "Integer-typed data page parameter. Used for counts, limits, page sizes, numeric IDs stored as whole numbers. pyParametersParamType must be all-caps \"INTEGER\", not Title Case \"Integer\"",
       "path": "skills/rules-rule-declare-pages/examples/pyParameters/integer.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-declare-pages",
       "aliases": [
-        "pyParameters entry — Integer"
-      ]
-    },
-    {
-      "name": "rules-rule-declare-pages/examples/pyParameters/page",
-      "label": "pyParameters entry — PAGE",
-      "description": "Page-typed data page parameter (structured embedded page). Requires pyParametersParamIntelliBaseClass to identify the page class.",
-      "path": "skills/rules-rule-declare-pages/examples/pyParameters/page.md",
-      "category": "skill",
-      "prompt": false,
-      "parent": "rules-rule-declare-pages",
-      "aliases": [
-        "pyParameters entry — PAGE"
+        "declare-pages-param-integer"
       ]
     },
     {
       "name": "rules-rule-declare-pages/examples/pyParameters/string",
-      "label": "pyParameters entry — String",
-      "description": "String-typed data page parameter. The most common type; used for IDs, names, codes, free-text selectors. pyParametersParamType must be Title Case \"String\", not all-caps \"STRING\" — see the Decimal example for the casing failure mode this avoids.",
+      "label": "declare-pages-param-string",
+      "description": "String-typed data page parameter. The most common type; used for IDs, names, codes, free-text selectors. pyParametersParamType must be all-caps \"STRING\", not Title Case \"String\"",
       "path": "skills/rules-rule-declare-pages/examples/pyParameters/string.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-declare-pages",
       "aliases": [
-        "pyParameters entry — String"
-      ]
-    },
-    {
-      "name": "rules-rule-declare-pages/examples/pyParameters/timeofday",
-      "label": "pyParameters entry — TIMEOFDAY",
-      "description": "Time-of-day-typed data page parameter (no date component). Used for recurring-schedule windows and business-hours filters.",
-      "path": "skills/rules-rule-declare-pages/examples/pyParameters/timeofday.md",
-      "category": "skill",
-      "prompt": false,
-      "parent": "rules-rule-declare-pages",
-      "aliases": [
-        "pyParameters entry — TIMEOFDAY"
+        "declare-pages-param-string"
       ]
     },
     {
       "name": "rules-rule-declare-pages/examples/pyParameters/trueorfalse",
-      "label": "pyParameters entry — Boolean",
-      "description": "Boolean-typed data page parameter. pyParametersParamType value is the literal string \"Boolean\" (Title Case), matching the Infinity Studio \"Data type\" dropdown.",
+      "label": "declare-pages-param-boolean",
+      "description": "Boolean-typed data page parameter. pyParametersParamType value is the literal string \"BOOLEAN\", matching the Infinity Studio \"Data type\" dropdown.",
       "path": "skills/rules-rule-declare-pages/examples/pyParameters/trueorfalse.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-declare-pages",
       "aliases": [
-        "pyParameters entry — Boolean"
+        "declare-pages-param-boolean"
       ]
     },
     {
       "name": "rules-rule-declare-pages/examples/read-only-connector",
-      "label": "Read-Only Connector-Backed Data Page",
+      "label": "declare-pages-read-only-connector",
       "description": "Complete read-only (non-savable) data page sourced from a REST connector. Uses pyPageType \"normal\" which derives pyType=\"normal\", pyIsSavable=\"false\", pyUseNewGenPageForEditableDataPage=\"false\". Do NOT use pyPageType \"loadonly\" — it causes the page to appear editable in the UI.",
       "path": "skills/rules-rule-declare-pages/examples/read-only-connector.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-declare-pages",
       "aliases": [
-        "Read-Only Connector-Backed Data Page"
+        "declare-pages-read-only-connector"
       ]
     },
     {
       "name": "rules-rule-declare-pages/examples/savable-data-page",
-      "label": "Savable Data Page (simplesave)",
+      "label": "declare-pages-savable-simplesave",
       "description": "Savable data page that persists changes back to the source via a single simplesave save option. Set pyPageType to \"savable\" (which derives pyType=\"loadonly\" and pyIsSavable=\"true\") and populate pyDataPageSaveOptionList with one Embed-DeclarePageSaveOption.",
       "path": "skills/rules-rule-declare-pages/examples/savable-data-page.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-declare-pages",
       "aliases": [
-        "Savable Data Page (simplesave)"
+        "declare-pages-savable-simplesave"
       ]
     },
     {
       "name": "rules-rule-declare-pages/examples/savable-multi-option",
-      "label": "Savable Data Page with Multi-Option Save Plan",
+      "label": "declare-pages-savable-multi-option",
       "description": "Savable data page with a conditional save plan chaining dbDelete, simplepatch, and simplesave routed by When rules. Demonstrates the multi-save-option pattern used when different caller actions need different persistence paths.",
       "path": "skills/rules-rule-declare-pages/examples/savable-multi-option.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-declare-pages",
       "aliases": [
-        "Savable Data Page with Multi-Option Save Plan"
+        "declare-pages-savable-multi-option"
       ]
     },
     {
       "name": "rules-rule-declare-pages/examples/simulated-connector-replacement",
-      "label": "Simulated Data Page — Mock / Fake / Test Data Replacement",
-      "description": "Simulated (a.k.a. mock, fake, stub, test-data) data page that replaces a real connector source with a DataTransform providing canned data. The original Connector source is preserved verbatim in pyDisabledSource so the simulation can be reversed. Ruleset layering activates the simulation per environment — transparent to callers. Not to be confused with unit-test mocks (Rule-Test-Unit-Case.pySetupPages). See `rules-rule-declare-pages/references/simulation` for the full pattern, constraints, and pitfalls.",
+      "label": "declare-pages-simulated-replacement",
+      "description": "Simulated (a.k.a. mock, fake, stub, test-data) data page that replaces a real connector source with a DataTransform providing canned data. The original Connector source is preserved verbatim in pyDisabledSource so the simulation can be reversed. Ruleset layering activates the simulation per environment — transparent to callers. Not to be confused with unit-test mocks (Rule-Test-Unit-Case.pySetupPages). See `data-pages-simulation` for the full pattern, constraints, and pitfalls.",
       "path": "skills/rules-rule-declare-pages/examples/simulated-connector-replacement.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-declare-pages",
       "aliases": [
-        "Simulated Data Page — Mock / Fake / Test Data Replacement"
+        "declare-pages-simulated-replacement"
       ]
     },
     {
       "name": "rules-rule-declare-pages/examples/stub-single",
-      "label": "Stub Data Page (Single)",
+      "label": "declare-pages-stub-single",
       "description": "Minimal connector-backed single/page Data Page — smallest valid create payload for a single-record lookup by key (pyPageType \"normal\", one IN parameter, single Connector source).",
       "path": "skills/rules-rule-declare-pages/examples/stub-single.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-declare-pages",
       "aliases": [
-        "Stub Data Page (Single)"
+        "declare-pages-stub-single"
       ]
     },
     {
       "name": "rules-rule-declare-pages/examples/stub",
-      "label": "Stub Data Page (List)",
+      "label": "declare-pages-stub-list",
       "description": "Minimal connector-backed list Data Page — smallest valid create payload for the most common integration pattern (pyPageType \"normal\", single Connector source, no parameters).",
       "path": "skills/rules-rule-declare-pages/examples/stub.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-declare-pages",
       "aliases": [
-        "Stub Data Page (List)"
+        "declare-pages-stub-list"
       ]
     },
     {
@@ -4372,98 +4305,98 @@
     },
     {
       "name": "rules-rule-obj-class/examples/abstract-class",
-      "label": "Abstract Class",
+      "label": "obj-class-abstract",
       "description": "Abstract class without a trailing dash -- parent for a family of API or utility classes.",
       "path": "skills/rules-rule-obj-class/examples/abstract-class.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-obj-class",
       "aliases": [
-        "Abstract Class"
+        "obj-class-abstract"
       ]
     },
     {
       "name": "rules-rule-obj-class/examples/data-class",
-      "label": "Data Class Definition",
+      "label": "obj-class-data",
       "description": "Data class under the application's data pool.",
       "path": "skills/rules-rule-obj-class/examples/data-class.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-obj-class",
       "aliases": [
-        "Data Class Definition"
+        "obj-class-data"
       ]
     },
     {
       "name": "rules-rule-obj-class/examples/embed-class",
-      "label": "Embed Class",
+      "label": "obj-class-embed",
       "description": "Concrete embedded class deriving from Embed- -- used for structured page lists and page groups.",
       "path": "skills/rules-rule-obj-class/examples/embed-class.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-obj-class",
       "aliases": [
-        "Embed Class"
+        "obj-class-embed"
       ]
     },
     {
       "name": "rules-rule-obj-class/examples/isclassgroup",
-      "label": "Class Group Root (ISCLASSGROUP)",
+      "label": "obj-class-group-root",
       "description": "A class that IS the class group root — subclasses use HASCLASSGROUP pointing back to this class.",
       "path": "skills/rules-rule-obj-class/examples/isclassgroup.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-obj-class",
       "aliases": [
-        "Class Group Root (ISCLASSGROUP)"
+        "obj-class-group-root"
       ]
     },
     {
       "name": "rules-rule-obj-class/examples/pyKeyDefList/composite",
-      "label": "pyKeyDefList — Composite Key",
+      "label": "obj-class-key-composite",
       "description": "pyKeyDefList shape for a class business key made of multiple properties.",
       "path": "skills/rules-rule-obj-class/examples/pyKeyDefList/composite.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-obj-class",
       "aliases": [
-        "pyKeyDefList — Composite Key"
+        "obj-class-key-composite"
       ]
     },
     {
       "name": "rules-rule-obj-class/examples/pyKeyDefList/single-property",
-      "label": "pyKeyDefList — Single Property Key",
+      "label": "obj-class-key-single-property",
       "description": "pyKeyDefList shape for a class business key made of one property.",
       "path": "skills/rules-rule-obj-class/examples/pyKeyDefList/single-property.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-obj-class",
       "aliases": [
-        "pyKeyDefList — Single Property Key"
+        "obj-class-key-single-property"
       ]
     },
     {
       "name": "rules-rule-obj-class/examples/stub",
-      "label": "Stub Class",
+      "label": "obj-class-stub",
       "description": "Minimal class definition — smallest valid create payload.",
       "path": "skills/rules-rule-obj-class/examples/stub.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-obj-class",
       "aliases": [
-        "Stub Class"
+        "obj-class-stub"
       ]
     },
     {
       "name": "rules-rule-obj-class/examples/work-subclass",
-      "label": "Work Subclass",
+      "label": "obj-class-work-subclass",
       "description": "Work class with class group assignment — standard Constellation app pattern.",
       "path": "skills/rules-rule-obj-class/examples/work-subclass.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-obj-class",
       "aliases": [
-        "Work Subclass"
+        "obj-class-work-subclass"
       ]
     },
     {
@@ -5333,7 +5266,7 @@
     {
       "name": "rules-rule-obj-flowaction/examples/stub",
       "label": "Stub Flow Action",
-      "description": "Minimal flow action — smallest valid create payload for Cosmos/Constellation apps. Code generation, design template, button labels, and behavioral defaults are all auto-filled by the schema.",
+      "description": "Minimal flow action — smallest valid create payload for Cosmos/Constellation apps. Code generation, design template, button labels, and behavioral defaults are supplied automatically.",
       "path": "skills/rules-rule-obj-flowaction/examples/stub.md",
       "category": "skill",
       "prompt": false,
@@ -5379,21 +5312,57 @@
       ]
     },
     {
+      "name": "rules-rule-obj-model/examples/data-transform-decision-table-invocation",
+      "label": "Data Transform Invoking Decision Table",
+      "description": "Agent-ready Clipboard Data Transform pattern for invoking a Decision Table with either the direct DecisionTable.ObtainValue function or the pxEvaluateDecisionTable Utilities wrapper.",
+      "path": "skills/rules-rule-obj-model/examples/data-transform-decision-table-invocation.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "rules-rule-obj-model",
+      "aliases": [
+        "Data Transform Invoking Decision Table"
+      ]
+    },
+    {
+      "name": "rules-rule-obj-model/examples/json-dt-array-nested-objects",
+      "label": "json-dt-array-nested-objects",
+      "description": "JSON DT using manual SET, UPDATE_PAGE (\"For JSON only\"), and APPEND_AND_MAP_TO on an Array top-level DT. Handles JSON-to-property name mismatches, nested JSON objects mapped to flat clipboard properties, and a JSON array mapped to a Page List.",
+      "path": "skills/rules-rule-obj-model/examples/json-dt-array-nested-objects.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "rules-rule-obj-model",
+      "aliases": [
+        "json-dt-array-nested-objects"
+      ]
+    },
+    {
+      "name": "rules-rule-obj-model/examples/json-dt-automap-array",
+      "label": "json-dt-automap-array",
+      "description": "JSON DT using automap for a list Data Page where JSON keys exactly match clipboard property names — Array top-level with a stub COMMENT step, no explicit pyProperties needed.",
+      "path": "skills/rules-rule-obj-model/examples/json-dt-automap-array.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "rules-rule-obj-model",
+      "aliases": [
+        "json-dt-automap-array"
+      ]
+    },
+    {
       "name": "rules-rule-obj-model/examples/json-format-automap",
-      "label": "JSON Format Data Transform — Automap",
-      "description": "JSON format Data Transform with automap enabled. All JSON fields are mapped automatically to matching clipboard properties.",
+      "label": "JSON Format Data Transform — Automap (Object)",
+      "description": "JSON format Data Transform with automap enabled, Object top-level (single record, not an array) — all JSON keys map automatically to matching clipboard properties by name. For the Array top-level automap pattern used with list data pages, see json-dt-automap-array.",
       "path": "skills/rules-rule-obj-model/examples/json-format-automap.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-obj-model",
       "aliases": [
-        "JSON Format Data Transform — Automap"
+        "JSON Format Data Transform — Automap (Object)"
       ]
     },
     {
       "name": "rules-rule-obj-model/examples/json-format-nested-descent",
       "label": "JSON Format Data Transform — Nested-Object Descent",
-      "description": "Rule-level JSON Data Transform mapping a multi-level response (response → array → object → scalars). Chained UPDATE_PAGE steps with pyUpdateContextOptions \"JSON\" traverse each nesting level. Demonstrates the working pattern when dotted paths in pyPropertiesValue would be silently skipped.",
+      "description": "JSON Data Transform mapping a multi-level response via chained UPDATE_PAGE steps with pyUpdateContextOptions 'JSON'. See model-json-data-transforms for the full mapping-actions reference.",
       "path": "skills/rules-rule-obj-model/examples/json-format-nested-descent.md",
       "category": "skill",
       "prompt": false,
@@ -5404,14 +5373,14 @@
     },
     {
       "name": "rules-rule-obj-model/examples/json-format-object",
-      "label": "JSON Format Data Transform — Manual Mapping",
-      "description": "JSON format Data Transform with explicit field-level mappings. Uses UPDATE_PAGE with nested SET steps to map JSON fields to clipboard properties.",
+      "label": "JSON Format Data Transform — Manual Mapping (Object)",
+      "description": "JSON format Data Transform with manual UPDATE_PAGE + SET field mappings, Object top-level (single record, not an array). For the Array top-level pattern with nested objects and page-list mapping, see json-dt-array-nested-objects.",
       "path": "skills/rules-rule-obj-model/examples/json-format-object.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-obj-model",
       "aliases": [
-        "JSON Format Data Transform — Manual Mapping"
+        "JSON Format Data Transform — Manual Mapping (Object)"
       ]
     },
     {
@@ -6017,7 +5986,7 @@
     {
       "name": "rules-rule-obj-report-definition/examples/pyFilter/equality",
       "label": "Filter — Equality with parameter reference",
-      "description": "A single pyFilter entry using `=` against a Param.* value.",
+      "description": "A single pyFilter entry using `=` against a Param.* value. pyLogicLabel defaults to \"F1\" for the first filter; pyFilterLogic must match.",
       "path": "skills/rules-rule-obj-report-definition/examples/pyFilter/equality.md",
       "category": "skill",
       "prompt": false,
@@ -7048,14 +7017,14 @@
     },
     {
       "name": "rules-rule-test-unit-case/examples/data-page-connector-test",
-      "label": "Data Page Test (Connector-Backed List)",
+      "label": "unit-test-data-page-connector",
       "description": "Tests a connector-backed (live external API) list data page with a ResultCount-only assertion. Nested List assertions checking specific list-item property values may be fragile against connector-backed sources -- see rules-rule-test-unit-case's \"Connector-backed Data Page assertions\" note.",
       "path": "skills/rules-rule-test-unit-case/examples/data-page-connector-test.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-test-unit-case",
       "aliases": [
-        "Data Page Test (Connector-Backed List)"
+        "unit-test-data-page-connector"
       ]
     },
     {
@@ -7455,63 +7424,39 @@
       ]
     },
     {
-      "name": "rules-rule-ui-theme/examples/branch-copy-theme-class",
-      "label": "Branch Copy Theme Class",
-      "description": "Copy the live Rule-UI-Theme class into the active branch before editing it.",
-      "path": "skills/rules-rule-ui-theme/examples/branch-copy-theme-class.md",
+      "name": "rules-rule-ui-theme/examples/pyDefinition/flat-sample",
+      "label": "theme-pydefinition-flat-sample",
+      "description": "Second pyDefinition payload (decoded, flat literal shape) for a Rule-UI-Theme instance, showing every base and components key together. Load when authoring or verifying a theme that uses the flat literal token shape -- see Theme Definition Token Inventory for the key list and theme-pydefinition-merge-pattern for how to re-serialize this as the pyDefinition string.",
+      "path": "skills/rules-rule-ui-theme/examples/pyDefinition/flat-sample.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-ui-theme",
       "aliases": [
-        "Branch Copy Theme Class"
+        "theme-pydefinition-flat-sample"
       ]
     },
     {
-      "name": "rules-rule-ui-theme/examples/branch-validation",
-      "label": "Branch Validation Snapshot",
-      "description": "Checklist for verifying a branched Rule-UI-Theme class after update-rule.",
-      "path": "skills/rules-rule-ui-theme/examples/branch-validation.md",
+      "name": "rules-rule-ui-theme/examples/pyDefinition/token-shape-sample",
+      "label": "theme-pydefinition-token-shape-sample",
+      "description": "Third pyDefinition payload, in the $type/$value token shape (\"literal\" values and \"inherited\" alias references), covering the entire base and components token catalogue -- verified key-for-key against the published Constellation/Cosmos design-token contract from the @pega/cosmos-react-core package. Load when authoring or verifying a theme that uses this wrapped token shape -- see theme-pydefinition-merge-pattern for how to detect the shape and edit literal vs inherited tokens without converting between shapes.",
+      "path": "skills/rules-rule-ui-theme/examples/pyDefinition/token-shape-sample.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-ui-theme",
       "aliases": [
-        "Branch Validation Snapshot"
-      ]
-    },
-    {
-      "name": "rules-rule-ui-theme/examples/full-theme-class",
-      "label": "Full Theme Class Snapshot",
-      "description": "Detailed live snapshot of Rule-UI-Theme showing the documented token surface returned by get-rule(detail=\"full\").",
-      "path": "skills/rules-rule-ui-theme/examples/full-theme-class.md",
-      "category": "skill",
-      "prompt": false,
-      "parent": "rules-rule-ui-theme",
-      "aliases": [
-        "Full Theme Class Snapshot"
-      ]
-    },
-    {
-      "name": "rules-rule-ui-theme/examples/live-theme-class",
-      "label": "Live Theme Class Snapshot",
-      "description": "Read-only snapshot of the live Rule-UI-Theme class rule used as the canonical anchor.",
-      "path": "skills/rules-rule-ui-theme/examples/live-theme-class.md",
-      "category": "skill",
-      "prompt": false,
-      "parent": "rules-rule-ui-theme",
-      "aliases": [
-        "Live Theme Class Snapshot"
+        "theme-pydefinition-token-shape-sample"
       ]
     },
     {
       "name": "rules-rule-ui-theme/examples/stub",
-      "label": "Stub Theme Class",
-      "description": "Minimal Rule-Obj-Class payload for the Rule-UI-Theme class.",
+      "label": "theme-stub",
+      "description": "Minimal Rule-UI-Theme instance payload with pyDefinition populated in the flat literal shape. Load when creating a brand-new named theme instance -- see Theme Definition Token Inventory for the confirmed key list.",
       "path": "skills/rules-rule-ui-theme/examples/stub.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-ui-theme",
       "aliases": [
-        "Stub Theme Class"
+        "theme-stub"
       ]
     },
     {
@@ -8463,6 +8408,18 @@
       ]
     },
     {
+      "name": "methodology-application-tests/references/customer-service-application",
+      "label": "customer-service-application",
+      "description": "Load when the current Pega application is built on Customer Service and uses the PegaCS-Constellation ruleset stack. Provides Customer Service-specific application-test discovery and data guidance.",
+      "path": "skills/methodology-application-tests/references/customer-service-application.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "methodology-application-tests",
+      "aliases": [
+        "customer-service-application"
+      ]
+    },
+    {
       "name": "methodology-application-tests/references/test-scenarios",
       "label": "scenario-design",
       "description": "Load when generating Cucumber test scenarios. Covers scenario categories, step title conventions, persona switching, stage/status assertions, child case orchestration, and coverage checklist.",
@@ -8547,6 +8504,18 @@
       ]
     },
     {
+      "name": "methodology-rule-authoring/references/branch-ruleset-not-candidate-test-cases",
+      "label": "authoring-branch-ruleset-not-candidate",
+      "description": "Resolve \"Branch ruleset not candidate\" errors when creating Rule-Test-Unit-Case rules by finding and using the application's dedicated test ruleset.",
+      "path": "skills/methodology-rule-authoring/references/branch-ruleset-not-candidate-test-cases.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "methodology-rule-authoring",
+      "aliases": [
+        "authoring-branch-ruleset-not-candidate"
+      ]
+    },
+    {
       "name": "rules-rule-async-jobscheduler/references/checkpoint-pattern",
       "label": "jobscheduler-checkpoint-pattern",
       "description": "How to design a Job Scheduler activity that can resume after a node restart, using NEW/IN-PROGRESS/PROCESSED status transitions.",
@@ -8596,14 +8565,14 @@
     },
     {
       "name": "rules-rule-classmetadata/references/primary-fields",
-      "label": "Primary Fields reference",
+      "label": "classmetadata-primary-fields",
       "description": "What pyPrimaryFields is — design-time metadata that drives Case Designer, default views, and agent reliability. What it is NOT (not keys, not required, not enforced).",
       "path": "skills/rules-rule-classmetadata/references/primary-fields.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-classmetadata",
       "aliases": [
-        "Primary Fields reference"
+        "classmetadata-primary-fields"
       ]
     },
     {
@@ -8715,83 +8684,87 @@
       ]
     },
     {
-      "name": "rules-rule-declare-pages/references/advanced-source-types",
-      "label": "declare-pages-advanced-source-types",
+      "name": "rules-rule-declare-pages/references/data-page-advanced-source-types",
+      "label": "data-page-advanced-source-types",
       "description": "Advanced Rule-Declare-Pages source types — AggregateSources, GenAI, KnowledgeBuddy, RoboticAutomation, and RoboticDesktopAutomation.",
-      "path": "skills/rules-rule-declare-pages/references/advanced-source-types.md",
+      "path": "skills/rules-rule-declare-pages/references/data-page-advanced-source-types.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-declare-pages",
       "aliases": [
-        "declare-pages-advanced-source-types"
+        "data-page-advanced-source-types"
       ]
     },
     {
-      "name": "rules-rule-declare-pages/references/parameter-mapping-details",
-      "label": "declare-pages-parameter-mapping-details",
+      "name": "rules-rule-declare-pages/references/data-page-parameter-mapping-details",
+      "label": "data-page-parameter-mapping-details",
       "description": "Load when mapping Data Page parameters into a source's call signature (connector, activity, or data transform). Covers Embed-NameValuePair fields, dynamic connector path parameters, and why save-plan entries don't use pyLoadActivityParameters.",
-      "path": "skills/rules-rule-declare-pages/references/parameter-mapping-details.md",
+      "path": "skills/rules-rule-declare-pages/references/data-page-parameter-mapping-details.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-declare-pages",
       "aliases": [
-        "declare-pages-parameter-mapping-details"
+        "data-page-parameter-mapping-details"
       ]
     },
     {
-      "name": "rules-rule-declare-pages/references/simulation",
-      "description": "Load when authoring or reviewing simulated data pages that replace a real source with canned data while preserving the original source in pyDisabledSource.",
-      "path": "skills/rules-rule-declare-pages/references/simulation.md",
-      "category": "skill",
-      "prompt": false,
-      "parent": "rules-rule-declare-pages"
-    },
-    {
-      "name": "rules-rule-declare-pages/references/source-resolution-and-multisource",
-      "label": "declare-pages-source-resolution-and-multisource",
+      "name": "rules-rule-declare-pages/references/data-page-source-resolution-and-multisource",
+      "label": "data-page-source-resolution-and-multisource",
       "description": "Load when choosing a Data Page's scope, wiring multiple conditional sources, or diagnosing a source-resolution save error. Covers scope selection, When-routed multi-source order, and class-hierarchy requirements between a Data Page and its source rules.",
-      "path": "skills/rules-rule-declare-pages/references/source-resolution-and-multisource.md",
+      "path": "skills/rules-rule-declare-pages/references/data-page-source-resolution-and-multisource.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-declare-pages",
       "aliases": [
-        "declare-pages-source-resolution-and-multisource"
+        "data-page-source-resolution-and-multisource"
+      ]
+    },
+    {
+      "name": "rules-rule-declare-pages/references/data-pages-simulation",
+      "label": "data-pages-simulation",
+      "description": "Load when authoring or reviewing simulated data pages that replace a real source with canned data while preserving the original source in pyDisabledSource.",
+      "path": "skills/rules-rule-declare-pages/references/data-pages-simulation.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "rules-rule-declare-pages",
+      "aliases": [
+        "data-pages-simulation"
       ]
     },
     {
       "name": "rules-rule-obj-activity/references/activity-preconditions",
-      "label": "Activity Preconditions",
+      "label": "activity-preconditions",
       "description": "Load when authoring steps that should only run conditionally (before the step executes). Covers the pyStepsPreCondParams fields, all valid action codes, combining multiple condition rows, and feature-toggle gating.",
       "path": "skills/rules-rule-obj-activity/references/activity-preconditions.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-obj-activity",
       "aliases": [
-        "Activity Preconditions"
+        "activity-preconditions"
       ]
     },
     {
       "name": "rules-rule-obj-activity/references/activity-transitions",
-      "label": "Activity Transitions",
+      "label": "activity-transitions",
       "description": "Load when authoring steps that route to different blocks based on outcome (after the step executes). Covers the pyStepsTransParams fields, all valid action codes, jumping to named blocks, and status-based routing patterns.",
       "path": "skills/rules-rule-obj-activity/references/activity-transitions.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-obj-activity",
       "aliases": [
-        "Activity Transitions"
+        "activity-transitions"
       ]
     },
     {
       "name": "rules-rule-obj-activity/references/method-catalog",
-      "label": "Method Catalog",
+      "label": "activity-method-catalog",
       "description": "Load when choosing which method to use in a step. Lists all 108 valid pyStepsActivityName values with brief usage notes and constraints.",
       "path": "skills/rules-rule-obj-activity/references/method-catalog.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-obj-activity",
       "aliases": [
-        "Method Catalog"
+        "activity-method-catalog"
       ]
     },
     {
@@ -9071,9 +9044,33 @@
       ]
     },
     {
+      "name": "rules-rule-obj-model/references/array-elements-schema-error-on-update",
+      "label": "json-dt-array-elements-schema-error",
+      "description": "Resolve \"schema for 'pyArrayElements' is false\" / \"schema for 'pyListProperty' is false\" errors on update-rule against an existing Object-top-level JSON Data Transform — recognize the pre-existing invalid state and recreate the rule instead of retrying the update.",
+      "path": "skills/rules-rule-obj-model/references/array-elements-schema-error-on-update.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "rules-rule-obj-model",
+      "aliases": [
+        "json-dt-array-elements-schema-error"
+      ]
+    },
+    {
+      "name": "rules-rule-obj-model/references/deserialized-fields-empty-after-successful-call",
+      "label": "json-dt-empty-fields-after-successful-call",
+      "description": "Resolve \"Data Page connector call succeeded but all mapped properties are empty\" — diagnose and fix a hybrid JSON/Clipboard Rule-Obj-Model that combines the bridge and mapper roles into one malformed rule instead of the required two-rule pattern.",
+      "path": "skills/rules-rule-obj-model/references/deserialized-fields-empty-after-successful-call.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "rules-rule-obj-model",
+      "aliases": [
+        "json-dt-empty-fields-after-successful-call"
+      ]
+    },
+    {
       "name": "rules-rule-obj-model/references/json-data-transforms",
       "label": "model-json-data-transforms",
-      "description": "JSON-format Data Transform behavior — mapping rules, context descent, arrays, primitive array workaround, regex safety, and troubleshooting",
+      "description": "Full authoring and troubleshooting reference for JSON-format Data Transforms (Rule-Obj-Model with pyDataModelFormat \"JSON\") — mapping actions, top-level element structure, the Clipboard bridge pattern, common patterns, and known gotchas. Load when building or debugging any JSON DT.",
       "path": "skills/rules-rule-obj-model/references/json-data-transforms.md",
       "category": "skill",
       "prompt": false,
@@ -9227,27 +9224,27 @@
       ]
     },
     {
-      "name": "rules-rule-ui-theme/references/theme-class-token-inventory",
-      "label": "Theme Class Token Inventory",
-      "description": "Live-token inventory for Rule-UI-Theme, grouped by authoring, runtime, and embedded reference tokens.",
-      "path": "skills/rules-rule-ui-theme/references/theme-class-token-inventory.md",
+      "name": "rules-rule-ui-theme/references/pydefinition-merge-pattern",
+      "label": "theme-pydefinition-merge-pattern",
+      "description": "Fetch-then-merge pattern for updating pyDefinition on a Rule-UI-Theme instance without dropping existing tokens. Load before calling update-rule on any theme instance.",
+      "path": "skills/rules-rule-ui-theme/references/pydefinition-merge-pattern.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-ui-theme",
       "aliases": [
-        "Theme Class Token Inventory"
+        "theme-pydefinition-merge-pattern"
       ]
     },
     {
-      "name": "rules-rule-ui-theme/references/theme-view-coordination",
-      "label": "Theme / View Coordination",
-      "description": "How to keep the Rule-UI-Theme class aligned with dependent Rule-UI-View rules.",
-      "path": "skills/rules-rule-ui-theme/references/theme-view-coordination.md",
+      "name": "rules-rule-ui-theme/references/theme-definition-token-inventory",
+      "label": "Theme Definition Token Inventory",
+      "description": "Confirmed base/components token structure inside pyDefinition, covering both the flat literal shape and the $type/$value token shape observed across live Rule-UI-Theme instances.",
+      "path": "skills/rules-rule-ui-theme/references/theme-definition-token-inventory.md",
       "category": "skill",
       "prompt": false,
       "parent": "rules-rule-ui-theme",
       "aliases": [
-        "Theme / View Coordination"
+        "Theme Definition Token Inventory"
       ]
     },
     {
@@ -9476,351 +9473,6 @@
       "parent": "rules-rule-ui-view",
       "aliases": [
         "view-update-workflow"
-      ]
-    },
-    {
-      "name": "rules-rule-admin-system-settings/schema/rule-admin-system-settings",
-      "label": "Rule-Admin-System-Settings",
-      "description": "JSON schema for creating and updating Pega application settings (Rule-Admin-System-Settings). Application settings store per-environment configuration values such as base URLs and authentication profile names. They are referenced by REST connectors via SETTING-based URL and auth profile configuration. On create, omit pySettingMetaData.pyCategoryName unless reusing a category name that already exists — inventing one fails validation.",
-      "path": "skills/rules-rule-admin-system-settings/schema/rule-admin-system-settings.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-admin-system-settings"
-    },
-    {
-      "name": "rules-rule-ai-agent/schema/rule-ai-agent",
-      "label": "Rule-AI-Agent",
-      "description": "Validates Rule-AI-Agent payloads for Pega Infinity. Requires Pega Infinity 25+ (08-25-01+).",
-      "path": "skills/rules-rule-ai-agent/schema/rule-ai-agent.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-ai-agent"
-    },
-    {
-      "name": "rules-rule-ai-tool/schema/rule-ai-tool",
-      "label": "Rule-AI-Tool",
-      "description": "Validates Rule-AI-Tool payloads for Pega Infinity.",
-      "path": "skills/rules-rule-ai-tool/schema/rule-ai-tool.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-ai-tool"
-    },
-    {
-      "name": "rules-rule-async-jobscheduler/schema/rule-async-jobscheduler",
-      "label": "Rule-Async-JobScheduler",
-      "description": "JSON schema for creating or updating a Pega Job Scheduler rule (Rule-Async-JobScheduler). Only authored and identity fields are included; system-managed fields are omitted.",
-      "path": "skills/rules-rule-async-jobscheduler/schema/rule-async-jobscheduler.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-async-jobscheduler"
-    },
-    {
-      "name": "rules-rule-async-queueprocessor/schema/rule-async-queueprocessor",
-      "label": "Rule-Async-QueueProcessor",
-      "description": "JSON schema for creating or updating a Pega Queue Processor rule (Rule-Async-QueueProcessor). Only authored and identity fields are included; system-managed and read-only fields are omitted.",
-      "path": "skills/rules-rule-async-queueprocessor/schema/rule-async-queueprocessor.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-async-queueprocessor"
-    },
-    {
-      "name": "rules-rule-classmetadata/schema/rule-classmetadata",
-      "label": "Rule-ClassMetadata",
-      "description": "Pega class metadata. Carries pyPrimaryFields for a class and, for Data- subclasses, the data-page bindings (list/lookup/savable) plus their embedded Rule-Declare-Pages snapshots and any data-type local actions.",
-      "path": "skills/rules-rule-classmetadata/schema/rule-classmetadata.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-classmetadata"
-    },
-    {
-      "name": "rules-rule-connect-generativeai/schema/rule-connect-generativeai",
-      "label": "Rule-Connect-GenerativeAI",
-      "description": "JSON schema for creating or updating a Pega GenerativeAI connector rule (Rule-Connect-GenerativeAI). Defines model configuration, prompt references, attachment settings, input parameters, and response mappings. Validated against real Pega 26 rules (v2 era). Only authored fields are included; system-managed fields (pxCreateDateTime, pxUpdateOperator, pzInsKey, etc.) are omitted.",
-      "path": "skills/rules-rule-connect-generativeai/schema/rule-connect-generativeai.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-connect-generativeai"
-    },
-    {
-      "name": "rules-rule-connect-rest/schema/rule-connect-rest",
-      "label": "Rule-Connect-REST",
-      "description": "JSON schema for creating or updating a Pega REST connector rule (Rule-Connect-REST). Only authored and identity fields are included; system-managed and versioning fields are omitted.",
-      "path": "skills/rules-rule-connect-rest/schema/rule-connect-rest.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-connect-rest"
-    },
-    {
-      "name": "rules-rule-corrtype/schema/rule-corrtype",
-      "label": "Rule-CorrType",
-      "description": "Validates Rule-CorrType (Correspondence Type) payloads for Pega Infinity. Correspondence types define the delivery channel for outbound correspondence -- email, fax, postal mail, phone/text, etc.",
-      "path": "skills/rules-rule-corrtype/schema/rule-corrtype.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-corrtype"
-    },
-    {
-      "name": "rules-rule-decision-dataset/schema/rule-decision-dataset",
-      "label": "Rule-Decision-DataSet",
-      "description": "JSON schema for creating or updating a Pega dataset rule (Rule-Decision-DataSet) via create-rule / update-rule. Only authored and identity fields are included; system-managed and versioning fields are omitted.",
-      "path": "skills/rules-rule-decision-dataset/schema/rule-decision-dataset.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-decision-dataset"
-    },
-    {
-      "name": "rules-rule-declare-decision-table/schema/rule-declare-decision-table",
-      "label": "Rule-Declare-DecisionTable",
-      "description": "JSON schema for creating a Pega Decision Table (Rule-Declare-DecisionTable). Fields marked x-pega-autoFill are injected by the builder and may be omitted from payloads. Uses simple string arrays for pyCondition and pyResults. Supports multi-result tables via pyPropertyColumns for setting multiple output properties per row.",
-      "path": "skills/rules-rule-declare-decision-table/schema/rule-declare-decision-table.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-declare-decision-table"
-    },
-    {
-      "name": "rules-rule-declare-pages/schema/rule-declare-pages",
-      "label": "Rule-Declare-Pages",
-      "description": "JSON schema for creating or updating a Pega data page rule (Rule-Declare-Pages) via create-rule / update-rule. Only authored and identity fields are included; system-managed and versioning fields are omitted.",
-      "path": "skills/rules-rule-declare-pages/schema/rule-declare-pages.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-declare-pages"
-    },
-    {
-      "name": "rules-rule-edit-validate/schema/rule-edit-validate",
-      "label": "Rule-Edit-Validate",
-      "description": "JSON schema for creating or updating a Pega edit validate rule (Rule-Edit-Validate). Edit validate rules contain Java code that validates a single property value, returning true if valid or false (with an error message) if invalid.",
-      "path": "skills/rules-rule-edit-validate/schema/rule-edit-validate.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-edit-validate"
-    },
-    {
-      "name": "rules-rule-notification/schema/rule-notification",
-      "label": "Rule-Notification",
-      "description": "JSON schema for creating or updating a Pega notification rule (Rule-Notification). Only authored and identity fields are included; system-managed and versioning fields are omitted.",
-      "path": "skills/rules-rule-notification/schema/rule-notification.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-notification"
-    },
-    {
-      "name": "rules-rule-obj-activity/schema/rule-obj-activity",
-      "label": "Rule-Obj-Activity",
-      "description": "JSON schema for creating or updating a Pega activity rule (Rule-Obj-Activity). Only authored and identity fields are included; system-managed and versioning fields are omitted.",
-      "path": "skills/rules-rule-obj-activity/schema/rule-obj-activity.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-obj-activity"
-    },
-    {
-      "name": "rules-rule-obj-attachmentcategory/schema/rule-obj-attachmentcategory",
-      "label": "Rule-Obj-AttachmentCategory",
-      "description": "JSON schema for Pega attachment category rules (Rule-Obj-AttachmentCategory). An attachment category is a named grouping that controls which attachment types (files, URLs, notes, correspondence, screenshots, scanned documents) are permitted on cases of a given class.",
-      "path": "skills/rules-rule-obj-attachmentcategory/schema/rule-obj-attachmentcategory.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-obj-attachmentcategory"
-    },
-    {
-      "name": "rules-rule-obj-casetype/schema/rule-obj-casetype",
-      "label": "Rule-Obj-CaseType",
-      "description": "JSON schema for creating or updating a Pega case type definition (Rule-Obj-CaseType). A case type defines the lifecycle of a business case: its stages, processes within stages, local actions, child case relationships, attachments, and runtime behavior. System-managed fields (pxInsKey, pxCreateDateTime, etc.) are omitted.",
-      "path": "skills/rules-rule-obj-casetype/schema/rule-obj-casetype.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-obj-casetype"
-    },
-    {
-      "name": "rules-rule-obj-class/schema/rule-obj-class",
-      "label": "Rule-Obj-Class",
-      "description": "JSON schema for creating or updating a Pega class definition (Rule-Obj-Class). Only authored and identity fields are included; system-managed fields are omitted.",
-      "path": "skills/rules-rule-obj-class/schema/rule-obj-class.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-obj-class"
-    },
-    {
-      "name": "rules-rule-obj-corr/schema/rule-obj-corr",
-      "label": "Rule-Obj-Corr",
-      "description": "Validates Rule-Obj-Corr (Correspondence) payloads for Pega Infinity. Correspondence rules define outbound communication content -- email bodies, letter templates, and document merge content -- associated with a correspondence type (Rule-CorrType).",
-      "path": "skills/rules-rule-obj-corr/schema/rule-obj-corr.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-obj-corr"
-    },
-    {
-      "name": "rules-rule-obj-fieldvalue/schema/rule-obj-fieldvalue",
-      "label": "Rule-Obj-FieldValue",
-      "description": "JSON schema for creating or updating a Pega field value rule (Rule-Obj-FieldValue). Field values store localizable text strings — labels, messages, captions, prompts, button text, notification messages, and error classifications — associated with a property on a class. Only authored and identity fields are included; system-managed and versioning fields are omitted.",
-      "path": "skills/rules-rule-obj-fieldvalue/schema/rule-obj-fieldvalue.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-obj-fieldvalue"
-    },
-    {
-      "name": "rules-rule-obj-flow/schema/rule-obj-flow",
-      "label": "Rule-Obj-Flow",
-      "description": "JSON schema for creating or updating a Pega flow rule (Rule-Obj-Flow). Only authored and identity fields are included; system-managed fields are omitted.",
-      "path": "skills/rules-rule-obj-flow/schema/rule-obj-flow.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-obj-flow"
-    },
-    {
-      "name": "rules-rule-obj-flowaction/schema/rule-obj-flowaction",
-      "label": "Rule-Obj-FlowAction",
-      "description": "JSON schema for creating or updating a Pega flow action rule (Rule-Obj-FlowAction). Only authored and identity fields are included; system-managed and versioning fields are omitted.",
-      "path": "skills/rules-rule-obj-flowaction/schema/rule-obj-flowaction.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-obj-flowaction"
-    },
-    {
-      "name": "rules-rule-obj-model/schema/rule-obj-model",
-      "label": "Rule-Obj-Model",
-      "description": "JSON schema for creating or updating a Pega Data Transform rule (Rule-Obj-Model). Fields marked x-pega-autoFill are injected by the builder and may be omitted from payloads.",
-      "path": "skills/rules-rule-obj-model/schema/rule-obj-model.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-obj-model"
-    },
-    {
-      "name": "rules-rule-obj-property/schema/rule-obj-property",
-      "label": "Rule-Obj-Property",
-      "description": "JSON schema for creating or updating a Pega property rule (Rule-Obj-Property). Covers scalar (String, Date, Integer, etc.), page, page list, page group, string list, string group, gateway/linked, and dropdown prompt list patterns.",
-      "path": "skills/rules-rule-obj-property/schema/rule-obj-property.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-obj-property"
-    },
-    {
-      "name": "rules-rule-obj-report-definition/schema/rule-obj-report-definition",
-      "label": "Rule-Obj-Report-Definition",
-      "description": "JSON schema for creating or updating a Pega Report Definition rule (Rule-Obj-Report-Definition). Covers list and summary reports with columns, filters, parameters, pagination, sub-reports, and source configuration.",
-      "path": "skills/rules-rule-obj-report-definition/schema/rule-obj-report-definition.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-obj-report-definition"
-    },
-    {
-      "name": "rules-rule-obj-servicelevel/schema/rule-obj-servicelevel",
-      "label": "Rule-Obj-ServiceLevel",
-      "description": "JSON schema for creating or updating a Pega Service Level Agreement rule (Rule-Obj-ServiceLevel). Only authored and identity fields are included; system-managed fields are omitted.",
-      "path": "skills/rules-rule-obj-servicelevel/schema/rule-obj-servicelevel.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-obj-servicelevel"
-    },
-    {
-      "name": "rules-rule-obj-validate/schema/rule-obj-validate",
-      "label": "Rule-Obj-Validate",
-      "description": "JSON schema for creating or updating a Pega validate rule (Rule-Obj-Validate). Only authored and identity fields are included; system-managed and versioning fields are omitted. Validate rules enforce property-level validation logic using a declarative grid (pyValidationValues) that compiles to activity steps (pySteps).",
-      "path": "skills/rules-rule-obj-validate/schema/rule-obj-validate.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-obj-validate"
-    },
-    {
-      "name": "rules-rule-obj-when/schema/rule-obj-when",
-      "label": "Rule-Obj-When",
-      "description": "JSON schema for creating or updating a Pega When rule (Rule-Obj-When). When rules evaluate boolean conditions using one or more condition clauses combined with AND/OR logic. Used by flows (decision shapes), validate rules, activities, and UI visibility conditions.",
-      "path": "skills/rules-rule-obj-when/schema/rule-obj-when.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-obj-when"
-    },
-    {
-      "name": "rules-rule-ruleset-branch/schema/rule-ruleset-branch",
-      "label": "Rule-RuleSet-Branch",
-      "description": "JSON schema for a Pega rule branch. This is an infrastructure rule type.",
-      "path": "skills/rules-rule-ruleset-branch/schema/rule-ruleset-branch.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-ruleset-branch"
-    },
-    {
-      "name": "rules-rule-ruleset-name/schema/rule-ruleset-name",
-      "label": "Rule-RuleSet-Name",
-      "description": "JSON schema for creating or updating a Pega ruleset name record (Rule-RuleSet-Name). This is an infrastructure rule type with no class association and no ruleset version. Only authored and identity fields are included; system-managed fields are omitted.",
-      "path": "skills/rules-rule-ruleset-name/schema/rule-ruleset-name.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-ruleset-name"
-    },
-    {
-      "name": "rules-rule-ruleset-version/schema/rule-ruleset-version",
-      "label": "Rule-RuleSet-Version",
-      "description": "JSON schema for creating or updating a Pega ruleset version record (Rule-RuleSet-Version). This is an infrastructure rule type with no class association. pyRuleSetVersion is always empty — the version identifier is pyRuleSetVersionID.",
-      "path": "skills/rules-rule-ruleset-version/schema/rule-ruleset-version.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-ruleset-version"
-    },
-    {
-      "name": "rules-rule-service-mcp/schema/rule-service-mcp",
-      "label": "Rule-Service-MCP",
-      "description": "Validates Rule-Service-MCP payloads for Pega Infinity. An MCP Service rule defines a Model Context Protocol (MCP) endpoint that exposes application capabilities as tools to external AI agents and LLMs. This schema validates the rule's core metadata, service identity, MCP versioning, usage and description text, and the set of published tools (including case-type-derived and custom tools).",
-      "path": "skills/rules-rule-service-mcp/schema/rule-service-mcp.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-service-mcp"
-    },
-    {
-      "name": "rules-rule-test-application-businessaction/schema/rule-test-application-businessaction",
-      "label": "Rule-Test-Application-BusinessAction",
-      "description": "JSON schema for creating or updating a Pega Business Action (Rule-Test-Application-BusinessAction) via create-rule / update-rule. Only authored and identity fields are included; system-managed and versioning fields are omitted.",
-      "path": "skills/rules-rule-test-application-businessaction/schema/rule-test-application-businessaction.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-test-application-businessaction"
-    },
-    {
-      "name": "rules-rule-test-application-case/schema/rule-test-application-case",
-      "label": "Rule-Test-Application-Case",
-      "description": "JSON schema for creating or updating a Pega Application Test Case (Rule-Test-Application-Case). Composes Business Actions into end-to-end test sequences.",
-      "path": "skills/rules-rule-test-application-case/schema/rule-test-application-case.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-test-application-case"
-    },
-    {
-      "name": "rules-rule-test-unit-case/schema/rule-test-unit-case",
-      "label": "Rule-Test-Unit-Case",
-      "description": "JSON schema for creating or updating a PegaUnit test case (Rule-Test-Unit-Case). Eleven assertion types supported, with availability depending on pyRuleUnderTestType.",
-      "path": "skills/rules-rule-test-unit-case/schema/rule-test-unit-case.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-test-unit-case"
-    },
-    {
-      "name": "rules-rule-ui-theme/schema/rule-ui-theme",
-      "label": "Rule-UI-Theme",
-      "description": "JSON schema for the Rule-UI-Theme class definition (Rule-Obj-Class). Only authored and identity fields are included; system-managed runtime and provenance fields are intentionally omitted.",
-      "path": "skills/rules-rule-ui-theme/schema/rule-ui-theme.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-ui-theme"
-    },
-    {
-      "name": "rules-rule-ui-view/schema/rule-ui-view",
-      "label": "Rule-UI-View",
-      "description": "JSON schema for creating or updating a Pega Constellation view rule (Rule-UI-View). Only authored and identity fields are included; system-managed fields are omitted. All three surfaces (pyContent, pxViewMetadata, pxContextMetadata) must be sent together in a single update-rule call whenever the field layout changes.",
-      "path": "skills/rules-rule-ui-view/schema/rule-ui-view.json",
-      "category": "schema",
-      "prompt": false,
-      "parent": "rules-rule-ui-view"
-    },
-    {
-      "name": "methodology-rule-authoring/troubleshooting/branch-ruleset-not-candidate-test-cases",
-      "label": "authoring-branch-ruleset-not-candidate",
-      "description": "Resolve \"Branch ruleset not candidate\" errors when creating Rule-Test-Unit-Case rules by finding and using the application's dedicated test ruleset.",
-      "path": "skills/methodology-rule-authoring/troubleshooting/branch-ruleset-not-candidate-test-cases.md",
-      "category": "skill",
-      "prompt": false,
-      "parent": "methodology-rule-authoring",
-      "aliases": [
-        "authoring-branch-ruleset-not-candidate"
       ]
     }
   ]

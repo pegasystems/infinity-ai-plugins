@@ -2,14 +2,18 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "rule-connect-generativeai.json",
   "title": "Rule-Connect-GenerativeAI",
-  "description": "JSON schema for creating or updating a Pega GenerativeAI connector rule (Rule-Connect-GenerativeAI). Defines model configuration, prompt references, attachment settings, input parameters, and response mappings. Validated against real Pega 26 rules (v2 era). Only authored fields are included; system-managed fields (pxCreateDateTime, pxUpdateOperator, pzInsKey, etc.) are omitted.",
+  "description": "JSON schema for creating or updating a Pega GenerativeAI connector rule (Rule-Connect-GenerativeAI). Defines model configuration, prompt references, attachment settings, input parameters, and response mappings. Targets Pega 25.1+ (v2 era, requires pyGenAIDef and pyGenAIConfig). Only authored fields are included; system-managed fields (pxCreateDateTime, pxUpdateOperator, pzInsKey, etc.) are omitted.",
   "type": "object",
   "required": [
     "pyLabel",
     "pyClassName",
     "pyServiceName",
     "pyExpectedResponseEntity",
-    "pyResponseFields"
+    "pyResponseFields",
+    "pyPromptName",
+    "pyGenAIDef",
+    "pyGenAIConfig",
+    "pyDescription"
   ],
   "properties": {
     "pxObjClass": {
@@ -93,7 +97,7 @@
     },
     "pyPromptName": {
       "type": "string",
-      "description": "User-prompt FieldValue name. Default is 'pyGenerativeAIPromptTemplate'. Do NOT generate custom prompt names unless the skill explicitly instructs it.",
+      "description": "Call list-rules with ruleType='Rule-Obj-FieldValue', ruleName='pyGenerativeAIPrompt', and className set to the connector's pyClassName to fetch available prompt field values (pyFieldName='pyGenerativeAIPrompt') scoped to the connector's class, then present the results to the user and ask them to select one. Default to 'pyGenerativeAIPromptTemplate' only if the user does not provide a value. Mirrors pyGenAIDef.pyUserPrompt.",
       "x-pega-autoFill": "pyGenerativeAIPromptTemplate"
     },
     "pySystemPromptName": {
@@ -104,12 +108,7 @@
     "pyUseCase": {
       "type": "string",
       "enum": ["qa", "custom", ""],
-      "description": "Top-level use-case type. 'qa' for Q&A/text output, 'custom' for structured/JSON output. On v2 rules keep in sync with pyGenAIDef.pyUseCase."
-    },
-    "pyUseOpLocaleForResponse": {
-      "type": "string",
-      "enum": ["true", "false", ""],
-      "description": "v1 locale flag — whether the AI response should use the operator's locale. Mirrors pyGenAIConfig.pyEnableLocalization on v2 rules."
+      "description": "Top-level use-case type. 'qa' for Q&A/text output, 'custom' for structured/JSON output. Keep in sync with pyGenAIDef.pyUseCase."
     },
     "pyMemo": {
       "type": "string",
@@ -117,11 +116,11 @@
     },
     "pyGenAIDef": {
       "$ref": "#/$defs/GenAIDef",
-      "description": "Prompt references and use-case definition (Embed-GenAI-Definition). Required on v2 rules (Pega 24.2+). Set pyUserPrompt, pySystemPrompt, pyUseCase, and pyImageAttachRefValue when pyIncludeAttachment='true'."
+      "description": "Prompt references and use-case definition (Embed-GenAI-Definition). Required. Set pyUserPrompt, pySystemPrompt, pyUseCase, and pyImageAttachRefValue when pyIncludeAttachment='true'."
     },
     "pyGenAIConfig": {
       "$ref": "#/$defs/GenAIConfig",
-      "description": "Model and locale configuration (Embed-GenAI-Config). Present on v2 rules (Pega 24.2+). Contains pyModelConfiguration with model ID, name, provider, and runtime parameters (including temperature). The server populates this from pyGenAIProvConfig on save; include explicitly only when overriding model selection."
+      "description": "Model and locale configuration (Embed-GenAI-Config). Contains pyModelConfiguration with model ID, name, provider, and runtime parameters (including temperature). Include explicitly only when overriding model selection."
     },
     "pyResponseFields": {
       "type": "array",
@@ -144,7 +143,8 @@
   "$defs": {
     "GenAIDef": {
       "type": "object",
-      "description": "Prompt and use-case definition (Embed-GenAI-Definition). Present on v2 rules (Pega 24.2+). Contains prompt FieldValue references, use-case type, and the attachment field reference.",
+      "description": "Prompt and use-case definition (Embed-GenAI-Definition). Contains prompt FieldValue references, use-case type, and the attachment field reference.",
+      "required": ["pxObjClass", "pyUserPrompt", "pySystemPrompt"],
       "properties": {
         "pxObjClass": {
           "type": "string",
@@ -159,12 +159,12 @@
         },
         "pyUserPrompt": {
           "type": "string",
-          "description": "User-prompt FieldValue name, mirroring pyPromptName (e.g., 'pyGenerativeAIPromptTemplate').",
+          "description": "User-prompt FieldValue name, mirroring pyPromptName (e.g., 'pyGenerativeAIPromptTemplate'). The value must exist as a Rule-Obj-FieldValue with pyFieldName='pyGenerativeAIPrompt' in the ruleset stack — Pega validates this on save. Call list-rules with ruleType='Rule-Obj-FieldValue', ruleName='pyGenerativeAIPrompt', className=<connector's pyClassName> to confirm the named entry exists before setting this field.",
           "x-pega-autoFill": "pyGenerativeAIPromptTemplate"
         },
         "pySystemPrompt": {
           "type": "string",
-          "description": "System-prompt FieldValue name, mirroring pySystemPromptName (e.g., 'pzDefaultSystemPrompt').",
+          "description": "System-prompt FieldValue name, mirroring pySystemPromptName (e.g., 'pzDefaultSystemPrompt'). The value must exist as a Rule-Obj-FieldValue with pyFieldName='pyGenerativeAISystemPrompt' in the ruleset stack — Pega validates this on save. Call list-rules with ruleType='Rule-Obj-FieldValue', ruleName='pyGenerativeAISystemPrompt', className=<connector's pyClassName> to confirm the named entry exists before setting this field. When pyCustomizeSystemPrompt is 'true', always ask the user what value to use — do not default to 'pzDefaultSystemPrompt' or any other value.",
           "x-pega-autoFill": "pzDefaultSystemPrompt"
         },
         "pyImageAttachRefValue": {
@@ -175,7 +175,7 @@
     },
     "GenAIConfig": {
       "type": "object",
-      "description": "Model and locale configuration (Embed-GenAI-Config). Present on v2 rules (Pega 24.2+). The server populates this from pyGenAIProvConfig on save.",
+      "description": "Model and locale configuration (Embed-GenAI-Config).",
       "properties": {
         "pxObjClass": {
           "type": "string",
@@ -202,6 +202,7 @@
     "GenAIModel": {
       "type": "object",
       "description": "Selected GenAI model and runtime parameters (Embed-GenAI-Model).",
+      "required": ["pxObjClass", "pyModelId", "pyModelName", "pyProvider"],
       "properties": {
         "pxObjClass": {
           "type": "string",
@@ -216,7 +217,8 @@
         },
         "pyModelName": {
           "type": "string",
-          "description": "Display name of the model (e.g., 'Pega-Default-Fast(Claude-3-Haiku)')."
+          "description": "Display name of the model (e.g., 'Pega-Default-Fast(GPT-5-Chat)').",
+          "x-pega-autoFill": "Pega-Default-Fast(GPT-5-Chat)"
         },
         "pyDescription": {
           "type": "string",
@@ -224,11 +226,12 @@
         },
         "pyProvider": {
           "type": "string",
-          "description": "Underlying model provider (e.g., 'bedrock')."
+          "description": "Underlying model provider (e.g., 'azure').",
+          "x-pega-autoFill": "azure"
         },
         "pyModelParameters": {
           "type": "array",
-          "description": "Runtime parameter overrides. The server syncs the temperature entry from pyGenAIProvConfig.pyTemperature on save.",
+          "description": "Runtime parameter overrides for the selected model.",
           "items": { "$ref": "#/$defs/GenAIModelParameter" }
         }
       }
@@ -265,13 +268,14 @@
         },
         "pyNote": {
           "type": "string",
-          "description": "Additional note on the custom field (e.g., 'Text'). Mirrors pyCFieldType on observed rules."
+          "description": "Additional note on the custom field (e.g., 'Text')."
         }
       }
     },
     "GenAIModelParameter": {
       "type": "object",
       "description": "A model runtime parameter override (Embed-GenAI-Model-Parameters). Temperature is the most common entry.",
+      "required": ["pxObjClass", "pyName", "pyType", "pyValue"],
       "properties": {
         "pxObjClass": {
           "type": "string",
@@ -289,7 +293,7 @@
         },
         "pyValue": {
           "type": "string",
-          "description": "Override value (e.g., '0.2'). Should match pyGenAIProvConfig.pyTemperature for the temperature parameter."
+          "description": "Override value (e.g., '0.2')."
         },
         "pyDefaultValue": {
           "type": "string",
@@ -312,7 +316,7 @@
     "ResponseField": {
       "type": "object",
       "description": "A response field mapping (Embed-Fields) — maps AI output to a clipboard property.",
-      "required": ["pyFieldName"],
+      "required": ["pxObjClass","pyFieldName"],
       "properties": {
         "pxObjClass": {
           "type": "string",
@@ -322,14 +326,14 @@
         },
         "pyFieldName": {
           "type": "string",
-          "description": "Dot-prefixed clipboard property path where the AI output is written (e.g., '.pyResponseData', '.pyJsonData', '.pyMessage')."
+          "description": "Dot-prefixed clipboard property path where the AI output is written (e.g., '.pyResponseData', '.pyJsonData', '.pyMessage'). Each name (without the dot) must exist as a Rule-Obj-Property on the connector's applies-to class — Pega validates this on save. Call list-rules with ruleType='Rule-Obj-Property' for each entry and create any missing properties before creating the connector."
         }
       }
     },
     "MethodParameter": {
       "type": "object",
       "description": "A connector input parameter (Embed-MethodParams). Defines a named parameter that can be passed when the connector is invoked from an Activity, Flow, or other caller.",
-      "required": ["pyParametersParamName", "pyParametersParamType"],
+      "required": ["pxObjClass","pyParametersParamName", "pyParametersParamType"],
       "properties": {
         "pxObjClass": {
           "type": "string",

@@ -1,6 +1,6 @@
 ---
 name: Stub Flow Action
-description: Minimal flow action — smallest valid create payload for Cosmos/Constellation apps. Code generation, design template, button labels, and behavioral defaults are all auto-filled by the schema.
+description: Minimal flow action — smallest valid create payload for Cosmos/Constellation apps. Code generation, design template, button labels, and behavioral defaults are supplied automatically.
 ---
 
 ```json

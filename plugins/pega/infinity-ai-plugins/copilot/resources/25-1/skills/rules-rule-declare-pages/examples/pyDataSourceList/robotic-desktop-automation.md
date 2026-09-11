@@ -1,5 +1,5 @@
 ---
-name: pyDataSourceList entry — RoboticDesktopAutomation
+name: declare-pages-source-robotic-desktop-automation
 description: Minimum-viable Robotic Desktop Automation (RDA) data page source entry. Triggers a desktop robotic automation to load data. Required field pyRDAAutomationId. Shares RA fields (pyRAReqDTName, pyRARespDTName, pyRATimeout). Server auto-sets pyLoadActivity to pxCallRoboticDesktopAutomation.
 ---
 

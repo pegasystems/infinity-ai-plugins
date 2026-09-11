@@ -1,5 +1,5 @@
 ---
-name: GET Connector with Dynamic Path and Query Parameters
+name: rest-get-dynamic-path
 description: REST Connector GET with a dynamic {param} path segment, a query string parameter, and Accept header. Data-page-sourced; pyMapToKey uses .pyResponseData on the connector step page per the response-landing-page contract.
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: rules-rule-obj-attachmentcategory
-description: Schema and authoring guide for Pega Attachment Category rules (Rule-Obj-AttachmentCategory), including attachment type flags, category naming, and attachment-level security configuration
+description: Authoring guide for Pega Attachment Category rules (Rule-Obj-AttachmentCategory), including attachment type flags, category naming, and attachment-level security configuration
 ---
 
 **Prerequisite:** Load `methodology-rule-authoring` first

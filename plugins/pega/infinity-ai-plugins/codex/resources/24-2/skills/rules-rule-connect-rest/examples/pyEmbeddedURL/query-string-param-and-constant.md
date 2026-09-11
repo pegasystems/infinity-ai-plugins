@@ -1,5 +1,5 @@
 ---
-name: Query string with PARAM and CONSTANT values
+name: rest-url-query-string-param-and-constant
 description: REST Connector pyEmbeddedURL with mixed query parameters — runtime business input as PARAM, fixed protocol options as CONSTANT. Prevents "required parameter is empty" failures from over-parameterized connectors.
 ---
 

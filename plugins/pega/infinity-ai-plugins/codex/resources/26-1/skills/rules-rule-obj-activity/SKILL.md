@@ -1,6 +1,6 @@
 ---
 name: rules-rule-obj-activity
-description: Schema and authoring guide for Pega activity rules (Rule-Obj-Activity), including step methods, parameters, pages, and examples
+description: Authoring guide for Pega activity rules (Rule-Obj-Activity), including step methods, parameters, pages, and examples
 ---
 
 **Prerequisite:** Load `methodology-rule-authoring` first
@@ -74,9 +74,9 @@ Step examples are organized by category. Each skill contains frontmatter + one J
 
 | Skill | When to load |
 |-------|--------------|
-| `Activity Preconditions` | Pre-step "When" condition rows (`pyStepsPreCondition` + `pyStepsPreCondParams`) — canonical 7-value action-code enum, multi-row chaining (AND-gate, switch-case, loop-guard), feature-toggle gating, `pyOnException` block targeting, verification checklist |
-| `Activity Transitions` | Post-step "Jump" condition rows (`pyStepsTransition` + `pyStepsTransParams`) — canonical action-code enum, block-name jump targeting, status fan-out / method-dispatcher / early-exit patterns, casing notes (`StepStatusFail` / `stepstatusgood`), block-naming conventions |
-| `Method Catalog` | Complete catalog of all 108 activity step methods — organized by category with labels and parameter notes |
+| `activity-preconditions` | Pre-step "When" condition rows (`pyStepsPreCondition` + `pyStepsPreCondParams`) — canonical 7-value action-code enum, multi-row chaining (AND-gate, switch-case, loop-guard), feature-toggle gating, `pyOnException` block targeting, verification checklist |
+| `activity-transitions` | Post-step "Jump" condition rows (`pyStepsTransition` + `pyStepsTransParams`) — canonical action-code enum, block-name jump targeting, status fan-out / method-dispatcher / early-exit patterns, casing notes (`StepStatusFail` / `stepstatusgood`), block-naming conventions |
+| `activity-method-catalog` | Complete catalog of all 108 activity step methods — organized by category with labels and parameter notes |
 | `Step Looping` | Loop authoring reference — 5 loop types, `pyStepsRepeatDef` fields, `param.pyForEachCount`, `<CURRENT>`, common patterns |
 
 ## Notes
@@ -190,7 +190,7 @@ Always verify both fields after creation:
   `pyStepsPreCondParamsWhen` expression
 
 See `Exit-Activity with precondition` for the step JSON and
-`Activity Preconditions` for the full field reference table.
+`activity-preconditions` for the full field reference table.
 
 ### Avoid repeating the same precondition on consecutive steps
 
@@ -254,7 +254,7 @@ identify the fallback block referenced by `pyOnException`):
 
 `pyOnException` holds a **block name** (matching some step's
 `pyStepsBlockName`), not a step number. See
-`Activity Preconditions` for details.
+`activity-preconditions` for details.
 
 #### `pyOnException` requires `pyStepsTransition: "true"`
 
@@ -292,7 +292,7 @@ Property-Set steps to grow a pagelist without an explicit loop wrapper.
 ### Activity readback verification — conditional steps
 
 After creating or updating an activity with conditions, load
-`Activity Preconditions` and follow its verification checklist.
+`activity-preconditions` and follow its verification checklist.
 
 ### `Save-DataPage` — persist a savable Data Page
 
@@ -626,7 +626,7 @@ activity name directly in `pyStepsActivityName` as a composite value:
 - `"Branch MyActivityName"` — branch to activity in same class
 - `"Branch Work-.pzApplyPageInstructions"` — cross-class branch
 
-The schema accepts both the fixed enum methods (e.g. `"Property-Set"`)
+The authoring contract accepts both the fixed methods (e.g. `"Property-Set"`)
 and the composite pattern `^(Call|Branch|Queue|Collect) .+$`.
 
 **Server validation for Call/Branch:**
@@ -767,7 +767,7 @@ When authoring reusable or portable activities, reference activity
 **parameters** (`Param.X`) instead of class properties in step fields
 (Property-Set values, precondition When expressions, Log-Message messages).
 
-- `Param.X` references are **not validated** against the class schema at
+- `Param.X` references are **not validated** against class property definitions at
   creation time — the server only validates that the syntax is valid.
 - Class property references (e.g. `.pyStatusWork`) **are validated** at
   creation time — the property must exist on the step page's class.

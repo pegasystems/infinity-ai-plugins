@@ -52,12 +52,12 @@ or parameter.
   `{}` at indices 0, 1, 2, 4 are no-op. Index 3 merges `{ "pyParameterValue": "1500" }`
   into the existing param, changing only the value.
 
-### Schema validation gotcha
+### Update validation gotcha
 
 If the existing data has **incomplete fields** (e.g., missing `pyMapTestInputFrom` on
-some parameters), the schema validator may reject the update even though the `{}`
+some parameters), update validation may reject the update even though the `{}`
 placeholder should be a no-op. This happens because the merge preserves the existing
-incomplete data, and the validator runs on the merged result.
+incomplete data, and validation runs on the merged result.
 
 **Fix:** Include the required field in the placeholder to satisfy the validator:
 

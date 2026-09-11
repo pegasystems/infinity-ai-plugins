@@ -1,5 +1,5 @@
 ---
-name: pyDataSourceList entry — LoadActivity
+name: declare-pages-source-load-activity
 description: Minimum-viable load-activity source entry. Use when load logic cannot be expressed as a data transform. Required field pyLoadActivity.
 ---
 

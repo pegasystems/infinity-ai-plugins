@@ -1,6 +1,6 @@
 ---
 name: rules-rule-notification
-description: Schema and authoring guide for Pega notification rules (Rule-Notification), including the value-conditional recipient model (CURRENTPAGE / DATAPAGE / PAGELIST), the three delivery channels (Email, Gadget, MobilePush), data-page parameter mapping, message parameters, and side-by-side examples for each recipient context.
+description: Authoring guide for Pega notification rules (Rule-Notification), including the value-conditional recipient model (CURRENTPAGE / DATAPAGE / PAGELIST), the three delivery channels (Email, Gadget, MobilePush), data-page parameter mapping, message parameters, and side-by-side examples for each recipient context.
 ---
 
 **Prerequisite:** Load `methodology-rule-authoring` first
@@ -30,7 +30,7 @@ Every entry in `pzRecipients[]` (or legacy `pzRecipientDataPages[]`) resolves wi
 | `DATAPAGE` | Fetch recipients from a data page | `pyRecipientDataPage`, `pyDPClass`, `pyRecipientProperties` (≥1 entry) | `pzRecipientDataPageParameters`, `pzRuleParameters` |
 | `PAGELIST` | Iterate an embedded page list / page group | `pyRecipientContextPage`, `pyRecipientProperties` (≥1 entry) | `pyDPClass`, `pzRecipientDataPageParameters` |
 
-The schema enforces this with `if`/`then` branches on the recipient `$def`. When `pyRecipientContext` is omitted on legacy rules, treat the default as `CURRENTPAGE`.
+Recipient fields depend on the selected `pyRecipientContext`. When `pyRecipientContext` is omitted on legacy rules, treat the default as `CURRENTPAGE`.
 
 ### `pyRecipientProperties` is always required
 
@@ -92,7 +92,7 @@ Each channel's parameter map is **independent**: every parameter declared on the
 
 ### Auto-filled fields (omit from payloads unless overriding)
 
-The schema marks auto-derived/auto-defaulted properties with `x-pega-autoFill` / `x-pega-autoDerived`. The examples in this skill omit them unless they carry author signal. `pyEnableChannel` is the main exception: omit it only when you want the channel on by default; set it explicitly to `"false"` to turn a channel off. Common auto-filled fields:
+MCP derives or defaults the following properties when they are omitted. The examples in this skill omit them unless they carry author signal. `pyEnableChannel` is the main exception: omit it only when you want the channel on by default; set it explicitly to `"false"` to turn a channel off. Common auto-filled fields:
 `pyCategory`, `pxChannelRank`, `pxSubscript`, `pyChannelName`, `pyEnableChannel`, `pyDisplayStream` (`"pyShowNotificationDefault"`; grouped/child notifications use `"ShowChildNotificationDefault"`; member-join notifications use `"pyShowNotificationForMemberJoin"`), `pyDefaultUserPreference` blocks, `pyShowInUserPreference`, `pyDoNotShowInPreference`, `pyMuteNotification`, `pyRuleAvailable`, `pyMethodStatus`, `pyBaseRule`, and `pySortDateCircumWithinRSMajor`.
 
 ### `pyShowInUserPreference` and `pyDoNotShowInPreference`

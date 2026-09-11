@@ -1,5 +1,5 @@
 ---
-name: List Data Page with Key-Based Retrieval
+name: declare-pages-list-by-key
 description: List-structure data page that supports fetching a single entry by key via pyEnableRetrievePageByKey + pyKeysForPageList, instead of requiring the caller to load the full list. Only valid when pyStructure is "list" and pyPageType is "normal".
 ---
 

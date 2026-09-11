@@ -1,11 +1,11 @@
 ---
 name: rules-rule-obj-model
-description: Schema and authoring guide for Pega Data Transform rules (Rule-Obj-Model), including action types, expression patterns, and examples
+description: Authoring guide for Pega Data Transform rules (Rule-Obj-Model), including action types, expression patterns, and examples
 ---
 
 ## Examples
 
-### Rule-level
+### Rule-level — Clipboard format
 
 | Skill | Description |
 |-------|-------------|
@@ -13,12 +13,23 @@ description: Schema and authoring guide for Pega Data Transform rules (Rule-Obj-
 | `APPEND_AND_MAP_TO` | APPEND_AND_MAP_TO with EXISTING_PAGE_LIST, DataSource parameter, and pyPagesAndClasses |
 | `WHEN / OTHERWISE_WHEN / OTHERWISE` | WHEN/OTHERWISE_WHEN/OTHERWISE multi-branch conditional logic (if/else-if/else pattern) |
 | `APPLY_MODEL with Parameters` | APPLY_MODEL step calling another Data Transform with explicit parameter passing |
-| `JSON Format Data Transform — Manual Mapping` | JSON format Data Transform with manual UPDATE_PAGE + SET field mappings |
-| `JSON Format Data Transform — Automap` | JSON format Data Transform with automap enabled — all fields mapped automatically |
-| `JSON Format Data Transform — Nested-Object Descent` | JSON format Data Transform descending multiple levels via chained UPDATE_PAGE with `pyUpdateContextOptions: "JSON"` (use instead of dotted paths) |
 | `JSON Response Bridge DT (Clipboard Wrapper)` | Clipboard-format wrapper DT that bridges a data page response to a JSON DT via APPLY_MODEL — required because JSON DTs cannot be invoked directly by the data page framework |
 | `Primitive Array Extraction — Single Field` | Clipboard-format DT extracting one primitive JSON array value with guarded `pxReplaceAllViaRegex` — minimal pattern |
 | `Primitive Array Extraction — Multiple Fields` | Clipboard-format DT extracting multiple primitive JSON array values — repeated `contains()` + regex pattern per field |
+| `Data Transform Invoking Decision Table` | Data Transform pattern for invoking a Decision Table with direct `DecisionTable.ObtainValue` or the `pxEvaluateDecisionTable` Utilities wrapper |
+
+### Rule-level — JSON format
+
+See `model-json-data-transforms` before building any of these — it covers the shared
+mapping-action vocabulary these examples draw from.
+
+| Skill | Description |
+|-------|-------------|
+| `JSON Format Data Transform — Automap (Object)` | Object top-level, automap enabled (single record) — all fields mapped automatically |
+| `JSON Format Data Transform — Manual Mapping (Object)` | Object top-level, manual UPDATE_PAGE + SET field mappings (single record) |
+| `JSON Format Data Transform — Nested-Object Descent` | Object top-level, descending multiple levels via chained UPDATE_PAGE with `pyUpdateContextOptions: "JSON"` (use instead of dotted paths) |
+| `json-dt-automap-array` | Array top-level, automap enabled — the more common list-Data-Page shape |
+| `json-dt-array-nested-objects` | Array top-level, explicit (non-automap) mapping combining SET, UPDATE_PAGE ("For JSON only"), and APPEND_AND_MAP_TO |
 
 ### Step-level
 
@@ -40,6 +51,14 @@ description: Schema and authoring guide for Pega Data Transform rules (Rule-Obj-
 | `Data Transform pyProperties APPEND_TO — Current Source Page` | `APPEND_TO` | Append the current iteration page (inside FOR_EACH_PAGE_IN) |
 | `Data Transform pyProperties JSON Mapping — UPDATE_PAGE with nested SET` | `UPDATE_PAGE` (MappingStep) | JSON mapping — UPDATE_PAGE with nested SET children for field-level control |
 | `Data Transform pyProperties JSON nested-object descent — UPDATE_PAGE chain with pyUpdateContextOptions` | `UPDATE_PAGE` (MappingStep) | JSON nested-descent — chained UPDATE_PAGE with `pyUpdateContextOptions: "JSON"` for multi-level traversal |
+
+## References
+
+| Skill | When to load |
+|-------|--------------|
+| `model-json-data-transforms` | Before authoring or debugging any JSON-format Data Transform; covers mapping actions, top-level element structure, bridge wiring, settings, common patterns, and JSON-specific gotchas |
+| `json-dt-empty-fields-after-successful-call` | When a Data Page connector call succeeds but all mapped properties are empty |
+| `json-dt-array-elements-schema-error` | When `update-rule` fails with `schema for 'pyArrayElements' is false` or `schema for 'pyListProperty' is false` on an existing Object-top-level JSON Data Transform |
 
 ## Notes
 
@@ -77,23 +96,48 @@ before proceeding with the DT.
   applied to **any** action type (SET, UPDATE_PAGE, etc.) to conditionally skip that step.
   A WHEN action with a when-rule reference in `pyPropertiesName` is a branch, not a guard.
 
-### APPEND_TO — pyPropertiesValue per mode
+### pyRelationNameAppend — modes per action
 
-- `NEW_PAGE`: `pyPropertiesValue` is empty. Child steps are optional — the page is
-  appended empty.
-- `EXISTING_PAGE`: `pyPropertiesValue` is a page reference (e.g. `.MyList(<LAST>)`,
-  `.MyList(1)`). Data is copied — the source is not modified.
-- `EXISTING_PAGE_LIST`: `pyPropertiesValue` is a page list reference (e.g. `.OtherList`).
-  Data is copied — the source is not modified.
-- `CURRENT_SOURCE_PAGE`: `pyPropertiesValue` is empty — the source is implicitly the
-  current iteration page. Only meaningful inside a `FOR_EACH_PAGE_IN` step. Combine with
-  a WHEN condition to selectively append pages (filter pattern).
+`pyRelationNameAppend` (on `APPEND_AND_MAP_TO`, `APPEND_TO`, and `FOR_EACH_PAGE_IN`
+steps) determines the source of pages. Not every mode is valid on every action:
+
+- `NEW_PAGE` (`APPEND_AND_MAP_TO`/`APPEND_TO`): `pyPropertiesValue` is empty.
+  Child steps are optional — the page is appended empty.
+- `EXISTING_PAGE` (`APPEND_TO` only): `pyPropertiesValue` is a page reference
+  (e.g. `.MyList(<LAST>)`, `.MyList(1)`). Data is copied — the source is not
+  modified.
+- `EXISTING_PAGE_LIST` (`APPEND_AND_MAP_TO`/`APPEND_TO`): `pyPropertiesValue` is
+  a page list reference (e.g. `.OtherList`). Data is copied — the source is not
+  modified. Also the typical value for `FOR_EACH_PAGE_IN`'s iteration source.
+- `CURRENT_SOURCE_PAGE` (`APPEND_TO` only, inside `FOR_EACH_PAGE_IN`):
+  `pyPropertiesValue` is empty — the source is implicitly the current
+  iteration page. Combine with a WHEN condition to selectively append pages
+  (filter pattern).
 
 ### APPEND_TO vs APPEND_AND_MAP_TO
 
 - Use `APPEND_AND_MAP_TO` when child SET steps are always required (mapping pattern).
 - Use `APPEND_TO` when appending empty pages, copying existing pages, or appending the
   current iteration page inside a loop.
+
+### Calling Decision Tables from Clipboard Data Transforms
+
+A Clipboard Data Transform can invoke a Decision Table directly with the Activity-style
+function or through the Utilities wrapper. Use the direct form when the transform has
+the current page object available as `myStepPage`; use the Utilities form when the
+current page needs to be passed as a page-reference string:
+
+```text
+@DecisionTable.ObtainValue(tools,myStepPage,"DecisionTableName")
+@pxEvaluateDecisionTable(@Utilities.pxGetStepPageReference(),"DecisionTableName")
+```
+
+The direct form receives the current step page object. The Utilities form receives the
+current step page reference string. Both return the Decision Table result as a string.
+Use the form that matches the surrounding rule pattern. Do not use `APPLY_MODEL` for this
+purpose because `APPLY_MODEL` invokes another Data Transform, not a Decision Table. See
+`Data Transform Invoking Decision Table` for a complete payload with input and output
+parameters.
 
 ### EXIT_FOR_EACH
 
@@ -105,6 +149,9 @@ before proceeding with the DT.
 
 ### UPDATE_PAGE — WITH_VALUES_FROM
 
+- Copies all properties from a source page (named in `pyPropertiesValue`,
+  **no dot prefix**) onto the target page (`pyPropertiesName`). Child
+  `pyProperties` must be empty when using this mode.
 - The source page should be declared in `pyPagesAndClasses` with its class.
 - **Constellation UI warning:** `WITH_VALUES_FROM` may not reliably update
   embedded display pages during assignment field-change refresh. If the view
@@ -119,17 +166,20 @@ before proceeding with the DT.
 
 ### JSON Data Transforms
 
-See `model-json-data-transforms` for full coverage of:
-- Mapping rules (`pyPropertiesValue` is a single key, not a path)
-- Context descent (`pyUpdateContextOptions`: JSON / CLIPBOARD / default)
-- Top-level JSON arrays (single-result vs multi-result)
-- Primitive JSON arrays and the guarded regex workaround
-- `@replaceAll` vs `pxReplaceAllViaRegex` (plain-text vs regex)
-- Request-vs-response ownership rule
-- Regex extraction safety guardrails
-- WrongModeException troubleshooting
-- `pyDateFormat` requirement
-- Wrapper DT bridge pattern and anti-pattern
+A JSON Data Transform is a `Rule-Obj-Model` with `pyDataModelFormat: "JSON"` — the
+same rule type and shared top-level conventions as Clipboard-format DTs above, just
+a different body shape (`pyMappingModel` instead of `pyProperties`) and a materially
+different, smaller action vocabulary (`SET`, `AUTO_MAP`, `UPDATE_PAGE`, `APPEND_AND_MAP_TO`,
+`APPLY_DATA_TRANSFORM`, `COMMENT`). JSON DTs cannot be wired directly to a Data
+Page — they always need a Clipboard-format wrapper ("bridge") DT in front of them.
+
+**Before authoring or debugging any JSON DT, load `model-json-data-transforms`**
+from the References table above. It covers top-level element structure (Object vs
+Array, including the explicit-mapping pattern and the legacy PAGEGROUPS edge case),
+the full mapping-actions reference (UI-to-API field translation,
+SET/AUTO_MAP/UPDATE_PAGE/APPEND_AND_MAP_TO/APPLY_DATA_TRANSFORM/COMMENT), the bridge
+pattern, `pyMappingModel` settings, five common patterns, and the primitive-JSON-array
+(arrays of scalars) workaround.
 
 ### Parameterized data page references in expressions
 
@@ -156,8 +206,9 @@ Rules:
 When a Data Transform is invoked from a **flow utility shape** (not from a
 data page's `pyResDataTransform`), the `DataSource` named page is NOT
 automatically on the clipboard. If the DT references connector-backed data
-pages inline (e.g., `D_X[Param: .Field].Property`), those data pages may
-internally reference `DataSource.pyResponseData` in their response DTs.
+pages inline (e.g., `D_X[Param: .Field].Property`), those data pages'
+response DTs expect `DataSource` as a PAGE parameter (the DP framework
+normally provides this automatically).
 
 **Fix:** Declare `DataSource` in the DT's `pyPagesAndClasses` and add an
 `UPDATE_PAGE DataSource` step with blank initialization before the first
@@ -170,8 +221,8 @@ Step 2: SET .Result to D_X[Param: .Field].Property
 ```
 
 Without this, the DT fails at runtime with missing-page or null-reference
-errors when the inline data page's response DT tries to write to
-`DataSource.pyResponseData`.
+errors when the inline data page's response DT tries to read from
+`DataSource.pyResponseData` (its PAGE parameter).
 
 ### Unnamed parameters in platform DTs
 

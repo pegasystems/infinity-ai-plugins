@@ -10,7 +10,7 @@ description: String/Text property rendered with pxURL and validated with pxIsVal
   "pyClassName": "ORA332-HomeHealth-Work-HHClaimPricing",
   "pyPropertyMode": "String",
   "pyStringType": "Text",
-  "pyMaxLength": 256,
+  "pyMaxLength": "256",
   "pyStreamName": "pxURL",
   "pyEditValidate": "pxIsValidURL"
 }

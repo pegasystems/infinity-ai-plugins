@@ -1,5 +1,5 @@
 ---
-name: pyDataSourceList entry — ObjOpen
+name: declare-pages-source-obj-open
 description: Minimum-viable ObjOpen (Lookup) source entry. Retrieves a single record by key. Required fields pyLookupClassName and pyClassKeyValueList. Server auto-sets pyLoadActivity to pxCallObjOpen.
 ---
 

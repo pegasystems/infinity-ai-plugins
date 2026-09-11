@@ -1,5 +1,5 @@
 ---
-name: Class Group Root (ISCLASSGROUP)
+name: obj-class-group-root
 description: A class that IS the class group root — subclasses use HASCLASSGROUP pointing back to this class.
 ---
 

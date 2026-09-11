@@ -1,13 +1,13 @@
 ---
 name: rules-rule-connect-generativeai
-description: Schema and authoring guide for Pega GenerativeAI connector rules (Rule-Connect-GenerativeAI), including model configuration, prompt FieldValue references, response mappings, and examples
+description: Authoring guide for Pega GenerativeAI connector rules (Rule-Connect-GenerativeAI), including model configuration, prompt FieldValue references, response mappings, and examples
 ---
 
 **Prerequisite:** Load `methodology-rule-authoring` first
 
 ## Examples
 
-`genai-stub` is the minimal valid create payload — only required schema fields.
+`genai-stub` is the minimal valid create payload — only required fields.
 The remaining examples are grouped by `pyExpectedResponseEntity`.
 
 ### Custom — `pyExpectedResponseEntity = "Custom"`
@@ -52,6 +52,25 @@ user prompt), author a `Rule-Obj-FieldValue` with `pyFieldName = pyGenerativeAIP
 or `pyGenerativeAISystemPrompt` and reference its `pyFieldValue` from the connector.
 Authoring `Rule-Obj-FieldValue` itself is out of scope for this skill.
 
+**Pre-flight: verify prompt Field Values exist before creating the connector.**
+Before setting `pyGenAIDef.pyUserPrompt` or `pyGenAIDef.pySystemPrompt`, call
+`list-rules` scoped to the connector's class to confirm the named Field Value exists.
+For `Rule-Obj-FieldValue`, `ruleName` is the `pyFieldName` of the Field Value rule:
+
+- For user prompt: `list-rules` with `ruleType="Rule-Obj-FieldValue"`,
+  `ruleName="pyGenerativeAIPrompt"` (i.e. `pyFieldName='pyGenerativeAIPrompt'`),
+  `className=<connector's pyClassName>`.
+- For system prompt: `list-rules` with `ruleType="Rule-Obj-FieldValue"`,
+  `ruleName="pyGenerativeAISystemPrompt"` (i.e. `pyFieldName='pyGenerativeAISystemPrompt'`),
+  `className=<connector's pyClassName>`.
+
+Present the results to the user and ask them to select one. Default to
+`"pyGenerativeAIPromptTemplate"` (user) or `"pzDefaultSystemPrompt"` (system) only
+when the user does not provide a value and no custom FieldValues are found.
+If a required Field Value is missing, create it first (via `Rule-Obj-FieldValue`)
+before creating the connector — Pega validates these against the ruleset stack on
+save and will reject the connector if the named entry does not exist.
+
 ### Identity & defaults
 - **Prefer the default prompts.** Set `pyPromptName` to `"pyGenerativeAIPromptTemplate"`
   and `pySystemPromptName` to `"pzDefaultSystemPrompt"`, and keep `pyCustomizeSystemPrompt`
@@ -59,6 +78,11 @@ Authoring `Rule-Obj-FieldValue` itself is out of scope for this skill.
 - **Custom system prompt.** To override the system prompt, set `pyCustomizeSystemPrompt`
   to `"true"` and point `pySystemPromptName` at a custom FieldValue's `pyFieldValue`
   (authored under `pyFieldName = pyGenerativeAISystemPrompt`).
+  **Gate:** When `pyCustomizeSystemPrompt` is `"true"`, always ask the user what
+  `pyGenAIDef.pySystemPrompt` value to use before setting the field. Do not default to
+  `"pzDefaultSystemPrompt"` or any other value — the whole point of enabling
+  customization is to use a specific system prompt, so the name must come from
+  the user explicitly.
 - **Custom user prompt.** To override the user prompt, point `pyPromptName` at a custom
   FieldValue's `pyFieldValue` (authored under `pyFieldName = pyGenerativeAIPrompt`).
   No separate toggle is required.
@@ -147,6 +171,15 @@ Every leaf must repeat the **full** prefix — there is no row that "declares" a
 intermediate page or list; the server infers structure from shared prefixes. All
 intermediate properties must already exist on the appropriate class with the correct
 mode (`Page` vs `Page List`), and each leaf scalar must exist on the innermost class.
+
+**Pre-flight: verify response properties exist before creating the connector.**
+For every `pyFieldName` entry the user wants to map, call `list-rules` with
+`ruleType="Rule-Obj-Property"`, `ruleName=<property name without the dot>`,
+`className=<connector's pyClassName>` to confirm the property is declared on that
+class. If any property is missing, create it first (via `Rule-Obj-Property`) before
+creating the connector. Do not attempt to create the connector with undeclared
+properties — Pega will reject it with a "does not exist or is not a valid entry for
+this ruleset and its prerequisites" error.
 
 ### Single vs List at the root
 - `pyExpectedResponseEntity = "Single"` → response is one object. Do NOT set `pyListName`.

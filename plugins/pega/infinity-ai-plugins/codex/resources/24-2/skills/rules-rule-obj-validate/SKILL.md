@@ -1,6 +1,6 @@
 ---
 name: rules-rule-obj-validate
-description: Schema and authoring guide for Pega validate rules (Rule-Obj-Validate), including the declarative validation grid (pyValidationValues), embedded when conditions, validate-rule chaining, compiled activity steps, and per-condition examples
+description: Authoring guide for Pega validate rules (Rule-Obj-Validate), including the declarative validation grid (pyValidationValues), embedded when conditions, validate-rule chaining, compiled activity steps, and per-condition examples
 ---
 
 **Prerequisites:**
@@ -23,7 +23,7 @@ serves as both the key and the rule name.
 
 ### Two flavors: `ACTIVITY` (dominant) vs `VALIDATE`
 
-`pyActivityType` selects the authoring model. The schema auto-fills
+`pyActivityType` selects the authoring model. The builder auto-fills
 `ACTIVITY`, which is the dominant style in modern Pega applications.
 
 | Flavor | When to use | Core fields |
@@ -81,8 +81,8 @@ Each `WhenCondition` (`Embed-WhenConditions`) inside `pyValidWhen` /
 identifies the underlying utility function (e.g. `PropertyHasValue`,
 `MathGreaterThan`, `compareTwoStrings`, `pxIsInListOfValues`,
 `isInThePastDate`, `Rule-Obj-When`). The full list of supported aliases is
-defined by the enum on `pyConditionValue1Purpose` in the schema and the
-authoritative per-alias templates live in **`library-function-builder/examples/`**.
+documented by the authoritative per-alias templates in
+**`library-function-builder/examples/`**.
 
 To author a condition for a validate rule:
 
@@ -249,6 +249,5 @@ name (e.g. `property-has-value.md`, `compare-two-strings.md`,
 validate-rule adapter described in *Embedded when conditions reuse the
 function-builder library* above.
 
-The full set of supported function aliases is enforced by the
-`pyConditionValue1Purpose` enum in the schema.
-
+Use only function aliases documented in the
+`library-function-builder/examples/` catalogue.

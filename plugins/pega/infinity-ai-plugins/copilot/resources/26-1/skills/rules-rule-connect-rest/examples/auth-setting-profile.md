@@ -1,5 +1,5 @@
 ---
-name: Authenticated Connector with SETTING Auth Profile
+name: rest-auth-setting-profile
 description: REST Connector with SETTING-based URL and SETTING-based authentication profile, dynamic CLIPBOARD path parameter, and GET+POST methods. Data-page-sourced; pyMapToKey uses .pyResponseData on the connector step page per the response-landing-page contract. Auth is handled by the referenced auth profile, not by a hardcoded Authorization header.
 ---
 

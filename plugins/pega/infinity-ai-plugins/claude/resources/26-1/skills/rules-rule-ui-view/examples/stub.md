@@ -10,7 +10,7 @@ list-rules(ruleType="Rule-Obj-Property", className="MyCo-MyApp-Work-Case", ruleN
 ```
 
 If the result is empty, create the property first using `rules-rule-obj-property`
-(schema and examples for `Rule-Obj-Property` creation). Do not proceed with view
+(authoring guidance and examples for `Rule-Obj-Property` creation). Do not proceed with view
 creation until every backing property is confirmed.
 
 ---

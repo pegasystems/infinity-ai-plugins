@@ -1,5 +1,5 @@
 ---
-name: pyDataSourceList entry — GenAI
+name: declare-pages-source-genai
 description: Minimum-viable GenAI source entry. Loads data via a Generative AI connector (Rule-Connect-GenerativeAI). Required field pyConnectorName. Server auto-sets pyLoadActivity to pxCallGenAI.
 ---
 

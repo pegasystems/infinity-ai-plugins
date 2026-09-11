@@ -1,5 +1,5 @@
 ---
-name: pyDataSourceList entry — DataTransform
+name: declare-pages-source-data-transform
 description: Minimum-viable data-transform source entry. Simplest source type; only pyDTName is required.
 ---
 

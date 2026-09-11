@@ -1,5 +1,5 @@
 ---
-name: pyDataSourceList entry — Connector with parameter mapping
+name: declare-pages-source-connector-with-params
 description: Connector source entry with pyConnectorParamList mapping data page parameters to connector query-string parameters. pyIsActivityParameter must be "false" for connector params (query string, path, headers); "true" only for pxCallConnector activity-level overrides.
 ---
 

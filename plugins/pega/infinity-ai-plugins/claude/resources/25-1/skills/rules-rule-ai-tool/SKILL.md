@@ -1,6 +1,6 @@
 ---
 name: rules-rule-ai-tool
-description: Schema and authoring guide for Pega AI Tool rules (Rule-AI-Tool), including backing-rule categories, parameter mapping, and GenAI definitions. Requires Pega Infinity 25+ (08-25-01+).
+description: Authoring guide for Pega AI Tool rules (Rule-AI-Tool), including backing-rule categories, parameter mapping, and GenAI definitions. Requires Pega Infinity 25+ (08-25-01+).
 ---
 
 **Prerequisite:** Load `methodology-rule-authoring` first

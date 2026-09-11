@@ -1,5 +1,5 @@
 ---
-name: Activity Preconditions
+name: activity-preconditions
 description: Load when authoring steps that should only run conditionally (before the step executes). Covers the pyStepsPreCondParams fields, all valid action codes, combining multiple condition rows, and feature-toggle gating.
 ---
 
@@ -28,7 +28,7 @@ or fall through to the next condition row.
 
 For decisions that depend on the **outcome** of the step (status
 good/fail, messages present), use transitions instead — see
-`Activity Transitions`.
+`activity-transitions`.
 
 ## Enabling preconditions on a step
 
@@ -68,7 +68,7 @@ prompt list (Pega-RULES 08-01-01). The same 7 values apply to
 | `"1"` | Jump to Later Step | Jump to the block named in the `*Prms` companion field (target must match some step's `pyStepsBlockName`) |
 | `"2"` | Continue Whens | Evaluate the next precondition row in array order |
 | `"3"` | Skip Step | Skip the current step (continue to the step after it) |
-| `"4"` | Exit Iteration | Exit the current loop iteration (also valid in transitions at the metadata level, but absent from the transition UI dropdown — see `Activity Transitions`) |
+| `"4"` | Exit Iteration | Exit the current loop iteration (also valid in transitions at the metadata level, but absent from the transition UI dropdown — see `activity-transitions`) |
 | `"5"` | Skip Whens | Skip the remaining precondition rows on this step and execute the step |
 | `"6"` | Exit Activity | Exit the activity entirely |
 
@@ -173,8 +173,7 @@ are **required** on every row in `pyStepsPreCondParams` — even if the
 value is `""` (blank / no action). Omitting either field causes the
 server to reject the activity or silently drop the precondition row.
 
-The JSON schema enforces this via `required` on the `ActivityPreCondition`
-definition. Always include both fields explicitly:
+The MCP authoring contract requires both fields. Always include them explicitly:
 
 ```json
 {

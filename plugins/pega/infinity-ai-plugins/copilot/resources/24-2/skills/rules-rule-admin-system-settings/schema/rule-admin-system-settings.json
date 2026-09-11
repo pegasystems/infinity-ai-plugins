@@ -83,7 +83,7 @@
         },
         "pyValueClass": {
           "type": "string",
-          "description": "Required companion to pyValueType: 'Class' — the class the setting's value should resolve to. Confirmed live: 'Data-Admin-Security-AuthenticationProfile' for auth profile settings."
+          "description": "Required companion to pyValueType: 'Class' — the class the setting's value should resolve to."
         }
       }
     }

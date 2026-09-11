@@ -1,5 +1,5 @@
 ---
-name: Data Page Test (Connector-Backed List)
+name: unit-test-data-page-connector
 description: Tests a connector-backed (live external API) list data page with a ResultCount-only assertion. Nested List assertions checking specific list-item property values may be fragile against connector-backed sources -- see rules-rule-test-unit-case's "Connector-backed Data Page assertions" note.
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: Work Subclass
+name: obj-class-work-subclass
 description: Work class with class group assignment — standard Constellation app pattern.
 ---
 

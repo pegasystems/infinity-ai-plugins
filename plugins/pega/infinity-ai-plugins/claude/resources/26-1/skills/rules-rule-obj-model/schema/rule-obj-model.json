@@ -5,6 +5,7 @@
   "description": "JSON schema for creating or updating a Pega Data Transform rule (Rule-Obj-Model). Fields marked x-pega-autoFill are injected by the builder and may be omitted from payloads.",
   "type": "object",
   "required": [
+    "pxObjClass",
     "pyRuleName",
     "pyModelName",
     "pyLabel",
@@ -15,7 +16,8 @@
       "type": "string",
       "const": "Rule-Obj-Model",
       "description": "Rule type class — always 'Rule-Obj-Model'.",
-      "x-pega-autoFill": "Rule-Obj-Model"
+      "x-pega-autoFill": "Rule-Obj-Model",
+      "x-pega-autoDerived": true
     },
     "pyModelName": {
       "type": "string",
@@ -91,7 +93,7 @@
     },
     "pyPagesAndClasses": {
       "type": "array",
-      "description": "Named pages used by this data transform, with their classes.",
+      "description": "Named pages used by this data transform, with their classes. Effectively required for Array-format JSON DTs with explicit (non-automap) pyProperties — see model-json-data-transforms, 'Array top-level with explicit (non-automap) property mappings'.",
       "items": { "$ref": "#/$defs/PageAndClass" }
     }
   },
@@ -105,7 +107,8 @@
           "type": "string",
           "const": "Embed-ModelParams",
           "description": "Always 'Embed-ModelParams'.",
-          "x-pega-autoFill": "Embed-ModelParams"
+          "x-pega-autoFill": "Embed-ModelParams",
+          "x-pega-autoDerived": true
         },
         "pyActionName": {
           "type": "string",
@@ -135,12 +138,12 @@
         "pyRelationNameUpdatepage": {
           "type": "string",
           "enum": ["BLANK", "WITH_VALUES_FROM", ""],
-          "description": "UPDATE_PAGE only. 'BLANK' = clear the page's existing data before applying child SET steps (fresh initialization); 'WITH_VALUES_FROM' = copy all properties from a source page (name in pyPropertiesValue, no dot prefix) to the target page (pyPropertiesName), child pyProperties must be empty; '' = update the page in place."
+          "description": "UPDATE_PAGE only. 'BLANK' = clear the page before applying child SET steps; 'WITH_VALUES_FROM' = copy all properties from a source page; '' = update in place. See this SKILL.md's 'UPDATE_PAGE — WITH_VALUES_FROM' for the exact mechanics."
         },
         "pyRelationNameAppend": {
           "type": "string",
           "enum": ["NEW_PAGE", "EXISTING_PAGE", "CURRENT_SOURCE_PAGE", "EXISTING_PAGE_LIST"],
-          "description": "APPEND_AND_MAP_TO / APPEND_TO / FOR_EACH_PAGE_IN. Determines the source of pages. For APPEND actions: 'NEW_PAGE' = append single new empty page; 'EXISTING_PAGE' = copy an existing page (APPEND_TO only); 'CURRENT_SOURCE_PAGE' = append current iteration page (APPEND_TO only, inside FOR_EACH); 'EXISTING_PAGE_LIST' = append all pages from a source list. For FOR_EACH_PAGE_IN: indicates the iteration source type (typically 'EXISTING_PAGE_LIST')."
+          "description": "APPEND_AND_MAP_TO / APPEND_TO / FOR_EACH_PAGE_IN. Determines the source of pages — not every mode is valid on every action. See this SKILL.md's 'pyRelationNameAppend — modes per action' for the full per-action breakdown."
         },
         "pyRelationNameWhen": {
           "type": "string",
@@ -154,12 +157,12 @@
         "pyUpdateContextOptions": {
           "type": "string",
           "enum": ["JSON", "CLIPBOARD", ""],
-          "description": "UPDATE_PAGE / APPEND_AND_MAP_TO only. Controls which context advances when descending into a nested JSON node. 'JSON' = JSON context descends, clipboard target stays at the current page (use when traversing nested response objects to reach scalar leaves). 'CLIPBOARD' = clipboard target descends, JSON stays at the current node. '' (BOTH, platform default) = both contexts move together (use when mapping a nested JSON object onto an embedded clipboard page). NESTED-OBJECT MAPPING: dotted-path expressions in pyPropertiesValue are silently skipped at runtime — descend one level per step using this field instead."
+          "description": "UPDATE_PAGE / APPEND_AND_MAP_TO only. Controls which context (JSON vs clipboard) advances when descending into a nested JSON node. Dotted-path expressions in pyPropertiesValue are silently skipped at runtime — descend one level per step instead. See model-json-data-transforms, 'UPDATE_PAGE — Navigate into nested JSON objects'."
         },
         "pyAppendAndMapToOptions": {
           "type": "string",
           "enum": ["", "SCALARS", "ARRAYS", "PAGEGROUPS"],
-          "description": "APPEND_AND_MAP_TO only. Iteration mode over a JSON array source. 'PAGEGROUPS' = iterate JSON array of objects, create one clipboard page per element (use for multi-element responses). 'ARRAYS' = iterate JSON array of arrays. 'SCALARS' = iterate JSON array of primitives. '' (default) = MAP_TO_OBJECTS — no iteration; only first array element is mapped (non-deterministic for multi-element arrays). UPDATE_PAGE does NOT iterate; use this field on APPEND_AND_MAP_TO to capture every element."
+          "description": "APPEND_AND_MAP_TO only. Element type in the source JSON array. See model-json-data-transforms, 'APPEND_AND_MAP_TO — Map JSON arrays to Page Lists' for the full value table and the JSON-DT-specific MappingStep field this is not to be confused with."
         },
         "pyClassName": {
           "type": "string",
@@ -265,7 +268,8 @@
         "pxObjClass": {
           "type": "string",
           "const": "Embed-MethodParams",
-          "x-pega-autoFill": "Embed-MethodParams"
+          "x-pega-autoFill": "Embed-MethodParams",
+          "x-pega-autoDerived": true
         },
         "pyParametersParamName": {
           "type": "string",
@@ -307,7 +311,8 @@
         "pxObjClass": {
           "type": "string",
           "const": "Embed-PagesAndClasses",
-          "x-pega-autoFill": "Embed-PagesAndClasses"
+          "x-pega-autoFill": "Embed-PagesAndClasses",
+          "x-pega-autoDerived": true
         },
         "pyPagesAndClassesPage": {
           "type": "string",
@@ -331,7 +336,8 @@
         "pxObjClass": {
           "type": "string",
           "const": "Embed-ModelSortParams",
-          "x-pega-autoFill": "Embed-ModelSortParams"
+          "x-pega-autoFill": "Embed-ModelSortParams",
+          "x-pega-autoDerived": true
         },
         "pySortActionProp": {
           "type": "string",
@@ -351,11 +357,16 @@
         "pxObjClass": {
           "type": "string",
           "const": "Rule-Obj-Mapping-JSON",
-          "x-pega-autoFill": "Rule-Obj-Mapping-JSON"
+          "x-pega-autoFill": "Rule-Obj-Mapping-JSON",
+          "x-pega-autoDerived": true
         },
         "pyClassName": {
           "type": "string",
-          "description": "Applies-to class — required for property resolution in JSON mappings."
+          "description": "Class context for JSON mapping. For Array top-level with explicit pyProperties, must equal the outer rule's own pyClassName (typically 'Code-Pega-List'), not the entity class. For Object top-level, set to the entity class. See model-json-data-transforms, 'Top-level element structure' and 'Array top-level with explicit (non-automap) property mappings'."
+        },
+        "pyPageClass": {
+          "type": "string",
+          "description": "For Array top-level with explicit pyProperties, OMIT entirely — setting any value causes an unresolved '$CLASS' that fails create-rule or silently no-ops at runtime. For Object top-level, set to the entity class. See model-json-data-transforms, 'Array top-level with explicit (non-automap) property mappings'."
         },
         "pyTopLevelElement": {
           "type": "string",
@@ -434,7 +445,8 @@
         "pxObjClass": {
           "type": "string",
           "const": "Embed-MappingParams",
-          "x-pega-autoFill": "Embed-MappingParams"
+          "x-pega-autoFill": "Embed-MappingParams",
+          "x-pega-autoDerived": true
         },
         "pyActionName": {
           "type": "string",
@@ -443,36 +455,63 @@
         },
         "pyElementType": {
           "type": "string",
-          "description": "'Objects' for object/array, 'Properties' for scalar."
+          "description": "'Objects' for object/array context. Case-sensitive — use 'Objects' (not 'OBJECTS')."
         },
         "pyPageClass": {
           "type": "string",
-          "description": "Class context for the property."
+          "description": "Class context for the property. On parent steps (SET, UPDATE_PAGE, APPEND_AND_MAP_TO): the parent entity class. On child SETs inside APPEND_AND_MAP_TO: the page list entry class."
         },
         "pyPropertiesName": {
           "type": "string",
-          "description": "Target clipboard property path."
+          "description": "Target clipboard property path (e.g. '.Email'). Empty string for UPDATE_PAGE with 'No context change' (For JSON only)."
         },
         "pyPropertiesValue": {
           "type": "string",
-          "description": "Source JSON path or expression."
+          "description": "Source JSON key name. Must be a single key — NOT a dotted path. Use UPDATE_PAGE to descend into nested objects."
         },
         "pyPageRef": {
           "type": "string",
-          "description": "Page reference context."
+          "description": "Page reference context. Empty at top level. Inside APPEND_AND_MAP_TO children: the page list property name (e.g. '.Accommodations')."
+        },
+        "pyUpdateContextOptions": {
+          "type": "string",
+          "enum": ["JSON", "CLIPBOARD", ""],
+          "description": "UPDATE_PAGE only. 'JSON' = For JSON only (JSON context descends, clipboard stays flat — most common). 'CLIPBOARD' = For clipboard only. '' = For both sides (default). Controls which side descends when navigating nested structures."
+        },
+        "pyAppendAndMapToOptions": {
+          "type": "string",
+          "enum": ["", "SCALARS", "ARRAYS", "PAGEGROUPS"],
+          "description": "APPEND_AND_MAP_TO only. Element type in the JSON array. '' (empty/default) = An array of objects — the standard pattern for API responses. 'SCALARS' = An array of scalars. 'ARRAYS' = An array of arrays. 'PAGEGROUPS' = A group of pages (edge case)."
+        },
+        "pyPropertyStepId": {
+          "type": "string",
+          "description": "Hierarchical step identifier (e.g. '1', '2', '7', '7.1', '7.2'). Assigned automatically by the UI; include when creating via API for consistent ordering."
         },
         "pyDisabled": {
           "type": "string",
-          "description": "When 'true', this mapping entry is skipped."
+          "description": "When 'true', this mapping entry is skipped at runtime."
+        },
+        "pyExpanded": {
+          "type": "string",
+          "description": "UI expansion state for steps with children — 'true' shows children expanded. Cosmetic only, no runtime effect."
         },
         "pyEmptyBehavior": {
           "type": "string",
-          "enum": ["SKIP", "SET_DEFAULT"],
-          "description": "Behavior when the JSON value is empty/null. 'SKIP' = leave clipboard property unchanged; 'SET_DEFAULT' = set to default value."
+          "enum": ["", "SKIP", "SET_DEFAULT"],
+          "description": "Behavior when the JSON value is empty/null. '' (empty/default) = 'Default value' in UI — uses property's default. 'SKIP' = leave clipboard property unchanged. 'SET_DEFAULT' = explicitly set to default value."
+        },
+        "pySkippedProperties": {
+          "type": "string",
+          "description": "UPDATE_PAGE / APPEND_AND_MAP_TO. Comma-separated list of properties to skip during mapping. Usually empty."
+        },
+        "hiddenMappingsWarningAdded": {
+          "type": "string",
+          "const": "false",
+          "description": "UI state field — must be 'false'. Required on UPDATE_PAGE and APPEND_AND_MAP_TO steps."
         },
         "pyProperties": {
           "type": "array",
-          "description": "Child mapping entries for nested objects/arrays. Used by APPEND_AND_MAP_TO and UPDATE_PAGE to define sub-mappings.",
+          "description": "Child mapping entries for nested objects/arrays. Used by UPDATE_PAGE (sub-mappings within the descended context) and APPEND_AND_MAP_TO (mappings for each array element). Empty array [] for leaf SET/COMMENT steps.",
           "items": { "$ref": "#/$defs/MappingStep" }
         }
       }

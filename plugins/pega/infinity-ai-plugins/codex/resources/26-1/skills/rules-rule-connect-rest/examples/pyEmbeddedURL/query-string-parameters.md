@@ -1,5 +1,5 @@
 ---
-name: Query string parameters from PARAM and CLIPBOARD
+name: rest-url-query-string-parameters
 description: REST Connector pyEmbeddedURL with multiple query string parameters -- PARAM-sourced and CLIPBOARD-sourced values, pyFirstItem on the first entry, pyEmptyBehavior SKIP and pyDefaultValue.
 ---
 

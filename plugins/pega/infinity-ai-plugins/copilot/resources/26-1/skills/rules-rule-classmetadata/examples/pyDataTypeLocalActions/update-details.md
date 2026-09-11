@@ -1,5 +1,5 @@
 ---
-name: UpdateDetails Action
+name: classmetadata-local-action-update-details
 description: The OOTB Edit action — opens the data record in update form.
 ---
 

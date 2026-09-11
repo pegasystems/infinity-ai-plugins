@@ -47,7 +47,7 @@ The structure is a recursive tree of `ComponentNode` objects:
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `type` | String | DX component type (see Field Type Patterns in JSON schema `$defs`) |
+| `type` | String | DX component type. See `view-field-type-selection` for the complete mapping and examples. |
 | `name` | String | Logical name (required for Regions, optional otherwise) |
 | `config` | Object | Component-specific configuration (see below) |
 | `children` | Array | Nested child ComponentNodes |

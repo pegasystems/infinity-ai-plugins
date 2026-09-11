@@ -1,6 +1,6 @@
 ---
-name: JSON Format Data Transform — Manual Mapping
-description: JSON format Data Transform with explicit field-level mappings. Uses UPDATE_PAGE with nested SET steps to map JSON fields to clipboard properties.
+name: JSON Format Data Transform — Manual Mapping (Object)
+description: "JSON format Data Transform with manual UPDATE_PAGE + SET field mappings, Object top-level (single record, not an array). For the Array top-level pattern with nested objects and page-list mapping, see json-dt-array-nested-objects."
 ---
 
 ```json

@@ -1,6 +1,6 @@
 ---
-name: Simulated Data Page — Mock / Fake / Test Data Replacement
-description: Simulated (a.k.a. mock, fake, stub, test-data) data page that replaces a real connector source with a DataTransform providing canned data. The original Connector source is preserved verbatim in pyDisabledSource so the simulation can be reversed. Ruleset layering activates the simulation per environment — transparent to callers. Not to be confused with unit-test mocks (Rule-Test-Unit-Case.pySetupPages). See `rules-rule-declare-pages/references/simulation` for the full pattern, constraints, and pitfalls.
+name: declare-pages-simulated-replacement
+description: Simulated (a.k.a. mock, fake, stub, test-data) data page that replaces a real connector source with a DataTransform providing canned data. The original Connector source is preserved verbatim in pyDisabledSource so the simulation can be reversed. Ruleset layering activates the simulation per environment — transparent to callers. Not to be confused with unit-test mocks (Rule-Test-Unit-Case.pySetupPages). See `data-pages-simulation` for the full pattern, constraints, and pitfalls.
 ---
 
 ```json

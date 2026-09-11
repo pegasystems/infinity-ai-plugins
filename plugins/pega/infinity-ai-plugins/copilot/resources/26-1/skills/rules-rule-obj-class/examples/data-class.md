@@ -1,5 +1,5 @@
 ---
-name: Data Class Definition
+name: obj-class-data
 description: Data class under the application's data pool.
 ---
 

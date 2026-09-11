@@ -1,6 +1,6 @@
 ---
 name: rules-rule-declare-decision-table
-description: Schema and authoring guide for Pega Decision Table rules (Rule-Declare-DecisionTable), including column structure, delegated restrictions, multi-result property columns, page list macros, and examples
+description: Authoring guide for Pega Decision Table rules (Rule-Declare-DecisionTable), including column structure, delegated restrictions, multi-result property columns, page list macros, and examples
 ---
 
 ## Overview

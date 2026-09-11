@@ -140,7 +140,7 @@ nested `Multi-Reference`, `Embedded Data`, and `Embedded List` fields must use
 | `action` (`config.editType` / `pyEditType`) | Fetch the `Rule-Obj-FlowAction` named in `addEditAction` / `editAction` (`pyAddEditAction` / `pyEditAction`) on `targetObjectClass` or inherited class, then fetch the `Rule-UI-View` named by its `pyViewReference`. If `pyViewReference` is blank and `pySectionReference` is populated, stop: this is legacy section wiring and not a Constellation view schema. |
 
 `pyColumns`/`pyPrimaryFields` is only the table's displayed columns for existing
-rows (usually a subset) — never the row schema.
+rows (usually a subset) — never the complete row structure.
 
 ```json
 {

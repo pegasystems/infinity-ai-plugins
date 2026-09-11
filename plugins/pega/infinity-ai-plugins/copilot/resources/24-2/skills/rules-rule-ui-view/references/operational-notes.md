@@ -9,7 +9,7 @@ description: "Operational notes and verification checklist for Rule-UI-View upda
 Both are JSON-stringified objects — **must be sent as JSON strings** (`JSON.stringify`),
 not objects. Must be updated explicitly alongside `pyContent` (not auto-regenerated).
 
-See `rules-rule-ui-view/references/view-metadata-structures` for the full schema reference:
+See `rules-rule-ui-view/references/view-metadata-structures` for the full metadata reference:
 component node properties, common config properties, special value annotations
 (`@P`, `@FL`, `@L`, `@ATTACHMENT`, `@USER`, `@ASSOCIATED`, `@LR`, etc.),
 view root config, and all `pxContextMetadata` sections (`$properties`, `$views`,
@@ -45,7 +45,7 @@ See `rules-rule-ui-view/references/view-field-patterns` for the full patterns:
 - **Attachment `pyType`:** Attachment properties use `pyType: "Page"` in `pyContent`.
 - **Field input type is a property-level concern.** `pyDisplayLabel` on a view field entry is cosmetic and server-generated — do not set it on CREATE/UPDATE. Change `pyStreamName` on the `Rule-Obj-Property` to change the control.
 - **`pyRequiredValue` type normalization:** Send as boolean (`false`/`true`) on CREATE/UPDATE. The server normalizes to string (`"false"`/`"true"`) on GET. Both representations are accepted.
-- **`pyInheritParentLayout` boolean coercion:** Send as boolean `false` on CREATE. The server stores it as string `"false"` on GET. Unlike `pyRequiredValue`, the schema validator **rejects** the string form on subsequent `update-rule` calls. Always include `"pyInheritParentLayout": false` (boolean) explicitly in every update payload to avoid validation failure.
+- **`pyInheritParentLayout` boolean coercion:** Send as boolean `false` on CREATE. The server stores it as string `"false"` on GET. Unlike `pyRequiredValue`, update validation **rejects** the string form on subsequent `update-rule` calls. Always include `"pyInheritParentLayout": false` (boolean) explicitly in every update payload to avoid validation failure.
 - **Embedded data properties in `$properties`/`$fields`:** Embedded data fields (Page/PageList sub-views) go in `$views` only — do NOT add them to `$properties` or `$fields`. The server strips embedded data property paths from both arrays on save. Only scalar fields belong in `$properties`/`$fields`.
 - **`displayAs`/`showLabel`/`hideLabel` on embedded data:** The server silently strips `displayAs`, `showLabel` (in `inheritedProps`), and `hideLabel` from embedded data `pxViewMetadata` config on save. Do not include them — they cause roundtrip mismatches. Only `label` survives in `inheritedProps` for embedded data references.
 - **DataReference `pyContent` GET vs CREATE difference:** Designer-created rules unpack `pyJsonConfig` into four top-level fields (`pyClassContext`, `pyReferenceType`, `pyRuleName`, `pyRuleType`) and strip `pyJsonConfig` to just `{"authorContext":"..."}`. MCP-created rules preserve `pyJsonConfig` as-sent and omit those four fields. Both are functionally equivalent — `pxViewMetadata` drives rendering. Always use the full `pyJsonConfig` form for CREATE/UPDATE.

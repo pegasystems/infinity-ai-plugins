@@ -1,6 +1,6 @@
 ---
 name: JSON Format Data Transform — Nested-Object Descent
-description: Rule-level JSON Data Transform mapping a multi-level response (response → array → object → scalars). Chained UPDATE_PAGE steps with pyUpdateContextOptions "JSON" traverse each nesting level. Demonstrates the working pattern when dotted paths in pyPropertiesValue would be silently skipped.
+description: "JSON Data Transform mapping a multi-level response via chained UPDATE_PAGE steps with pyUpdateContextOptions 'JSON'. See model-json-data-transforms for the full mapping-actions reference."
 ---
 
 ```json

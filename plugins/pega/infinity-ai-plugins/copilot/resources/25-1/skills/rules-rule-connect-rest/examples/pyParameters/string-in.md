@@ -1,5 +1,5 @@
 ---
-name: Required STRING IN parameter
+name: rest-param-string-in
 description: REST Connector pyParameters entry — required STRING IN parameter matching a {productId} PARAM placeholder in pyResourcePathParameters.
 ---
 

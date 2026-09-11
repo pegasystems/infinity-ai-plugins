@@ -22,6 +22,7 @@ description: List report with three columns, two filters using a parameter, and 
     "pyReportContentPageName": "pyReportContentPage",
     "pyReportingDbDropdown": "Standard",
     "pyUseAlternateDb": "false",
+    "pyIgnoreSkinPDFExport": "true",
     "pyChart": {
       "pyEnableChart": "false",
       "pyGraphType": "Column"
@@ -86,6 +87,7 @@ description: List report with three columns, two filters using a parameter, and 
       }
     },
     "pyUserInteractions": {
+      "pyDesignModeActualResults": "true",
       "pyPagingParams": {
         "pyPagingEnabled": "true",
         "pyPageSize": "50",

@@ -1,5 +1,5 @@
 ---
-name: Stub Data Page (List)
+name: declare-pages-stub-list
 description: Minimal connector-backed list Data Page — smallest valid create payload for the most common integration pattern (pyPageType "normal", single Connector source, no parameters).
 ---
 

@@ -204,15 +204,14 @@ Descriptor-row shape for `ToCurrentOperator` / `CheckAvailability`:
 }
 ```
 
-Key distinctions from other `pzRuleParameters` row schemas:
+Key distinctions from other `pzRuleParameters` row shapes:
 
 - `pyParametersParamType: "BOOLEAN"` (not `"STRING"`) for boolean params.
 - `pyParametersParamDesc` carries the router activity's parameter
   description text verbatim.
-- Uses `pyParametersParamDefaultValue` (notify-wrapper-style 10-field
-  schema), not `pyParametersParamSize` variants used on approval bundles.
+- Uses `pyParametersParamDefaultValue` in place of `pyParametersParamSize`,
+  matching the notify-wrapper row shape. Approval-bundle rows use
+  `pyParametersParamSize` instead.
 
 On recreation, include one descriptor row per router-declared parameter.
 For routers without declared parameters, the Assignment carries `[]`.
-
-

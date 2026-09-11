@@ -1,6 +1,6 @@
 ---
 name: rules-rule-obj-flowaction
-description: Schema and authoring guide for Pega flow action rules (Rule-Obj-FlowAction), including view wiring, lifecycle hooks, guards, and examples
+description: Authoring guide for Pega flow action rules (Rule-Obj-FlowAction), including view wiring, lifecycle hooks, guards, and examples
 ---
 
 **Prerequisite:** Load `methodology-rule-authoring` first for general create/update
@@ -169,9 +169,7 @@ Always set this field explicitly.
 ### `pyOldStreamType = "Rule-HTML-Section"` is required at create time
 
 Despite the name, this must be `"Rule-HTML-Section"` even for Cosmos apps.
-Controls `pzAssemblePreProcess` HTML generation. Validate auto-sets it to
-`"NO_UI"` when `pySectionReference` is empty. This field is auto-filled by
-the schema.
+Controls `pzAssemblePreProcess` HTML generation.
 
 ### `pyconfirmchoice` has a lowercase 'c'
 
@@ -204,9 +202,6 @@ Key details:
   **not** at the section level (`pySections[0].pyUsingPage` is always empty).
 - The top-level `pySectionReferencePage` field always mirrors the sectionBody-level
   `pyUsingPage` and is auto-managed — do not set it independently.
-- The schema enforces this pairing via an `if/then` conditional on `HarnessSection`:
-  when `pyPageContext` is `clipboard`, `datapage`, or `property`, `pyUsingPage` on
-  the nested `HarnessSectionBody` must be non-empty.
 
 ### Flow wiring for connector actions
 

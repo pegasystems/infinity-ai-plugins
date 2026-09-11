@@ -1,6 +1,6 @@
 ---
 name: methodology-rule-authoring
-description: General instructions for creating and updating Pega rules using the schema-backed authoring tools
+description: General instructions for creating and updating Pega rules
 ---
 
 # Rule Authoring — General Guide
@@ -63,35 +63,25 @@ for creation or modification.
 ### Workflow
 
 1. **Load the rule-type skill** — use `get-skill` to load the matching `rules-*` skill for
-    the target rule type. This provides examples and points you to the JSON schema.
-2. **Must read the rule-type schema directly** — load the schema entry for the rule type
-   (rules-{pxObjClass lowercase-with-hyphens}/schema/{pxObjClass lowercase-with-hyphens} for example `rules-rule-obj-property/schema/rule-obj-property`) before building
-   the payload. Use the schema as the source of truth for:
-   - required fields
-   - auto-filled and auto-derived fields you should omit
-   - valid enum values
-   - conditional requirements such as fields that are required only for certain
-     modes or configurations
-   When the example and schema appear to disagree, trust the schema for field
-   validity and use existing live rules only as a secondary check for application
-   conventions.
-3. **Find the closest example and use it as-is** — identify the example from the
-   skill's `examples/` directory that most closely matches what you need to create.
+    the target rule type. This provides instructions on how to understand the rule, examples,
+    and references to skills that contain additional information.
+2. **Find the closest example and use it as-is** — identify the example from the
+    skill's `examples/` directory that most closely matches what you need to create.
    `examples/` contains full rule examples while subfolders in `examples/` contain
    example steps or shapes or rows. The canonical stub example returned by the
    parent skill's examples table is a good start if
    you want to create the simplest possible rule. **Treat the example as a rigid
    template:** use the exact same property names, nesting structure, and field
-   patterns it uses. Only change the _values_ to match the user's requirements. Do
-not invent property names or guess at field structures. Follow the example's structure, but when the schema requires additional fields (or different enum values), follow the schema's spelling and requirements to keep the payload valid.
-4. **Adapt the example** — change the field values to match the user's requirements.
-   Base all of your decision regarding the data model on the examples. Do not
-   combine examples. Do not get creative. Do not remove or add fields you don't need.
-   Don't add fields the example.
-5. **Call `create-rule`.**
-   See `methodology-change-request-workflow` for the full ChangeRequest lifecycle
-   that provides the `changeRequestID`.
-6. **Verify** — call `get-rule` on the returned key to confirm the rule was created
+    patterns it uses. Only change the _values_ to match the user's requirements. Do
+    not invent property names or guess at field structures.
+3. **Adapt the example** — change the field values to match the user's requirements.
+    Base all of your decision regarding the data model on the examples. Do not remove
+    or add fields you don't need. Look for additional examples that might give guidance
+    rather than changing the data model.
+4. **Call `create-rule`.**
+    See `methodology-change-request-workflow` for the full ChangeRequest lifecycle
+    that provides the `changeRequestID`.
+5. **Verify** — call `get-rule` on the returned key to confirm the rule was created
    correctly.
 
 ## Updating a Rule
@@ -181,20 +171,8 @@ don't know which change caused the failure.
 
 Use `methodology-dx-api-assignment-action` when an assignment requires complex `pageInstructions` or non-trivial embedded/page-list mutations.
 
-## Troubleshooting
+## References
 
-See these troubleshooting skills for common error resolutions:
-
-- `authoring-branch-ruleset-not-candidate` — Resolve "Branch ruleset not candidate" errors when creating test cases
-
-## AI Authoring Data Pages
-
-This section includes Data Pages that agents can use to make authoring decisions. The **404 Not Found** row informs the
-agent what to do if the Data Page call returns a "404 Not Found" message
-
-### `D_pxBranchForAI`
-* **Purpose** — Retrieve branch summary details, including branch lock status and rules contained in the branch.
-* **Parameters** — `branchID` (required string, case-insensitive): pass the effective branch ID returned as `branchName` by `initiate-authoring-change`.
-* **Page or List** — Page
-* **Details** — Use the returned `pyIsLocked` value to determine whether the branch is editable. The `pxResults` array lists the `pzInsKey` values for rules in the branch.
-* * **404 Not Found** — Search for the branchID with allApps=true, matchMode=any, fullText=true
+| Skill | When to load |
+|-------|--------------|
+| `authoring-branch-ruleset-not-candidate` | Resolve "Branch ruleset not candidate" errors when creating test cases |

@@ -12,14 +12,15 @@ description: Load this skill when the user asks to generate end-to-end Pega appl
 | `rules-rule-test-application-case` | Application Test rule creation using Business Actions |
 | `methodology-rule-authoring` | Write API selection and ChangeRequest lifecycle |
 | `rules-rule-obj-flow` | Flow shape interpretation — CRITICAL for Decision shapes and ScreenFlow detection |
-| `rules-rule-obj-flowaction` | Flow action schema — CRITICAL for validation extraction (`pyValidateActivity`) |
+| `rules-rule-obj-flowaction` | Flow action authoring guidance — CRITICAL for validation extraction (`pyValidateActivity`) |
 
 ## Phase 0: Prerequisite Check (Hard Stop)
 
 1. Call `run-data-page(dataPage="D_pzAutoTestCriterias", dataPageType="list")`.
-2. For each item in the `data` array, check `pySelected`.
-3. If **any** item has `pySelected: false` — **HARD STOP**. Tell the user: _"Cannot proceed — complete the above prerequisites in App Studio / Infinity Studio test landing page, then retry."_ Do **not** continue to Phase 1.
-4. If all items have `pySelected: true` — proceed to Phase 1.
+2. If the data page returns `403 Forbidden`, skip Phase 0 and proceed to Phase 1.
+3. Otherwise, for each item in the `data` array, check `pySelected`.
+4. If **any** item has `pySelected: false` — **HARD STOP**. Tell the user: _"Cannot proceed — complete the above prerequisites in App Studio / Infinity Studio test landing page, then retry."_ Do **not** continue to Phase 1.
+5. If all items have `pySelected: true` — proceed to Phase 1.
 
 ## Phase 1: Define Scope
 
@@ -32,6 +33,10 @@ Determine what to test based on the user's intent — do NOT ask upfront.
   through create-case or wait shapes in its flows.
 
 1. Call `get-application` → case types, data objects, relationships.
+
+### Customer Service Application Variant
+
+If `get-application` confirms that the current application is built on Customer Service and its `RulesetStack` contains `PegaCS-Constellation`, load `customer-service-application` via `get-skill` and follow its instructions before continuing. Keep the resulting Customer Service context active throughout all subsequent phases.
 
 ## Phase 2: Discover Existing Tests
 

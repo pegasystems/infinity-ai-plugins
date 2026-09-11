@@ -1,6 +1,6 @@
 ---
 name: rules-rule-obj-corr
-description: Schema and authoring guide for Pega Correspondence rules (Rule-Obj-Corr), including email and mail content templates, email view modes, and templated email configuration
+description: Authoring guide for Pega Correspondence rules (Rule-Obj-Corr), including email and mail content templates, email view modes, and templated email configuration
 ---
 
 **Prerequisite:** Load `methodology-rule-authoring` first
@@ -186,9 +186,7 @@ Each element is an `Embed-PagesAndClasses` page:
 
 ## Related Rule Types
 
-- **`Rule-CorrType`** -- Defines correspondence types (Email, Mail, etc.)
-- **`Rule-HTML-Section`** -- HTML sections included via `<pega:include>`
-- **`Rule-HTML-Paragraph`** -- HTML paragraphs included via `<pega:include>`
-- **`Rule-Corr-Fragment`** -- Correspondence fragments for modular content
-- **`Rule-Template-Word`** -- Word templates for mail correspondence
-- **`Rule-Obj-When`** -- When conditions for conditional rendering
+| Skill | Description |
+|------|-------------|
+| `rules-rule-corrtype` | Defines correspondence types (Email, Mail, etc.) |
+| `rules-rule-obj-when` | When conditions for conditional rendering |

@@ -1,5 +1,5 @@
 ---
-name: Activity Transitions
+name: activity-transitions
 description: Load when authoring steps that route to different blocks based on outcome (after the step executes). Covers the pyStepsTransParams fields, all valid action codes, jumping to named blocks, and status-based routing patterns.
 ---
 
@@ -26,7 +26,7 @@ jumps, or exit the activity).
 > runtime still accepts `"4"` on transitions.
 
 For "should this step run at all?" gating, use preconditions — see
-`Activity Preconditions`.
+`activity-preconditions`.
 
 ## `pyStepsTransParams` row fields (Embed-ActivityTransitions)
 
@@ -177,8 +177,7 @@ are **required** on every row in `pyStepsTransParams` — even if the
 value is `""` (blank / no action). Omitting either field causes the
 server to reject the activity or silently drop the transition row.
 
-The JSON schema enforces this via `required` on the `ActivityTransition`
-definition. Always include both fields explicitly:
+The MCP authoring contract requires both fields. Always include them explicitly:
 
 ```json
 {

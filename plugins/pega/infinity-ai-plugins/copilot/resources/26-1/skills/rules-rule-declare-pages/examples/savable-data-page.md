@@ -1,5 +1,5 @@
 ---
-name: Savable Data Page (simplesave)
+name: declare-pages-savable-simplesave
 description: Savable data page that persists changes back to the source via a single simplesave save option. Set pyPageType to "savable" (which derives pyType="loadonly" and pyIsSavable="true") and populate pyDataPageSaveOptionList with one Embed-DeclarePageSaveOption.
 ---
 
@@ -15,7 +15,7 @@ description: Savable data page that persists changes back to the source via a si
   "pyParameters": [
     {
       "pyParametersParamName": "customerID",
-      "pyParametersParamType": "String",
+      "pyParametersParamType": "STRING",
       "pyParametersParamInOut": "IN",
       "pyParametersParamReq": "-1",
       "pyParametersParamDesc": "Customer ID"

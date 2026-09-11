@@ -1,5 +1,5 @@
 ---
-name: pyDataSourceList entry — ReportDefinition
+name: declare-pages-source-report-definition
 description: Minimum-viable report-definition source entry. Required fields pyLoadReportDefinition and pyReportDefinitionClass. Server auto-sets pyLoadActivity to pxCallRetrieveReportData.
 ---
 

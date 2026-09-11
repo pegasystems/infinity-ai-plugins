@@ -205,9 +205,9 @@ status after confirming on a live Pega instance.)*
   via `pyMaxLength`)
 - **Example:** To enforce a minimum of 8 characters on `.pyPassword`: Constraint rule
   with condition `@(Pega-RULES:String).length(.pyPassword) < 8` and message "Password
-  must be at least 8 characters." For a max of 50 characters: set `pyMaxLength = 50`
-  on the Property rule (this also enforces it in the UI input field), OR add a Constraint
-  with `@(Pega-RULES:String).length(.pyDescription) > 50`.
+  must be at least 8 characters." For a max of 50 characters: set `pyMaxLength` to
+  `"50"` on the Property rule JSON payload (this also enforces it in the UI input
+  field), OR add a Constraint with `@(Pega-RULES:String).length(.pyDescription) > 50`.
 - **Notes:** **Max length via Property rule** (`pyMaxLength`): the simplest approach for
   maximum length — enforces both server-side and typically trims or blocks input in
   the UI. **Min length via Constraint rule**: there is no `pyMinLength` equivalent —

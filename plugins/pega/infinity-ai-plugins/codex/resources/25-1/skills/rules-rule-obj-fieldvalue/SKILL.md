@@ -1,6 +1,6 @@
 ---
 name: rules-rule-obj-fieldvalue
-description: Schema and authoring guide for Pega field value rules (Rule-Obj-FieldValue), including localizable text, message parameters, common field name patterns, notification messages, and GenAI prompts
+description: Authoring guide for Pega field value rules (Rule-Obj-FieldValue), including localizable text, message parameters, common field name patterns, notification messages, and GenAI prompts
 ---
 
 **Prerequisite:** Load `methodology-rule-authoring` first

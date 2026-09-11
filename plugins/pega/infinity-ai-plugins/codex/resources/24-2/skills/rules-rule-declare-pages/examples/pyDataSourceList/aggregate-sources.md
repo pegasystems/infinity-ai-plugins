@@ -1,5 +1,5 @@
 ---
-name: pyDataSourceList entry — AggregateSources
+name: declare-pages-source-aggregate
 description: Minimum-viable aggregate-sources source entry. Combines results from multiple independent sub-sources into a single data page. Required field pyAggregatedDataSourceList (each nested entry is itself a DeclarePageSource of any type). Rare — used when one data page must merge multiple feeds.
 ---
 
