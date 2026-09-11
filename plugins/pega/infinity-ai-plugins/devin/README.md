@@ -15,6 +15,8 @@ Add the following server to Devin's MCP metadata file. Use a project-level `.dev
 - macOS and Linux: `~/.config/devin/mcp_config.json`
 - Windows: `%APPDATA%\devin\mcp_config.json` (open the Run dialog with Windows + R and enter `%appdata%`)
 
+If `devin` directory does not exist already, please create a new directory.
+
 Use absolute paths and replace the placeholder values:
 
 ```json
