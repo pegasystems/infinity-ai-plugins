@@ -8,7 +8,7 @@ This repository packages Pega Infinity AI plugins for multiple AI clients. It co
 
 ## Supported Pega Infinity Versions
 
-[Pega Documentation - Developing aapplications with external agents](https://docs.pega.com/bundle/platform/page/platform/gen-ai/building-pega-through-mcp.html)
+[Pega Documentation - Developing applications with external agents](https://docs.pega.com/bundle/platform/page/platform/gen-ai/building-pega-through-mcp.html)
 
 - Pega Infinity 26.1+
 - Pega Infinity 25.1.3+ (please contact [Pega Support](https://pegasupport.pega.com))
