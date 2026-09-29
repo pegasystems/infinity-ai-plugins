@@ -67,7 +67,7 @@ Each column is an `Embed-DecisionTable-Column` inside the `pyColumns` array:
 | `pyDefaultOperator` | No | Default operator for Dev Studio display (`"="`, `"!="`, `">="`, `"<="`, `">"`, `"<"`) |
 | `pyUseRange` | No | `"false"` (range conditions flag) |
 | `pyUseRangeMax` | No | `"false"` (range max flag) |
-| `pyOrConditions` | No | OR conditions array — see `decision-table-or-conditions` |
+| `pyOrConditions` | No | OR conditions array — see `rules-rule-declare-decision-table/references/or-conditions` |
 
 **Condition value format:** Operator concatenated with value as a single string.
 All values are strings regardless of data type:
@@ -89,21 +89,21 @@ payload — they are server-generated.
 
 ### OR Conditions
 
-See `decision-table-or-conditions` for multi-value matching within a single row.
+See `rules-rule-declare-decision-table/references/or-conditions` for multi-value matching within a single row.
 
 ## Multi-Result Decision Tables
 
-See `decision-table-multi-result` for `pyPropertyColumns`, `pyDefaultResultPropSet`,
+See `rules-rule-declare-decision-table/references/multi-result` for `pyPropertyColumns`, `pyDefaultResultPropSet`,
 embedded quotes convention, and the two patterns (Lookup Table vs List Builder).
 
 ## Page List Macros in Property Paths
 
-See `decision-table-page-list-macros` for `<APPEND>`/`<LAST>` macros and
+See `rules-rule-declare-decision-table/references/page-list-macros` for `<APPEND>`/`<LAST>` macros and
 `pyPagesAndClasses` declarations when targeting page lists.
 
 ## Allowed Values and SET Side-Effects
 
-See `decision-table-allowed-values` for the `pyAllowedValues` vocabulary pattern,
+See `rules-rule-declare-decision-table/references/allowed-values` for the `pyAllowedValues` vocabulary pattern,
 SET side-effects that fire per return value, and when to use this feature vs
 plain `pyResults`.
 
@@ -137,14 +137,14 @@ Omit for most tables — adding entries flags the rule as "Advanced" in Dev Stud
 Each non-stub example shows a **single-step `create-rule` payload** with
 columns and rows included. Auto-filled fields are omitted from all examples.
 
-| Skill | Description |
-|------|-------------|
-| `Stub Decision Table` | Bare shell — identity + defaults, no columns, no rows |
-| `Multi-Column Mixed Types` | 3 columns (integer + decimal + text), 3 rows, mixed data types |
-| `Date Columns` | 3 columns (text + date + date), 3 rows, dual date range pattern |
-| `Text-Only Approval` | 3 columns (all text), 3 rows, approval/gate workflow pattern |
-| `Parameter Lookup` | 1 column (Param.Name reference), 4 rows, parameter-based lookup |
-| `Multi-Result Lookup Table` | Multi-result lookup table — condition maps to multiple output properties, first-match |
-| `Multi-Result List Builder` | Multi-result list builder — `<APPEND>`/`<LAST>` macros, `pyEvaluateAllRows: "yes"` |
-| `Allowed Values with Property Assignments` | pyAllowedValues — registers result values and allows specific values for additional target properties when each result is selected |
-| `Preset Properties (pyInitialPropSet)` | pyInitialPropSet preset properties — sets properties unconditionally before any row evaluation |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-declare-decision-table/examples/stub` | Stub Decision Table | Bare shell — identity + defaults, no columns, no rows |
+| `rules-rule-declare-decision-table/examples/multi-column-mixed` | Multi-Column Mixed Types | 3 columns (integer + decimal + text), 3 rows, mixed data types |
+| `rules-rule-declare-decision-table/examples/date-columns` | Date Columns | 3 columns (text + date + date), 3 rows, dual date range pattern |
+| `rules-rule-declare-decision-table/examples/text-only-approval` | Text-Only Approval | 3 columns (all text), 3 rows, approval/gate workflow pattern |
+| `rules-rule-declare-decision-table/examples/parameter-lookup` | Parameter Lookup | 1 column (Param.Name reference), 4 rows, parameter-based lookup |
+| `rules-rule-declare-decision-table/examples/multi-result-lookup` | Multi-Result Lookup Table | Multi-result lookup table — condition maps to multiple output properties, first-match |
+| `rules-rule-declare-decision-table/examples/multi-result-list-builder` | Multi-Result List Builder | Multi-result list builder — `<APPEND>`/`<LAST>` macros, `pyEvaluateAllRows: "yes"` |
+| `rules-rule-declare-decision-table/examples/allowed-values-set` | Allowed Values with Property Assignments | pyAllowedValues — registers result values and allows specific values for additional target properties when each result is selected |
+| `rules-rule-declare-decision-table/examples/initial-prop-set` | Preset Properties (pyInitialPropSet) | pyInitialPropSet preset properties — sets properties unconditionally before any row evaluation |

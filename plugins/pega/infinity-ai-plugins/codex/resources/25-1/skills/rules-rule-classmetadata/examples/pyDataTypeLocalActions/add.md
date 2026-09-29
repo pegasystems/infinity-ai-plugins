@@ -1,6 +1,6 @@
 ---
 name: classmetadata-local-action-add
-description: The OOTB Add action — opens the data record in create form to add a new instance.
+description: Load when adding the OOTB Add row to pyDataTypeLocalActions. Contains the create-form action payload.
 ---
 
 ```json

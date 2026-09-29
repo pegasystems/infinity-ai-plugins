@@ -9,45 +9,45 @@ description: Authoring guide for Pega Report Definition rules (Rule-Obj-Report-D
 
 ### Rule-level
 
-| Skill | Description |
-|-------|-------------|
-| `Stub Report Definition` | Minimal report definition — smallest valid create payload |
-| `List Report with Filters and Parameters` | List report with three columns, two filters using a parameter, and pagination |
-| `Summary Report with GroupBy and Aggregates` | Summary/aggregate report with GROUP BY and COUNT |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-obj-report-definition/examples/stub` | Stub Report Definition | Minimal report definition — smallest valid create payload |
+| `rules-rule-obj-report-definition/examples/list-with-filters` | List Report with Filters and Parameters | List report with three columns, two filters using a parameter, and pagination |
+| `rules-rule-obj-report-definition/examples/summary-group-count` | Summary Report with GroupBy and Aggregates | Summary/aggregate report with GROUP BY and COUNT |
 
 ### Component-level
 
-| Skill | Description |
-|-------|-------------|
-| `List Field — Sorted column` | Output column with `pySortOrder=1`, `pySortType=ASC` |
-| `List Field — Unsorted column` | Output column without sorting (omit `pySortOrder`) |
-| `Filter — Equality with parameter reference` | Filter condition using `=` with parameter |
-| `Filter — Not-equal with literal value` | Filter condition using `!=` with literal |
-| `Filter — IS NOT NULL` | Filter condition for IS NOT NULL |
-| `Filter — User-visible (AllAccess)` | User-visible filter with AllAccess |
-| `Parameter — Text` | Named report parameter (Text type) |
-| `Parameter — DateTime` | Named report parameter (DateTime type) |
-| `Pagination Configuration` | Pagination configuration |
-| `Group-By Column` | GROUP BY column for summary reports |
-| `Aggregate Column — COUNT` | Aggregate function column (COUNT) |
-| `Aggregate Column — SUM` | Aggregate function column (SUM) |
-| `Aggregate Column — COUNTDISTINCT` | Aggregate function column (COUNTDISTINCT) |
-| `Sub-Report (pySubReportInfo) — minimal row` | JOIN to another Report Definition — minimal row |
-| `Sub-Report — complete LEFT OUTER worked example` | JOIN to another Report Definition — complete LEFT OUTER worked example |
-| `Named Page Declaration` | Named page declaration for filter binding |
-| `Direct Table Join (pyJoinInfo) — minimal row` | Direct table JOIN — minimal row |
-| `Direct Table Join — matching pyPagesAndClasses entries` | Direct table JOIN — matching `pyPagesAndClasses` snippet |
-| `Direct Table Join — complete LEFT OUTER worked example` | Direct table JOIN — complete LEFT OUTER worked example |
-| `Declare-Index Join (pyIndexInfo) — minimal row` | Declare-Index JOIN to an `Index-*` class — minimal row |
-| `Declare-Index Join — three INNER joins on one Work case` | Declare-Index JOIN — worked example with three joins |
-| `Association Join (pyAssociations) — explicit row` | Association JOIN via `Rule-Obj-Association` — explicit row |
-| `Association — explicit pyAssociations block (mirrored)` | Association JOIN — explicit mirrored block |
-| `Association — explicit complete worked example` | Association JOIN — complete worked example for DX API |
-| `Association — implicit list report worked example` | Association JOIN — implicit example (Dev Studio only) |
-| `Max Records and Timeout Configuration` | Max records and timeout configuration mirrored in both `pyContent` and `pyUI` |
-| `Report Rank — pyContent.pyReportRank` | Top-N / Bottom-N ranking (window function) — content layer |
-| `Report Rank — pyUI.pyBody.pyReportRank (UI mirror)` | Top-N / Bottom-N ranking (window function) — UI mirror |
-| `Pie Chart (pyUI.pyChart)` | Pie chart over a summary report |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-obj-report-definition/examples/pyListFields/sorted` | List Field — Sorted column | Output column with `pySortOrder=1`, `pySortType=ASC` |
+| `rules-rule-obj-report-definition/examples/pyListFields/unsorted` | List Field — Unsorted column | Output column without sorting (omit `pySortOrder`) |
+| `rules-rule-obj-report-definition/examples/pyFilter/equality` | Filter — Equality with parameter reference | Filter condition using `=` with parameter |
+| `rules-rule-obj-report-definition/examples/pyFilter/not-equal` | Filter — Not-equal with literal value | Filter condition using `!=` with literal |
+| `rules-rule-obj-report-definition/examples/pyFilter/is-not-null` | Filter — IS NOT NULL | Filter condition for IS NOT NULL |
+| `rules-rule-obj-report-definition/examples/pyFilter/user-visible` | Filter — User-visible (AllAccess) | User-visible filter with AllAccess |
+| `rules-rule-obj-report-definition/examples/pyParameters/text` | Parameter — Text | Named report parameter (Text type) |
+| `rules-rule-obj-report-definition/examples/pyParameters/datetime` | Parameter — DateTime | Named report parameter (DateTime type) |
+| `rules-rule-obj-report-definition/examples/pyPaging/basic` | Pagination Configuration | Pagination configuration |
+| `rules-rule-obj-report-definition/examples/pyGroupBy/basic` | Group-By Column | GROUP BY column for summary reports |
+| `rules-rule-obj-report-definition/examples/pyAggregate/count` | Aggregate Column — COUNT | Aggregate function column (COUNT) |
+| `rules-rule-obj-report-definition/examples/pyAggregate/sum` | Aggregate Column — SUM | Aggregate function column (SUM) |
+| `rules-rule-obj-report-definition/examples/pyAggregate/countdistinct` | Aggregate Column — COUNTDISTINCT | Aggregate function column (COUNTDISTINCT) |
+| `rules-rule-obj-report-definition/examples/pySubReportInfo/basic` | Sub-Report (pySubReportInfo) — minimal row | JOIN to another Report Definition — minimal row |
+| `rules-rule-obj-report-definition/examples/pySubReportInfo/left-outer-worked` | Sub-Report — complete LEFT OUTER worked example | JOIN to another Report Definition — complete LEFT OUTER worked example |
+| `rules-rule-obj-report-definition/examples/pyPagesAndClasses/basic` | Named Page Declaration | Named page declaration for filter binding |
+| `rules-rule-obj-report-definition/examples/pyJoinInfo/basic` | Direct Table Join (pyJoinInfo) — minimal row | Direct table JOIN — minimal row |
+| `rules-rule-obj-report-definition/examples/pyJoinInfo/pages-and-classes` | Direct Table Join — matching pyPagesAndClasses entries | Direct table JOIN — matching `pyPagesAndClasses` snippet |
+| `rules-rule-obj-report-definition/examples/pyJoinInfo/left-outer-worked` | Direct Table Join — complete LEFT OUTER worked example | Direct table JOIN — complete LEFT OUTER worked example |
+| `rules-rule-obj-report-definition/examples/pyIndexInfo/basic` | Declare-Index Join (pyIndexInfo) — minimal row | Declare-Index JOIN to an `Index-*` class — minimal row |
+| `rules-rule-obj-report-definition/examples/pyIndexInfo/three-joins` | Declare-Index Join — three INNER joins on one Work case | Declare-Index JOIN — worked example with three joins |
+| `rules-rule-obj-report-definition/examples/pyAssociations/explicit` | Association Join (pyAssociations) — explicit row | Association JOIN via `Rule-Obj-Association` — explicit row |
+| `rules-rule-obj-report-definition/examples/pyAssociations/explicit-mirrored` | Association — explicit pyAssociations block (mirrored) | Association JOIN — explicit mirrored block |
+| `rules-rule-obj-report-definition/examples/pyAssociations/explicit-worked` | Association — explicit complete worked example | Association JOIN — complete worked example for DX API |
+| `rules-rule-obj-report-definition/examples/pyAssociations/implicit-worked` | Association — implicit list report worked example | Association JOIN — implicit example (Dev Studio only) |
+| `rules-rule-obj-report-definition/examples/pyMaxRecords/basic` | Max Records and Timeout Configuration | Max records and timeout configuration mirrored in both `pyContent` and `pyUI` |
+| `rules-rule-obj-report-definition/examples/pyReportRank/content` | Report Rank — pyContent.pyReportRank | Top-N / Bottom-N ranking (window function) — content layer |
+| `rules-rule-obj-report-definition/examples/pyReportRank/ui` | Report Rank — pyUI.pyBody.pyReportRank (UI mirror) | Top-N / Bottom-N ranking (window function) — UI mirror |
+| `rules-rule-obj-report-definition/examples/pyChart/pie` | Pie Chart (pyUI.pyChart) | Pie chart over a summary report |
 
 ## Functionality Reference
 

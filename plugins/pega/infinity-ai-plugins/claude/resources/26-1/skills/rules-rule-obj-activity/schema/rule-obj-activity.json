@@ -288,8 +288,7 @@
         },
         "pyStepsCallParams": {
           "type": "object",
-          "description": "Key-value pairs of method-specific parameters (varies per method).",
-          "additionalProperties": true
+          "description": "Key-value pairs of method-specific parameters (varies per method)."
         },
         "pyParamArray": {
           "type": "array",

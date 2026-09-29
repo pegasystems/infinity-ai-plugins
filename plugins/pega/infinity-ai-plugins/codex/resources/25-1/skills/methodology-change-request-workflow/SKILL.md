@@ -336,7 +336,8 @@ The whole point of branching is to isolate changes for human review. Rules creat
 updated in the base ruleset bypass the branch and are immediately visible to all
 users — with no opportunity for review.
 
-For detailed information on branched development, see `pega-branched-development`.
+For the branch-rule record model, see `rules-rule-ruleset-branch`. For the general
+branch-scoped authoring workflow, see `methodology-rule-authoring`.
 
 If you need to modify an existing rule that is not already in the branch ruleset,
 call `update-rule` directly with `changeRequestID`; the tool creates/uses the branch

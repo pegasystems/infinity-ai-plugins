@@ -7,10 +7,10 @@ description: Authoring guide for Pega ruleset name records (Rule-RuleSet-Name), 
 
 ## Examples
 
-| Skill | Description |
-|-------|-------------|
-| `rules-rule-ruleset-name/examples/standard` | Minimal standard ruleset record showing the required authored identity fields |
-| `rules-rule-ruleset-name/examples/branch` | Minimal branch ruleset record showing the additional branch-only identity fields |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-ruleset-name/examples/standard` | Standard RuleSet Name | Minimal standard ruleset record showing the required authored identity fields |
+| `rules-rule-ruleset-name/examples/branch` | Branch RuleSet Name | Minimal branch ruleset record showing the additional branch-only identity fields |
 
 ## Authoring Notes
 

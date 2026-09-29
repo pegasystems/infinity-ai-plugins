@@ -135,11 +135,11 @@ Blueprint Delivered requires a fundamental shift from traditional delivery:
 - **Designed for Scale** -- Applicable to new builds and modernization of existing systems
 
 ## Additional resources
-| User intent | Skill |
-|---|---|
-| Blueprinting phase, discovery, design workshops, prepare stage | `Blueprint Delivered phase one - Blueprinting` |
-| Blueprint import, foundation stage, CI/CD setup, refinement | `Blueprint Delivered phase two part one` |
-| Authentication, SSO, persona authorization, data integration | `Blueprint Delivered phase two part two` |
-| Routing, SLAs, views, landing pages, branding | `Blueprint Delivered phase two part three` |
-| Business logic, decision tables, integrations, localization | `Blueprint Delivered phase two part four` |
-| Go-live, UAT, deployment, rollback, value activation | `Blueprint Delivered phase three - Value activation` |
+| User intent | Skill | Label |
+|---|---|---|
+| Blueprinting phase, discovery, design workshops, prepare stage | `methodology-blueprint-delivered/references/blueprinting` | Blueprint Delivered phase one - Blueprinting |
+| Blueprint import, foundation stage, CI/CD setup, refinement | `methodology-blueprint-delivered/references/authoring-foundation` | Blueprint Delivered phase two part one |
+| Authentication, SSO, persona authorization, data integration | `methodology-blueprint-delivered/references/authoring-security-data` | Blueprint Delivered phase two part two |
+| Routing, SLAs, views, landing pages, branding | `methodology-blueprint-delivered/references/authoring-case-usability` | Blueprint Delivered phase two part three |
+| Business logic, decision tables, integrations, localization | `methodology-blueprint-delivered/references/authoring-automation` | Blueprint Delivered phase two part four |
+| Go-live, UAT, deployment, rollback, value activation | `methodology-blueprint-delivered/references/value-activation` | Blueprint Delivered phase three - Value activation |

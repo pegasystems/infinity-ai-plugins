@@ -1,9 +1,7 @@
 ---
 name: classmetadata-primary-fields
-description: "What pyPrimaryFields is — design-time metadata that drives Case Designer, default views, and agent reliability. What it is NOT (not keys, not required, not enforced)."
+description: Load when choosing or explaining class primary fields. Defines pyPrimaryFields, its design-time effects, and what it does not enforce.
 ---
-# Primary Fields
-
 ## What Are Primary Fields?
 
 Primary Fields are a **design-time metadata designation** stored on a class that

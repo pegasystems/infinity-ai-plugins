@@ -52,58 +52,65 @@ DecisionTree, Expressions, and When rules. ActivityStatus is exclusive to activi
 
 ### Rule-level
 
-| Skill | Description |
-|------|-------------|
-| `Stub Test Case` | Minimal test case template -- smallest valid create payload with an empty assertion |
-| `Activity Status Test` | ActivityStatus assertion -- verifies the rule under test completed with a GOOD status. The most common single-assertion pattern for activities. |
-| `Decision Assertion Test` | Decision table test with triple-nested Decision assertion. Same structure applies to decision trees and declare expressions -- swap the pyRuleUnderTest block. |
-| `Decision Table Test with Parameter Inputs` | Decision table test where the columns reference parameters (`param.X`). Input rows must put the `param.<Name>` token in `pyDisplayLabel` as well as `pyPropertyName`/`pyPropertyAbsolutePath` -- friendly labels break the Manage Properties refresh action in Dev Studio. |
-| `When Rule Decision Test` | When rule test with Decision assertion, pyAllowMultipleInputCombinations, and true/false result rows. No setup pages needed. |
-| `Report Definition Test (Complex Test with Setup/Cleanup)` | Report definition with List assertion, setup/cleanup activities, setup pages, RUT parameters, and pages-and-classes. Setup/cleanup patterns are RUT-type-agnostic. |
-| `Data Page Test (Single Object)` | Single-object data page with parameter, bare InsName format, `pyIsSinglePageImplementation` |
-| `Data Page Test (List)` | List data page with ResultCount and List assertions on `.pxResults` |
-| `unit-test-data-page-connector` | Connector-backed live API list data page; use ResultCount-first assertions and avoid fragile nested list-item checks on live connector results. |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-test-unit-case/examples/stub` | Stub Test Case | Minimal test case template -- smallest valid create payload with an empty assertion |
+| `rules-rule-test-unit-case/examples/activity-status-test` | Activity Status Test | ActivityStatus assertion -- verifies the rule under test completed with a GOOD status. The most common single-assertion pattern for activities. |
+| `rules-rule-test-unit-case/examples/decision-table-test` | Decision Assertion Test | Decision table test with triple-nested Decision assertion. Same structure applies to decision trees and declare expressions -- swap the pyRuleUnderTest block. |
+| `rules-rule-test-unit-case/examples/decision-table-parameter-inputs-test` | Decision Table Test with Parameter Inputs | Decision table test where the columns reference parameters (`param.X`). Input rows must put the `param.<Name>` token in `pyDisplayLabel` as well as `pyPropertyName`/`pyPropertyAbsolutePath` -- friendly labels break the Manage Properties refresh action in Dev Studio. |
+| `rules-rule-test-unit-case/examples/when-rule-test` | When Rule Decision Test | When rule test with Decision assertion, pyAllowMultipleInputCombinations, and true/false result rows. No setup pages needed. |
+| `rules-rule-test-unit-case/examples/report-definition-test` | Report Definition Test (Complex Test with Setup/Cleanup) | Report definition with List assertion, setup/cleanup activities, setup pages, RUT parameters, and pages-and-classes. Setup/cleanup patterns are RUT-type-agnostic. |
+| `rules-rule-test-unit-case/examples/data-page-single-test` | Data Page Test (Single Object) | Single-object data page with parameter, bare InsName format, `pyIsSinglePageImplementation` |
+| `rules-rule-test-unit-case/examples/data-page-list-test` | Data Page Test (List) | List data page with ResultCount and List assertions on `.pxResults` |
+| `rules-rule-test-unit-case/examples/data-page-connector-test` | unit-test-data-page-connector | Connector-backed live API list data page; use ResultCount-first assertions and avoid fragile nested list-item checks on live connector results. |
 
 ### Assertion-level
 
-| Skill | `pyAssertionType` | Description |
-|------|--------------------|-------------|
-| `ActivityStatus Assertion` | `ActivityStatus` | Single-level check that an activity completed with a specific status code |
-| `Decision Assertion` | `Decision` | Triple-nested structure for testing decision tables with input/output rows |
-| `ExpectedRuntime Assertion` | `ExpectedRuntime` | Verifies the rule under test completes within a time threshold |
-| `List Assertion` | `List` | Checks property values on items within a page list (e.g., report results) |
-| `Page Assertion` | `Page` | Checks property values on a rule instance page loaded via setup pages |
-| `Parameter Assertion` | `Property` (Param) | Property assertion targeting activity/data transform parameters using `Param.*` prefix |
-| `Property Assertion` | `Property` | Two-level structure for asserting clipboard page property values |
-| `Property Assertion on a Custom Page` | `Property` | Property assertion targeting a named page (not RunRecordPrimaryPage) with `pyPagesAndClasses` declaration |
-| `Property Assertion (TrueFalse)` | `Property` (TrueFalse) | Property assertion with `TrueFalse` mode and `Is True` comparator |
-| `Property Assertion (Error Validation)` | `Property` (error) | Property assertion using `has error with message` comparator for validation errors |
-| `Property Assertion (DateTime)` | `Property` (DateTime) | Property assertion with `DateTime` mode -- Pega DateTime format in inner quotes, plus `Not exists` existence check |
-| `Property Assertion (Integer)` | `Property` (Integer) | Property assertion with `Integer` mode -- numeric values without inner quotes, plus `Not exists` on indexed page |
-| `ResultCount Assertion` | `ResultCount` | Single-level check on the count of items in a page list |
+| Skill | Label | `pyAssertionType` | Description |
+|---|---|---|---|
+| `rules-rule-test-unit-case/examples/pyExpectedResults/activity-status` | ActivityStatus Assertion | `ActivityStatus` | Single-level check that an activity completed with a specific status code |
+| `rules-rule-test-unit-case/examples/pyExpectedResults/decision` | Decision Assertion | `Decision` | Triple-nested structure for testing decision tables with input/output rows |
+| `rules-rule-test-unit-case/examples/pyExpectedResults/expected-runtime` | ExpectedRuntime Assertion | `ExpectedRuntime` | Verifies the rule under test completes within a time threshold |
+| `rules-rule-test-unit-case/examples/pyExpectedResults/list` | List Assertion | `List` | Checks property values on items within a page list (e.g., report results) |
+| `rules-rule-test-unit-case/examples/pyExpectedResults/page` | Page Assertion | `Page` | Checks property values on a rule instance page loaded via setup pages |
+| `rules-rule-test-unit-case/examples/pyExpectedResults/page-error-message` | page-error-message | Page assertion containing a nested `has error with message` assertion |
+| `rules-rule-test-unit-case/examples/pyExpectedResults/parameter` | Parameter Assertion | `Property` (Param) | Property assertion targeting activity/data transform parameters using `Param.*` prefix |
+| `rules-rule-test-unit-case/examples/pyExpectedResults/property` | Property Assertion | `Property` | Two-level structure for asserting clipboard page property values |
+| `rules-rule-test-unit-case/examples/pyExpectedResults/property-custom-page` | Property Assertion on a Custom Page | `Property` | Property assertion targeting a named page (not RunRecordPrimaryPage) with `pyPagesAndClasses` declaration |
+| `rules-rule-test-unit-case/examples/pyExpectedResults/property-boolean` | Property Assertion (TrueFalse) | `Property` (TrueFalse) | Property assertion with `TrueFalse` mode and `Is True` comparator |
+| `rules-rule-test-unit-case/examples/pyExpectedResults/property-error-validation` | Property Assertion (Error Validation) | `Property` (error) | Property assertion using `has error with message` comparator for validation errors |
+| `rules-rule-test-unit-case/examples/pyExpectedResults/property-datetime` | Property Assertion (DateTime) | `Property` (DateTime) | Property assertion with `DateTime` mode -- Pega DateTime format in inner quotes, plus `Not exists` existence check |
+| `rules-rule-test-unit-case/examples/pyExpectedResults/property-numeric` | Property Assertion (Integer) | `Property` (Integer) | Property assertion with `Integer` mode -- numeric values without inner quotes, plus `Not exists` on indexed page |
+| `rules-rule-test-unit-case/examples/pyExpectedResults/result-count` | ResultCount Assertion | `ResultCount` | Single-level check on the count of items in a page list |
 
 ### Setup pages
 
-| Skill | Selection type | Description |
-|------|---------------|-------------|
-| `Flat Properties on RunRecordPrimaryPage (CLIPBOARDPAGES)` | `CLIPBOARDPAGES` | RunRecordPrimaryPage with pxObjClass and flat properties -- the most common pattern |
-| `Custom Page Class-Only Stub (CUSTOMPAGES)` | `CUSTOMPAGES` | Custom-named page with only pxObjClass -- typed but empty page |
-| `Work Object on pyWorkPage (CLIPBOARDPAGES)` | `CLIPBOARDPAGES` | pyWorkPage pre-loaded with work case properties |
-| `Multi-Page Setup (CUSTOMPAGES)` | `CUSTOMPAGES` | Two setup pages -- input data page + error container |
-| `Nested PageList Data (CLIPBOARDPAGES)` | `CLIPBOARDPAGES` | Page with embedded PageList -- parent data with child records |
+| Skill | Label | Selection type | Description |
+|---|---|---|---|
+| `rules-rule-test-unit-case/examples/pySetupPages/primary-page-flat` | Flat Properties on RunRecordPrimaryPage (CLIPBOARDPAGES) | `CLIPBOARDPAGES` | RunRecordPrimaryPage with pxObjClass and flat properties -- the most common pattern |
+| `rules-rule-test-unit-case/examples/pySetupPages/custom-page-stub` | Custom Page Class-Only Stub (CUSTOMPAGES) | `CUSTOMPAGES` | Custom-named page with only pxObjClass -- typed but empty page |
+| `rules-rule-test-unit-case/examples/pySetupPages/work-page` | Work Object on pyWorkPage (CLIPBOARDPAGES) | `CLIPBOARDPAGES` | pyWorkPage pre-loaded with work case properties |
+| `rules-rule-test-unit-case/examples/pySetupPages/multi-page` | Multi-Page Setup (CUSTOMPAGES) | `CUSTOMPAGES` | Two setup pages -- input data page + error container |
+| `rules-rule-test-unit-case/examples/pySetupPages/nested-list` | Nested PageList Data (CLIPBOARDPAGES) | `CLIPBOARDPAGES` | Page with embedded PageList -- parent data with child records |
+
+### Setup actions
+
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-test-unit-case/examples/pySetup/create-data-object` | Create Data Object Setup | Create a persisted data-object fixture during `pySetup`, optionally applying an additional data transform. |
 
 ### Rule-under-test
 
-| Skill | `pyRuleUnderTestType` | InsName format |
-|------|-----------------------|----------------|
-| `pyRuleUnderTest for Activity` | `Rule-Obj-Activity` | `CLASS!RULENAME` |
-| `pyRuleUnderTest for When Rule` | `Rule-Obj-When` | `CLASS!RULENAME` |
-| `pyRuleUnderTest for Data Transform` | `Rule-Obj-Model` | `CLASS!RULENAME` |
-| `pyRuleUnderTest for Decision Table` | `Rule-Declare-DecisionTable` | `CLASS!RULENAME` |
-| `pyRuleUnderTest for Decision Tree` | `Rule-Declare-DecisionTree` | `CLASS!RULENAME` |
-| `pyRuleUnderTest for Declare Expression` | `Rule-Declare-Expressions` | `CLASS!.PROPERTYNAME!` |
-| `pyRuleUnderTest for Data Page` | `Rule-Declare-Pages` | `D_RULENAME` (bare, no class prefix) |
-| `pyRuleUnderTest for Report Definition` | `Rule-Obj-Report-Definition` | `CLASS!RULENAME` |
+| Skill | Label | `pyRuleUnderTestType` | InsName format |
+|---|---|---|---|
+| `rules-rule-test-unit-case/examples/pyRuleUnderTest/rule-obj-activity` | pyRuleUnderTest for Activity | `Rule-Obj-Activity` | `CLASS!RULENAME` |
+| `rules-rule-test-unit-case/examples/pyRuleUnderTest/rule-obj-when` | pyRuleUnderTest for When Rule | `Rule-Obj-When` | `CLASS!RULENAME` |
+| `rules-rule-test-unit-case/examples/pyRuleUnderTest/rule-obj-model` | pyRuleUnderTest for Data Transform | `Rule-Obj-Model` | `CLASS!RULENAME` |
+| `rules-rule-test-unit-case/examples/pyRuleUnderTest/rule-declare-decision-table` | pyRuleUnderTest for Decision Table | `Rule-Declare-DecisionTable` | `CLASS!RULENAME` |
+| `rules-rule-test-unit-case/examples/pyRuleUnderTest/rule-declare-decision-tree` | pyRuleUnderTest for Decision Tree | `Rule-Declare-DecisionTree` | `CLASS!RULENAME` |
+| `rules-rule-test-unit-case/examples/pyRuleUnderTest/rule-declare-expressions` | pyRuleUnderTest for Declare Expression | `Rule-Declare-Expressions` | `CLASS!.PROPERTYNAME!` |
+| `rules-rule-test-unit-case/examples/pyRuleUnderTest/rule-declare-pages` | pyRuleUnderTest for Data Page | `Rule-Declare-Pages` | `D_RULENAME` (bare, no class prefix) |
+| `rules-rule-test-unit-case/examples/pyRuleUnderTest/rule-obj-report-definition` | pyRuleUnderTest for Report Definition | `Rule-Obj-Report-Definition` | `CLASS!RULENAME` |
 
 ## Authoring notes
 
@@ -137,7 +144,9 @@ omitted.
   etc.). Inside a Property assertion group, the same field name `pyExpectedResults` holds
   the nested array of individual property checks. The field is always `pyExpectedResults`
   at both levels — there is no `pyExpectedResultsList` or other variant. See
-  `Property Assertion` or `Property Assertion on a Custom Page` for the two-level Property pattern.
+  `rules-rule-test-unit-case/examples/pyExpectedResults/property` or
+  `rules-rule-test-unit-case/examples/pyExpectedResults/property-custom-page`
+  for the two-level Property pattern.
 - **`pyPropertyMode` casing differs by assertion type.** Property assertions use Title Case
   (`Text`, `TrueFalse`, `Identifier`). Decision assertions use lowercase (`decimal`, `text`).
 - **`pyComparator` casing is irregular.** Use the exact documented values (e.g.,
@@ -152,7 +161,7 @@ omitted.
 - **Setup/cleanup activities** (`pySetup`/`pyCleanup`) run before/after the test.
    Parameters go in `pySetupParams` as comma-separated `key=value` pairs and in
    `pyParametersDetails` as structured entries. Use `"None"` for no parameters.
-   See `Report Definition Test (Complex Test with Setup/Cleanup)` for a complete example.
+   See `rules-rule-test-unit-case/examples/report-definition-test` for a complete example.
 - **RUT parameters** (`pyRuleUnderTest.pyParameters`) pass input to the rule under test.
   String values need escaped inner quotes in `pyParametersParamValue`.
 - **Pages and classes** (`pyPagesAndClasses`) declare named clipboard pages and their
@@ -173,8 +182,9 @@ omitted.
   also carry a concrete `pyExpectedValue` on the input rows; omitting it
   sends an empty string and silently masks coverage of every non-default
   branch (only the default-fallback row should leave inputs empty). See
-  `Decision Table Test with Parameter Inputs`. Property-backed decision tables
-  (`Decision Assertion Test`) keep using friendly display labels -- the two
+  `rules-rule-test-unit-case/examples/decision-table-parameter-inputs-test`.
+  Property-backed decision tables
+  (`rules-rule-test-unit-case/examples/decision-table-test`) keep using friendly display labels -- the two
   patterns differ only in the input rows.
 - **Decision assertion `pyPropertyMode` values are narrow.** Use only
   `text`, `decimal`, or `date` (lowercase) -- there is no `truefalse`,
@@ -201,7 +211,9 @@ omitted.
   sets `.pyLabel` on that page, the Property assertion must use
   `"pyStepPageName": "test"` and `"pyPageName": "test"`, and the page must be declared
   in `pyPagesAndClasses`. Use `RunRecordPrimaryPage` only when the rule operates on its
-  primary page. See `Property Assertion on a Custom Page` for the complete pattern.
+  primary page. See
+  `rules-rule-test-unit-case/examples/pyExpectedResults/property-custom-page`
+  for the complete pattern.
 - **Connector-backed Data Page assertions.** `ResultCount` assertions work
   reliably against connector-backed (live external API) list Data Pages.
   Nested `List` assertions checking specific `pxResults(N)` property values
@@ -212,7 +224,7 @@ omitted.
   list Data Page, plus a separate single-record lookup Data Page test
   asserting specific property values there, over nested list-item
   assertions on the connector-backed list Data Page. See
-  `unit-test-data-page-connector`.
+  `rules-rule-test-unit-case/examples/data-page-connector-test`.
 
 ## Test failure triage
 

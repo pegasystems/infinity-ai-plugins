@@ -52,7 +52,7 @@ description: Load when a Business Action form lets the user choose several recor
       ],
       "pyForm": [
         {
-          "pyParameterName": "MealList",
+          "pyParameterName": "SelectedSearchResult",
           "pyParameterType": "Multi-Reference",
           "pyTestMultiReferenceList": [
             {
@@ -78,6 +78,6 @@ description: Load when a Business Action form lets the user choose several recor
       ]
     }
   ],
-  "pyPlaywrightScript": "await caseUtils.clickGo(page, 'Select meals');\nconst meals = ['Vegetarian pasta', 'Garden salad'];\nawait commonUtils.Handle_SearchAndSelectMulti(page, 'Meals', { searchFor: params['Meals_searchFor'] || '' }, [{ label: 'Meal name', type: 'TextInput', value: 'veg' }], meals);\nawait caseUtils.clickSubmit(page);"
+  "pyPlaywrightScript": "await caseUtils.clickGo(page, 'Select meals');\nconst searchFor = params['Meals_searchFor'] || '';\nif (searchFor === 'Non-vegetarian') {\n  const meals = ['Chicken curry', 'Fish and chips'];\n  await commonUtils.Handle_SearchAndSelectMulti(page, 'Meals', { searchFor }, [{ label: 'Meal name', type: 'TextInput', value: 'chicken' }], meals);\n} else {\n  const meals = ['Vegetarian pasta', 'Garden salad'];\n  await commonUtils.Handle_SearchAndSelectMulti(page, 'Meals', { searchFor }, [{ label: 'Meal name', type: 'TextInput', value: 'veg' }], meals);\n}\nawait caseUtils.clickSubmit(page);"
 }
 ```

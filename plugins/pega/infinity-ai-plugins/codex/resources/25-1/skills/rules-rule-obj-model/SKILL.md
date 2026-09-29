@@ -7,58 +7,58 @@ description: Authoring guide for Pega Data Transform rules (Rule-Obj-Model), inc
 
 ### Rule-level — Clipboard format
 
-| Skill | Description |
-|-------|-------------|
-| `Stub Data Transform` | Absolute minimum Clipboard create payload — only pyModelName, pyLabel, pyClassName |
-| `APPEND_AND_MAP_TO` | APPEND_AND_MAP_TO with EXISTING_PAGE_LIST, DataSource parameter, and pyPagesAndClasses |
-| `WHEN / OTHERWISE_WHEN / OTHERWISE` | WHEN/OTHERWISE_WHEN/OTHERWISE multi-branch conditional logic (if/else-if/else pattern) |
-| `APPLY_MODEL with Parameters` | APPLY_MODEL step calling another Data Transform with explicit parameter passing |
-| `JSON Response Bridge DT (Clipboard Wrapper)` | Clipboard-format wrapper DT that bridges a data page response to a JSON DT via APPLY_MODEL — required because JSON DTs cannot be invoked directly by the data page framework |
-| `Primitive Array Extraction — Single Field` | Clipboard-format DT extracting one primitive JSON array value with guarded `pxReplaceAllViaRegex` — minimal pattern |
-| `Primitive Array Extraction — Multiple Fields` | Clipboard-format DT extracting multiple primitive JSON array values — repeated `contains()` + regex pattern per field |
-| `Data Transform Invoking Decision Table` | Data Transform pattern for invoking a Decision Table with direct `DecisionTable.ObtainValue` or the `pxEvaluateDecisionTable` Utilities wrapper |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-obj-model/examples/stub` | Stub Data Transform | Absolute minimum Clipboard create payload — only pyModelName, pyLabel, pyClassName |
+| `rules-rule-obj-model/examples/append-and-map` | APPEND_AND_MAP_TO | APPEND_AND_MAP_TO with EXISTING_PAGE_LIST, DataSource parameter, and pyPagesAndClasses |
+| `rules-rule-obj-model/examples/otherwise-when` | WHEN / OTHERWISE_WHEN / OTHERWISE | WHEN/OTHERWISE_WHEN/OTHERWISE multi-branch conditional logic (if/else-if/else pattern) |
+| `rules-rule-obj-model/examples/apply-model-params` | APPLY_MODEL with Parameters | APPLY_MODEL step calling another Data Transform with explicit parameter passing |
+| `rules-rule-obj-model/examples/json-response-bridge-dt` | JSON Response Bridge DT (Clipboard Wrapper) | Clipboard-format wrapper DT that bridges a data page response to a JSON DT via APPLY_MODEL — required because JSON DTs cannot be invoked directly by the data page framework |
+| `rules-rule-obj-model/examples/json-primitive-array-single-field` | Primitive Array Extraction — Single Field | Clipboard-format DT extracting one primitive JSON array value with guarded `pxReplaceAllViaRegex` — minimal pattern |
+| `rules-rule-obj-model/examples/json-primitive-array-multi-field` | Primitive Array Extraction — Multiple Fields | Clipboard-format DT extracting multiple primitive JSON array values — repeated `contains()` + regex pattern per field |
+| `rules-rule-obj-model/examples/data-transform-decision-table-invocation` | Data Transform Invoking Decision Table | Data Transform pattern for invoking a Decision Table with direct `DecisionTable.ObtainValue` or the `pxEvaluateDecisionTable` Utilities wrapper |
 
 ### Rule-level — JSON format
 
-See `model-json-data-transforms` before building any of these — it covers the shared
+See `rules-rule-obj-model/references/json-data-transforms` before building any of these — it covers the shared
 mapping-action vocabulary these examples draw from.
 
-| Skill | Description |
-|-------|-------------|
-| `JSON Format Data Transform — Automap (Object)` | Object top-level, automap enabled (single record) — all fields mapped automatically |
-| `JSON Format Data Transform — Manual Mapping (Object)` | Object top-level, manual UPDATE_PAGE + SET field mappings (single record) |
-| `JSON Format Data Transform — Nested-Object Descent` | Object top-level, descending multiple levels via chained UPDATE_PAGE with `pyUpdateContextOptions: "JSON"` (use instead of dotted paths) |
-| `json-dt-automap-array` | Array top-level, automap enabled — the more common list-Data-Page shape |
-| `json-dt-array-nested-objects` | Array top-level, explicit (non-automap) mapping combining SET, UPDATE_PAGE ("For JSON only"), and APPEND_AND_MAP_TO |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-obj-model/examples/json-format-automap` | JSON Format Data Transform — Automap (Object) | Object top-level, automap enabled (single record) — all fields mapped automatically |
+| `rules-rule-obj-model/examples/json-format-object` | JSON Format Data Transform — Manual Mapping (Object) | Object top-level, manual UPDATE_PAGE + SET field mappings (single record) |
+| `rules-rule-obj-model/examples/json-format-nested-descent` | JSON Format Data Transform — Nested-Object Descent | Object top-level, descending multiple levels via chained UPDATE_PAGE with `pyUpdateContextOptions: "JSON"` (use instead of dotted paths) |
+| `rules-rule-obj-model/examples/json-dt-automap-array` | json-dt-automap-array | Array top-level, automap enabled — the more common list-Data-Page shape |
+| `rules-rule-obj-model/examples/json-dt-array-nested-objects` | json-dt-array-nested-objects | Array top-level, explicit (non-automap) mapping combining SET, UPDATE_PAGE ("For JSON only"), and APPEND_AND_MAP_TO |
 
 ### Step-level
 
-| Skill | `pyActionName` | Description |
-|-------|---------------|-------------|
-| `Data Transform pyProperties UPDATE_PAGE with BLANK` | `UPDATE_PAGE` | Update page with BLANK initialization and SET children |
-| `Data Transform pyProperties UPDATE_PAGE with WITH_VALUES_FROM` | `UPDATE_PAGE` | Copy all properties from a source page (WITH_VALUES_FROM) |
-| `Data Transform pyProperties APPEND New Page` | `APPEND_AND_MAP_TO` | Append single new page with SET children |
-| `Data Transform pyProperties WHEN` | `WHEN` | Conditional block; empty pyProperties tests condition without actions |
-| `Data Transform pyProperties WHEN with when-rule reference` | `WHEN` | WHEN step referencing a when-rule by name instead of an inline expression |
-| `Data Transform pyProperties OTHERWISE_WHEN` | `OTHERWISE_WHEN` | Else-if branch in a WHEN/OTHERWISE group |
-| `Data Transform pyProperties EXIT_MODEL` | `EXIT_MODEL` | Terminate the data transform immediately |
-| `Data Transform pyProperties FOR_EACH_PAGE_IN / EXIT_FOR_EACH` | `FOR_EACH_PAGE_IN` / `EXIT_FOR_EACH` | Iterate over a list; early-exit pattern |
-| `Data Transform pyProperties REMOVE` | `REMOVE` | Remove a named page from the clipboard |
-| `Data Transform pyProperties COMMENT` | `COMMENT` | Developer documentation step (no-op at runtime) |
-| `Data Transform pyProperties SORT` | `SORT` | Sort a page list by one or more properties |
-| `Data Transform pyProperties APPEND_TO — New Page` | `APPEND_TO` | Append a new empty page to a page list |
-| `Data Transform pyProperties APPEND_TO — Existing Page / Page List` | `APPEND_TO` | Append a copy of an existing page or all pages from another list |
-| `Data Transform pyProperties APPEND_TO — Current Source Page` | `APPEND_TO` | Append the current iteration page (inside FOR_EACH_PAGE_IN) |
-| `Data Transform pyProperties JSON Mapping — UPDATE_PAGE with nested SET` | `UPDATE_PAGE` (MappingStep) | JSON mapping — UPDATE_PAGE with nested SET children for field-level control |
-| `Data Transform pyProperties JSON nested-object descent — UPDATE_PAGE chain with pyUpdateContextOptions` | `UPDATE_PAGE` (MappingStep) | JSON nested-descent — chained UPDATE_PAGE with `pyUpdateContextOptions: "JSON"` for multi-level traversal |
+| Skill | Label | `pyActionName` | Description |
+|---|---|---|---|
+| `rules-rule-obj-model/examples/pyProperties/update-page-blank` | Data Transform pyProperties UPDATE_PAGE with BLANK | `UPDATE_PAGE` | Update page with BLANK initialization and SET children |
+| `rules-rule-obj-model/examples/pyProperties/update-page-with-values-from` | Data Transform pyProperties UPDATE_PAGE with WITH_VALUES_FROM | `UPDATE_PAGE` | Copy all properties from a source page (WITH_VALUES_FROM) |
+| `rules-rule-obj-model/examples/pyProperties/append-new` | Data Transform pyProperties APPEND New Page | `APPEND_AND_MAP_TO` | Append single new page with SET children |
+| `rules-rule-obj-model/examples/pyProperties/when` | Data Transform pyProperties WHEN | `WHEN` | Conditional block; empty pyProperties tests condition without actions |
+| `rules-rule-obj-model/examples/pyProperties/when-rule-ref` | Data Transform pyProperties WHEN with when-rule reference | `WHEN` | WHEN step referencing a when-rule by name instead of an inline expression |
+| `rules-rule-obj-model/examples/pyProperties/otherwise-when` | Data Transform pyProperties OTHERWISE_WHEN | `OTHERWISE_WHEN` | Else-if branch in a WHEN/OTHERWISE group |
+| `rules-rule-obj-model/examples/pyProperties/exit` | Data Transform pyProperties EXIT_MODEL | `EXIT_MODEL` | Terminate the data transform immediately |
+| `rules-rule-obj-model/examples/pyProperties/for-each` | Data Transform pyProperties FOR_EACH_PAGE_IN / EXIT_FOR_EACH | `FOR_EACH_PAGE_IN` / `EXIT_FOR_EACH` | Iterate over a list; early-exit pattern |
+| `rules-rule-obj-model/examples/pyProperties/remove` | Data Transform pyProperties REMOVE | `REMOVE` | Remove a named page from the clipboard |
+| `rules-rule-obj-model/examples/pyProperties/comment` | Data Transform pyProperties COMMENT | `COMMENT` | Developer documentation step (no-op at runtime) |
+| `rules-rule-obj-model/examples/pyProperties/sort` | Data Transform pyProperties SORT | `SORT` | Sort a page list by one or more properties |
+| `rules-rule-obj-model/examples/pyProperties/append-to-new` | Data Transform pyProperties APPEND_TO — New Page | `APPEND_TO` | Append a new empty page to a page list |
+| `rules-rule-obj-model/examples/pyProperties/append-to-existing` | Data Transform pyProperties APPEND_TO — Existing Page / Page List | `APPEND_TO` | Append a copy of an existing page or all pages from another list |
+| `rules-rule-obj-model/examples/pyProperties/append-to-current-source` | Data Transform pyProperties APPEND_TO — Current Source Page | `APPEND_TO` | Append the current iteration page (inside FOR_EACH_PAGE_IN) |
+| `rules-rule-obj-model/examples/pyProperties/json-mapping` | Data Transform pyProperties JSON Mapping — UPDATE_PAGE with nested SET | `UPDATE_PAGE` (MappingStep) | JSON mapping — UPDATE_PAGE with nested SET children for field-level control |
+| `rules-rule-obj-model/examples/pyProperties/json-update-page-with-context` | Data Transform pyProperties JSON nested-object descent — UPDATE_PAGE chain with pyUpdateContextOptions | `UPDATE_PAGE` (MappingStep) | JSON nested-descent — chained UPDATE_PAGE with `pyUpdateContextOptions: "JSON"` for multi-level traversal |
 
 ## References
 
-| Skill | When to load |
-|-------|--------------|
-| `model-json-data-transforms` | Before authoring or debugging any JSON-format Data Transform; covers mapping actions, top-level element structure, bridge wiring, settings, common patterns, and JSON-specific gotchas |
-| `json-dt-empty-fields-after-successful-call` | When a Data Page connector call succeeds but all mapped properties are empty |
-| `json-dt-array-elements-schema-error` | When `update-rule` fails with `schema for 'pyArrayElements' is false` or `schema for 'pyListProperty' is false` on an existing Object-top-level JSON Data Transform |
+| Skill | Label | When to load |
+|---|---|---|
+| `rules-rule-obj-model/references/json-data-transforms` | model-json-data-transforms | Before authoring or debugging any JSON-format Data Transform; covers mapping actions, top-level element structure, bridge wiring, settings, common patterns, and JSON-specific gotchas |
+| `rules-rule-obj-model/references/deserialized-fields-empty-after-successful-call` | json-dt-empty-fields-after-successful-call | When a Data Page connector call succeeds but all mapped properties are empty |
+| `rules-rule-obj-model/references/array-elements-schema-error-on-update` | json-dt-array-elements-schema-error | When `update-rule` fails with `schema for 'pyArrayElements' is false` or `schema for 'pyListProperty' is false` on an existing Object-top-level JSON Data Transform |
 
 ## Notes
 
@@ -173,7 +173,7 @@ different, smaller action vocabulary (`SET`, `AUTO_MAP`, `UPDATE_PAGE`, `APPEND_
 `APPLY_DATA_TRANSFORM`, `COMMENT`). JSON DTs cannot be wired directly to a Data
 Page — they always need a Clipboard-format wrapper ("bridge") DT in front of them.
 
-**Before authoring or debugging any JSON DT, load `model-json-data-transforms`**
+**Before authoring or debugging any JSON DT, load `rules-rule-obj-model/references/json-data-transforms`**
 from the References table above. It covers top-level element structure (Object vs
 Array, including the explicit-mapping pattern and the legacy PAGEGROUPS edge case),
 the full mapping-actions reference (UI-to-API field translation,

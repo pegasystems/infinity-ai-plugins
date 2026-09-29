@@ -7,17 +7,17 @@ description: Authoring guide for Pega AI Tool rules (Rule-AI-Tool), including ba
 
 ## Examples
 
-| Skill | Description |
-|------|-------------|
-| `Get Case Types Activity-backed Tool` | Activity-backed tool using `Rule-Obj-Activity` with nested `pyIntentActionPage.pyParameters` |
-| `Data Transform Agent-backed Tool` | Tool delegating to a `Rule-AI-Agent` backing rule |
-| `Documentation Buddy-backed Tool` | Tool backed by an internal Buddy knowledge source |
-| `Create Case Type-backed Tool` | Tool backed by `Rule-Obj-CaseType` for starting a specific case type |
-| `Create Rule Activity-backed Tool` | Rich activity-backed tool with confirmation, detailed instructions, and parameter mappings |
-| `Search Rule Data Page-backed Tool` | Data page-backed tool with mirrored top-level and nested parameters |
-| `Change Case Stage Flow Action-backed Tool` | Flow action-backed tool |
-| `Rule-AI-Tool Stub` | Smallest valid Rule-AI-Tool create payload |
-| `Display Case Summary Section-backed Tool` | Section-backed tool for rendering a UI section |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-ai-tool/examples/activity-backed-tool` | Get Case Types Activity-backed Tool | Activity-backed tool using `Rule-Obj-Activity` with nested `pyIntentActionPage.pyParameters` |
+| `rules-rule-ai-tool/examples/agent-backed-tool` | Data Transform Agent-backed Tool | Tool delegating to a `Rule-AI-Agent` backing rule |
+| `rules-rule-ai-tool/examples/buddy-backed-tool` | Documentation Buddy-backed Tool | Tool backed by an internal Buddy knowledge source |
+| `rules-rule-ai-tool/examples/casetype-backed-tool` | Create Case Type-backed Tool | Tool backed by `Rule-Obj-CaseType` for starting a specific case type |
+| `rules-rule-ai-tool/examples/complex-automation-tool` | Create Rule Activity-backed Tool | Rich activity-backed tool with confirmation, detailed instructions, and parameter mappings |
+| `rules-rule-ai-tool/examples/datapage-backed-tool` | Search Rule Data Page-backed Tool | Data page-backed tool with mirrored top-level and nested parameters |
+| `rules-rule-ai-tool/examples/flowaction-backed-tool` | Change Case Stage Flow Action-backed Tool | Flow action-backed tool |
+| `rules-rule-ai-tool/examples/minimal-tool` | Rule-AI-Tool Stub | Smallest valid Rule-AI-Tool create payload |
+| `rules-rule-ai-tool/examples/section-backed-tool` | Display Case Summary Section-backed Tool | Section-backed tool for rendering a UI section |
 
 ## Authoring notes
 

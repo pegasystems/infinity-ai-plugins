@@ -76,7 +76,17 @@ export class CommonUtils {
     Handle_RichText: (page: Page, label: string, input: string, rowLocator?: Locator) => Promise<void>;
 
     /**
-     * Handles date input fields by parsing the input date and filling month, day, year separately.
+     * Choose the date utility based on the required user interaction:
+     * - Use Handle_Date when the test should directly enter month, day, and year in a date field.
+     * - Use Handle_DatePicker when the test must open the calendar popup and select its month, year,
+     *   and day. Do not use Handle_DatePicker for date-time fields.
+    * - Use Handle_DateTime when the test should directly enter date and time controls.
+    * - Use Handle_DateTimePicker when the test must open the date-time calendar popup, select its
+    *   month, year, and day, then enter its time and click Apply.
+     */
+
+    /**
+     * Handles date input fields by directly filling month, day, and year controls.
      * Supports: MM/DD/YYYY, YYYY-MM-DD. Defaults to current date if null.
      *
      * @param page - The Playwright page instance
@@ -88,6 +98,44 @@ export class CommonUtils {
      * await commonUtils.Handle_Date(page, 'Start date', '2025-06-01');
      */
     Handle_Date: (page: Page, label: string, inputDate: string, rowLocator?: Locator) => Promise<void>;
+
+    /**
+     * Handles date-only calendar popups. Opens the field's calendar, selects the requested month
+     * and year, then clicks the requested day. Use only when the Business Action explicitly
+     * requires calendar-popup selection, not direct date entry.
+     *
+     * Supports: MM/DD/YYYY, YYYY-MM-DD. The month selector uses month values 0 through 11;
+     * this utility derives that value from inputDate. The selected date is identified by its
+     * accessible label, for example "June 15, 2025".
+     *
+     * @param page - The Playwright page instance
+     * @param label - The date field label/data-testid prefix
+     * @param inputDate - The date value in MM/DD/YYYY or YYYY-MM-DD format
+     * @param rowLocator - Optional row or container locator for table-embedded date fields
+     *
+     * @example
+     * await commonUtils.Handle_DatePicker(page, 'Birth date', '1985-06-15');
+     * await commonUtils.Handle_DatePicker(page, 'Start date', '06/01/2025', rowLocator);
+     */
+    Handle_DatePicker: (page: Page, label: string, inputDate: string, rowLocator?: Locator) => Promise<void>;
+
+    /**
+     * Handles date-time calendar popups. Opens the field's date-time picker, selects the requested
+     * month, year, and day, fills hour, minute, and AM/PM controls, then clicks Apply.
+     * Use only when the Business Action explicitly requires date-time popup selection.
+     *
+     * Input must use YYYY-MM-DD HH:MM:SS. The utility converts the time to the popup's 12-hour
+     * controls and selects the corresponding AM/PM value. The month selector uses values 0 through 11.
+     *
+     * @param page - The Playwright page instance
+     * @param label - The date-time field label/data-testid prefix
+     * @param inputDate - The date-time value in YYYY-MM-DD HH:MM:SS format
+     * @param rowLocator - Optional row or container locator for table-embedded date-time fields
+     *
+     * @example
+     * await commonUtils.Handle_DateTimePicker(page, 'Appointment time', '2025-06-01 18:01:20');
+     */
+    Handle_DateTimePicker: (page: Page, label: string, inputDate: string, rowLocator?: Locator) => Promise<void>;
 
     /**
      * Handles date-time input fields. Supports YYYY-MM-DD HH:MM:SS format.

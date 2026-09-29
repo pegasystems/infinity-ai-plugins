@@ -5,7 +5,7 @@ This directory contains the source template for the Claude Code plugin variant o
 The final packaged plugin is expected to bundle:
 
 - the pinned `infinity-rules-mcp` runtime JAR
-- the pinned `infinity-skills` payloads for versions `24-2`, `25-1`, `26-1`, and `27-1`
+- the pinned `infinity-skills` payloads for versions `24-2`, `25-1`, and `26-1`
 - Claude-facing skills and configuration
 
 The plugin supplies its bundled skills directory automatically. Set `pega_infinity_version` to

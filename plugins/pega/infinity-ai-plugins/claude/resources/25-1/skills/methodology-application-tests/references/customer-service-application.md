@@ -1,6 +1,6 @@
 ---
 name: customer-service-application
-description: Load when the current Pega application is built on Customer Service and uses the PegaCS-Constellation ruleset stack. Provides Customer Service-specific application-test discovery and data guidance.
+description: Load when the current Pega application is built on Customer Service and uses the PegaCS-Constellation ruleset stack. Provides Customer Service-specific application test discovery and data guidance.
 ---
 
 # Customer Service Application Variant
@@ -9,7 +9,16 @@ Apply this reference in addition to the standard application-test methodology wh
 
 ## Retrieve Customer Service Context
 
-1. Call Data Page `D_pyApplicationInstructionsCS` with `dataPageType="list"` to retrieve the Customer Service-specific instructions. Treat these instructions as additive; the standard methodology remains in effect.
+1. Call Data Page `D_pyApplicationInstructionsCS` with `dataPageType="list"`:
+
+   ```
+   run-data-page(
+     dataPage="D_pyApplicationInstructionsCS",
+     dataPageType="list"
+   )
+   ```
+
+  For every `pxResults` entry, add `pyApplicationInstructions` to the active context as mandatory Customer Service guidance and `pySampleScenarios` as template-only guidance for scenario structure, Business Action naming, and wiring. The standard methodology remains in effect, and application-specific steps must come from the actual rules.
 2. Call Data Page `D_pxAvailableCaseTypesForPortal` with `dataPageType="page"`:
 
    ```
@@ -22,16 +31,10 @@ Apply this reference in addition to the standard application-test methodology wh
 
 3. Read the `pyCaseTypesAvailableToCreate` array from the page response. For each entry, use `pyClassName`, `pyLabel`, `pyStartingFields`, and `pyMetaData` as the available Interaction and Service Case metadata.
 4. For demo customer entries, parse `pyActionMeta.pyPayload` and use its values as runtime test data, including `caseType` and `startingFields`.
-5. Combine the instructions, case-type metadata, and payloads into one active Customer Service context before continuing.
+5. Combine the returned Customer Service instructions and sample-scenario templates, case-type metadata, and payloads into one active Customer Service context before continuing.
 
-## Apply the Context
+## Use This Context
 
-Retain this Customer Service context throughout all subsequent phases. It governs:
-
-- scope definition in Phase 1
-- existing Business Action discovery in Phase 2
-- scenario generation in Phase 4
-- Business Action creation in Phase 5
-- Application Test creation in Phase 6
-
-Use the sample scenarios from the Customer Service instructions as references when generating Phase 4 scenarios. Derive available case types and customer test data from the portal response rather than from assumptions or static examples.
+1. Keep the assembled Customer Service context active for the remaining methodology phases.
+2. Before authoring scenarios, read the Interaction case type, all stage flows, and recursively call subflows. Derive every Interaction assignment through the flow-discovered Service Case launch assignment from ordered Assignment shapes and connector paths; each reachable Assignment shape is a separate Gherkin and Business Action step. Group assignments by their actual connector path and decision variant. Assignments on mutually exclusive decision branches must be represented in separate scenarios, never combined into one scenario.
+3. Decisions select a path but are not steps. Then derive Service Case steps from its actual post-launch flow and customer test data from the portal response.

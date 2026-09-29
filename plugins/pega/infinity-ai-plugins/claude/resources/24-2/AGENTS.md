@@ -28,6 +28,27 @@ agent what to do if the Data Page call returns a "404 Not Found" message
 * **Details** — Use the returned `pyIsLocked` value to determine whether the branch is editable. The `pxResults` array lists the `pzInsKey` values for rules in the branch.
 * **404 Not Found** — Search for the branchID with allApps=true, matchMode=any, fullText=true
 
+### `D_pxSetBranchDevelopmentPreferences`
+* **Purpose** — Set or clear the branch development preference for a branch and application in the current app stack. User may also call this their "Branch Preference"
+* **Parameters** — `BranchDevelopment`: "true" or "false" string; `Branch` (string, required when BranchDevelopment is true, exact match): the branch for which to set the branch development preference. `Application` (optional string): the application name in the app stack to use for the preference; blank defaults to the current application and influences which ruleset is selected.
+* **Page or List** — Page
+* **404 Not Found** — Inform the user to set the branch development preferences via the Branch icon in the upper-right-hand corner of Infinity Studio.
+
+### `D_pxUpdateBranchContext`
+* **Purpose** — Update durable context text on an existing `Rule-RuleSet-Branch` record. Use to store plans for future use.
+* **Parameters** — `branchID` (required); use `taskListOperation` and `taskListContent` to modify the list of tasks managed by the agent; use `futureNotesOperation` and `futureNotesContent` to modify notes regarding future work; use `completedSummaryOperation` and `completedSummaryContent` to modify an overview of work completed so far.
+* **Operation contract** — Each operation is optional and must be `replace`, `append`, or `clear`. `replace` assigns the content, `append` adds a newline followed by the content, and `clear` sets the target property to an empty string. Content is required for `replace` and `append`, and is not used for `clear`. An omitted operation leaves that property unchanged. At least one operation is required.
+* **Page or List** — Page
+* **404 Not Found** — The Data Page is unavailable in the current application/ruleset context. Continue processing without the branch-context update and inform the user that the plan was not stored.
+
+### `D_pxBranchContext`
+* **Purpose** — Retrieve the durable context stored on an existing `Rule-RuleSet-Branch` record. Use to read the agent-managed task list, future-work notes, and completed-work overview.
+* **Parameters** — `branchID` (required).
+* **Page or List** — Page
+* **Branch not found** — The branch supplied does not exist in the system. Report this to the user.
+* **Branch unavailable in current application stack** — The branch exists in the system but is not accessible on the current application or any built on application. Summarize the error for the user.
+* **404 Not Found** — The Data Page is unavailable in the current application/ruleset context. Continue processing without the branch-context lookup and inform the user that the context could not be read.
+
 ## Skills repo overview
 
 - Directory structure: `skills/{domain}-{topic}/SKILL.md`
@@ -104,7 +125,7 @@ it is unavailable.**
 | `Rule-Admin-System-Settings` | Application Setting | Omit `pySettingMetaData.pyCategoryName` on create unless reusing a category that already exists |
 | `Rule-Async-JobScheduler` | Job Scheduler | |
 | `Rule-Async-QueueProcessor` | Queue Processor | |
-| `Rule-ClassMetaData` | Class Metadata | |
+| `Rule-ClassMetadata` | Class Metadata | |
 | `Rule-Connect-GenerativeAI` | Generative AI Connector | |
 | `Rule-Connect-REST` | REST Connector | |
 | `Rule-CorrType` | Correspondence Type | |

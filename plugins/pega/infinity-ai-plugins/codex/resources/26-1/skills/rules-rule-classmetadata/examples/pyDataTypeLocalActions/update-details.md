@@ -1,6 +1,6 @@
 ---
 name: classmetadata-local-action-update-details
-description: The OOTB Edit action — opens the data record in update form.
+description: Load when adding the OOTB Edit row to pyDataTypeLocalActions. Contains the update-details action payload.
 ---
 
 ```json

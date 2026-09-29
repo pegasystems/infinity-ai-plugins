@@ -5,14 +5,14 @@ description: Load this skill when the user asks to generate end-to-end Pega appl
 
 ## Skills This Methodology Orchestrates
 
-| Skill | Purpose |
-|-------|---------|
-| `scenario-design` | Gherkin scenario design, coverage rules, step conventions |
-| `rules-rule-test-application-businessaction` | How to create or update Business Action rules |
-| `rules-rule-test-application-case` | Application Test rule creation using Business Actions |
-| `methodology-rule-authoring` | Write API selection and ChangeRequest lifecycle |
-| `rules-rule-obj-flow` | Flow shape interpretation — CRITICAL for Decision shapes and ScreenFlow detection |
-| `rules-rule-obj-flowaction` | Flow action authoring guidance — CRITICAL for validation extraction (`pyValidateActivity`) |
+| Skill | Label | Purpose |
+|---|---|---|
+| `methodology-application-tests/references/test-scenarios` | scenario-design | Gherkin scenario design, coverage rules, step conventions |
+| `rules-rule-test-application-businessaction` |  | How to create or update Business Action rules |
+| `rules-rule-test-application-case` |  | Application Test rule creation using Business Actions |
+| `methodology-rule-authoring` |  | Write API selection and ChangeRequest lifecycle |
+| `rules-rule-obj-flow` |  | Flow shape interpretation — CRITICAL for Decision shapes and ScreenFlow detection |
+| `rules-rule-obj-flowaction` |  | Flow action authoring guidance — CRITICAL for validation extraction (`pyValidateActivity`) |
 
 ## Phase 0: Prerequisite Check (Hard Stop)
 
@@ -34,9 +34,13 @@ Determine what to test based on the user's intent — do NOT ask upfront.
 
 1. Call `get-application` → case types, data objects, relationships.
 
-### Customer Service Application Variant
+### Application Variants
 
-If `get-application` confirms that the current application is built on Customer Service and its `RulesetStack` contains `PegaCS-Constellation`, load `customer-service-application` via `get-skill` and follow its instructions before continuing. Keep the resulting Customer Service context active throughout all subsequent phases.
+If `RulesetStack` contains a listed ruleset, load the corresponding skill via `get-skill` before continuing. Keep the loaded context active throughout all subsequent phases.
+
+| RulesetStack contains | Load skill |
+|-----------------------|------------|
+| `PegaCS-Constellation` | `methodology-application-tests/references/customer-service-application` |
 
 ## Phase 2: Discover Existing Tests
 
@@ -102,7 +106,7 @@ Per case type:
 **Fix all mismatches before proceeding to next phases.**
 
 ## Phase 4: Generate Cucumber Scenarios
-**Load Scenario References** — Load  `scenario-design` and relevant skills from the **Example Reference Skills** table via `get-skill`.
+**Load Scenario References** — Load  `methodology-application-tests/references/test-scenarios` and relevant skills from the **Example Reference Skills** table via `get-skill`.
 ### Generate Scenarios for each gap identified in Phase 2, following the scenario design rules from the reference. Each scenario should be self-contained, with clear Given/When/Then steps that can be directly mapped to Business Actions and Test Cases in later phases.
 1. Analyze existing test coverage (Phase 2) against full lifecycle (Phase 3)
    to identify gaps.
@@ -152,14 +156,14 @@ Follow the `rules-rule-test-application-case` skill's process and create one App
 
 These skills contain example Gherkin scenarios for different Pega lifecycle patterns. Load these when generating scenarios in Phase 4 for illustrative purposes; they are not part of the methodology itself.
 
-| Skill | Load when writing | What it demonstrates |
-|---------|-------------------|---------------------|
-| `scenario-happy-path` | E2E lifecycle | Multi-step lifecycle, persona switch, decision-driving data |
-| `scenario-single-child-orchestration` | Single child case | Parent-child lifecycle, inline child completion, persona switching |
-| `scenario-sequential-children-wait` | Multiple children + Wait | Sequential completion, Wait dependency, parent progression |
-| `scenario-child-skip-create` | Child with Start Condition: Never | Child skips to first active stage without create step |
-| `scenario-cross-case-rejection` | Application E2E rejection | Parent rejected on child outcome, multiple CaseType tags |
-| `scenario-case-wide-action` | Case-wide actions | Reopen after resolution, status revert assertion |
-| `scenario-optional-process` | Optional process trigger | Trigger ad-hoc process from actions menu, complete resulting assignment |
+| Skill | Label | Load when writing | What it demonstrates |
+|---|---|---|---|
+| `methodology-application-tests/examples/happy-path-screen-flow-scenario` | scenario-happy-path | E2E lifecycle | Multi-step lifecycle, persona switch, decision-driving data |
+| `methodology-application-tests/examples/single-child-case-orchestration-scenario` | scenario-single-child-orchestration | Single child case | Parent-child lifecycle, inline child completion, persona switching |
+| `methodology-application-tests/examples/sequential-child-case-wait-scenario` | scenario-sequential-children-wait | Multiple children + Wait | Sequential completion, Wait dependency, parent progression |
+| `methodology-application-tests/examples/child-case-skip-create-scenario` | scenario-child-skip-create | Child with Start Condition: Never | Child skips to first active stage without create step |
+| `methodology-application-tests/examples/cross-case-rejection-scenario` | scenario-cross-case-rejection | Application E2E rejection | Parent rejected on child outcome, multiple CaseType tags |
+| `methodology-application-tests/examples/case-wide-action-reopen-scenario` | scenario-case-wide-action | Case-wide actions | Reopen after resolution, status revert assertion |
+| `methodology-application-tests/examples/optional-process-trigger-scenario` | scenario-optional-process | Optional process trigger | Trigger ad-hoc process from actions menu, complete resulting assignment |
 
 ---

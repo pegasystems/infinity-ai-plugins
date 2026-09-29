@@ -28,10 +28,10 @@ Read the component from `pyContent` or `pxViewMetadata`; do not infer the type f
 |----------|---------|
 | `pyFieldReference` | Names the parent field in `pyForm`; do not use it as the display label. |
 | `pyMode` / `config.mode` | Identifies single versus multi ObjectReference behavior. |
-| `pyValue` / `config.value` | Identifies the reference binding; use the last segment as the single-reference selection key. |
-| `pySelectionKey` / `config.selectionKey` | Names the property stored for each multi-reference row; strip the leading dot before using it in `pyParameterName`. |
+| `pyValue` / `config.value` | Identifies the reference binding; unless `displayAs` is `advancedSearch`, use the last segment as the single-reference selection key. |
+| `pySelectionKey` / `config.selectionKey` | Names the property stored for each multi-reference row; unless `displayAs` is `advancedSearch`, strip the leading dot before using it in `pyParameterName`. |
 | `pyReferenceComponentType` / `config.componentType` | Tells UI automation which widget to use: `Combobox` maps to `autocomplete`, `Table` maps to `table`. |
-| `pyDisplayAs` / `config.displayAs` | Identifies the picker display mode for `ObjectReference` and `UserReference` fields (`Drop-down list`, `Search box`, `advancedSearch`); `advancedSearch` applies to either reference kind. This affects UI automation only. |
+| `pyDisplayAs` / `config.displayAs` | Identifies the picker display mode for `ObjectReference` and `UserReference` fields (`Drop-down list`, `Search box`, `advancedSearch`). For `advancedSearch`, use the business-identifier mapping in `rules-rule-test-application-businessaction/references/advanced-search`. |
 | `pyReferenceList` / `config.referenceList` | Data page backing the picker; `UserReference` commonly uses `D_pyC11nOperatorsList`. |
 | `pyLabel` / `pyLabelOption` / `config.label` | Supplies labels: `text`/`@L` is literal; `field`, `default`, or `@FL` means fetch the property label. |
 | `pyContextField` / `config.context` | Identifies the embedded page context or binding; do not treat it as the only field to map. |
@@ -46,7 +46,7 @@ Read the component from `pyContent` or `pxViewMetadata`; do not infer the type f
 
 ## Selection keys and field names
 
-Read keys from the view; never hard-code `pyID` or `pyGUID`. For ObjectReference test data, run the configured `referenceList` data page and use a valid value for the resolved selection key.
+Except for `advancedSearch`, read keys from the owning form view; never hard-code `pyID` or `pyGUID`. For ObjectReference test data, run the configured `referenceList` data page and use a valid value for the resolved selection key.
 
 | Mode | Where to read | Use in `pyForm` |
 |------|---------------|-----------------|

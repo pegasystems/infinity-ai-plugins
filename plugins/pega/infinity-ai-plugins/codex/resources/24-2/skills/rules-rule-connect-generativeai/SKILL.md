@@ -7,32 +7,32 @@ description: Authoring guide for Pega GenerativeAI connector rules (Rule-Connect
 
 ## Examples
 
-`genai-stub` is the minimal valid create payload — only required fields.
+`rules-rule-connect-generativeai/examples/stub` is the minimal valid create payload — only required fields.
 The remaining examples are grouped by `pyExpectedResponseEntity`.
 
 ### Custom — `pyExpectedResponseEntity = "Custom"`
 
-| Skill | Description |
-|-------|-------------|
-| `genai-custom-unstructured` | Q&A connector returning unstructured text to `.pyResponseData` (temperature 0.2) |
-| `genai-custom-structured` | Custom use-case returning structured JSON to `.pyJsonData` (temperature 0.6) |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-connect-generativeai/examples/custom/unstructured` | genai-custom-unstructured | Q&A connector returning unstructured text to `.pyResponseData` (temperature 0.2) |
+| `rules-rule-connect-generativeai/examples/custom/structured` | genai-custom-structured | Custom use-case returning structured JSON to `.pyJsonData` (temperature 0.6) |
 
 ### Single — `pyExpectedResponseEntity = "Single"`
 
-| Skill | Description |
-|-------|-------------|
-| `genai-single-flat` | Multiple top-level scalar response fields, privacy enabled (temperature 0.4) |
-| `genai-single-flat-with-attachment` | Attachment input enabled — `pyIncludeAttachment='true'` with `pyGenAIDef.pyImageAttachRefValue` (temperature 0.4) |
-| `genai-single-page-inside-fields` | Embedded `Page` whose children use `.pyPage.pyChild` dot notation |
-| `genai-single-nested-pages-deep` | Multi-level embedded pages: `.pyOuter.pyInner.pyLeaf` |
-| `genai-single-nested-pagelist-deep` | Top-level scalar plus a 3-level-deep nested pagelist (`.pyStages().pySteps().pyDynamicCaseFields()`) |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-connect-generativeai/examples/single/flat` | genai-single-flat | Multiple top-level scalar response fields, privacy enabled (temperature 0.4) |
+| `rules-rule-connect-generativeai/examples/single/flat-with-attachment` | genai-single-flat-with-attachment | Attachment input enabled — `pyIncludeAttachment='true'` with `pyGenAIDef.pyImageAttachRefValue` (temperature 0.4) |
+| `rules-rule-connect-generativeai/examples/single/page-inside-fields` | genai-single-page-inside-fields | Embedded `Page` whose children use `.pyPage.pyChild` dot notation |
+| `rules-rule-connect-generativeai/examples/single/nested-pages-deep` | genai-single-nested-pages-deep | Multi-level embedded pages: `.pyOuter.pyInner.pyLeaf` |
+| `rules-rule-connect-generativeai/examples/single/nested-pagelist-deep` | genai-single-nested-pagelist-deep | Top-level scalar plus a 3-level-deep nested pagelist (`.pyStages().pySteps().pyDynamicCaseFields()`) |
 
 ### List — `pyExpectedResponseEntity = "List"`
 
-| Skill | Description |
-|-------|-------------|
-| `genai-list-flat` | Flat list extraction; outer list named by `pyListName`, items hold scalars (temperature 0.8) |
-| `genai-list-pagelist-inside-pagelist` | List items each contain a child pagelist (`.pyChild().pyLeaf`) (temperature 1.0) |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-connect-generativeai/examples/list/flat` | genai-list-flat | Flat list extraction; outer list named by `pyListName`, items hold scalars (temperature 0.8) |
+| `rules-rule-connect-generativeai/examples/list/pagelist-inside-pagelist` | genai-list-pagelist-inside-pagelist | List items each contain a child pagelist (`.pyChild().pyLeaf`) (temperature 1.0) |
 
 ## Authoring Notes
 

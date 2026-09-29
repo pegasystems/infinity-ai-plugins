@@ -7,12 +7,12 @@ description: Authoring guide for Pega Attachment Category rules (Rule-Obj-Attach
 
 ## Examples
 
-| Skill | Description |
-|-------|-------------|
-| `Stub Attachment Category` | Minimal attachment category — smallest valid create payload with no attachment type flags |
-| `File-Only Attachment Category` | File-only attachment category — explicitly disables other default-enabled types |
-| `Work Privilege Security` | Attachment category that grants create access with an existing Work- attachment privilege |
-| `Always View Security` | Attachment category that uses the broad `Always` when rule to grant view access |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-obj-attachmentcategory/examples/stub` | Stub Attachment Category | Minimal attachment category — smallest valid create payload with no attachment type flags |
+| `rules-rule-obj-attachmentcategory/examples/file-only` | File-Only Attachment Category | File-only attachment category — explicitly disables other default-enabled types |
+| `rules-rule-obj-attachmentcategory/examples/work-privilege` | Work Privilege Security | Attachment category that grants create access with an existing Work- attachment privilege |
+| `rules-rule-obj-attachmentcategory/examples/always-view` | Always View Security | Attachment category that uses the broad `Always` when rule to grant view access |
 
 ## Authoring Notes
 
@@ -83,8 +83,11 @@ separate category for each one — the category name must match the property nam
 Do not reuse a single category across multiple attachment properties.
 Set `pyCategoryName` to match the property name exactly, on the same `pyClassName`.
 
-**File-only.** Companion attachment categories must allow only file uploads (see `File-Only Attachment Category` example).
+**File-only.** Companion attachment categories must allow only file uploads
+(see `rules-rule-obj-attachmentcategory/examples/file-only`).
 
-Then use the `rules-rule-obj-property` skill (see `Attachment Property (Page)` or `Attachment Property (PageList)` example) to
+Then use the `rules-rule-obj-property` skill (see
+`rules-rule-obj-property/examples/attachment-property-page` or
+`rules-rule-obj-property/examples/attachment-property-pagelist`) to
 create the property. The property's `pyDOParamList` has an `AttachmentCategory`
 parameter that references this category by name.

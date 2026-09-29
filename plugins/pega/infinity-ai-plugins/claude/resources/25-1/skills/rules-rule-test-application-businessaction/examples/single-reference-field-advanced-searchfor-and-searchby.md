@@ -26,7 +26,7 @@ description: Load when a Business Action form has one reference picker displayed
     },
     {
       "pyParameterName": "Enter search criteria and select the customer from the search results",
-      "pyParameterValue": "Biggs:SA-031"
+      "pyParameterValue": "Biggs:CON-031"
     },
     {
       "pyParameterName": "ValidationFails",
@@ -65,7 +65,7 @@ description: Load when a Business Action form has one reference picker displayed
           "pyTestReferenceField": [
             {
               "pyMapActionParameterFrom": "Input",
-              "pyParameterName": "pyGUID",
+              "pyParameterName": "ContactID",
               "pyParameterValue": "Enter search criteria and select the customer from the search results"
             }
           ]
@@ -73,6 +73,6 @@ description: Load when a Business Action form has one reference picker displayed
       ]
     }
   ],
-  "pyPlaywrightScript": "await caseUtils.clickGo(page, 'Search for customer');\nconst searchFor = params['Enter search criteria and select the customer from the search results_searchFor'] || '';\nconst searchBy = params['Enter search criteria and select the customer from the search results_searchBy'] || '';\nif (params['Enter search criteria and select the customer from the search results']) {\n  if (searchFor === 'Service account information') {\n    await commonUtils.Handle_SearchAndSelectSingle(page, 'Enter search criteria and select the customer from the search results', { searchFor }, [{ label: 'Service account ID', type: 'TextInput', value: 'SA-031' }], params['Enter search criteria and select the customer from the search results']);\n  } else if (searchBy === 'Phone number or Email or SSN/National ID') {\n    await commonUtils.Handle_SearchAndSelectSingle(page, 'Enter search criteria and select the customer from the search results', { searchFor, searchBy }, [{ label: 'Phone number', type: 'TextInput', value: '' }, { label: 'Email', type: 'TextInput', value: '' }, { label: 'SSN/National ID', type: 'TextInput', value: '' }], params['Enter search criteria and select the customer from the search results']);\n  } else {\n    await commonUtils.Handle_SearchAndSelectSingle(page, 'Enter search criteria and select the customer from the search results', { searchFor, searchBy }, [{ label: 'Last name', type: 'TextInput', value: 'Biggs' }, { label: 'First name', type: 'TextInput', value: 'Rebecca' }, { label: 'Date of birth', type: 'TextInput', value: '1980-01-15' }], params['Enter search criteria and select the customer from the search results']);\n  }\n}\nawait caseUtils.clickSubmit(page);"
+  "pyPlaywrightScript": "await caseUtils.clickGo(page, 'Search for customer');\nconst searchFor = params['Enter search criteria and select the customer from the search results_searchFor'] || '';\nconst searchBy = params['Enter search criteria and select the customer from the search results_searchBy'] || '';\nif (params['Enter search criteria and select the customer from the search results']) {\n  if (searchFor === 'Customer information') {\n    if (searchBy === 'Phone number or Email or SSN/National ID') {\n      await commonUtils.Handle_SearchAndSelectSingle(page, 'Enter search criteria and select the customer from the search results', { searchFor, searchBy }, [{ label: 'Phone number', type: 'TextInput', value: '' }, { label: 'Email', type: 'TextInput', value: '' }, { label: 'SSN/National ID', type: 'TextInput', value: '' }], params['Enter search criteria and select the customer from the search results']);\n    } else {\n      await commonUtils.Handle_SearchAndSelectSingle(page, 'Enter search criteria and select the customer from the search results', { searchFor, searchBy }, [{ label: 'Last name', type: 'TextInput', value: 'Biggs' }, { label: 'First name', type: 'TextInput', value: 'Rebecca' }], params['Enter search criteria and select the customer from the search results']);\n    }\n  } else {\n    await commonUtils.Handle_SearchAndSelectSingle(page, 'Enter search criteria and select the customer from the search results', { searchFor, searchBy }, [{ label: 'Service account ID', type: 'TextInput', value: 'SA-031' }], params['Enter search criteria and select the customer from the search results']);\n  }\n}\nawait caseUtils.clickSubmit(page);"
 }
 ```

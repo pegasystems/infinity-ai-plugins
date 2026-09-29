@@ -30,6 +30,7 @@ authored with `create-rule` / `update-rule`.
 | `Rule-Admin-System-Settings` | `rules-rule-admin-system-settings` | `create-rule` and `update-rule` both supported; omit `pySettingMetaData.pyCategoryName` on create unless reusing a category that already exists |
 | `Rule-Async-JobScheduler` | `rules-rule-async-jobscheduler` | `create-rule` / `update-rule` |
 | `Rule-Async-QueueProcessor` | `rules-rule-async-queueprocessor` | `create-rule` / `update-rule` |
+| `Rule-ClassMetadata` | `rules-rule-classmetadata` | `create-rule` / `update-rule` |
 | `Rule-Connect-GenerativeAI` | `rules-rule-connect-generativeai` | `create-rule` / `update-rule` |
 | `Rule-Connect-REST` | `rules-rule-connect-rest` | `create-rule` / `update-rule` |
 | `Rule-Declare-DecisionTable` | `rules-rule-declare-decision-table` | `create-rule` / `update-rule` |
@@ -122,11 +123,11 @@ replace. Examples: `{"pySteps.pySteps":"replace"}` or
 
 ### Update examples
 
-| Skill | Pattern | Description |
-|-------|---------|-------------|
-| `authoring-update-scalar-fields` | Scalar replace | Change top-level fields (description, boolean flag) without touching the rule body |
-| `authoring-update-single-list-element` | Positional list merge | Modify one element in a list using `{}` no-op placeholders to skip preceding elements |
-| `authoring-update-append-list-element` | Append to list | Add a new element at the end of a list by placing `{}` placeholders for all existing elements |
+| Skill | Label | Pattern | Description |
+|---|---|---|---|
+| `methodology-rule-authoring/examples/update-scalar-fields` | authoring-update-scalar-fields | Scalar replace | Change top-level fields (description, boolean flag) without touching the rule body |
+| `methodology-rule-authoring/examples/update-single-list-element` | authoring-update-single-list-element | Positional list merge | Modify one element in a list using `{}` no-op placeholders to skip preceding elements |
+| `methodology-rule-authoring/examples/update-append-list-element` | authoring-update-append-list-element | Append to list | Add a new element at the end of a list by placing `{}` placeholders for all existing elements |
 
 ### Workflow
 
@@ -173,6 +174,6 @@ Use `methodology-dx-api-assignment-action` when an assignment requires complex `
 
 ## References
 
-| Skill | When to load |
-|-------|--------------|
-| `authoring-branch-ruleset-not-candidate` | Resolve "Branch ruleset not candidate" errors when creating test cases |
+| Skill | Label | When to load |
+|---|---|---|
+| `methodology-rule-authoring/references/branch-ruleset-not-candidate-test-cases` | authoring-branch-ruleset-not-candidate | Resolve "Branch ruleset not candidate" errors when creating test cases |

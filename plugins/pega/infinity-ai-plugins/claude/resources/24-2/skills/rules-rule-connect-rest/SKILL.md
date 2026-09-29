@@ -27,13 +27,13 @@ will not validate the older form.
 
 ### Topic references
 
-| Topic | Skill | Covers |
-|-------|-------|--------|
-| URL configuration | `rest-url-configuration` | Direct URLs (`pyBaseURL`/`pyEndpointURL`) and SETTING-based URLs (`pyBaseURLSetting`) |
-| Parameter naming and mapping | `rest-parameter-mapping` | Dynamic path segments, `pyResourceParameters`, `pyParametersParam*` vs `pyParameterName`, query string parameters |
-| Request and response body mapping | `rest-request-response-mapping` | Response `pyMapToKey` targets, POST/PUT/PATCH bodies, URL-encoded POST, GET (no body) |
-| Authentication | `rest-authentication` | `pyAuthProfileSelectionType`, direct vs SETTING profiles, TLS truststore, builder behaviors |
-| Endpoint-grouped vs. single CRUD connector | `rest-endpoint-grouped-vs-single-connector` | Why to group manual/no-OAS connectors by endpoint shape (collection vs. instance) instead of one connector handling both |
+| Topic | Skill | Label | Covers |
+|---|---|---|---|
+| URL configuration | `rules-rule-connect-rest/references/url-configuration` | rest-url-configuration | Direct URLs (`pyBaseURL`/`pyEndpointURL`) and SETTING-based URLs (`pyBaseURLSetting`) |
+| Parameter naming and mapping | `rules-rule-connect-rest/references/parameter-mapping` | rest-parameter-mapping | Dynamic path segments, `pyResourceParameters`, `pyParametersParam*` vs `pyParameterName`, query string parameters |
+| Request and response body mapping | `rules-rule-connect-rest/references/request-response-mapping` | rest-request-response-mapping | Response `pyMapToKey` targets, POST/PUT/PATCH bodies, URL-encoded POST, GET (no body) |
+| Authentication | `rules-rule-connect-rest/references/authentication` | rest-authentication | `pyAuthProfileSelectionType`, direct vs SETTING profiles, TLS truststore, builder behaviors |
+| Endpoint-grouped vs. single CRUD connector | `rules-rule-connect-rest/references/endpoint-grouped-vs-single-connector` | rest-endpoint-grouped-vs-single-connector | Why to group manual/no-OAS connectors by endpoint shape (collection vs. instance) instead of one connector handling both |
 
 ### `Accept` header
 
@@ -49,7 +49,8 @@ step page. The data-page sourcing engine then passes that step page AS the
 — that named page does not exist during connector execution (it only exists in
 the DT context). Using `DataSource.<property>` causes a silent empty-response
 failure: 200 OK, no exception, empty values.
-See `rest-request-response-mapping` for the full mapping reference.
+See `rules-rule-connect-rest/references/request-response-mapping` for the full
+mapping reference.
 
 ### All five method array sets
 
@@ -157,15 +158,15 @@ Set `pyIntegrationSystemId` — a plain string — to the ID of an **existing** 
 
 ### Rule-level
 
-| Skill | Description |
-|-------|-------------|
-| `rest-stub` | Minimal GET connector -- smallest valid create payload with a static URL |
-| `rest-get-dynamic-path` | GET connector with dynamic `{param}` path segment and query string parameter |
-| `rest-post-setting-url` | POST connector with SETTING-based URL, request body from clipboard, Authorization header |
-| `rest-auth-setting-profile` | Authenticated connector with SETTING auth profile, CLIPBOARD path param, GET+POST methods |
-| `rest-endpoint-grouped-collection` | Collection connector (LIST + CREATE) for the endpoint-grouped manual CRUD pattern |
-| `rest-endpoint-grouped-instance` | Instance connector (LOOKUP + UPDATE + DELETE) for the endpoint-grouped manual CRUD pattern |
-| `rest-crud-direct-url` | GET/POST/PUT/PATCH CRUD connector with direct base URL and conditional-update response header mapping |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-connect-rest/examples/stub` | rest-stub | Minimal GET connector -- smallest valid create payload with a static URL |
+| `rules-rule-connect-rest/examples/get-dynamic-path` | rest-get-dynamic-path | GET connector with dynamic `{param}` path segment and query string parameter |
+| `rules-rule-connect-rest/examples/post-setting-url` | rest-post-setting-url | POST connector with SETTING-based URL, request body from clipboard, Authorization header |
+| `rules-rule-connect-rest/examples/auth-setting-profile` | rest-auth-setting-profile | Authenticated connector with SETTING auth profile, CLIPBOARD path param, GET+POST methods |
+| `rules-rule-connect-rest/examples/endpoint-grouped-collection` | rest-endpoint-grouped-collection | Collection connector (LIST + CREATE) for the endpoint-grouped manual CRUD pattern |
+| `rules-rule-connect-rest/examples/endpoint-grouped-instance` | rest-endpoint-grouped-instance | Instance connector (LOOKUP + UPDATE + DELETE) for the endpoint-grouped manual CRUD pattern |
+| `rules-rule-connect-rest/examples/get-runtime-url` | rest-crud-direct-url | GET/POST/PUT/PATCH CRUD connector with direct base URL and conditional-update response header mapping |
 
 ### `pyEmbeddedURL` partial shapes
 
@@ -173,23 +174,23 @@ When composing or modifying URL configuration, use these standalone EmbedURL
 snippets -- copy the JSON body into the `pyEmbeddedURL` value of a full
 connector payload.
 
-| Skill | Description |
-|-------|-------------|
-| `rest-url-direct-base-url` | Minimum direct URL -- `pyBaseURL` only, no path or query parameters |
-| `rest-url-setting-base-url` | Application-setting-based URL -- `pyBaseURLSetting` reference with `pyNote` |
-| `rest-url-static-path-segments` | Multiple CONSTANT segments forming a literal path |
-| `rest-url-dynamic-path-segment` | Runtime placeholder `{param}` segment paired with `pyParameters` |
-| `rest-url-clipboard-path-segment` | Path segment sourced from a clipboard property with `pyEncoding: "NONE"` |
-| `rest-url-query-string-parameters` | Multiple query parameters from PARAM and CLIPBOARD with `pyFirstItem`, `pyEmptyBehavior`, `pyDefaultValue` |
-| `rest-url-query-string-param-and-constant` | Mixed PARAM + CONSTANT query parameters — runtime business input vs fixed protocol options |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-connect-rest/examples/pyEmbeddedURL/direct-base-url` | rest-url-direct-base-url | Minimum direct URL -- `pyBaseURL` only, no path or query parameters |
+| `rules-rule-connect-rest/examples/pyEmbeddedURL/setting-base-url` | rest-url-setting-base-url | Application-setting-based URL -- `pyBaseURLSetting` reference with `pyNote` |
+| `rules-rule-connect-rest/examples/pyEmbeddedURL/static-path-segments` | rest-url-static-path-segments | Multiple CONSTANT segments forming a literal path |
+| `rules-rule-connect-rest/examples/pyEmbeddedURL/dynamic-path-segment` | rest-url-dynamic-path-segment | Runtime placeholder `{param}` segment paired with `pyParameters` |
+| `rules-rule-connect-rest/examples/pyEmbeddedURL/clipboard-path-segment` | rest-url-clipboard-path-segment | Path segment sourced from a clipboard property with `pyEncoding: "NONE"` |
+| `rules-rule-connect-rest/examples/pyEmbeddedURL/query-string-parameters` | rest-url-query-string-parameters | Multiple query parameters from PARAM and CLIPBOARD with `pyFirstItem`, `pyEmptyBehavior`, `pyDefaultValue` |
+| `rules-rule-connect-rest/examples/pyEmbeddedURL/query-string-param-and-constant` | rest-url-query-string-param-and-constant | Mixed PARAM + CONSTANT query parameters — runtime business input vs fixed protocol options |
 
 ### `pyParameters` entries
 
-| Skill | Description |
-|-------|-------------|
-| `rest-param-string-in` | Required STRING IN parameter matching a `{param}` PARAM placeholder |
-| `rest-param-boolean-in` | Optional BOOLEAN IN parameter used as a flag to control connector behavior |
-| `rest-param-integer-out` | Optional INTEGER OUT parameter returning a numeric value to the calling data page |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-connect-rest/examples/pyParameters/string-in` | rest-param-string-in | Required STRING IN parameter matching a `{param}` PARAM placeholder |
+| `rules-rule-connect-rest/examples/pyParameters/boolean-in` | rest-param-boolean-in | Optional BOOLEAN IN parameter used as a flag to control connector behavior |
+| `rules-rule-connect-rest/examples/pyParameters/integer-out` | rest-param-integer-out | Optional INTEGER OUT parameter returning a numeric value to the calling data page |
 
 ## Integration pipeline — mandatory execution order
 

@@ -7,12 +7,12 @@ description: Authoring guide for Pega Correspondence Type rules (Rule-CorrType),
 
 ## Examples
 
-| Skill | Description |
-|-------|-------------|
-| `Minimal Correspondence Type` | Minimal correspondence type -- smallest valid create payload |
-| `Postal Mail Correspondence Type` | Postal mail type with a data transform model applied to the correspondence class |
-| `Fax Correspondence Type` | Fax-based correspondence type for outbound fax delivery |
-| `Phone/Text Correspondence Type` | Phone and text message correspondence type for outbound SMS or voice delivery |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-corrtype/examples/stub` | Minimal Correspondence Type | Minimal correspondence type -- smallest valid create payload |
+| `rules-rule-corrtype/examples/postal-mail-type` | Postal Mail Correspondence Type | Postal mail type with a data transform model applied to the correspondence class |
+| `rules-rule-corrtype/examples/fax-type` | Fax Correspondence Type | Fax-based correspondence type for outbound fax delivery |
+| `rules-rule-corrtype/examples/phone-text-type` | Phone/Text Correspondence Type | Phone and text message correspondence type for outbound SMS or voice delivery |
 
 ## Authoring notes
 

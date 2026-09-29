@@ -955,6 +955,10 @@
           "type": "string",
           "description": "Rule type (e.g., 'Rule-Obj-Activity', 'Rule-Obj-Model', 'Load-Object')."
         },
+        "pyAdditionalDataTransform": {
+          "type": "string",
+          "description": "Optional Data Transform applied to the created data object during Create-Data-Object setup."
+        },
         "pyComments": {
           "type": "string",
           "description": "Free-text comment describing what this step does."

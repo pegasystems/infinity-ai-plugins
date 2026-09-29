@@ -76,20 +76,20 @@ alert thresholds, omit both fields.
 
 ## References
 
-| Skill | When to load |
-|-------|--------------|
-| `queueprocessor-alerts` | Alert IDs, recommended actions, and API creation failures (including `pyNodeTypes` validation errors) |
-| `Enqueue and Dispatch` | Creating a QP also requires a dispatch Activity that enqueues items; load for the enqueue-and-dispatch design pattern |
+| Skill | Label | When to load |
+|---|---|---|
+| `rules-rule-async-queueprocessor/references/dos-donts-alerts-troubleshooting` | queueprocessor-alerts | Alert IDs, recommended actions, and API creation failures (including `pyNodeTypes` validation errors) |
+| `rules-rule-obj-activity/examples/enqueue-and-dispatch` | Enqueue and Dispatch | Creating a QP also requires a dispatch Activity that enqueues items; load for the enqueue-and-dispatch design pattern |
 
 
 ## Examples
 
 ### Rule-level
 
-| Skill | Description |
-|-------|-------------|
-| `Stub Queue Processor` | Minimal valid create payload — required fields only |
-| `Immediate Event-Driven Queue Processor` | Immediate mode with Auto-Tune and retry config |
-| `Delayed Queue Processor` | Delayed mode with property-based delay |
-| `Run as Specific Operator` | Standard QP that sets a specific execution operator |
-| `Queue Processor With Manual Alert Thresholds` | Manual alert-threshold scenario with explicit warning threshold |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-async-queueprocessor/examples/stub` | Stub Queue Processor | Minimal valid create payload — required fields only |
+| `rules-rule-async-queueprocessor/examples/immediate-event-driven-queue-processor` | Immediate Event-Driven Queue Processor | Immediate mode with Auto-Tune and retry config |
+| `rules-rule-async-queueprocessor/examples/delayed-queue-processor` | Delayed Queue Processor | Delayed mode with property-based delay |
+| `rules-rule-async-queueprocessor/examples/run-as-specific-operator` | Run as Specific Operator | Standard QP that sets a specific execution operator |
+| `rules-rule-async-queueprocessor/examples/manual-alert-thresholds` | Queue Processor With Manual Alert Thresholds | Manual alert-threshold scenario with explicit warning threshold |

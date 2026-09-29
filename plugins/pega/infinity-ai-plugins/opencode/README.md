@@ -47,8 +47,7 @@ Set `PEGA_BASE_URL` to the environment root URL only. Do not include `/prweb` or
 path segment.
 
 The runtime selects the bundled skills version from the `resources/` directory using
-`pega_infinity_version` in `~/.infinity-rules-mcp/config.json`. Use one of `24-2`, `25-1`, `26-1`,
-or `27-1`.
+`pega_infinity_version` in `~/.infinity-rules-mcp/config.json`. Use one of `24-2`, `25-1`, or `26-1`.
 
 ### 2. Install skills
 

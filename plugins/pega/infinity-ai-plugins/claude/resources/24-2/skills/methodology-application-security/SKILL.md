@@ -16,7 +16,7 @@ description: Performs complete application security scans of web applications an
 - CVSS v3.1 (use as severity scoring framework).
 
 ## Methodology
-When the user asks to perform a security scan, load `security-app-scan`
+When the user asks to perform a security scan, load `methodology-application-security/references/app-security-scan`
 for the full scan methodology and checklist.
 
 ## Output contract

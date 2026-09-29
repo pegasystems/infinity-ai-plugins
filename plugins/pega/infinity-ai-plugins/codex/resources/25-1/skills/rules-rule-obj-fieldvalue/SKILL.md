@@ -7,16 +7,16 @@ description: Authoring guide for Pega field value rules (Rule-Obj-FieldValue), i
 
 ## Examples
 
-| Skill | Description |
-|------|-------------|
-| `Stub Field Value` | Minimal field value -- smallest valid create payload |
-| `Message Label` | Message label on @baseclass for API/UI error messages |
-| `Parameterized Message` | Parameterized text with {1}, {2} placeholders and pyFieldValueParams |
-| `Property Reference Expression` | Inline property reference expression in pyLocalizedValue (no pyFieldValueParams) |
-| `Notification Message` | Notification message for flow notification shapes |
-| `GenAI User Prompt` | GenAI Connect Rule user prompt field value (pyGenerativeAIPrompt) |
-| `GenAI System Prompt` | System prompt field value for a GenAI connector (pyGenerativeAISystemPrompt) |
-| `Caption Label` | Caption label for rule form help text with parameterized placeholder |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-obj-fieldvalue/examples/stub` | Stub Field Value | Minimal field value -- smallest valid create payload |
+| `rules-rule-obj-fieldvalue/examples/message-label` | Message Label | Message label on @baseclass for API/UI error messages |
+| `rules-rule-obj-fieldvalue/examples/parameterized-message` | Parameterized Message | Parameterized text with {1}, {2} placeholders and pyFieldValueParams |
+| `rules-rule-obj-fieldvalue/examples/property-reference` | Property Reference Expression | Inline property reference expression in pyLocalizedValue (no pyFieldValueParams) |
+| `rules-rule-obj-fieldvalue/examples/notification-message` | Notification Message | Notification message for flow notification shapes |
+| `rules-rule-obj-fieldvalue/examples/genai-user-prompt` | GenAI User Prompt | GenAI Connect Rule user prompt field value (pyGenerativeAIPrompt) |
+| `rules-rule-obj-fieldvalue/examples/genai-system-prompt` | GenAI System Prompt | System prompt field value for a GenAI connector (pyGenerativeAISystemPrompt) |
+| `rules-rule-obj-fieldvalue/examples/caption` | Caption Label | Caption label for rule form help text with parameterized placeholder |
 
 ## Authoring Notes
 

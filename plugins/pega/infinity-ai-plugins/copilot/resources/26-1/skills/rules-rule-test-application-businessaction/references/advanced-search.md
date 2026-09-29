@@ -7,11 +7,11 @@ description: Load when a Business Action form has a search-and-select (an advanc
 
 | Field | DX API mapping | Playwright selection value |
 |---|---|---|
-| Single `ObjectReference` | `pyParameterType: "Reference"` with one `pyTestReferenceField` keyed by the selection key from `pyValue` | `LABEL:ID` parameter value |
-| Multi `ObjectReference` | `pyParameterType: "Multi-Reference"` with one `pyTestReferenceField` per selected row keyed by `pySelectionKey` | `[]` of display values; never one string or comma-separated values |
+| Single `ObjectReference` | `pyParameterType: "Reference"` with one `pyTestReferenceField` per required business identifier for the active search category | `DISPLAY:IDENTIFIER` parameter value |
+| Multi `ObjectReference` | `pyParameterType: "Multi-Reference"` with the required business identifier field(s) for each selected row | `[]` of display values; never one string or comma-separated values |
 | `UserReference` with advancedSearch display | Standard scalar field mapping; no `pyParameterType`, `pyTestReferenceField`, or `pyTestMultiReferenceList` | Operator display value for UI; operator id for DX/API input |
 
-advancedSearch affects Playwright only; use the DX mapping in the table above.
+For advanced search, derive DX reference fields from the active category's required business identifier properties. Do not add a hidden technical identifier solely because it appears in `classKeys`, `value`, or `selectionKey` metadata.
 
 ## CommonUtils signatures
 
@@ -22,13 +22,15 @@ Handle_SearchAndSelectMulti(page, label, { searchFor, searchBy }, searchFields, 
 
 | Argument | Value |
 |---|---|
-| `label` | Resolved field label from view metadata |
+| `label` | Exact visible heading above the Search by controls and Search results. Do not use the referenced picker view's `config.label`, `pyLabel`, or `pyDefaultHeading` unless it is that visible heading |
 | `{ searchFor, searchBy }` | Destructured object with optional `searchFor` and `searchBy` properties. Pass `{}` when picker has single category and single group |
 | `searchFor` | (optional) Value to select in the "Search for" radio/dropdown — omit if not needed |
 | `searchBy` | (optional) Value to select in the "Search by" dropdown — omit if not needed |
 | `searchFields` | Array of `{ label, type, value }` objects — one per search criteria field, in order |
-| `searchPick` (single) | Single-selection input parameter value (`LABEL:ID`) |
+| `searchPick` (single) | Single-selection input parameter value (`DISPLAY:IDENTIFIER`): `DISPLAY` is the selected row's visible value and `IDENTIFIER` is the active category's required business identifier value |
 | `searchPicks` (multi) | Array of display values to select |
+
+The handlers scope the interaction to the container below this heading. Select the heading a user sees immediately above the picker controls, not the title or label stored on the referenced picker view. This resolves the Playwright anchor only and does not change DX mapping.
 
 Each `searchFields` entry describes one search criteria control:
 
@@ -57,20 +59,30 @@ await commonUtils.Handle_SearchAndSelectMulti(page, 'LABEL', { searchFor },
  [{ label: 'Search Field Label', type: 'TextInput', value: 'Search value' }], values);
 ```
 
+## Classify the picker layout first
+
+Before writing params or Playwright, evaluate these axes independently. A picker can
+combine any of them:
+
+1. **Visible heading** — Find the heading immediately above the Search by controls and Search results. Use its exact text as the handler `label`; do not use the referenced picker view's title or label merely because it has a similar name.
+2. **In-picker categories** — Determine whether the picker contains `searchFor` categories, `searchBy` groups, both, or neither, then apply the branching rules below.
+
 ## Mandatory picker view extraction
 
 > **Required for every `advancedSearch` field before writing any Playwright or params.**
 
 1. **Fetch the picker view** — `get-rule(detail="full")` on the field's picker view. Never assume the group structure.
-2. **Extract ALL "Search for" categories** — from `DeferLoad` children if present.
-3. **Extract ALL "Search by" groups** — each group's exact criterion string + every filter field (label, `pyComponentName`, property ref).
+2. **Resolve the visible heading** — use the exact heading immediately above the Search by controls and Search results. Do not use the referenced picker view's `pyLabel`/`pyDefaultHeading` unless it matches that visible heading.
+3. **Resolve the active category's business identifier** — inspect the selected search group's required fields and their property references. Use the required property that identifies the selected business record in `pyTestReferenceField`; do not substitute a technical identifier from `classKeys`, `value`, or `selectionKey`.
+4. **Extract ALL "Search for" categories** — from `DeferLoad` children if present.
+5. **Extract ALL "Search by" groups** — each group's exact criterion string + every filter field (label, `pyComponentName`, property ref, required state).
+6. **Resolve the identifier value** — run the selected category/group's configured `referenceList` data page using its search field values and static view parameters. From the matching row, read the visible display value and the business identifier property from step 3. For a single select, set the UI input parameter to `DISPLAY:IDENTIFIER`.
+7. **Map the active category in `pyForm`** — add each required business identifier as a `pyTestReferenceField` entry. Use the identifier property name from the search-group metadata and its value from the matching row or the search criterion. Do not add unrelated technical identifiers.
+8. **Add input parameters** — `{Label}_searchFor` and `{Label}_searchBy` (e.g., `Customer_searchFor`, `Customer_searchBy`), defaulting to the most representative category/group. Pass empty string when only one option exists at that level.
+9. **One `if`/`else if` Playwright block per category/group** — branch on `{Label}_searchFor` first, then `{Label}_searchBy` within each category. Give each block its own `searchFields[]`; use `else` for the final fallback.
 
-4. **Add input parameters** — `{Label}_searchFor` and `{Label}_searchBy` (e.g., `Customer_searchFor`, `Customer_searchBy`), defaulting to the most representative category/group. Pass empty string when only one option exists at that level.
-
-5. **One `if`/`else if` Playwright block per category/group** — when multiple "Search for" categories exist, branch on `{Label}_searchFor` first (outer); within each category, branch on `{Label}_searchBy` (inner) if multiple groups exist. Each block has its own `searchFields[]`; the last branch is always the `else` fallback. See `business-action-single-reference-field-advanced-searchfor`, `business-action-single-reference-field-advanced-searchfor-and-searchby`, `business-action-single-reference-field-advanced-searchby`, `business-action-multi-reference-field-advanced-searchfor`, `business-action-multi-reference-field-advanced-searchfor-and-searchby`, and `business-action-multi-reference-field-advanced-searchby` for the code patterns.
-
-**DX mapping is unaffected** — `pyForm` still carries only the selected record's key
-(`LABEL:ID`). The searchFor, searchBy, and filter fields are UI-only; they do not appear in `pyForm`.
+`searchFor` and `searchBy` remain UI-only. Required business identifier fields from
+the active category are included in `pyForm`.
 
 ---
 
@@ -111,103 +123,34 @@ await commonUtils.Handle_SearchAndSelectSingle(
 - `type` is the search field's `pyComponentName` from the Field-type-to-locator
   table in `business-action-ui-automation` (e.g. `TextInput`, `Dropdown`,
   `Currency`, `pxDateTime`, `pxAutoComplete`).
-- `searchPick` / `searchPicks` — the record to select (`LABEL:ID` for single-select; a `[]` of
+- `searchPick` / `searchPicks` — the record to select (`DISPLAY:IDENTIFIER` for single-select; a `[]` of
   display values for multi-select).
 
-DX mapping is unaffected — the category and search fields are UI-only mechanics;
-`pyForm` still carries the selected record's key.
+The category controls are UI-only mechanics; `pyForm` carries the active category's required business identifier fields.
 
-## Branching Playwright patterns
+## Playwright examples
 
-When multiple categories or groups have **different search fields**, branch with
-`if`/`else if`/`else`. The last branch is always the `else` fallback.
+Load the example matching the picker layout and selection type:
 
-### searchFor only (single-select)
-
-```typescript
-const seatSearchFor = params['Seat_searchFor'] || '';
-if (params['Seat']) {
-  if (seatSearchFor === 'Business') {
-    await commonUtils.Handle_SearchAndSelectSingle(page, 'Seat', { searchFor: seatSearchFor }, [{ label: 'Suite number', type: 'TextInput', value: 'B1' }], params['Seat']);
-  } else {
-    await commonUtils.Handle_SearchAndSelectSingle(page, 'Seat', { searchFor: seatSearchFor }, [{ label: 'Row number', type: 'TextInput', value: '12' }], params['Seat']);
-  }
-}
-```
-
-### searchFor only (multi-select)
-
-```typescript
-const mealsSearchFor = params['Meals_searchFor'] || '';
-if (mealsSearchFor === 'Non-vegetarian') {
-  const meals = ['Chicken curry', 'Fish and chips'];
-  await commonUtils.Handle_SearchAndSelectMulti(page, 'Meals', { searchFor: mealsSearchFor }, [{ label: 'Meal name', type: 'TextInput', value: 'chicken' }], meals);
-} else {
-  const meals = ['Vegetarian pasta', 'Garden salad'];
-  await commonUtils.Handle_SearchAndSelectMulti(page, 'Meals', { searchFor: mealsSearchFor }, [{ label: 'Meal name', type: 'TextInput', value: 'veg' }], meals);
-}
-```
-
-### searchBy only (single-select)
-
-```typescript
-const approverSearchBy = params['Approver_searchBy'] || '';
-if (params['Approver']) {
-  if (approverSearchBy === 'Search by Name') {
-    await commonUtils.Handle_SearchAndSelectSingle(page, 'Approver', { searchBy: approverSearchBy }, [{ label: 'First name', type: 'TextInput', value: 'Jane' }, { label: 'Last name', type: 'TextInput', value: 'Manager' }], params['Approver']);
-  } else {
-    await commonUtils.Handle_SearchAndSelectSingle(page, 'Approver', { searchBy: approverSearchBy }, [{ label: 'Approver number', type: 'TextInput', value: '301' }], params['Approver']);
-  }
-}
-```
-
-### searchFor + searchBy (single-select)
-
-```typescript
-const searchFor = params['LABEL_searchFor'] || '';
-const searchBy = params['LABEL_searchBy'] || '';
-if (params['LABEL']) {
-  if (searchFor === 'Service account information') {
-    await commonUtils.Handle_SearchAndSelectSingle(page, 'LABEL', { searchFor: searchFor }, [{ label: 'Service account ID', type: 'TextInput', value: 'SA-031' }], params['LABEL']);
-  } else {
-    if (searchBy === 'Phone number or Email or SSN/National ID') {
-      await commonUtils.Handle_SearchAndSelectSingle(page, 'LABEL', { searchFor: searchFor, searchBy: searchBy }, [{ label: 'Phone number', type: 'TextInput', value: '' }, { label: 'Email', type: 'TextInput', value: '' }, { label: 'SSN/National ID', type: 'TextInput', value: '' }], params['LABEL']);
-    } else {
-      await commonUtils.Handle_SearchAndSelectSingle(page, 'LABEL', { searchFor: searchFor, searchBy: searchBy }, [{ label: 'Last name', type: 'TextInput', value: 'Biggs' }, { label: 'First name', type: 'TextInput', value: 'Rebecca' }], params['LABEL']);
-    }
-  }
-}
-```
-
-### searchFor + searchBy (multi-select)
-
-```typescript
-const entertainmentSearchFor = params['Entertainment_searchFor'] || '';
-const entertainmentSearchBy = params['Entertainment_searchBy'] || '';
-if (entertainmentSearchFor === 'TV Shows') {
-  const tvTitles = ['Sky Drama S1', 'Night Comedy S2'];
-  await commonUtils.Handle_SearchAndSelectMulti(page, 'Entertainment', { searchFor: entertainmentSearchFor, searchBy: entertainmentSearchBy }, [{ label: 'Show name', type: 'TextInput', value: 'Sky' }], tvTitles);
-} else {
-  if (entertainmentSearchBy === 'Search by Title') {
-    const movieTitles = ['Sky Runner', 'Horizon Chase'];
-    await commonUtils.Handle_SearchAndSelectMulti(page, 'Entertainment', { searchFor: entertainmentSearchFor, searchBy: entertainmentSearchBy }, [{ label: 'Title', type: 'TextInput', value: 'Sky' }], movieTitles);
-  } else {
-    const movieTitles = ['Sky Runner', 'Horizon Chase'];
-    await commonUtils.Handle_SearchAndSelectMulti(page, 'Entertainment', { searchFor: entertainmentSearchFor, searchBy: entertainmentSearchBy }, [{ label: 'Genre', type: 'Dropdown', value: 'Action' }], movieTitles);
-  }
-}
-```
+| Layout | Single-select | Multi-select |
+|---|---|---|
+| `searchFor` only | `rules-rule-test-application-businessaction/examples/single-reference-field-advanced-searchfor` | `rules-rule-test-application-businessaction/examples/multi-reference-field-advanced-searchfor` |
+| `searchBy` only | `rules-rule-test-application-businessaction/examples/single-reference-field-advanced-searchby` | `rules-rule-test-application-businessaction/examples/multi-reference-field-advanced-searchby` |
+| `searchFor` and `searchBy` | `rules-rule-test-application-businessaction/examples/single-reference-field-advanced-searchfor-and-searchby` | `rules-rule-test-application-businessaction/examples/multi-reference-field-advanced-searchfor-and-searchby` |
 
 ---
 
 ## Final checks
 
 - **ALWAYS fetch the picker view; every group needs its own `if`/`else if` block.**
+- **The handler `label` MUST exactly match the visible heading above Search by and Search results.** Do not use an internal component label or the referenced picker view's `pyLabel`/`pyDefaultHeading` unless it matches that heading.
+- **DX reference fields MUST use the active category's required business identifier properties.** Do not add a technical identifier solely from `classKeys`, `value`, or `selectionKey`.
+- **The `searchPick` identifier MUST match the `pyTestReferenceField` identifier.** Build `DISPLAY:IDENTIFIER` with the same business identifier value used by DX.
 - **`searchFor` MUST be a `pyInputParameter` named `{Label}_searchFor`** (when multiple categories exist).
 - **`searchBy` MUST be a `pyInputParameter` named `{Label}_searchBy`** (when multiple groups exist).
 - **Different categories → outer `if/else if` on `searchFor`; different groups → inner `if/else if` on `searchBy`.** A single call without branching is wrong when fields differ.
 - **Category with no searchBy → pass `{ searchFor: searchFor }` only** — do not include `searchBy` in the options object for that branch.
-- Single-select `searchPick` uses `LABEL:ID` format (e.g., `'John Smith:EMP-301'`).
+- Single-select `searchPick` uses `DISPLAY:IDENTIFIER` format.
 - Multi-select `searchPicks` is an array of display names.
 - Each `searchFields` entry must include the search field `label`, its `type`, and its `value`.
 - Use the advancedSearch handlers instead of `Handle_ReferenceListMethods` for this display mode.

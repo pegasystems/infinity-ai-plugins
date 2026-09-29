@@ -13,10 +13,10 @@ These are **reference examples** showing what branch records look like when insp
 via `get-rule`. They are not create payloads — agents never create `Rule-RuleSet-Branch`
 records.
 
-| Skill | Description |
-|------|-------------|
-| `Stub Branch` | Minimal branch record — bare-minimum required fields |
-| `Labeled Branch` | Branch record with a human-readable display label |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-ruleset-branch/examples/stub` | Stub Branch | Minimal branch record — bare-minimum required fields |
+| `rules-rule-ruleset-branch/examples/labeled-branch` | Labeled Branch | Branch record with a human-readable display label |
 
 ## Authoring Notes
 

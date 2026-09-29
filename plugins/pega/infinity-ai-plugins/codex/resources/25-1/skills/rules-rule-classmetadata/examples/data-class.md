@@ -1,10 +1,11 @@
 ---
 name: classmetadata-data-class
-description: Data-object metadata with pyListDataPage / pyLookUpDataPage / pySavableDataPage bindings, embedded Rule-Declare-Pages snapshots, and pyDataTypeLocalActions.
+description: Load when authoring data-class metadata. Contains data-page bindings, embedded snapshots, local actions, and primary fields.
 ---
 
 ```json
 {
+  "pxObjClass": "Rule-ClassMetadata",
   "pyClassName": "MyOrg-MyApp-Data-MyDataObject",
   "pyListDataPage": "D_MyDataObjectList",
   "pyLookUpDataPage": "D_MyDataObject",

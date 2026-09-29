@@ -9,19 +9,19 @@ description: Authoring guide for Pega Service Level Agreement rules (Rule-Obj-Se
 
 ### Rule-level
 
-| Skill | Description |
-|-------|-------------|
-| `Stub Service Level Agreement` | Minimal valid create payload — required fields only |
-| `Goal and Deadline` | Goal and deadline with escalation tiers |
-| `Timed Delay Assignment Ready` | Timed delay before assignment becomes ready |
-| `Escalation Actions with CallActivity and When Rule` | CallActivity escalation actions with When rule and activity parameters |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-obj-servicelevel/examples/stub` | Stub Service Level Agreement | Minimal valid create payload — required fields only |
+| `rules-rule-obj-servicelevel/examples/goal-deadline` | Goal and Deadline | Goal and deadline with escalation tiers |
+| `rules-rule-obj-servicelevel/examples/timed-delay-assignment` | Timed Delay Assignment Ready | Timed delay before assignment becomes ready |
+| `rules-rule-obj-servicelevel/examples/escalation-actions` | Escalation Actions with CallActivity and When Rule | CallActivity escalation actions with When rule and activity parameters |
 
 ## References
 
-| Skill | When to load |
-|-------|--------------|
-| `servicelevel-timing-and-urgency` | SLA timing semantics, urgency increments, business days vs calendar days |
-| `servicelevel-wiring-to-flows` | How to wire an SLA to a flow, assignment shape, or case type stage |
+| Skill | Label | When to load |
+|---|---|---|
+| `rules-rule-obj-servicelevel/references/sla-timing-and-urgency` | servicelevel-timing-and-urgency | SLA timing semantics, urgency increments, business days vs calendar days |
+| `rules-rule-obj-servicelevel/references/wiring-sla-to-flows` | servicelevel-wiring-to-flows | How to wire an SLA to a flow, assignment shape, or case type stage |
 
 ## Naming Best Practices
 
