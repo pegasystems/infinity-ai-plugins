@@ -1,10 +1,11 @@
 ---
 name: classmetadata-stub
-description: Minimal create payload — just pyClassName. The smallest valid Rule-ClassMetadata rule.
+description: Load for the smallest valid Rule-ClassMetadata create payload with only the target class identity.
 ---
 
 ```json
 {
+  "pxObjClass": "Rule-ClassMetadata",
   "pyClassName": "MyOrg-MyApp-Work-MyCase"
 }
 ```

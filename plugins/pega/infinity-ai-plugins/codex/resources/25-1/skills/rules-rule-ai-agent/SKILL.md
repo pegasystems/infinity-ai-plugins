@@ -9,28 +9,28 @@ description: Authoring guide for Pega AI Agent rules (Rule-AI-Agent), including 
 
 ### Full Agent Examples
 
-| Skill | Description |
-|-------|-------------|
-| `Minimal AI Agent` | Minimal create payload with no tools or AI data sources |
-| `Data Transform Authoring Agent` | Full Rule-AI-Agent example scoped to `Rule-Obj-Model` with one automation action tool |
-| `Case Type Authoring Agent` | Full Rule-AI-Agent example scoped to `Rule-Obj-CaseType` with one automation action tool and one data page knowledge tool |
-| `Delegating Insight Agent` | Full Rule-AI-Agent example that uses `pzAgentTools` to delegate insight generation to another agent |
-| `Documentation Guidance Agent` | Full Rule-AI-Agent example that uses a Buddy-backed knowledge tool for documentation questions |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-ai-agent/examples/stub` | Minimal AI Agent | Minimal create payload with no tools or AI data sources |
+| `rules-rule-ai-agent/examples/data-transform-authoring-agent` | Data Transform Authoring Agent | Full Rule-AI-Agent example scoped to `Rule-Obj-Model` with one automation action tool |
+| `rules-rule-ai-agent/examples/case-type-authoring-agent` | Case Type Authoring Agent | Full Rule-AI-Agent example scoped to `Rule-Obj-CaseType` with one automation action tool and one data page knowledge tool |
+| `rules-rule-ai-agent/examples/data-insight-agent-with-agent-tool` | Delegating Insight Agent | Full Rule-AI-Agent example that uses `pzAgentTools` to delegate insight generation to another agent |
+| `rules-rule-ai-agent/examples/documentation-agent-with-buddy-tool` | Documentation Guidance Agent | Full Rule-AI-Agent example that uses a Buddy-backed knowledge tool for documentation questions |
 
 ### List Property Examples (row/shape types)
 
-| Skill | Description |
-|-------|-------------|
-| `pzActionTools entry - Automation backed Tool` | Action-tool row example (`Rule-AI-Tool`) for `pzActionTools` |
-| `pzKnowledgeTools entry - Data Page backed Tool` | Knowledge-tool row example (`Rule-AI-Tool`) for `pzKnowledgeTools` — data page backed |
-| `pzKnowledgeTools entry - Buddy backed Tool` | Knowledge-tool row example (`Rule-AI-Tool`) for `pzKnowledgeTools` — buddy backed |
-| `pzKnowledgeTools entry - Section backed Tool` | Knowledge-tool row example (`Rule-AI-Tool`) for `pzKnowledgeTools` — section backed |
-| `pzAgentTools entry - Agent` | Agent-tool row example (`Rule-AI-Tool`) for `pzAgentTools` |
-| `pzCaseTypeTools entry - Case type backed Tool` | Case-type-tool row example (`Rule-AI-Tool`) for `pzCaseTypeTools` |
-| `pzAIDataSources entry - Primary fields` | Data-source row example (`Embed-DataPage`) for `pzAIDataSources` — primary fields |
-| `pzAIDataSources entry - Data model fields` | Data-source row example (`Embed-DataPage`) for `pzAIDataSources` — data model fields |
-| `A2A External Agent` | External-agent connection example (`Rule-Connect-Agent`) for `pzExternalAgents` |
-| `MCP Client Connection pzMCPClients- MCP connection` | MCP connection example (`Rule-Connect-MCP`) for `pzMCPClients` |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-ai-agent/examples/pzActionTools/automation` | pzActionTools entry - Automation backed Tool | Action-tool row example (`Rule-AI-Tool`) for `pzActionTools` |
+| `rules-rule-ai-agent/examples/pzKnowledgeTools/data-page` | pzKnowledgeTools entry - Data Page backed Tool | Knowledge-tool row example (`Rule-AI-Tool`) for `pzKnowledgeTools` — data page backed |
+| `rules-rule-ai-agent/examples/pzKnowledgeTools/buddy` | pzKnowledgeTools entry - Buddy backed Tool | Knowledge-tool row example (`Rule-AI-Tool`) for `pzKnowledgeTools` — buddy backed |
+| `rules-rule-ai-agent/examples/pzKnowledgeTools/section` | pzKnowledgeTools entry - Section backed Tool | Knowledge-tool row example (`Rule-AI-Tool`) for `pzKnowledgeTools` — section backed |
+| `rules-rule-ai-agent/examples/pzAgentTools/agent` | pzAgentTools entry - Agent | Agent-tool row example (`Rule-AI-Tool`) for `pzAgentTools` |
+| `rules-rule-ai-agent/examples/pzCaseTypeTools/case-type` | pzCaseTypeTools entry - Case type backed Tool | Case-type-tool row example (`Rule-AI-Tool`) for `pzCaseTypeTools` |
+| `rules-rule-ai-agent/examples/pzAIDataSources/primary-fields` | pzAIDataSources entry - Primary fields | Data-source row example (`Embed-DataPage`) for `pzAIDataSources` — primary fields |
+| `rules-rule-ai-agent/examples/pzAIDataSources/data-model-fields` | pzAIDataSources entry - Data model fields | Data-source row example (`Embed-DataPage`) for `pzAIDataSources` — data model fields |
+| `rules-rule-ai-agent/examples/pzExternalAgents/a2a-agent` | A2A External Agent | External-agent connection example (`Rule-Connect-Agent`) for `pzExternalAgents` |
+| `rules-rule-ai-agent/examples/pzMCPClients/mcp-connection` | MCP Client Connection pzMCPClients- MCP connection | MCP connection example (`Rule-Connect-MCP`) for `pzMCPClients` |
 
 ## Authoring notes
 

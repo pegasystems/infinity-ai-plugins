@@ -7,11 +7,11 @@ description: Authoring guide for Pega edit validate rules (Rule-Edit-Validate), 
 
 ## Examples
 
-| Skill | Description |
-|------|-------------|
-| `Boolean true validation` | Boolean true validation -- checks value is true, adds error message if false |
-| `Not-blank validation` | Not-blank validation with error message |
-| `Numeric range validation` | Numeric range validation with class scoping |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-edit-validate/examples/stub` | Boolean true validation | Boolean true validation -- checks value is true, adds error message if false |
+| `rules-rule-edit-validate/examples/not-blank-validation` | Not-blank validation | Not-blank validation with error message |
+| `rules-rule-edit-validate/examples/numeric-range-validation` | Numeric range validation | Numeric range validation with class scoping |
 
 ## Authoring notes
 

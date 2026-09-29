@@ -7,12 +7,12 @@ description: Authoring guide for Pega notification rules (Rule-Notification), in
 
 ## Examples
 
-| Skill | Description |
-|------|-------------|
-| `Stub Notification` | `Stub Notification` — minimal notification, current-page recipient, gadget channel only. Smallest valid create payload. |
-| `Send Status Update` | `Send Status Update` — auto-generated Send Notification step pattern, all three channels, case followers recipient, four linked rules sharing the same base name. |
-| `Notify Work Parties` | `Notify Work Parties` — recipients from an embedded page list on the work object, Email and Gadget channels, both operator ID and raw email address mappings, message parameter. |
-| `Case Status Details` | `Case Status Details` — all three channels each with their own independent parameter map (message body, email subject, push message), case followers recipient. |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-notification/examples/stub` | Stub Notification | `Stub Notification` — minimal notification, current-page recipient, gadget channel only. Smallest valid create payload. |
+| `rules-rule-notification/examples/send-status-update` | Send Status Update | `Send Status Update` — auto-generated Send Notification step pattern, all three channels, case followers recipient, four linked rules sharing the same base name. |
+| `rules-rule-notification/examples/notify-work-parties` | Notify Work Parties | `Notify Work Parties` — recipients from an embedded page list on the work object, Email and Gadget channels, both operator ID and raw email address mappings, message parameter. |
+| `rules-rule-notification/examples/case-status-details` | Case Status Details | `Case Status Details` — all three channels each with their own independent parameter map (message body, email subject, push message), case followers recipient. |
 
 > **Author-minimal examples:** the example payloads in this skill show only the fields the author typically supplies. Auto-filled / auto-derived fields such as `pxObjClass`, `pyCategory`, and channel scaffolding fields are omitted unless they carry author signal.
 

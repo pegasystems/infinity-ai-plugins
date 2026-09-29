@@ -56,7 +56,7 @@ description: Load when a Business Action form has one reference picker displayed
       ],
       "pyForm": [
         {
-          "pyParameterName": "SeatRef",
+          "pyParameterName": "SelectedSearchResult",
           "pyParameterType": "Reference",
           "pyTestReferenceField": [
             {
@@ -69,6 +69,6 @@ description: Load when a Business Action form has one reference picker displayed
       ]
     }
   ],
-  "pyPlaywrightScript": "await caseUtils.clickGo(page, 'Select seat');\nif (params['Seat']) {\n  await commonUtils.Handle_SearchAndSelectSingle(page, 'Seat', { searchFor: params['Seat_searchFor'] || '' }, [{ label: 'Row number', type: 'TextInput', value: '12' }], params['Seat']);\n}\nawait caseUtils.clickSubmit(page);"
+  "pyPlaywrightScript": "await caseUtils.clickGo(page, 'Select seat');\nconst searchFor = params['Seat_searchFor'] || '';\nif (params['Seat']) {\n  if (searchFor === 'Business') {\n    await commonUtils.Handle_SearchAndSelectSingle(page, 'Seat', { searchFor }, [{ label: 'Suite number', type: 'TextInput', value: 'B1' }], params['Seat']);\n  } else {\n    await commonUtils.Handle_SearchAndSelectSingle(page, 'Seat', { searchFor }, [{ label: 'Row number', type: 'TextInput', value: '12' }], params['Seat']);\n  }\n}\nawait caseUtils.clickSubmit(page);"
 }
 ```

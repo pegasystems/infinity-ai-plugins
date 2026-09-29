@@ -60,19 +60,19 @@ explicitly intend to change the schedule. Deep merge will overwrite the existing
 
 ## References
 
-| Skill | When to load |
-|-------|--------------|
-| `jobscheduler-checkpoint-pattern` | Resumable JS activity design — NEW/IN-PROGRESS/PROCESSED pattern |
-| `jobscheduler-legacy-agent-replacement` | Migrating `Rule-Async-Agent` to JS or QP |
-| `jobscheduler-alerts` | Alert IDs and recommended actions |
+| Skill | Label | When to load |
+|---|---|---|
+| `rules-rule-async-jobscheduler/references/checkpoint-pattern` | jobscheduler-checkpoint-pattern | Resumable JS activity design — NEW/IN-PROGRESS/PROCESSED pattern |
+| `rules-rule-async-jobscheduler/references/legacy-agent-replacement` | jobscheduler-legacy-agent-replacement | Migrating `Rule-Async-Agent` to JS or QP |
+| `rules-rule-async-jobscheduler/references/dos-donts-alerts-troubleshooting` | jobscheduler-alerts | Alert IDs and recommended actions |
 
 ## Examples
 
 ### Rule-level
 
-| Skill | Description |
-|-------|-------------|
-| `Stub Job Scheduler` | Minimal valid create payload — required fields only |
-| `Cluster-Scoped Daily Job Scheduler` | Cluster scope, daily at 02:00, using the Checkpoint Pattern |
-| `Per-Node Startup Job Scheduler` | Associated node scope, Startup frequency — per-node initialisation |
-| `JS + QP Hybrid — High-Volume Batch Dispatch` | Cluster scope JS dispatch activity — see `Enqueue and Dispatch` for the activity design |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-async-jobscheduler/examples/stub` | Stub Job Scheduler | Minimal valid create payload — required fields only |
+| `rules-rule-async-jobscheduler/examples/cluster-scoped-daily-job-scheduler` | Cluster-Scoped Daily Job Scheduler | Cluster scope, daily at 02:00, using the Checkpoint Pattern |
+| `rules-rule-async-jobscheduler/examples/per-node-startup-job-scheduler` | Per-Node Startup Job Scheduler | Associated node scope, Startup frequency — per-node initialisation |
+| `rules-rule-async-jobscheduler/examples/js-qp-hybrid-high-volume-batch-dispatch` | JS + QP Hybrid — High-Volume Batch Dispatch | Cluster scope JS dispatch activity — see `rules-rule-obj-activity/examples/enqueue-and-dispatch` for the activity design |

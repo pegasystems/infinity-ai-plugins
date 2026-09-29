@@ -102,7 +102,7 @@ To author a condition for a validate rule:
    template).
 4. Wrap in an `Embed-WhenConditions` clause and place it inside
    `pyValidWhen.pyCondition[]` (or `pyRequiredWhen.pyCondition[]`). See
-   `examples/pyValidWhen/embed-whencondition-clause.md` for the row shape.
+   `rules-rule-obj-validate/examples/pyValidWhen/embed-whencondition-clause` for the row shape.
 
 ### `LocalEvaluateProperty` does not work in `pyValidWhen`
 
@@ -150,13 +150,13 @@ engine recognizes the comma-delimited list:
 - `No candidates found [possible function name, ruleset/version or number of parameter problem]` — alias expansion failed.
 - `mismatched input 'NY'` — Pega stripped the outer double-quotes because the value wasn't recognized as a quoted list.
 
-**Required shape** — see `examples/pyValidWhen/list-of-values-condition-params.md`
+**Required shape** — see `rules-rule-obj-validate/examples/pyValidWhen/list-of-values-condition-params`
 for the full `pyCallParams` + `pyFunctionData` template (the literal value is
 `"'CA','NY','TX'"` — outer dquotes are part of the string;
 `pyUIParameters[listOfValues].pyParametersParamValue` is `""` because the UI
 display is sourced from `pyCommaDelimitedString`, while
 `pyParameters[listOfValues].pyParametersParamValue` carries the literal quoted
-list). See also `library-function-builder/examples/px-is-in-list-of-values.md`
+list). See also `library-function-builder/examples/px-is-in-list-of-values`
 for the alias-side template.
 
 ### `entrySatisfiesCondition` aliases need a value-list/group property
@@ -224,18 +224,18 @@ versions and are auto-filled.
 
 ### Rule-level
 
-| Skill | Description |
-|-------|-------------|
-| `validate-stub` | Minimal validate rule — smallest valid create payload |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-obj-validate/examples/stub` | validate-stub | Minimal validate rule — smallest valid create payload |
 
 ### Row/shape examples
 
-| Skill | Description |
-|-------|-------------|
-| `property-validate` | VALIDATE-mode step shape — `Property-Validate` for required-field checks |
-| `property-validations-with-conditions` | ACTIVITY-mode validation column shape — multi-property `pyValidations` with embedded `pyValidWhen` conditions built from `1FreeFormExpressionBoolean` |
-| `embed-whencondition-clause` | Embedded when-condition fragment — generic row shape for `pyValidWhen.pyCondition[]` |
-| `list-of-values-condition-params` | `pyCallParams` + `pyFunctionData` shape for list-of-values aliases |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-obj-validate/examples/pySteps/property-validate` | property-validate | VALIDATE-mode step shape — `Property-Validate` for required-field checks |
+| `rules-rule-obj-validate/examples/pyValidationValues/property-validations-with-conditions` | property-validations-with-conditions | ACTIVITY-mode validation column shape — multi-property `pyValidations` with embedded `pyValidWhen` conditions built from `1FreeFormExpressionBoolean` |
+| `rules-rule-obj-validate/examples/pyValidWhen/embed-whencondition-clause` | embed-whencondition-clause | Embedded when-condition fragment — generic row shape for `pyValidWhen.pyCondition[]` |
+| `rules-rule-obj-validate/examples/pyValidWhen/list-of-values-condition-params` | list-of-values-condition-params | `pyCallParams` + `pyFunctionData` shape for list-of-values aliases |
 
 ### Embedded when conditions
 

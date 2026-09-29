@@ -28,7 +28,6 @@ Supported Infinity versions map to bundled directory names as follows:
 - Infinity 24.2 -> `24-2`
 - Infinity 25.1 -> `25-1`
 - Infinity 26.1 -> `26-1`
-- Infinity 27.1 -> `27-1`
 
 ## Check Existing Configuration
 

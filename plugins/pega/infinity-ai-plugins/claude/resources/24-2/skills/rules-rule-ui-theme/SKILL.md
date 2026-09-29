@@ -9,11 +9,11 @@ description: Authoring guide for Pega Theme rules (Rule-UI-Theme), including the
 
 ## Critical Authoring Rules
 
-1. `pyDefinition` is the most important field on a `Rule-UI-Theme` instance. It is a JSON-encoded string holding the theme's design tokens under two top-level sections, `base` (global tokens) and `components` (per-component overrides) — see `Theme Definition Token Inventory` for the confirmed key catalogue. Two value shapes are confirmed: a flat literal shape (raw values) and a richer `$type`/`$value` shape supporting `"literal"` values and `"inherited"` alias references to other token paths — see `theme-pydefinition-token-shape-sample`. Always check which shape the live instance uses and preserve it; never omit, blank, or wholesale-replace `pyDefinition` unless the user explicitly wants the entire theme replaced.
-2. Always fetch the current instance with `get-rule(detail="full")` before update, and merge changes into `pyDefinition` rather than reconstructing it from scratch — see `theme-pydefinition-merge-pattern` for the fetch-then-merge procedure.
+1. `pyDefinition` is the most important field on a `Rule-UI-Theme` instance. It is a JSON-encoded string holding the theme's design tokens under two top-level sections, `base` (global tokens) and `components` (per-component overrides) — see `rules-rule-ui-theme/references/theme-definition-token-inventory` for the confirmed key catalogue. Two value shapes are confirmed: a flat literal shape (raw values) and a richer `$type`/`$value` shape supporting `"literal"` values and `"inherited"` alias references to other token paths — see `rules-rule-ui-theme/examples/pyDefinition/token-shape-sample`. Always check which shape the live instance uses and preserve it; never omit, blank, or wholesale-replace `pyDefinition` unless the user explicitly wants the entire theme replaced.
+2. Always fetch the current instance with `get-rule(detail="full")` before update, and merge changes into `pyDefinition` rather than reconstructing it from scratch — see `rules-rule-ui-theme/references/pydefinition-merge-pattern` for the fetch-then-merge procedure.
 3. Find the target instance first with `list-rules(ruleType="Rule-UI-Theme", ruleName=<themeName>)`. Do not confuse a specific named theme (e.g. `pzAuriga`) with the `Rule-UI-Theme` class-definition anchor (`RULE-OBJ-CLASS RULE-UI-THEME`) — they are different rule records.
 4. If the change is visual or layout-related (fields, regions, screens) rather than a design token, switch to `rules-rule-ui-view`.
-5. Do not invent `pyDefinition` sub-keys beyond those confirmed in `Theme Definition Token Inventory` or a live `get-rule(detail="full")` result. Confirm exact structure against the actual instance before authoring.
+5. Do not invent `pyDefinition` sub-keys beyond those confirmed in `rules-rule-ui-theme/references/theme-definition-token-inventory` or a live `get-rule(detail="full")` result. Confirm exact structure against the actual instance before authoring.
 
 ## What This Skill Covers
 
@@ -70,15 +70,15 @@ Before touching a theme, determine the correct operation:
 
 ## References
 
-| Skill | When to load |
-|-------|--------------|
-| `theme-pydefinition-merge-pattern` | Before updating a theme's `pyDefinition` — fetch, preserve the existing token shape, merge the requested change, and verify the complete JSON value. |
-| `Theme Definition Token Inventory` | When selecting or verifying `base` and `components` token paths inside `pyDefinition`. |
+| Skill | Label | When to load |
+|---|---|---|
+| `rules-rule-ui-theme/references/pydefinition-merge-pattern` | theme-pydefinition-merge-pattern | Before updating a theme's `pyDefinition` — fetch, preserve the existing token shape, merge the requested change, and verify the complete JSON value. |
+| `rules-rule-ui-theme/references/theme-definition-token-inventory` | Theme Definition Token Inventory | When selecting or verifying `base` and `components` token paths inside `pyDefinition`. |
 
 ## Examples
 
-| Skill | Description |
-|------|-------------|
-| `theme-stub` | Minimal `Rule-UI-Theme` instance payload with `pyDefinition` |
-| `theme-pydefinition-flat-sample` | Second confirmed full `pyDefinition` payload (flat literal shape) showing every `base`/`components` key together |
-| `theme-pydefinition-token-shape-sample` | Full confirmed `pyDefinition` payload in the `$type`/`$value`/`inherited` token shape |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-ui-theme/examples/stub` | theme-stub | Minimal `Rule-UI-Theme` instance payload with `pyDefinition` |
+| `rules-rule-ui-theme/examples/pyDefinition/flat-sample` | theme-pydefinition-flat-sample | Second confirmed full `pyDefinition` payload (flat literal shape) showing every `base`/`components` key together |
+| `rules-rule-ui-theme/examples/pyDefinition/token-shape-sample` | theme-pydefinition-token-shape-sample | Full confirmed `pyDefinition` payload in the `$type`/`$value`/`inherited` token shape |

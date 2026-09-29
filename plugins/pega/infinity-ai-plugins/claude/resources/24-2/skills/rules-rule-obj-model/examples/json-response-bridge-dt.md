@@ -62,7 +62,10 @@ description: Clipboard-format wrapper Data Transform that bridges a data page re
           "pxObjClass": "Embed-ModelParams",
           "pyActionName": "APPLY_MODEL",
           "pyDisabled": "true",
-          "pyPropertiesName": "pxErrorHandlingTemplate"
+          "pyPropertiesName": "pxErrorHandlingTemplate",
+          "pyModelName": "pxErrorHandlingTemplate",
+          "pyClassName": "Code-Pega-List",
+          "pyPassCurrentParameterPage": "false"
         }
       ]
     }

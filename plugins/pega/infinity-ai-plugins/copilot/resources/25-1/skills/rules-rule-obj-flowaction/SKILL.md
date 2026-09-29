@@ -10,23 +10,23 @@ workflows, deep merge semantics, and update examples that apply to all rule type
 
 ### Rule-level
 
-| Skill | Description |
-|-------|-------------|
-| `Stub Flow Action` | Minimal local action — smallest valid create payload for Constellation apps, with draft-mode pattern |
-| `Connector Action (Assignment Shape)` | Connector action wired to an assignment shape in a flow (`pyUsedAs: "LOCALANDCONNECTOR"`) |
-| `Simple Local Action (Traditional HTML)` | Local action for pre-8.4 apps using Rule-HTML-Section |
-| `Guarded Action with Lifecycle Hooks` | Action with pre-processing activity, validation, data transform, privilege guard, and when guard |
-| `Pre-Processing Data Transform` | Pre-processing data transform to populate fields before form display |
-| `Pre-Processing Activity` | Pre-processing activity to load external data before form renders |
-| `Post-Processing Data Transform` | Post-processing data transform (`pyActionTransformRule`) to compute values after submit |
-| `Post-Processing Activity` | Post-processing activity (`pyLocalActionActivity`) to run logic after submit |
-| `Combined Pre and Post Processing` | Full lifecycle: pre-processing activity + data transform, post-processing transform + validation |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-obj-flowaction/examples/stub` | Stub Flow Action | Minimal local action — smallest valid create payload for Constellation apps, with draft-mode pattern |
+| `rules-rule-obj-flowaction/examples/connector-action` | Connector Action (Assignment Shape) | Connector action wired to an assignment shape in a flow (`pyUsedAs: "LOCALANDCONNECTOR"`) |
+| `rules-rule-obj-flowaction/examples/traditional-html-action` | Simple Local Action (Traditional HTML) | Local action for pre-8.4 apps using Rule-HTML-Section |
+| `rules-rule-obj-flowaction/examples/guarded-action-with-hooks` | Guarded Action with Lifecycle Hooks | Action with pre-processing activity, validation, data transform, privilege guard, and when guard |
+| `rules-rule-obj-flowaction/examples/pre-processing-data-transform` | Pre-Processing Data Transform | Pre-processing data transform to populate fields before form display |
+| `rules-rule-obj-flowaction/examples/pre-processing-activity` | Pre-Processing Activity | Pre-processing activity to load external data before form renders |
+| `rules-rule-obj-flowaction/examples/post-processing-data-transform` | Post-Processing Data Transform | Post-processing data transform (`pyActionTransformRule`) to compute values after submit |
+| `rules-rule-obj-flowaction/examples/post-processing-activity` | Post-Processing Activity | Post-processing activity (`pyLocalActionActivity`) to run logic after submit |
+| `rules-rule-obj-flowaction/examples/pre-and-post-processing-combined` | Combined Pre and Post Processing | Full lifecycle: pre-processing activity + data transform, post-processing transform + validation |
 
 ## References
 
-| Skill | When to load |
-|-------|--------------|
-| `flowaction-assignment-preview` | Displaying external/integrated data on a Constellation assignment view with live field-change refresh — architecture, timing, `pxFARefreshSettingsOfView` wiring, embedded display page pattern |
+| Skill | Label | When to load |
+|---|---|---|
+| `rules-rule-obj-flowaction/references/constellation-assignment-preview` | flowaction-assignment-preview | Displaying external/integrated data on a Constellation assignment view with live field-change refresh — architecture, timing, `pxFARefreshSettingsOfView` wiring, embedded display page pattern |
 
 ### Code generation (critical — controls pySourceStream generation)
 
@@ -232,7 +232,7 @@ current form, use `pxFARefreshSettingsOfView` for live preview or
 `pyActionTransformRule` for submit-time processing.
 
 **`pxFARefreshSettingsOfView`** wires field changes to Data Transforms. See
-`flowaction-assignment-preview` for the full pattern, shape definition, and
+`rules-rule-obj-flowaction/references/constellation-assignment-preview` for the full pattern, shape definition, and
 implementation checklist.
 
 **`pyActionTransformRule` must reference a Data Transform (`Rule-Obj-Model`),
@@ -245,7 +245,7 @@ assignment).
 **`pyActionTransformRule` is the post-processing data transform.** Do not
 confuse it with `pyAdditionalSubmitFieldsDataTransform` — that is a separate
 Constellation-specific field for setting computed fields on submit (see
-`flowaction-assignment-preview`). When adding a post-submit data transform to
+`rules-rule-obj-flowaction/references/constellation-assignment-preview`). When adding a post-submit data transform to
 a flow action, always use `pyActionTransformRule`.
 
 **Same-name ambiguity:** If a Data Transform and an Activity share the same

@@ -63,7 +63,7 @@ Create the `Rule-Obj-FlowAction` that controls the assignment step.
 
 **Load:** `rules-rule-obj-flowaction`
 
-**Reference:** `view-assignment-flowaction-wiring` for
+**Reference:** `rules-rule-ui-view/references/assignment-flowaction-view-wiring` for
 the `pyViewReference` vs `pySectionReference` wiring rules.
 
 Key fields:
@@ -83,7 +83,7 @@ Add the new Assignment shape to the target flow at the desired position.
 
 **Load:** `rules-rule-obj-flow`
 
-**Reference:** `flowaction-wiring-patterns` for
+**Reference:** `rules-rule-obj-flow/references/flowaction-wiring-patterns` for
 routing patterns.
 
 **Reference:** `rules-rule-obj-flow/examples/shapes/assignment-worklist` for shape JSON.
@@ -105,7 +105,7 @@ Use this when the FlowAction and View already exist for the step.
 
 **Start from the flow — do not guess the view name.**
 
-**Reference:** `view-assignment-inspection` for the
+**Reference:** `rules-rule-ui-view/references/assignment-view-inspection` for the
 full discovery workflow (flow -> FlowAction -> `pyViewReference` -> View).
 
 Record the `pzInsKey` for the FlowAction and View.
@@ -114,7 +114,7 @@ Record the `pzInsKey` for the FlowAction and View.
 
 Use `get-rule` with `detail="full"` on the FlowAction.
 
-**Reference:** `view-assignment-flowaction-wiring` for
+**Reference:** `rules-rule-ui-view/references/assignment-flowaction-view-wiring` for
 wiring rules and what to look for.
 
 If `pyViewReference` is blank and `pySectionReference` is populated, the FlowAction
@@ -129,7 +129,7 @@ Use `get-rule` with `detail="full"` on the View.
 
 ### Step 4: Classify each field change
 
-**Reference:** `view-assignment-update-patterns` for
+**Reference:** `rules-rule-ui-view/references/assignment-view-update-patterns` for
 the classification table and update patterns.
 
 | Classification | Condition | Action |
@@ -150,22 +150,22 @@ Create all missing properties before updating the view.
 
 Apply all field changes in a **single** `update-rule` call.
 
-**Reference:** `view-update-workflow` for the
+**Reference:** `rules-rule-ui-view/references/view-update-workflow` for the
 standard workflow (find, read, update, verify).
 
-**Reference:** `view-assignment-update-patterns` for
+**Reference:** `rules-rule-ui-view/references/assignment-view-update-patterns` for
 field-specific patterns:
 
-| Pattern | Skill |
-|---------|-------|
-| Add a text field | `Append Text Field` |
-| Add a dropdown field | `Append Dropdown Field` |
-| Add a date field | `Append DateTime Field` |
-| Add a data reference | `Append Data Reference Field` |
-| Make a field required | `view-field-patterns` |
-| Make a field read-only | `view-assignment-update-patterns` |
-| Reorder fields | `view-assignment-update-patterns` |
-| Remove a field | `view-assignment-update-patterns` |
+| Pattern | Skill | Label |
+|---|---|---|
+| Add a text field | `rules-rule-ui-view/examples/append/text-field` | Append Text Field |
+| Add a dropdown field | `rules-rule-ui-view/examples/append/dropdown-field` | Append Dropdown Field |
+| Add a date field | `rules-rule-ui-view/examples/append/datetime-field` | Append DateTime Field |
+| Add a data reference | `rules-rule-ui-view/examples/append/data-reference-field` | Append Data Reference Field |
+| Make a field required | `rules-rule-ui-view/references/view-field-patterns` | view-field-patterns |
+| Make a field read-only | `rules-rule-ui-view/references/assignment-view-update-patterns` | view-assignment-update-patterns |
+| Reorder fields | `rules-rule-ui-view/references/assignment-view-update-patterns` | view-assignment-update-patterns |
+| Remove a field | `rules-rule-ui-view/references/assignment-view-update-patterns` | view-assignment-update-patterns |
 
 **Critical:** Always update `pyContent`, `pxViewMetadata`, and `pxContextMetadata`
 together in a single call.
@@ -184,16 +184,16 @@ Use `get-rule` with `detail="full"` on the View.
 
 ## Common Variations
 
-| Variation | Skill |
-|-----------|-------|
-| Dropdown with FieldValue prompt list | `Append Dropdown Field` |
-| Required field (two-surface wiring) | `view-field-patterns` |
-| Conditional visibility (When rule) | `view-field-patterns` |
-| Data reference field | `view-path-b-data-reference` |
-| Embedded data field | `view-path-a-embedded-data` |
-| Pre-processing activity | `rules-rule-obj-flowaction` (lifecycle hooks section) |
-| Post-processing data transform | `rules-rule-obj-flowaction` (lifecycle hooks section) |
-| Server-side validation | `rules-rule-obj-flowaction` (`pyValidateActivity` field) |
+| Variation | Skill | Label |
+|---|---|---|
+| Dropdown with FieldValue prompt list | `rules-rule-ui-view/examples/append/dropdown-field` | Append Dropdown Field |
+| Required field (two-surface wiring) | `rules-rule-ui-view/references/view-field-patterns` | view-field-patterns |
+| Conditional visibility (When rule) | `rules-rule-ui-view/references/view-field-patterns` | view-field-patterns |
+| Data reference field | `rules-rule-ui-view/references/path-b-data-reference` | view-path-b-data-reference |
+| Embedded data field | `rules-rule-ui-view/references/path-a-embedded-data` | view-path-a-embedded-data |
+| Pre-processing activity | `rules-rule-obj-flowaction` (lifecycle hooks section) |  |
+| Post-processing data transform | `rules-rule-obj-flowaction` (lifecycle hooks section) |  |
+| Server-side validation | `rules-rule-obj-flowaction` (`pyValidateActivity` field) |  |
 
 ---
 

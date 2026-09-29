@@ -56,14 +56,14 @@ description: Load when a Business Action form lets the user choose several recor
       ],
       "pyForm": [
         {
-          "pyParameterName": "EntertainmentList",
+          "pyParameterName": "SelectedSearchResult",
           "pyParameterType": "Multi-Reference",
           "pyTestMultiReferenceList": [
             {
               "pyTestReferenceField": [
                 {
                   "pyMapActionParameterFrom": "Constant",
-                  "pyParameterName": "ContentID",
+                  "pyParameterName": "EntertainmentID",
                   "pyParameterValue": "ENT-MOV-ACTION-001"
                 }
               ]
@@ -72,7 +72,7 @@ description: Load when a Business Action form lets the user choose several recor
               "pyTestReferenceField": [
                 {
                   "pyMapActionParameterFrom": "Constant",
-                  "pyParameterName": "ContentID",
+                  "pyParameterName": "EntertainmentID",
                   "pyParameterValue": "ENT-MOV-ACTION-005"
                 }
               ]
@@ -82,6 +82,6 @@ description: Load when a Business Action form lets the user choose several recor
       ]
     }
   ],
-  "pyPlaywrightScript": "await caseUtils.clickGo(page, 'Select entertainment');\nconst searchFor = params['Entertainment_searchFor'] || '';\nconst searchBy = params['Entertainment_searchBy'] || '';\nconst movieTitles = ['Sky Runner', 'Horizon Chase'];\nif (searchFor === 'Movies') {\n  if (searchBy === 'Search by Genre') {\n    await commonUtils.Handle_SearchAndSelectMulti(page, 'Entertainment', { searchFor, searchBy }, [{ label: 'Genre', type: 'Dropdown', value: 'Action' }], movieTitles);\n  } else {\n    await commonUtils.Handle_SearchAndSelectMulti(page, 'Entertainment', { searchFor, searchBy }, [{ label: 'Title', type: 'TextInput', value: 'Sky' }], movieTitles);\n  }\n} else {\n  await commonUtils.Handle_SearchAndSelectMulti(page, 'Entertainment', { searchFor }, [{ label: 'Series name', type: 'TextInput', value: 'Horizon' }], movieTitles);\n}\nawait caseUtils.clickSubmit(page);"
+  "pyPlaywrightScript": "await caseUtils.clickGo(page, 'Select entertainment');\nconst searchFor = params['Entertainment_searchFor'] || '';\nconst searchBy = params['Entertainment_searchBy'] || '';\nif (searchFor === 'Movies') {\n  const movieTitles = ['Sky Runner', 'Horizon Chase'];\n  if (searchBy === 'Search by Genre') {\n    await commonUtils.Handle_SearchAndSelectMulti(page, 'Entertainment', { searchFor, searchBy }, [{ label: 'Genre', type: 'Dropdown', value: 'Action' }], movieTitles);\n  } else {\n    await commonUtils.Handle_SearchAndSelectMulti(page, 'Entertainment', { searchFor, searchBy }, [{ label: 'Title', type: 'TextInput', value: 'Sky' }], movieTitles);\n  }\n} else {\n  const tvTitles = ['Sky Drama S1', 'Night Comedy S2'];\n  await commonUtils.Handle_SearchAndSelectMulti(page, 'Entertainment', { searchFor, searchBy }, [{ label: 'Series name', type: 'TextInput', value: 'Sky' }], tvTitles);\n}\nawait caseUtils.clickSubmit(page);"
 }
 ```

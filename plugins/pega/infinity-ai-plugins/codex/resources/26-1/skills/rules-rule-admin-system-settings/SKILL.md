@@ -12,21 +12,21 @@ REST connectors reference them with:
 - `pyAuthProfileSelectionType: "SETTING"`
 - `pyAuthenticationProfileForSetting: "{SettingName}"`
 
-For connector-side wiring examples, see `rest-url-setting-base-url`
-and `rest-auth-setting-profile` in `rules-rule-connect-rest`.
+For connector-side wiring examples, see
+`rules-rule-connect-rest/examples/pyEmbeddedURL/setting-base-url` and
+`rules-rule-connect-rest/examples/auth-setting-profile`.
 
 ## Authoring support
 
 Application Settings support both `create-rule` and `update-rule`. On create,
 omit `pySettingMetaData.pyCategoryName` unless reusing the exact name of a
-category that already exists (e.g. one created as a side effect of
-`recipe-create-data-type-with-generator`) — inventing a new category name
-fails with `500 Internal Server Error: "Selected category is invalid."`
+category that already exists — inventing a new category name fails with
+`500 Internal Server Error: "Selected category is invalid."` For complete
+integration workflows, load `methodology-integration` and follow its
+authoring order.
 
-Settings are also created as a side effect of `recipe-create-data-type-with-generator`
-(the DataObjectGenerator wrapper creates them alongside connectors). Use the
-generator when it fits the broader task; use `create-rule` directly when a
-standalone setting is needed.
+Create the setting directly with `create-rule` when a standalone setting is needed;
+use the integration-specific rule skills when building a larger integration.
 
 Do not confuse Application Settings with Dynamic System Settings:
 
@@ -48,11 +48,11 @@ Do not confuse Application Settings with Dynamic System Settings:
 
 ## Examples
 
-| Skill | Description |
-|---|---|
-| `admin-system-settings-stub` | Minimal, full valid Rule-Admin-System-Settings create payload |
-| `admin-system-settings-value-type-string` | `pySettingMetaData` shape for a String-typed setting (e.g. a base URL); `pySetting` holds the raw string directly |
-| `admin-system-settings-value-type-class` | `pySettingMetaData` shape for a Class-typed setting (e.g. an auth profile reference), including the required `pyValueClass` companion field |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-admin-system-settings/examples/stub` | admin-system-settings-stub | Minimal, full valid Rule-Admin-System-Settings create payload |
+| `rules-rule-admin-system-settings/examples/pySettingMetaData/string` | admin-system-settings-value-type-string | `pySettingMetaData` shape for a String-typed setting (e.g. a base URL); `pySetting` holds the raw string directly |
+| `rules-rule-admin-system-settings/examples/pySettingMetaData/class` | admin-system-settings-value-type-class | `pySettingMetaData` shape for a Class-typed setting (e.g. an auth profile reference), including the required `pyValueClass` companion field |
 
 The referenced Application Setting must already exist before a connector can save
 successfully in `SETTING` mode.

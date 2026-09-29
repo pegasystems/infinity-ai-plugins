@@ -23,61 +23,61 @@ step skill for the parameter shape.
 
 ### Rule-level
 
-| Skill | Description |
-|-------|-------------|
-| `Stub Activity` | Minimal activity with a single placeholder step — smallest valid create payload. **Must include at least one step** (omitting `pySteps` causes auto-fill of an invalid empty step). |
-| `Set Approval Status` | Log-Message + Property-Set + Obj-Save |
-| `Get Recent Reports` | Page-New + Obj-Browse + Show-Page with pyPagesAndClasses |
-| `Calculate Compound Interest` | Single Java step with pyParameters (IN/OUT) and ParameterPage I/O |
-| `Data Page Orchestration Activity` | Sequential clipboard page operations with error checking, ERR block, Page-New/Page-Remove pairing, and fallback |
-| `Chained Data Page Integration` | Multi-API chaining with parameterized data pages (`D_Name[Param: value]`), early exit, and `pyOnException` fallback |
-| `Enqueue and Dispatch` | Job Scheduler dispatch activity — Obj-Browse + EMBEDDED loop + Obj-Save + Queue-For-Processing |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-obj-activity/examples/stub` | Stub Activity | Minimal activity with a single placeholder step — smallest valid create payload. **Must include at least one step** (omitting `pySteps` causes auto-fill of an invalid empty step). |
+| `rules-rule-obj-activity/examples/log-set-save` | Set Approval Status | Log-Message + Property-Set + Obj-Save |
+| `rules-rule-obj-activity/examples/browse-and-return` | Get Recent Reports | Page-New + Obj-Browse + Show-Page with pyPagesAndClasses |
+| `rules-rule-obj-activity/examples/java-parameter-io` | Calculate Compound Interest | Single Java step with pyParameters (IN/OUT) and ParameterPage I/O |
+| `rules-rule-obj-activity/examples/data-page-orchestration` | Data Page Orchestration Activity | Sequential clipboard page operations with error checking, ERR block, Page-New/Page-Remove pairing, and fallback |
+| `rules-rule-obj-activity/examples/chained-data-page-integration` | Chained Data Page Integration | Multi-API chaining with parameterized data pages (`D_Name[Param: value]`), early exit, and `pyOnException` fallback |
+| `rules-rule-obj-activity/examples/enqueue-and-dispatch` | Enqueue and Dispatch | Job Scheduler dispatch activity — Obj-Browse + EMBEDDED loop + Obj-Save + Queue-For-Processing |
 
 ### Step-level skills
 
 Step examples are organized by category. Each skill contains frontmatter + one JSON example.
 
 #### Obj-* and Link methods
-`Obj-Browse`, `Obj-Delete`, `Obj-Delete-By-Handle`, `Obj-Filter`, `Obj-Open`, `Obj-Open-By-Handle`, `Obj-Refresh-And-Lock`, `Obj-Save`, `Obj-Save-Cancel`, `Obj-Sort`, `Obj-Validate`, `Link-Objects`
+`rules-rule-obj-activity/examples/pySteps/obj-browse`, `rules-rule-obj-activity/examples/pySteps/obj-delete`, `rules-rule-obj-activity/examples/pySteps/obj-delete-by-handle`, `rules-rule-obj-activity/examples/pySteps/obj-filter`, `rules-rule-obj-activity/examples/pySteps/obj-open`, `rules-rule-obj-activity/examples/pySteps/obj-open-by-handle`, `rules-rule-obj-activity/examples/pySteps/obj-refresh-and-lock`, `rules-rule-obj-activity/examples/pySteps/obj-save`, `rules-rule-obj-activity/examples/pySteps/obj-save-cancel`, `rules-rule-obj-activity/examples/pySteps/obj-sort`, `rules-rule-obj-activity/examples/pySteps/obj-validate`, `rules-rule-obj-activity/examples/pySteps/link-objects`
 
 #### Page-* methods
-`Page-Change-Class`, `Page-Clear-Messages`, `Page-Copy`, `Page-Copy from Data Page`, `Page-Merge-Into`, `Page-New`, `Page-Remove`, `Page-Rename`, `Page-Set-Messages`, `Page-Unlock`, `Page-Validate`
+`rules-rule-obj-activity/examples/pySteps/page-change-class`, `rules-rule-obj-activity/examples/pySteps/page-clear-messages`, `rules-rule-obj-activity/examples/pySteps/page-copy`, `rules-rule-obj-activity/examples/pySteps/page-copy-data-page`, `rules-rule-obj-activity/examples/pySteps/page-merge-into`, `rules-rule-obj-activity/examples/pySteps/page-new`, `rules-rule-obj-activity/examples/pySteps/page-remove`, `rules-rule-obj-activity/examples/pySteps/page-rename`, `rules-rule-obj-activity/examples/pySteps/page-set-messages`, `rules-rule-obj-activity/examples/pySteps/page-unlock`, `rules-rule-obj-activity/examples/pySteps/page-validate`
 
 #### Property-* methods
-`Property-Map-DecisionTable`, `Property-Map-DecisionTree`, `Property-Map-Value`, `Property-Remove`, `Property-Set`, `Property-Set from Data Page Step Page`, `Property-Set-Messages`, `Property-Set-Special`, `Property-Set-XML`, `Property-Validate`
+`rules-rule-obj-activity/examples/pySteps/property-map-decision-table`, `rules-rule-obj-activity/examples/pySteps/property-map-decision-tree`, `rules-rule-obj-activity/examples/pySteps/property-map-value`, `rules-rule-obj-activity/examples/pySteps/property-remove`, `rules-rule-obj-activity/examples/pySteps/property-set`, `rules-rule-obj-activity/examples/pySteps/property-set-from-data-page`, `rules-rule-obj-activity/examples/pySteps/property-set-messages`, `rules-rule-obj-activity/examples/pySteps/property-set-special`, `rules-rule-obj-activity/examples/pySteps/property-set-xml`, `rules-rule-obj-activity/examples/pySteps/property-validate`
 
 #### Activity flow, Call, Branch, Exit
-`Activity-Clear-Status`, `Activity-End`, `Activity-Set-Status`, `Branch (Activity name)`, `Call (Activity name)`, `Call-Async-Activity`, `Call-Function`, `Exit-Activity`, `Exit-Activity with precondition`, `Start-Validate / End-Validate`
+`rules-rule-obj-activity/examples/pySteps/activity-clear-status`, `rules-rule-obj-activity/examples/pySteps/activity-end`, `rules-rule-obj-activity/examples/pySteps/activity-set-status`, `rules-rule-obj-activity/examples/pySteps/branch`, `rules-rule-obj-activity/examples/pySteps/call`, `rules-rule-obj-activity/examples/pySteps/call-async-activity`, `rules-rule-obj-activity/examples/pySteps/call-function`, `rules-rule-obj-activity/examples/pySteps/exit-activity`, `rules-rule-obj-activity/examples/pySteps/exit-activity-conditional`, `rules-rule-obj-activity/examples/pySteps/start-end-validate`
 
 #### Connect-* methods
-`Connect-REST`, `Connect-SOAP`, `Connect-Wait`
+`rules-rule-obj-activity/examples/pySteps/connect-rest`, `rules-rule-obj-activity/examples/pySteps/connect-soap`, `rules-rule-obj-activity/examples/pySteps/connect-wait`
 
 #### Data transforms, parsing, RDB, mapping
-`Apply-DataTransform`, `Apply-Parse-XML`, `Load-DataPage`, `Map-Structured`, `RDB-List`, `RDB-Open`, `RDB-Save`, `Save-DataPage Step`
+`rules-rule-obj-activity/examples/pySteps/apply-data-transform`, `rules-rule-obj-activity/examples/pySteps/apply-parse-xml`, `rules-rule-obj-activity/examples/pySteps/load-data-page`, `rules-rule-obj-activity/examples/pySteps/map-structured`, `rules-rule-obj-activity/examples/pySteps/rdb-list`, `rules-rule-obj-activity/examples/pySteps/rdb-open`, `rules-rule-obj-activity/examples/pySteps/rdb-save`, `rules-rule-obj-activity/examples/pySteps/save-data-page`
 
 #### Queue-For-* methods
-`Queue-For-Agent`, `Queue-For-Processing Dispatch`, `Queue-For-Processing Immediate`, `Queue-For-Processing Delayed`, `Queue-For-Processing Run as Operator`
+`rules-rule-obj-activity/examples/pySteps/queue-for-agent`, `rules-rule-obj-activity/examples/pySteps/queue-for-processing-dispatch`, `rules-rule-obj-activity/examples/pySteps/queue-for-processing-immediate`, `rules-rule-obj-activity/examples/pySteps/queue-for-processing-delayed`, `rules-rule-obj-activity/examples/pySteps/queue-for-processing-run-as-operator`
 
 #### Show-* methods
-`Show-Harness`, `Show-HTML`, `Show-Page`, `Show-Property`
+`rules-rule-obj-activity/examples/pySteps/show-harness`, `rules-rule-obj-activity/examples/pySteps/show-html`, `rules-rule-obj-activity/examples/pySteps/show-page`, `rules-rule-obj-activity/examples/pySteps/show-property`
 
 #### Transaction control
-`Commit`, `Rollback`
+`rules-rule-obj-activity/examples/pySteps/commit`, `rules-rule-obj-activity/examples/pySteps/rollback`
 
 #### History methods
-`History-Add`, `History-List`
+`rules-rule-obj-activity/examples/pySteps/history-add`, `rules-rule-obj-activity/examples/pySteps/history-list`
 
 #### Java, logging, wait, privilege, string buffer
-`Java`, `Log-Message`, `Privilege-Check`, `StringBuffer-Append`, `Wait`
+`rules-rule-obj-activity/examples/pySteps/java`, `rules-rule-obj-activity/examples/pySteps/log-message`, `rules-rule-obj-activity/examples/pySteps/privilege-check`, `rules-rule-obj-activity/examples/pySteps/stringbuffer-append`, `rules-rule-obj-activity/examples/pySteps/wait`
 
 ## References
 
-| Skill | When to load |
-|-------|--------------|
-| `activity-preconditions` | Pre-step "When" condition rows (`pyStepsPreCondition` + `pyStepsPreCondParams`) — canonical 7-value action-code enum, multi-row chaining (AND-gate, switch-case, loop-guard), feature-toggle gating, `pyOnException` block targeting, verification checklist |
-| `activity-transitions` | Post-step "Jump" condition rows (`pyStepsTransition` + `pyStepsTransParams`) — canonical action-code enum, block-name jump targeting, status fan-out / method-dispatcher / early-exit patterns, casing notes (`StepStatusFail` / `stepstatusgood`), block-naming conventions |
-| `activity-method-catalog` | Complete catalog of all 108 activity step methods — organized by category with labels and parameter notes |
-| `Step Looping` | Loop authoring reference — 5 loop types, `pyStepsRepeatDef` fields, `param.pyForEachCount`, `<CURRENT>`, common patterns |
+| Skill | Label | When to load |
+|---|---|---|
+| `rules-rule-obj-activity/references/activity-preconditions` | activity-preconditions | Pre-step "When" condition rows (`pyStepsPreCondition` + `pyStepsPreCondParams`) — canonical 7-value action-code enum, multi-row chaining (AND-gate, switch-case, loop-guard), feature-toggle gating, `pyOnException` block targeting, verification checklist |
+| `rules-rule-obj-activity/references/activity-transitions` | activity-transitions | Post-step "Jump" condition rows (`pyStepsTransition` + `pyStepsTransParams`) — canonical action-code enum, block-name jump targeting, status fan-out / method-dispatcher / early-exit patterns, casing notes (`StepStatusFail` / `stepstatusgood`), block-naming conventions |
+| `rules-rule-obj-activity/references/method-catalog` | activity-method-catalog | Complete catalog of all 108 activity step methods — organized by category with labels and parameter notes |
+| `rules-rule-obj-activity/references/step-looping` | Step Looping | Loop authoring reference — 5 loop types, `pyStepsRepeatDef` fields, `param.pyForEachCount`, `<CURRENT>`, common patterns |
 
 ## Notes
 
@@ -189,8 +189,9 @@ Always verify both fields after creation:
 - `pyStepsPreCondParams` contains at least one row with a non-empty
   `pyStepsPreCondParamsWhen` expression
 
-See `Exit-Activity with precondition` for the step JSON and
-`activity-preconditions` for the full field reference table.
+See `rules-rule-obj-activity/examples/pySteps/exit-activity-conditional` for the
+step JSON and `rules-rule-obj-activity/references/activity-preconditions` for
+the full field reference table.
 
 ### Avoid repeating the same precondition on consecutive steps
 
@@ -254,7 +255,7 @@ identify the fallback block referenced by `pyOnException`):
 
 `pyOnException` holds a **block name** (matching some step's
 `pyStepsBlockName`), not a step number. See
-`activity-preconditions` for details.
+`rules-rule-obj-activity/references/activity-preconditions` for details.
 
 #### `pyOnException` requires `pyStepsTransition: "true"`
 
@@ -292,7 +293,8 @@ Property-Set steps to grow a pagelist without an explicit loop wrapper.
 ### Activity readback verification — conditional steps
 
 After creating or updating an activity with conditions, load
-`activity-preconditions` and follow its verification checklist.
+`rules-rule-obj-activity/references/activity-preconditions` and follow its
+verification checklist.
 
 ### `Save-DataPage` — persist a savable Data Page
 
@@ -302,7 +304,7 @@ To persist a savable Data Page (`pyPageType: "savable"`), use the
 persistence and external write-back via save connectors. Do not call
 internal `pzSaveDataPage` or other `pz*` activities directly — they are
 private/internal and may change between platform versions. See
-`Save-DataPage Step`.
+`rules-rule-obj-activity/examples/pySteps/save-data-page`.
 
 Only use `Save-DataPage` against a savable Data Page — a non-savable
 (`pyPageType: "normal"`) Data Page has no save plan to execute.
@@ -516,7 +518,7 @@ The server auto-populates `pyStepsParamUI` sub-arrays on both the first
 `pyStepsCallParams` (7 items describing main params like PageName, ObjClass).
 Do NOT author `pyStepsParamUI` manually — it is generated on save.
 
-See `Obj-Browse` for the full condition table
+See `rules-rule-obj-activity/examples/pySteps/obj-browse` for the full condition table
 and correct structure.
 
 #### Obj-Browse requires PageName and RowKey
@@ -526,7 +528,7 @@ with results) and `RowKey` — a property reference that uniquely
 identifies each result row (e.g. `.pyID`, `.pzInsKey`). Omitting either
 causes runtime errors. Columns to select, filter, and sort can be
 specified either via the row-based `pyParamArray` grid (see
-`Obj-Browse`) or via the optional `SelectList`, `OrderByList`, and
+`rules-rule-obj-activity/examples/pySteps/obj-browse`) or via the optional `SelectList`, `OrderByList`, and
 `MaxRecords` parameters in `pyStepsCallParams`.
 Use `ReadOnly: "true"` for read-only queries (no locking).
 
@@ -800,8 +802,11 @@ rules via API. Without it, the function grid appears blank in the designer
 (though the activity persists and executes correctly).
 
 **Constructing `pyFunctionData`:** Load the corresponding function alias
-from the `library-function-builder` skill (e.g., `StringEquals`,
-`MathGreaterThan`, `isInThePastDate`) and map its fields to `pyFunctionData`:
+from the `library-function-builder` skill (e.g.,
+`library-function-builder/examples/string-equals`,
+`library-function-builder/examples/math-greater-than`,
+`library-function-builder/examples/is-in-the-past-date`) and map its fields to
+`pyFunctionData`:
 - `pyPurpose` → `pyCity` and `pyName`
 - `pySignature` → `pySignature`
 - `pyPatternText` → `pyEcho`
@@ -811,7 +816,7 @@ from the `library-function-builder` skill (e.g., `StringEquals`,
 - `pyParameters[]` → `pyParameters[]` (with actual argument values in `pyParametersParamValue`)
 - Derive `pyUIParameters[]` from the pattern (input fields for placeholders, Label entries for text between)
 
-See `Call-Function` for the full
+See `rules-rule-obj-activity/examples/pySteps/call-function` for the full
 `pyFunctionData` structure, mapping table, and batching examples.
 
 **All available function signatures are defined in the

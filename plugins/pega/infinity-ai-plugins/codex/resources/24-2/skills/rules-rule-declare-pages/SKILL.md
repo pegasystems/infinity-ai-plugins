@@ -21,37 +21,38 @@ Data Pages (`Rule-Declare-Pages`) are global constructors/caches. Data pages are
 
 Examples stay in separate files; use this table to pick the payload pattern.
 
-| Skill | Description |
-|-------|-------------|
-| `declare-pages-stub-list` | Minimal connector-backed list Data Page — smallest valid create payload |
-| `declare-pages-stub-single` | Minimal connector-backed single/page Data Page — smallest valid create payload |
-| `declare-pages-read-only-connector` | Read-only connector-backed Data Page — correct `pyPageType: "normal"` shape |
-| `declare-pages-multi-source-when-routed` | Conditional sources with `pySourceWhen` and `Always` fallback |
-| `declare-pages-list-by-key` | List DP with key-based retrieval (`pyEnableRetrievePageByKey` + `pyKeysForPageList`) |
-| `declare-pages-savable-simplesave` | Savable DP with one `simplesave` save option |
-| `declare-pages-savable-multi-option` | Save-plan cascade (`dbDelete` / `simplepatch` / `simplesave`) and alternate-key storage |
-| `declare-pages-post-load-activity` | Enrichment via `pyPostActivity` + `pyPostActivityParams` |
-| `declare-pages-simulated-replacement` | Simulation source with original source preserved in `pyDisabledSource` |
-| `declare-pages-param-string` | Data Page parameter entry — String type (all-caps `STRING`) |
-| `declare-pages-param-integer` | Data Page parameter entry — Integer type (all-caps `INTEGER`) |
-| `declare-pages-param-decimal` | Data Page parameter entry — Decimal type (Title Case `Decimal`) |
-| `declare-pages-param-boolean` | Data Page parameter entry — Boolean type (all-caps `BOOLEAN`) |
-| `declare-pages-source-connector` | Minimum connector source entry |
-| `declare-pages-source-connector-with-params` | Connector params from DP parameters; `pyIsActivityParameter: "false"` |
-| `declare-pages-source-data-transform` | Minimum DataTransform source |
-| `declare-pages-source-load-activity` | Minimum LoadActivity source |
-| `declare-pages-source-obj-open` | Lookup/ObjOpen source by key |
-| `declare-pages-source-report-definition` | ReportDefinition source for list/query use cases |
-| `declare-pages-source-aggregate` | Aggregates multiple sub-sources; see `data-page-advanced-source-types` |
-| `declare-pages-source-genai` | Generative AI connector source; server auto-sets `pyLoadActivity` to `pxCallGenAI`; see `data-page-advanced-source-types` |
-| `declare-pages-source-knowledge-buddy` | Knowledge Buddy query source; server auto-sets `pyLoadActivity` to `pxCallKnowledgeBuddy`; see `data-page-advanced-source-types` |
-| `declare-pages-source-robotic-automation` | Server-side robotic automation source; see `data-page-advanced-source-types` |
-| `declare-pages-source-robotic-desktop-automation` | Desktop robotic automation source; see `data-page-advanced-source-types` |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-declare-pages/examples/stub` | declare-pages-stub-list | Minimal connector-backed list Data Page — smallest valid create payload |
+| `rules-rule-declare-pages/examples/stub-single` | declare-pages-stub-single | Minimal connector-backed single/page Data Page — smallest valid create payload |
+| `rules-rule-declare-pages/examples/read-only-connector` | declare-pages-read-only-connector | Read-only connector-backed Data Page — correct `pyPageType: "normal"` shape |
+| `rules-rule-declare-pages/examples/multi-source-when-routed` | declare-pages-multi-source-when-routed | Conditional sources with `pySourceWhen` and `Always` fallback |
+| `rules-rule-declare-pages/examples/page-by-key` | declare-pages-list-by-key | List DP with key-based retrieval (`pyEnableRetrievePageByKey` + `pyKeysForPageList`) |
+| `rules-rule-declare-pages/examples/savable-data-page` | declare-pages-savable-simplesave | Savable DP with one `simplesave` save option |
+| `rules-rule-declare-pages/examples/savable-multi-option` | declare-pages-savable-multi-option | Save-plan cascade (`dbDelete` / `simplepatch` / `simplesave`) and alternate-key storage |
+| `rules-rule-declare-pages/examples/post-load-activity` | declare-pages-post-load-activity | Enrichment via `pyPostActivity` + `pyPostActivityParams` |
+| `rules-rule-declare-pages/examples/simulated-connector-replacement` | declare-pages-simulated-replacement | Simulation source with original source preserved in `pyDisabledSource` |
+| `rules-rule-declare-pages/examples/pyParameters/string` | declare-pages-param-string | Data Page parameter entry — String type (all-caps `STRING`) |
+| `rules-rule-declare-pages/examples/pyParameters/integer` | declare-pages-param-integer | Data Page parameter entry — Integer type (all-caps `INTEGER`) |
+| `rules-rule-declare-pages/examples/pyParameters/decimal` | declare-pages-param-decimal | Data Page parameter entry — Decimal type (Title Case `Decimal`) |
+| `rules-rule-declare-pages/examples/pyParameters/trueorfalse` | declare-pages-param-boolean | Data Page parameter entry — Boolean type (all-caps `BOOLEAN`) |
+| `rules-rule-declare-pages/examples/pyDataSourceList/connector` | declare-pages-source-connector | Minimum connector source entry |
+| `rules-rule-declare-pages/examples/pyDataSourceList/connector-with-params` | declare-pages-source-connector-with-params | Connector params from DP parameters; `pyIsActivityParameter: "false"` |
+| `rules-rule-declare-pages/examples/pyDataSourceList/data-transform` | declare-pages-source-data-transform | Minimum DataTransform source |
+| `rules-rule-declare-pages/examples/pyDataSourceList/load-activity` | declare-pages-source-load-activity | Minimum LoadActivity source |
+| `rules-rule-declare-pages/examples/pyDataSourceList/obj-open` | declare-pages-source-obj-open | Lookup/ObjOpen source by key |
+| `rules-rule-declare-pages/examples/pyDataSourceList/report-definition` | declare-pages-source-report-definition | ReportDefinition source for list/query use cases |
+| `rules-rule-declare-pages/examples/pyDataSourceList/aggregate-sources` | declare-pages-source-aggregate | Aggregates multiple sub-sources; see `rules-rule-declare-pages/references/data-page-advanced-source-types` |
+| `rules-rule-declare-pages/examples/pyDataSourceList/genai` | declare-pages-source-genai | Generative AI connector source; server auto-sets `pyLoadActivity` to `pxCallGenAI`; see `rules-rule-declare-pages/references/data-page-advanced-source-types` |
+| `rules-rule-declare-pages/examples/pyDataSourceList/knowledge-buddy` | declare-pages-source-knowledge-buddy | Knowledge Buddy query source; server auto-sets `pyLoadActivity` to `pxCallKnowledgeBuddy`; see `rules-rule-declare-pages/references/data-page-advanced-source-types` |
+| `rules-rule-declare-pages/examples/pyDataSourceList/robotic-automation` | declare-pages-source-robotic-automation | Server-side robotic automation source; see `rules-rule-declare-pages/references/data-page-advanced-source-types` |
+| `rules-rule-declare-pages/examples/pyDataSourceList/robotic-desktop-automation` | declare-pages-source-robotic-desktop-automation | Desktop robotic automation source; see `rules-rule-declare-pages/references/data-page-advanced-source-types` |
 
 ## Minimum rule shape
 
-See `declare-pages-stub-list` and `declare-pages-stub-single` for the smallest
-valid create payload for the two most common Data Page shapes.
+See `rules-rule-declare-pages/examples/stub` and
+`rules-rule-declare-pages/examples/stub-single` for the smallest valid create
+payload for the two most common Data Page shapes.
 
 `pyPageType` is the user-facing selector. Author it instead of derived fields:
 
@@ -82,7 +83,8 @@ defined on `Code-Pega-List` and populate the primary page passed by the DP engin
 
 Advanced source types — AggregateSources, GenAI, KnowledgeBuddy,
 RoboticAutomation, RoboticDesktopAutomation — are supported but uncommon; see
-`data-page-advanced-source-types` and the separate example files.
+`rules-rule-declare-pages/references/data-page-advanced-source-types` and the
+separate example files.
 
 ## Connector source contract
 
@@ -111,7 +113,8 @@ also set `pyLoadActivityParameters` to mirror the connector param mapping (for
 example, `{"id":"Param.Id"}`). Direct API writes may not regenerate this shadow
 field the way Dev Studio does. This applies to Data Page **sources** only.
 Save-plan entries do **not** have `pyLoadActivityParameters`; they read
-`pyConnectorParamList` directly. See `data-page-parameter-mapping-details`.
+`pyConnectorParamList` directly. See
+`rules-rule-declare-pages/references/data-page-parameter-mapping-details`.
 
 ## Simulated data pages and disabled sources — common and critical
 
@@ -142,8 +145,8 @@ Rules to preserve correctness:
   the class's `DataTableEditorReport` Report Definition) won't show any data
   from it. For Data Designer-complete Data Types, prefer the Blueprint-style
   ReportDefinition simulation for list DPs and ObjOpen for single/savable
-  DPs. See `model-integration-data-pages` for the full Records-tab
-  mechanism.
+  DPs. See `rules-rule-obj-report-definition` for the Report Definition
+  structure behind the Records-tab mechanism.
 
 When creating a non-simulated Data Page from scratch, omit `pyDisabledSource`.
 When updating a Data Page that already has simulation metadata, preserve
@@ -218,7 +221,8 @@ format-control parameters.
 Multiple entries in `pyDataSourceList` can route conditionally with
 `pySourceWhen`; Pega evaluates in array order and uses the first true source.
 Use `pySourceWhen: "Always"` as the final fallback. See
-`data-page-source-resolution-and-multisource` for When parameters,
+`rules-rule-declare-pages/references/data-page-source-resolution-and-multisource`
+for When parameters,
 AggregateSources, class hierarchy resolution, and authoring order.
 
 Source rules must exist before the data page is created. Referenced source
@@ -234,7 +238,7 @@ that field does not apply to save-plan entries.
 
 ### Savable Data Page
 
-See example `declare-pages-savable-simplesave`
+See example `rules-rule-declare-pages/examples/savable-data-page`
 
 Notes:
 - Agents should set `pyPageType` only. `pyType` ("loadonly") and `pyIsSavable` ("true") are derived from `pyPageType: "savable"`.
@@ -242,7 +246,7 @@ Notes:
 
 ### Savable Data Page with Multi-Option Save Plan
 
-See example `declare-pages-savable-multi-option`
+See example `rules-rule-declare-pages/examples/savable-multi-option`
 
 Notes:
 - Pega evaluates save options in array order; the first whose `pySaveOptionWhen` evaluates true executes.
@@ -276,9 +280,9 @@ Notes:
 
 ## References
 
-| Skill | Covers |
-|-----------|--------|
-| `data-page-advanced-source-types` | AggregateSources, GenAI, KnowledgeBuddy, RoboticAutomation, RDA |
-| `data-page-parameter-mapping-details` | `Embed-NameValuePair`, `pyActivityParams`, dynamic path params, save-plan distinction |
-| `data-page-source-resolution-and-multisource` | Multi-source When routing, source rule existence, class hierarchy resolution |
-| `data-pages-simulation` | Simulated Data Pages, source replacement, and preserving `pyDisabledSource` |
+| Skill | Label | Covers |
+|---|---|---|
+| `rules-rule-declare-pages/references/data-page-advanced-source-types` | data-page-advanced-source-types | AggregateSources, GenAI, KnowledgeBuddy, RoboticAutomation, RDA |
+| `rules-rule-declare-pages/references/data-page-parameter-mapping-details` | data-page-parameter-mapping-details | `Embed-NameValuePair`, `pyActivityParams`, dynamic path params, save-plan distinction |
+| `rules-rule-declare-pages/references/data-page-source-resolution-and-multisource` | data-page-source-resolution-and-multisource | Multi-source When routing, source rule existence, class hierarchy resolution |
+| `rules-rule-declare-pages/references/data-pages-simulation` | data-pages-simulation | Simulated Data Pages, source replacement, and preserving `pyDisabledSource` |

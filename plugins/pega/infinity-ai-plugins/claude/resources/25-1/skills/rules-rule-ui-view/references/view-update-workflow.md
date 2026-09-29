@@ -21,9 +21,8 @@ Updating the view without the metadata means the field renders at runtime but Ap
 does not recognise it as primary. Updating the metadata without the view means App Studio
 shows it as primary but it does not appear in the panel.
 
-**Always do both.** For the metadata layer, load `rules-rule-classmetadata/examples/with-primary-fields` — it documents the
-`Rule-ClassMetadata` update pattern, the `Pega-Fields` array structure, and the
-branch-awareness check required to avoid shadow-rule pitfalls.
+**Always do both.** The parent skills provide the Class Metadata procedure and
+the `Pega-Fields` array shape needed for the metadata layer.
 
 ## Step 0: Find the view's instance key
 

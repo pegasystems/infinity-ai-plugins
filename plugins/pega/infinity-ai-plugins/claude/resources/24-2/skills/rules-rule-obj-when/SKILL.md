@@ -153,18 +153,19 @@ Practical implications when authoring:
   `pyParametersParamValue`, `pyParametersParamDropdownValues`, `pyReference`,
   or `pyNodeCaption` — those belong only on function-call slots inside
   `pyFunctionData`.
-- See the `With Rule-Level Parameters` example for a complete worked example.
+- See `rules-rule-obj-when/examples/with-rule-parameters` for a complete worked
+  example.
 
 ## Examples
 
 ### Rule-level
 
-| Skill | Description |
-|-------|-------------|
-| `Stub When Rule` | Minimal When rule — smallest valid create payload (always-true condition) |
-| `Single Condition Equals` | Single string equality condition (`CompareTwoValues`) |
-| `Multi-Condition AND` | Two conditions combined with AND logic (`compareTwoStrings` + `PropertyHasValue`) |
-| `With Rule-Level Parameters` | Two rule-level Parameters (Text + Integer) referenced as `Param.<Name>` inside conditions — demonstrates the `Embed-MethodParams` shape used by the rule-level Parameters tab (Context B), distinct from function-call parameter slots |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-obj-when/examples/stub` | Stub When Rule | Minimal When rule — smallest valid create payload (always-true condition) |
+| `rules-rule-obj-when/examples/single-condition-equals` | Single Condition Equals | Single string equality condition (`CompareTwoValues`) |
+| `rules-rule-obj-when/examples/multi-condition-and` | Multi-Condition AND | Two conditions combined with AND logic (`compareTwoStrings` + `PropertyHasValue`) |
+| `rules-rule-obj-when/examples/with-rule-parameters` | With Rule-Level Parameters | Two rule-level Parameters (Text + Integer) referenced as `Param.<Name>` inside conditions — demonstrates the `Embed-MethodParams` shape used by the rule-level Parameters tab (Context B), distinct from function-call parameter slots |
 
 ### Per-alias condition examples
 

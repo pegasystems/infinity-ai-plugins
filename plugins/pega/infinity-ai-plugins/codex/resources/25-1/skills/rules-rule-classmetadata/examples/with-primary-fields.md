@@ -1,10 +1,11 @@
 ---
 name: classmetadata-with-primary-fields
-description: Work-class metadata defining Primary fields in pyPrimaryFields. Used to indicate that these properties are the most important fields for the case type identified by pyClassName — they drive Case Designer authoring, default view generation, and AI-assisted field placement.
+description: Load when creating or replacing a work class's ordered pyPrimaryFields list. Contains the complete Rule-ClassMetadata payload shape.
 ---
 
 ```json
 {
+  "pxObjClass": "Rule-ClassMetadata",
   "pyClassName": "MyOrg-MyApp-Work-MyCase",
   "pyPrimaryFields": [
     { "pyPropertyName": "pyID" },

@@ -52,7 +52,7 @@ description: Load when a Business Action form lets the user choose several recor
       ],
       "pyForm": [
         {
-          "pyParameterName": "AmenityList",
+          "pyParameterName": "SelectedSearchResult",
           "pyParameterType": "Multi-Reference",
           "pyTestMultiReferenceList": [
             {
@@ -78,6 +78,6 @@ description: Load when a Business Action form lets the user choose several recor
       ]
     }
   ],
-  "pyPlaywrightScript": "await caseUtils.clickGo(page, \"Select amenities\");\n\nconst amenities = ['Extra legroom', 'Priority boarding'];\nawait commonUtils.Handle_SearchAndSelectMulti(page, 'Amenities', { searchBy: params[\"Amenities_searchBy\"] }, [{label: \"Amenities provider\", type: \"pxAutoComplete\", value: \"vendor1\"}], amenities);\n\nawait caseUtils.clickSubmit(page);"
+  "pyPlaywrightScript": "await caseUtils.clickGo(page, 'Select amenities');\nconst searchBy = params['Amenities_searchBy'] || '';\nconst amenities = ['Extra legroom', 'Priority boarding'];\nif (searchBy === 'Search by Name') {\n  await commonUtils.Handle_SearchAndSelectMulti(page, 'Amenities', { searchBy }, [{ label: 'Amenity name', type: 'TextInput', value: 'priority' }], amenities);\n} else {\n  await commonUtils.Handle_SearchAndSelectMulti(page, 'Amenities', { searchBy }, [{ label: 'Amenities provider', type: 'pxAutoComplete', value: 'vendor1' }], amenities);\n}\nawait caseUtils.clickSubmit(page);"
 }
 ```

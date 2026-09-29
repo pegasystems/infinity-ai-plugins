@@ -21,7 +21,6 @@ Supported Infinity versions map to bundled directory names as follows:
 - Infinity 24.2 -> `24-2`
 - Infinity 25.1 -> `25-1`
 - Infinity 26.1 -> `26-1`
-- Infinity 27.1 -> `27-1`
 
 This Copilot setup flow is OAuth-only:
 
@@ -58,7 +57,7 @@ fi
 
 - Treat `pega_base_url` / `PEGA_BASE_URL` as configured only if the value is non-empty, not a placeholder such as `<paste-your-pega-url-here>`, and uses the environment root URL without `/prweb`
 - Treat `pega_oauth_client_id` / `PEGA_OAUTH_CLIENT_ID` as configured when it is the standard value `34233104330833666523` or an explicitly required custom value
-- Treat `pega_infinity_version` as configured only if it exactly matches `24-2`, `25-1`, `26-1`, or `27-1`.
+- Treat `pega_infinity_version` as configured only if it exactly matches `24-2`, `25-1`, or `26-1`.
 - Values in `~/.infinity-rules-mcp/config.json` take precedence over `PEGA_*` environment variables.
 
 **Partial Configuration Handling:**
@@ -72,7 +71,7 @@ If no valid configuration exists, confirm the user has:
 
 - the Pega base URL, for example `https://example.pega.net` or `https://example.pega.example.com`
 - use the environment root URL only; do not include `/prweb` or any other path segment
-- the Infinity version to use: 24.2 (`24-2`), 25.1 (`25-1`), 26.1 (`26-1`), or 27.1 (`27-1`)
+- the Infinity version to use: 24.2 (`24-2`), 25.1 (`25-1`), or 26.1 (`26-1`)
 
 Use the standard OAuth client ID shown in the template. Only use a different client ID if the user
 explicitly says their environment requires a custom override.

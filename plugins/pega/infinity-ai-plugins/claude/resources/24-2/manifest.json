@@ -220,7 +220,7 @@
     },
     {
       "name": "rules-rule-classmetadata",
-      "description": "Authoring guide for Pega class metadata rules (Rule-ClassMetadata) — primary fields lists for work classes and data-page bindings (list / lookup / savable) for data-object classes",
+      "description": "Load when creating or updating Pega class metadata rules (Rule-ClassMetadata). Covers primary fields for work and data classes, data-page bindings, and data-type local actions.",
       "path": "skills/rules-rule-classmetadata/SKILL.md",
       "category": "skill",
       "prompt": false
@@ -1408,7 +1408,7 @@
     {
       "name": "rules-rule-classmetadata/examples/data-class",
       "label": "classmetadata-data-class",
-      "description": "Data-object metadata with pyListDataPage / pyLookUpDataPage / pySavableDataPage bindings, embedded Rule-Declare-Pages snapshots, and pyDataTypeLocalActions.",
+      "description": "Load when authoring data-class metadata. Contains data-page bindings, embedded snapshots, local actions, and primary fields.",
       "path": "skills/rules-rule-classmetadata/examples/data-class.md",
       "category": "skill",
       "prompt": false,
@@ -1420,7 +1420,7 @@
     {
       "name": "rules-rule-classmetadata/examples/pyDataTypeLocalActions/add",
       "label": "classmetadata-local-action-add",
-      "description": "The OOTB Add action — opens the data record in create form to add a new instance.",
+      "description": "Load when adding the OOTB Add row to pyDataTypeLocalActions. Contains the create-form action payload.",
       "path": "skills/rules-rule-classmetadata/examples/pyDataTypeLocalActions/add.md",
       "category": "skill",
       "prompt": false,
@@ -1432,7 +1432,7 @@
     {
       "name": "rules-rule-classmetadata/examples/pyDataTypeLocalActions/custom",
       "label": "classmetadata-local-action-custom",
-      "description": "A Custom data-type action — pick this subclass when the action is not one of the OOTB UpdateDetails / Add / Delete operations. Wire pyActionName / pyActionLabel to the application-specific behaviour.",
+      "description": "Load when adding an application-specific row to pyDataTypeLocalActions. Contains the Custom action payload.",
       "path": "skills/rules-rule-classmetadata/examples/pyDataTypeLocalActions/custom.md",
       "category": "skill",
       "prompt": false,
@@ -1444,7 +1444,7 @@
     {
       "name": "rules-rule-classmetadata/examples/pyDataTypeLocalActions/delete",
       "label": "classmetadata-local-action-delete",
-      "description": "The OOTB Delete action — removes the selected data record after confirmation.",
+      "description": "Load when adding the OOTB Delete row to pyDataTypeLocalActions. Contains the confirmed-delete action payload.",
       "path": "skills/rules-rule-classmetadata/examples/pyDataTypeLocalActions/delete.md",
       "category": "skill",
       "prompt": false,
@@ -1456,7 +1456,7 @@
     {
       "name": "rules-rule-classmetadata/examples/pyDataTypeLocalActions/update-details",
       "label": "classmetadata-local-action-update-details",
-      "description": "The OOTB Edit action — opens the data record in update form.",
+      "description": "Load when adding the OOTB Edit row to pyDataTypeLocalActions. Contains the update-details action payload.",
       "path": "skills/rules-rule-classmetadata/examples/pyDataTypeLocalActions/update-details.md",
       "category": "skill",
       "prompt": false,
@@ -1468,7 +1468,7 @@
     {
       "name": "rules-rule-classmetadata/examples/stub",
       "label": "classmetadata-stub",
-      "description": "Minimal create payload — just pyClassName. The smallest valid Rule-ClassMetadata rule.",
+      "description": "Load for the smallest valid Rule-ClassMetadata create payload with only the target class identity.",
       "path": "skills/rules-rule-classmetadata/examples/stub.md",
       "category": "skill",
       "prompt": false,
@@ -1480,7 +1480,7 @@
     {
       "name": "rules-rule-classmetadata/examples/with-primary-fields",
       "label": "classmetadata-with-primary-fields",
-      "description": "Work-class metadata defining Primary fields in pyPrimaryFields. Used to indicate that these properties are the most important fields for the case type identified by pyClassName — they drive Case Designer authoring, default view generation, and AI-assisted field placement.",
+      "description": "Load when creating or replacing a work class's ordered pyPrimaryFields list. Contains the complete Rule-ClassMetadata payload shape.",
       "path": "skills/rules-rule-classmetadata/examples/with-primary-fields.md",
       "category": "skill",
       "prompt": false,
@@ -6254,6 +6254,18 @@
       ]
     },
     {
+      "name": "rules-rule-test-unit-case/examples/pyExpectedResults/page-error-message",
+      "label": "page-error-message",
+      "description": "Use when testing a rule that adds a page-level error message such as Page-Set-Messages in activities. Shows the nested Page and Property assertion pattern for has error with message on RunRecordPrimaryPage.",
+      "path": "skills/rules-rule-test-unit-case/examples/pyExpectedResults/page-error-message.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "rules-rule-test-unit-case",
+      "aliases": [
+        "page-error-message"
+      ]
+    },
+    {
       "name": "rules-rule-test-unit-case/examples/pyExpectedResults/page",
       "label": "Page Assertion",
       "description": "Page assertion -- checks property values on a rule instance page loaded via setup pages.",
@@ -6455,6 +6467,18 @@
       "parent": "rules-rule-test-unit-case",
       "aliases": [
         "pyRuleUnderTest for When Rule"
+      ]
+    },
+    {
+      "name": "rules-rule-test-unit-case/examples/pySetup/create-data-object",
+      "label": "Create Data Object Setup",
+      "description": "Use when a PegaUnit test requires a data-object instance before execution; contains a pySetup example.",
+      "path": "skills/rules-rule-test-unit-case/examples/pySetup/create-data-object.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "rules-rule-test-unit-case",
+      "aliases": [
+        "Create Data Object Setup"
       ]
     },
     {
@@ -7672,7 +7696,7 @@
     {
       "name": "rules-rule-classmetadata/references/primary-fields",
       "label": "classmetadata-primary-fields",
-      "description": "What pyPrimaryFields is — design-time metadata that drives Case Designer, default views, and agent reliability. What it is NOT (not keys, not required, not enforced).",
+      "description": "Load when choosing or explaining class primary fields. Defines pyPrimaryFields, its design-time effects, and what it does not enforce.",
       "path": "skills/rules-rule-classmetadata/references/primary-fields.md",
       "category": "skill",
       "prompt": false,

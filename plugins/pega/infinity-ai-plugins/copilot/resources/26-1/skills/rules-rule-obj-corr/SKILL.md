@@ -7,23 +7,23 @@ description: Authoring guide for Pega Correspondence rules (Rule-Obj-Corr), incl
 
 ## Examples
 
-| Skill | pyCorrType | Description |
-|-------|------------|-------------|
-| `minimal-email-payload` | Email | Minimal email -- smallest valid create payload |
-| `raw-html-email` | Email | Raw HTML source editing mode for full markup control |
-| `verify-email-before-send` | Email | Requires user verification before dispatch |
-| `email-with-multiple-page-contexts` | Email | References properties from multiple page contexts |
-| `privilege-guarded-email` | Email | Privilege-based access control and when-condition visibility |
-| `prompted-and-validated-email` | Email | pyHTMLPrompt and pyPromptValidate for user-editable correspondence |
-| `basic-templated-email` | Email | Templated email with named template and template stream |
-| `templated-email-with-region-content` | Email | Templated email with pyEmailRegions for named template regions |
-| `email-with-mixed-include-directives` | Email | All pySourceStream directive types (sections, fragments, when, withPage) |
-| `printable-mail-document` | Mail | Document-based correspondence for printed letters or PDF output |
-| `attach-summary-report-to-case` | Mail | Attaches document to case instead of sending |
-| `mail-with-printer-settings` | Mail | pyFormPrinter and pyFormPrintMethod references |
-| `mail-with-word-template` | Mail | pyWordTemplate for Word document output |
-| `generate-fax-cover-sheet` | Fax | Fax cover sheet with recipient and sender details |
-| `mobile-text-notification` | PhoneText | SMS notification for mobile text messages |
+| Skill | Label | pyCorrType | Description |
+|---|---|---|---|
+| `rules-rule-obj-corr/examples/stub` | minimal-email-payload | Email | Minimal email -- smallest valid create payload |
+| `rules-rule-obj-corr/examples/source-html-email` | raw-html-email | Email | Raw HTML source editing mode for full markup control |
+| `rules-rule-obj-corr/examples/verify-before-send` | verify-email-before-send | Email | Requires user verification before dispatch |
+| `rules-rule-obj-corr/examples/multi-page-email` | email-with-multiple-page-contexts | Email | References properties from multiple page contexts |
+| `rules-rule-obj-corr/examples/privilege-secured-email` | privilege-guarded-email | Email | Privilege-based access control and when-condition visibility |
+| `rules-rule-obj-corr/examples/prompt-and-validate-email` | prompted-and-validated-email | Email | pyHTMLPrompt and pyPromptValidate for user-editable correspondence |
+| `rules-rule-obj-corr/examples/templated-email` | basic-templated-email | Email | Templated email with named template and template stream |
+| `rules-rule-obj-corr/examples/templated-email-with-regions` | templated-email-with-region-content | Email | Templated email with pyEmailRegions for named template regions |
+| `rules-rule-obj-corr/examples/mixed-include-directives` | email-with-mixed-include-directives | Email | All pySourceStream directive types (sections, fragments, when, withPage) |
+| `rules-rule-obj-corr/examples/mail` | printable-mail-document | Mail | Document-based correspondence for printed letters or PDF output |
+| `rules-rule-obj-corr/examples/attach-document` | attach-summary-report-to-case | Mail | Attaches document to case instead of sending |
+| `rules-rule-obj-corr/examples/printer-and-activity-mail` | mail-with-printer-settings | Mail | pyFormPrinter and pyFormPrintMethod references |
+| `rules-rule-obj-corr/examples/word-template-mail` | mail-with-word-template | Mail | pyWordTemplate for Word document output |
+| `rules-rule-obj-corr/examples/fax-cover-sheet` | generate-fax-cover-sheet | Fax | Fax cover sheet with recipient and sender details |
+| `rules-rule-obj-corr/examples/sms-notification` | mobile-text-notification | PhoneText | SMS notification for mobile text messages |
 
 ## Authoring notes
 

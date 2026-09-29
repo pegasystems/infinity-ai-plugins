@@ -63,7 +63,7 @@ Before generating scenarios, retrieve configured personas:
 run-data-page(
   dataPage="D_pzGlobalTestPersonaList",
   dataPageType="list",
-  payload={ "AppName": "{AppName}", "AppVersion": "{AppVersion}" }
+  payload="{\"dataViewParameters\": { \"AppName\": \"{AppName}\", \"AppVersion\": \"{AppVersion}\" }}"
 )
 ```
 

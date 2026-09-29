@@ -9,16 +9,16 @@ description: Authoring guide for Pega case type rules (Rule-Obj-CaseType), inclu
 
 Top-level case type examples (full-rule payloads):
 
-| Skill | Description |
-|-------|-------------|
-| `Stub Casetype` | Minimal case type — smallest valid create payload with a single stage |
-| `Simple Linear` | Three primary stages (Create, Fulfillment, Completed) with one alternate stage (Withdrawn) |
-| `Complex with Local Actions` | Case-wide and stage-level local actions, child cases with property mapping, expression-based conditions, SLAs |
-| `Auto Transition` | Automatic stage transitions with conditional process execution |
-| `Pipeline with Params` | Data pipeline with parameterized processes (pyCallParams), conditional stage skipping, and process-level SLAs |
-| `Parent Child Dependencies` | Parent case with multiple child case types, dependency fulfillment auto-start, required children, data transforms, and status groups |
-| `Approval with SLA` | Manual stage transitions, case-level and stage-level SLAs, cascading approval type, required attachment categories |
-| `Adhoc Processes and Starting Flows` | Starting flows (pyCasetypeStartingFlows, pyFlowsToStart), case-wide and stage-level optional processes, multi-channel intake, case parameters |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-obj-casetype/examples/stub` | Stub Casetype | Minimal case type — smallest valid create payload with a single stage |
+| `rules-rule-obj-casetype/examples/simple-linear` | Simple Linear | Three primary stages (Create, Fulfillment, Completed) with one alternate stage (Withdrawn) |
+| `rules-rule-obj-casetype/examples/complex-with-local-actions` | Complex with Local Actions | Case-wide and stage-level local actions, child cases with property mapping, expression-based conditions, SLAs |
+| `rules-rule-obj-casetype/examples/auto-transition` | Auto Transition | Automatic stage transitions with conditional process execution |
+| `rules-rule-obj-casetype/examples/pipeline-with-params` | Pipeline with Params | Data pipeline with parameterized processes (pyCallParams), conditional stage skipping, and process-level SLAs |
+| `rules-rule-obj-casetype/examples/parent-child-dependencies` | Parent Child Dependencies | Parent case with multiple child case types, dependency fulfillment auto-start, required children, data transforms, and status groups |
+| `rules-rule-obj-casetype/examples/approval-with-sla` | Approval with SLA | Manual stage transitions, case-level and stage-level SLAs, cascading approval type, required attachment categories |
+| `rules-rule-obj-casetype/examples/adhoc-processes-and-starting-flows` | Adhoc Processes and Starting Flows | Starting flows (pyCasetypeStartingFlows, pyFlowsToStart), case-wide and stage-level optional processes, multi-channel intake, case parameters |
 
 ### Focused snippets per embedded structure
 
@@ -28,56 +28,56 @@ Each file contains a single, minimal JSON snippet for one variant.
 
 `examples/pyStages/` — `Embed-Stage` variants:
 
-| Skill | Description |
-|-------|-------------|
-| `Initialization Stage` | First primary stage (PRIM0) with `pyIsInitializationStage` + `CreateForm_Default` |
-| `Automatic Transition` | Mid-lifecycle auto-advancing stage with `pyStageEntryStatus` |
-| `Manual Transition` | Stage that waits for explicit user/system action (`pyStageTransition: manual`) |
-| `Terminal Resolution` | Final primary stage with resolution, cleanup, and child resolution cascade |
-| `Alternate Withdrawn` | Alternate ALT1 withdrawal stage with cascading cancellation |
-| `Alternate Rejected` | Alternate ALT2 rejection stage |
-| `Conditional Skip When For Stage` | Stage skipped via `pySkipStageWhen` when-rule |
-| `Conditional Skip Expression` | Stage gated by inline `pyExpressionToSkipOrAllow` |
-| `With Required Attachments` | Stage requiring an attachment category before advancing |
-| `With Stage SLA` | Stage-level SLA via `pySLAType: Always` |
-| `With Validation` | Stage running a validate rule on entry (`pyValidate`) |
-| `With Local Actions` | Stage exposing stage-scoped local actions |
-| `Multi Process Pipeline` | Single stage with PARALLEL + SEQUENTIAL processes |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-obj-casetype/examples/pyStages/initialization-stage` | Initialization Stage | First primary stage (PRIM0) with `pyIsInitializationStage` + `CreateForm_Default` |
+| `rules-rule-obj-casetype/examples/pyStages/automatic-transition` | Automatic Transition | Mid-lifecycle auto-advancing stage with `pyStageEntryStatus` |
+| `rules-rule-obj-casetype/examples/pyStages/manual-transition` | Manual Transition | Stage that waits for explicit user/system action (`pyStageTransition: manual`) |
+| `rules-rule-obj-casetype/examples/pyStages/terminal-resolution` | Terminal Resolution | Final primary stage with resolution, cleanup, and child resolution cascade |
+| `rules-rule-obj-casetype/examples/pyStages/alternate-withdrawn` | Alternate Withdrawn | Alternate ALT1 withdrawal stage with cascading cancellation |
+| `rules-rule-obj-casetype/examples/pyStages/alternate-rejected` | Alternate Rejected | Alternate ALT2 rejection stage |
+| `rules-rule-obj-casetype/examples/pyStages/conditional-skip-when` | Conditional Skip When For Stage | Stage skipped via `pySkipStageWhen` when-rule |
+| `rules-rule-obj-casetype/examples/pyStages/conditional-skip-expression` | Conditional Skip Expression | Stage gated by inline `pyExpressionToSkipOrAllow` |
+| `rules-rule-obj-casetype/examples/pyStages/with-required-attachments` | With Required Attachments | Stage requiring an attachment category before advancing |
+| `rules-rule-obj-casetype/examples/pyStages/with-stage-sla` | With Stage SLA | Stage-level SLA via `pySLAType: Always` |
+| `rules-rule-obj-casetype/examples/pyStages/with-validation` | With Validation | Stage running a validate rule on entry (`pyValidate`) |
+| `rules-rule-obj-casetype/examples/pyStages/with-local-actions` | With Local Actions | Stage exposing stage-scoped local actions |
+| `rules-rule-obj-casetype/examples/pyStages/multi-process-pipeline` | Multi Process Pipeline | Single stage with PARALLEL + SEQUENTIAL processes |
 
 `examples/pyProcesses/` — `Embed-StageProcess` variants:
 
-| Skill | Description |
-|-------|-------------|
-| `Parallel Basic` | Process that starts immediately on stage entry |
-| `Sequential Basic` | Process that waits for preceding processes to finish |
-| `Create Form` | Standard `CreateForm_Default` initialization process |
-| `Conditional When` | Process started only when a when-rule is true (`pyStartWhen`) |
-| `Conditional Skip When For Process` | Process skipped when a when-rule is true (`pyWhenToSkip`) |
-| `Conditional Expression` | Process gated by inline expression |
-| `With Process SLA` | Process-level SLA via `pyStepSLA` |
-| `With Call Params` | Process passing values to its flow via `pyCallParams` |
-| `With Rule Parameters` | Process declaring formal parameter contract via `pzRuleParameters` |
-| `Channel Specific` | Process scoped to a single channel via `pyChannelName` |
-| `Optional Adhoc` | Operator-launched optional/ad-hoc process |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-obj-casetype/examples/pyProcesses/parallel-basic` | Parallel Basic | Process that starts immediately on stage entry |
+| `rules-rule-obj-casetype/examples/pyProcesses/sequential-basic` | Sequential Basic | Process that waits for preceding processes to finish |
+| `rules-rule-obj-casetype/examples/pyProcesses/create-form` | Create Form | Standard `CreateForm_Default` initialization process |
+| `rules-rule-obj-casetype/examples/pyProcesses/conditional-when` | Conditional When | Process started only when a when-rule is true (`pyStartWhen`) |
+| `rules-rule-obj-casetype/examples/pyProcesses/conditional-skip-when` | Conditional Skip When For Process | Process skipped when a when-rule is true (`pyWhenToSkip`) |
+| `rules-rule-obj-casetype/examples/pyProcesses/conditional-expression` | Conditional Expression | Process gated by inline expression |
+| `rules-rule-obj-casetype/examples/pyProcesses/with-process-sla` | With Process SLA | Process-level SLA via `pyStepSLA` |
+| `rules-rule-obj-casetype/examples/pyProcesses/with-call-params` | With Call Params | Process passing values to its flow via `pyCallParams` |
+| `rules-rule-obj-casetype/examples/pyProcesses/with-rule-parameters` | With Rule Parameters | Process declaring formal parameter contract via `pzRuleParameters` |
+| `rules-rule-obj-casetype/examples/pyProcesses/channel-specific` | Channel Specific | Process scoped to a single channel via `pyChannelName` |
+| `rules-rule-obj-casetype/examples/pyProcesses/optional-adhoc` | Optional Adhoc | Operator-launched optional/ad-hoc process |
 
 `examples/pyChannels/` — `Data-Channel-Configuration` variants:
 
-| Skill | Description |
-|-------|-------------|
-| `Default Channel` | Standard single-channel configuration |
-| `Web Channel` | Web (browser/portal) channel entry |
-| `Mobile Channel` | Mobile-app channel entry |
-| `Email Channel` | Inbound email channel entry |
-| `Hidden Channel` | Defined but inactive channel (`pyShowChannel: false`) |
-| `Multi Channel` | Full `pyChannels` array combining Default + Web + Email + Mobile |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-obj-casetype/examples/pyChannels/default-channel` | Default Channel | Standard single-channel configuration |
+| `rules-rule-obj-casetype/examples/pyChannels/web-channel` | Web Channel | Web (browser/portal) channel entry |
+| `rules-rule-obj-casetype/examples/pyChannels/mobile-channel` | Mobile Channel | Mobile-app channel entry |
+| `rules-rule-obj-casetype/examples/pyChannels/email-channel` | Email Channel | Inbound email channel entry |
+| `rules-rule-obj-casetype/examples/pyChannels/hidden-channel` | Hidden Channel | Defined but inactive channel (`pyShowChannel: false`) |
+| `rules-rule-obj-casetype/examples/pyChannels/multi-channel` | Multi Channel | Full `pyChannels` array combining Default + Web + Email + Mobile |
 
 ## References
 
 Operational guides for mutating an already-created case type:
 
-| Skill | Description |
-|-------|-------------|
-| `Managing Lifecycle Stages` | Procedures for inserting, renaming, changing the flow of, reordering, and removing stages on an existing case type — including renumbering, supporting-rule dependencies, verification, and troubleshooting |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-obj-casetype/references/managing-stages` | Managing Lifecycle Stages | Procedures for inserting, renaming, changing the flow of, reordering, and removing stages on an existing case type — including renumbering, supporting-rule dependencies, verification, and troubleshooting |
 
 ## Functionality Reference
 
@@ -129,9 +129,10 @@ a `pyChangeStage` flow action or cascading cancellation).
 
 A case type with no alternate paths can omit `pyAlternateStages`
 entirely (or send an empty array); `pyAltStageIDMax` should then be
-`"0"`. See `Simple Linear` for a minimal alternate-stage
-example and `Parent Child Dependencies` /
-`Approval with SLA` for richer ones.
+`"0"`. See `rules-rule-obj-casetype/examples/simple-linear` for a minimal
+alternate-stage example and
+`rules-rule-obj-casetype/examples/parent-child-dependencies` /
+`rules-rule-obj-casetype/examples/approval-with-sla` for richer ones.
 
 ### Stage IDs
 
@@ -180,18 +181,19 @@ content only governs runtime behavior:
 - **Terminal stages** (`pyIsTerminalStage: "true"` with
   `pyStageTransition: "resolution"`) resolve the case on entry and do
   not run a flow — leave `pyProcesses` empty or omitted (see
-  `Terminal Resolution`,
-  `Alternate Rejected`,
-  `Alternate Withdrawn`, and the terminal stages in
-  the top-level examples such as `Simple Linear` and
-  `Auto Transition`). Cleanup work is configured via
+  `rules-rule-obj-casetype/examples/pyStages/terminal-resolution`,
+  `rules-rule-obj-casetype/examples/pyStages/alternate-rejected`,
+  `rules-rule-obj-casetype/examples/pyStages/alternate-withdrawn`, and the
+  terminal stages in top-level examples such as
+  `rules-rule-obj-casetype/examples/simple-linear` and
+  `rules-rule-obj-casetype/examples/auto-transition`). Cleanup work is configured via
   `pyCleanupProcess: "true"`, `pyResolveChildCases`, and
   `pyChildCaseStatus`, not via a process.
 - **Init-and-terminal stage** — a single stage that is *both* the
   initialization stage and a terminal stage (`pyIsInitializationStage:
   "true"` *and* `pyIsTerminalStage: "true"`) typically still carries
   `pyProcesses` so the create form / initial flow runs before the stage
-  resolves. See `Stub Casetype` for the canonical shape.
+  resolves. See `rules-rule-obj-casetype/examples/stub` for the canonical shape.
 
 ### `Embed-Stage` vs `Embed-Rule-Obj-CaseType-Stages` — always use `Embed-Stage`
 

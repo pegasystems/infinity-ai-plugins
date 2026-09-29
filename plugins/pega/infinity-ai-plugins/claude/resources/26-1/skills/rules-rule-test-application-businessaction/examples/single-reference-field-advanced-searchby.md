@@ -56,12 +56,12 @@ description: Load when a Business Action form has one reference picker displayed
       ],
       "pyForm": [
         {
-          "pyParameterName": "ApproverRef",
+          "pyParameterName": "SelectedSearchResult",
           "pyParameterType": "Reference",
           "pyTestReferenceField": [
             {
               "pyMapActionParameterFrom": "Input",
-              "pyParameterName": "StaffID",
+              "pyParameterName": "ApproverID",
               "pyParameterValue": "Approver"
             }
           ]
@@ -69,6 +69,6 @@ description: Load when a Business Action form has one reference picker displayed
       ]
     }
   ],
-  "pyPlaywrightScript": "await caseUtils.clickGo(page, 'Assign approver');\nif (params['Approver']) {\n  await commonUtils.Handle_SearchAndSelectSingle(page, 'Approver', { searchBy: params['Approver_searchBy'] || '' }, [{ label: 'Approver number', type: 'TextInput', value: '301' }], params['Approver']);\n}\nawait caseUtils.clickSubmit(page);"
+  "pyPlaywrightScript": "await caseUtils.clickGo(page, 'Assign approver');\nconst searchBy = params['Approver_searchBy'] || '';\nif (params['Approver']) {\n  if (searchBy === 'Search by Name') {\n    await commonUtils.Handle_SearchAndSelectSingle(page, 'Approver', { searchBy }, [{ label: 'First name', type: 'TextInput', value: 'Jane' }, { label: 'Last name', type: 'TextInput', value: 'Manager' }], params['Approver']);\n  } else {\n    await commonUtils.Handle_SearchAndSelectSingle(page, 'Approver', { searchBy }, [{ label: 'Approver number', type: 'TextInput', value: '301' }], params['Approver']);\n  }\n}\nawait caseUtils.clickSubmit(page);"
 }
 ```

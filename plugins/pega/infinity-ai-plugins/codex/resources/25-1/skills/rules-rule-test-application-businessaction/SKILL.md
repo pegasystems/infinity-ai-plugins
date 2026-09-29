@@ -19,7 +19,7 @@ When working standalone, gather them before starting.
 | Class Name | Case type work class (`pyClassName`) | `get-application` → case type list |
 | View Name | View rule name (usually same as Flow Action) | `get-rule` on `Rule-Obj-Flow` → assignment shape `pyFlowAction` |
 | Type | `Standalone`, `ScreenFlow (SF1)`, `ScreenFlow (SFN)`, or `PerformAction` | Check `pyCategory` on the flow — `ScreenFlow` = screen flow, else standalone |
-| Persona | Actor performing this assignment | `list-rules(ruleType="Rule-Persona")` and from assignment routing |
+| Persona | Actor performing this assignment | `run-data-page(dataPage="D_pzGlobalTestPersonaList", dataPageType="list", payload="{\"dataViewParameters\":{\"AppName\":\"{AppName}\",\"AppVersion\":\"{AppVersion}\"}}")` |
 | ChangeRequest ID | Active change request for saving rules | From `methodology-rule-authoring` |
 | Test Data | Scenario-specific default values for input parameters — every interactive field MUST have a meaningful default | From test scenarios or methodology handover |
 
@@ -93,67 +93,70 @@ run-data-page(
 )
 ```
 2. **If the response contains non-blank `pyViewContent`,** use it as the view source and continue to **Extract fields**.
-3. **Otherwise** (the data page is unavailable, returns an error/404, or `pyViewContent` is blank or missing), use the fallback.
+3. **MUST use the fallback process below before proceeding** if the data page is unavailable, returns an error (including 404), or if pyViewContent is empty ({}), blank, missing entirely.
 
 #### Fallback: Get the view rule
 
 1. Call `list-rules ruleType="Rule-UI-View" className="<Class Name>" ruleName="<View Name>"`.
 2. Call `get-rule key="<viewInsKey>" detail="full"` for the returned view rule.
 3. Use `pxViewMetadata` or `pyContent` as the view source, then continue to **Extract fields**.
-4. Recurse through referenced views for discovery
+4. For every referenced view discovered during extraction, repeat this fallback `list-rules` then `get-rule(detail="full")` sequence. Do not call `D_pzGetViewDetails` for referenced views after entering fallback mode.
+5. **HARD STOP:** If `list-rules` finds no matching View, `get-rule` fails, or both `pxViewMetadata` and `pyContent` are unusable, report the missing authoritative view source before authoring. Do not create or update the Business Action.
+6. Do not conclude that a view has no editable fields until the selected View rule content has been extracted.
 
 #### Extract fields
 
 Use the selected view source. But map only fields in editable form templates. Any template whose name starts with `Details` (for example, `Details` or `DetailsTwoColumn`) is display-only: exclude all descendants from `pyForm`, `pyInputParameters`, and `pyPlaywrightScript`. Include every interactive field from the editable form context; missing one invalidates the BA.
 
-Load `business-action-view-field-extraction` via `get-skill` and follow its procedure to extract all interactive fields from the returned view metadata (or fallback view rule content).
+Load `rules-rule-test-application-businessaction/references/view-field-extraction` via `get-skill` and follow its procedure to extract all interactive fields from the returned view metadata (or fallback view rule content).
 
-> **Verification gate:** Confirm your field list was derived from the actual `D_pzGetViewDetails`
-> response (or fallback `get-rule` response). Count the interactive (non-readOnly) fields; if zero,
-> re-check your parsing. Then produce the **field extraction checkpoint** table (see
-> `business-action-view-field-extraction` Field extraction checkpoint)
+> **Verification gate:** Before Step 5, confirm the field list and Playwright test IDs are traceable
+> to usable content from the actual `D_pzGetViewDetails` response or fallback `get-rule` response.
+> Count the interactive (non-readOnly) fields; if zero, re-check your parsing. Then produce the
+> **field extraction checkpoint** table (see
+> `rules-rule-test-application-businessaction/references/view-field-extraction` Field extraction checkpoint).
 
 ### Step 5: Generate parameters
 
-Load `business-action-parameters` via `get-skill` and follow its generate → verify procedure.
+Load `rules-rule-test-application-businessaction/references/businessaction-parameters` via `get-skill` and follow its generate → verify procedure.
 Its default selection order is mandatory: scenario/handover values, referenceList data pages for ObjectReference fields, resolved cases, dropdown options, then realistic sample data.
 
-If the field extraction checkpoint includes `ObjectReference`, `UserReference`, `reference`, or `EmbeddedDataMulti`, load `business-action-reference-field-mapping`; if any reference has `pyDisplayAs` / `config.displayAs` = `advancedSearch`, also load `business-action-advanced-search` before generating Playwright code.
+If the field extraction checkpoint includes `ObjectReference`, `UserReference`, `reference`, or `EmbeddedDataMulti`, load `rules-rule-test-application-businessaction/references/reference-field-mapping`; if any reference has `pyDisplayAs` / `config.displayAs` = `advancedSearch`, also load `rules-rule-test-application-businessaction/references/advanced-search` before generating Playwright code.
 
 Load a matching example via `get-skill` before creating a Business Action — the example
 shows the full JSON structure including `pyTestSteps` and `pyActionParameters`:
 
-| Business Action needed | Skill |
-|---|---|
-| Create Case (has CreateCase step) Business Action | `business-action-create-case` |
-| Child case Business Action (CaptureChildCase + PerformAssignment) | `business-action-child-case` |
-| Perform Assignment Business Action | `business-action-perform-assignment` |
-| Perform Action Business Action | `business-action-perform-action` |
-| Optional process trigger Business Action | `business-action-trigger-optional-process` |
-| Perform Approval Business Action (Approved) | `business-action-approval-approved` |
-| Perform Approval Business Action (Rejected) | `business-action-approval-rejected` |
-| Form with a single reference field | `business-action-single-reference-field` |
-| Form with a reference list (multi) | `business-action-multi-reference-field` |
-| Form with a single reference field with advancedSearch (searchFor only) | `business-action-single-reference-field-advanced-searchfor` |
-| Form with a single reference field with advancedSearch (searchFor and searchBy) | `business-action-single-reference-field-advanced-searchfor-and-searchby` |
-| Form with a single reference field with advancedSearch (searchBy only) | `business-action-single-reference-field-advanced-searchby` |
-| Form with a reference list (multi) with advancedSearch (searchFor only) | `business-action-multi-reference-field-advanced-searchfor` |
-| Form with a reference list (multi) with advancedSearch (searchFor and searchBy) | `business-action-multi-reference-field-advanced-searchfor-and-searchby` |
-| Form with a reference list (multi) with advancedSearch (searchBy only) | `business-action-multi-reference-field-advanced-searchby` |
-| Form with a DateTime field (12-hour clock with AM/PM) | `business-action-datetime-12hr` |
-| Form with a DateTime field (24-hour clock) | `business-action-datetime-24hr` |
-| Form with a UserReference search box | `business-action-user-reference-search-box` |
-| Form with an embedded data single (sub-view) | `business-action-embedded-data-single` |
-| Form with an embedded data list (multi-record table) | `business-action-embedded-data-list` |
-| Form with a conditional reference field | `business-action-reference-conditional` |
-| Simplest stub | `business-action-stub` |
+| Business Action needed | Skill | Label |
+|---|---|---|
+| Create Case (has CreateCase step) Business Action | `rules-rule-test-application-businessaction/examples/create-case` | business-action-create-case |
+| Child case Business Action (CaptureChildCase + PerformAssignment) | `rules-rule-test-application-businessaction/examples/child-case` | business-action-child-case |
+| Perform Assignment Business Action | `rules-rule-test-application-businessaction/examples/perform-assignment` | business-action-perform-assignment |
+| Perform Action Business Action | `rules-rule-test-application-businessaction/examples/perform-action` | business-action-perform-action |
+| Optional process trigger Business Action | `rules-rule-test-application-businessaction/examples/trigger-optional-process` | business-action-trigger-optional-process |
+| Perform Approval Business Action (Approved) | `rules-rule-test-application-businessaction/examples/perform-approval-approved` | business-action-approval-approved |
+| Perform Approval Business Action (Rejected) | `rules-rule-test-application-businessaction/examples/perform-approval-rejected` | business-action-approval-rejected |
+| Form with a single reference field | `rules-rule-test-application-businessaction/examples/single-reference-field` | business-action-single-reference-field |
+| Form with a reference list (multi) | `rules-rule-test-application-businessaction/examples/multi-reference-field` | business-action-multi-reference-field |
+| Form with a single reference field with advancedSearch (searchFor only) | `rules-rule-test-application-businessaction/examples/single-reference-field-advanced-searchfor` | business-action-single-reference-field-advanced-searchfor |
+| Form with a single reference field with advancedSearch (searchFor and searchBy) | `rules-rule-test-application-businessaction/examples/single-reference-field-advanced-searchfor-and-searchby` | business-action-single-reference-field-advanced-searchfor-and-searchby |
+| Form with a single reference field with advancedSearch (searchBy only) | `rules-rule-test-application-businessaction/examples/single-reference-field-advanced-searchby` | business-action-single-reference-field-advanced-searchby |
+| Form with a reference list (multi) with advancedSearch (searchFor only) | `rules-rule-test-application-businessaction/examples/multi-reference-field-advanced-searchfor` | business-action-multi-reference-field-advanced-searchfor |
+| Form with a reference list (multi) with advancedSearch (searchFor and searchBy) | `rules-rule-test-application-businessaction/examples/multi-reference-field-advanced-searchfor-and-searchby` | business-action-multi-reference-field-advanced-searchfor-and-searchby |
+| Form with a reference list (multi) with advancedSearch (searchBy only) | `rules-rule-test-application-businessaction/examples/multi-reference-field-advanced-searchby` | business-action-multi-reference-field-advanced-searchby |
+| Form with a DateTime field (12-hour clock with AM/PM) | `rules-rule-test-application-businessaction/examples/datetime-12hr` | business-action-datetime-12hr |
+| Form with a DateTime field (24-hour clock) | `rules-rule-test-application-businessaction/examples/datetime-24hr` | business-action-datetime-24hr |
+| Form with a UserReference search box | `rules-rule-test-application-businessaction/examples/user-reference-search-box` | business-action-user-reference-search-box |
+| Form with an embedded data single (sub-view) | `rules-rule-test-application-businessaction/examples/embedded-data-single` | business-action-embedded-data-single |
+| Form with an embedded data list (multi-record table) | `rules-rule-test-application-businessaction/examples/embedded-data-list` | business-action-embedded-data-list |
+| Form with a conditional reference field | `rules-rule-test-application-businessaction/examples/conditional-reference-field` | business-action-reference-conditional |
+| Simplest stub | `rules-rule-test-application-businessaction/examples/stub` | business-action-stub |
 
 > **CreateCase — Assignment constant:** The `Assignment` action parameter value must be the actual `pyFlowAction` name from the ScreenFlow shape (e.g., `"Basicdetails"`), not the generic `"Create"`. Get this value from `get-rule` on the flow → assignment shape → `pyFlowAction`.
 
 ### Step 6: Generate Playwright script
 
-Load `business-action-ui-automation` via `get-skill` and follow its patterns.
-Load `business-action-common-utils-api` via `get-skill` for utility method signatures.
+Load `rules-rule-test-application-businessaction/references/businessaction-ui-automation` via `get-skill` and follow its patterns.
+Load `rules-rule-test-application-businessaction/references/common-utils-docs` via `get-skill` for utility method signatures.
 Set `pyPlaywrightScript` to TypeScript body statements only. `page`, `browser`, `context`, `params`, and `config` are already in scope when the script runs.
 
 ### Step 7: Create or update rule
@@ -174,11 +177,11 @@ Immediately call `get-rule(key="{createdKey}", detail="full")` and confirm:
 4. `pyForm` has entries for all non-checkbox, non-readOnly fields
 5. `pyInputParameters` includes CaseID (first), ALL interactive form fields, ValidationFails (last)
 6. `pyPlaywrightScript` has interaction lines for all interactive fields
-7. Reference, multi-reference, embedded single object (Embedded Data), and embedded data list (Embedded List) fields follow `business-action-reference-field-mapping`; verify `pyForm`, `pyInputParameters`, and Playwright mappings against that reference.
+7. Reference, multi-reference, embedded single object (Embedded Data), and embedded data list (Embedded List) fields follow `rules-rule-test-application-businessaction/references/reference-field-mapping`; verify `pyForm`, `pyInputParameters`, and Playwright mappings against that reference.
 8. `pyOutputParameters`: For **CreateCase BAs** — step-level and root-level use the same descriptive name (e.g., `HomeLoanCaseID`); NEVER generic `CaseID`; step-level has `pyParameterValue: "data$caseInfo$ID"`; root-level has `pyMapOutputFrom: "Response"`. For **child case BAs** (CaptureChildCase + PerformAssignment) — both levels use `ChildCaseIDAutoMapped` as the parameter name `pyParameterValue: ""`. Multiple root-level output parameters are allowed when the Business Action captures more than one value (e.g., both CaseID and CaseKey).
 9. Every `pyInputParameters` entry (except CaseID and embedded reference fields represented only in `pyForm`) has a non-empty `pyParameterValue` with a meaningful test default — never blank, never a placeholder like `"TODO"` or `"value"`.
 10. **Approval Business Actions only:** `pyApprovalResult` in `pyForm` has `pyMapRequestFieldFrom: "Constant"` with value exactly `"Approved"` or `"Rejected"`.
-11. **Playwright script content verification** — cross-check `pyPlaywrightScript` against the loaded `business-action-ui-automation` and the matching example skill:
+11. **Playwright script content verification** — cross-check `pyPlaywrightScript` against the loaded `rules-rule-test-application-businessaction/references/businessaction-ui-automation` and the matching example skill:
 Standalone → `clickGo(page, "ASSIGNMENT_NAME")` where `ASSIGNMENT_NAME` = exact `pyMOName` from the flow shape. Approval → `clickGo(page, "Get Approval")`.
 
 **TriggerOptionalProcess BAs:** Only checks 1–3 and 11 apply. `pyForm` is empty, `pyInputParameters` has only `CaseID` (no `ValidationFails`). Check 11: Playwright = single `openCaseWideActions(page, "PROCESS_LABEL")` call where `PROCESS_LABEL` = `pyLabel` (not `pyFlowName`); no `clickSubmit`, no field interaction lines.
@@ -220,14 +223,14 @@ When you encounter an approval shape in a flow during Phase 3 lifecycle extracti
 
 ## References
 
-| Skill | Used in | What it contains |
-|-------|---------|------------------|
-| `business-action-view-field-extraction` | Step 4 | Field parsing from view rule |
-| `business-action-parameters` | Step 5 | Format constraints, field inclusion rules, label rules |
-| `business-action-reference-field-mapping` | Steps 5–6 | Identification, DX mapping, Playwright, and input parameterization for reference and embedded-data fields |
-| `business-action-advanced-search` | Steps 5–6 | Advanced search reference picker value formats and Playwright handlers |
-| `business-action-ui-automation` | Step 6 | Standard field-type-to-locator table, opener logic, CaseID capture |
-| `business-action-common-utils-api` | Step 6 | Utility method signatures (exact arg order) |
+| Skill | Label | Used in | What it contains |
+|---|---|---|---|
+| `rules-rule-test-application-businessaction/references/view-field-extraction` | business-action-view-field-extraction | Step 4 | Field parsing from view rule |
+| `rules-rule-test-application-businessaction/references/businessaction-parameters` | business-action-parameters | Step 5 | Format constraints, field inclusion rules, label rules |
+| `rules-rule-test-application-businessaction/references/reference-field-mapping` | business-action-reference-field-mapping | Steps 5–6 | Identification, DX mapping, Playwright, and input parameterization for reference and embedded-data fields |
+| `rules-rule-test-application-businessaction/references/advanced-search` | business-action-advanced-search | Steps 5–6 | Advanced search reference picker value formats and Playwright handlers |
+| `rules-rule-test-application-businessaction/references/businessaction-ui-automation` | business-action-ui-automation | Step 6 | Standard field-type-to-locator table, opener logic, CaseID capture |
+| `rules-rule-test-application-businessaction/references/common-utils-docs` | business-action-common-utils-api | Step 6 | Utility method signatures (exact arg order) |
 
 ## Read-Only  Business Actions
 

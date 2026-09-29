@@ -8,6 +8,8 @@ description: Authoring guide for Pega Constellation views (Rule-UI-View), includ
 - Load `rules-rule-obj-property` when any target field's backing property does
 	not already exist. That skill contains examples and authoring notes
 	needed to create a `Rule-Obj-Property`.
+- Load `rules-rule-classmetadata` when changing the `pyPrimaryFields` View;
+  primary-field metadata and runtime rendering must stay aligned.
 
 ## Critical Authoring Rules
 
@@ -122,41 +124,41 @@ Creating a View with that references `.MyTextField` when `MyTextField` does not 
 
 ## Examples
 
-| Skill | Type | Pattern | Description |
-|------|------|---------|-------------|
-| `Stub Rule-UI-View` | create | Minimal create | Smallest valid view with one region |
-| `Append Text Field` | update | Text field add | Append TextInput, preserve arrays |
-| `Append TextArea Field` | update | TextArea field add | Multi-line `Pega-UI-Content-Field-Text-Paragraph` |
-| `Append RichText Field` | update | RichText field add | WYSIWYG rich text (same pxObjClass as TextArea) |
-| `Append Email Field` | update | Email field add | Append Email field |
-| `Append Phone Field` | update | Phone field add | Phone + calling code datasource + `$pagelists` |
-| `Append DateTime Field` | update | DateTime field add | Date + time field wiring across all three surfaces |
-| `Append Dropdown Field` | update | Dropdown add | Associated Dropdown + datasource wiring |
-| `Append Decimal Field` | update | Decimal field add | Decimal number field |
-| `Append Checkbox Field` | update | Checkbox add | Boolean/Checkbox + caption wiring |
-| `Append UserReference Field` | update | UserReference add | Operator lookup + `@USER` + `$users` + `$pagelists` |
-| `Append Data Reference Field` | update | Data Reference add | Embedded sub-view field + `$views` |
-| `Append Embedded Data Field` | update | Embedded Data add | `Data-Embedded` reference + `authorContext` + `$views` |
-| `Append Attachment Field` | update | Attachment field add | File upload + `@ATTACHMENT` + `$attachments` |
-| `Step Form View` | create | Step form create | DefaultForm for a workflow step |
-| `Edit Action View` | create | Edit action create | `pyEdit` with TextArea, Data Ref, Checkbox |
-| `Details View` | create | Details view create | `pyReview` with `pxViewType: "details"` |
-| `Data Reference Autocomplete View` | create | DataReference create | AutoComplete lookup + flat layout + `$classesmetadata` |
-| `Data Reference Table Select View` | create | DataReference create | SimpleTableSelect multi-select + presets + `$pagelists` |
-| `Simple Table View` | create | SimpleTable create | Editable multi-record list + modal edit + `$actions` |
-| `Landing Page View` | create | Landing page create | `WideNarrowPage` + Todo/Pulse/Announcement widgets + AI agents |
-| `DataReference Readonly View` | create | DataReference readonly | SemanticLink navigation link with hover preview |
-| `FieldGroup Table View` | create | FieldGroup table | SimpleTable rendered as stacked card layout |
-| `Data Reference Chain` | create | Data Reference chain | Full dependency chain for DataReference fields |
-| `Embedded Data Chain` | create | Embedded Data chain | Full dependency chain for Embedded Data fields |
+| Skill | Label | Type | Pattern | Description |
+|---|---|---|---|---|
+| `rules-rule-ui-view/examples/stub` | Stub Rule-UI-View | create | Minimal create | Smallest valid view with one region |
+| `rules-rule-ui-view/examples/append/text-field` | Append Text Field | update | Text field add | Append TextInput, preserve arrays |
+| `rules-rule-ui-view/examples/append/textarea-field` | Append TextArea Field | update | TextArea field add | Multi-line `Pega-UI-Content-Field-Text-Paragraph` |
+| `rules-rule-ui-view/examples/append/richtext-field` | Append RichText Field | update | RichText field add | WYSIWYG rich text (same pxObjClass as TextArea) |
+| `rules-rule-ui-view/examples/append/email-field` | Append Email Field | update | Email field add | Append Email field |
+| `rules-rule-ui-view/examples/append/phone-field` | Append Phone Field | update | Phone field add | Phone + calling code datasource + `$pagelists` |
+| `rules-rule-ui-view/examples/append/datetime-field` | Append DateTime Field | update | DateTime field add | Date + time field wiring across all three surfaces |
+| `rules-rule-ui-view/examples/append/dropdown-field` | Append Dropdown Field | update | Dropdown add | Associated Dropdown + datasource wiring |
+| `rules-rule-ui-view/examples/append/decimal-field` | Append Decimal Field | update | Decimal field add | Decimal number field |
+| `rules-rule-ui-view/examples/append/checkbox-field` | Append Checkbox Field | update | Checkbox add | Boolean/Checkbox + caption wiring |
+| `rules-rule-ui-view/examples/append/user-reference-field` | Append UserReference Field | update | UserReference add | Operator lookup + `@USER` + `$users` + `$pagelists` |
+| `rules-rule-ui-view/examples/append/data-reference-field` | Append Data Reference Field | update | Data Reference add | Embedded sub-view field + `$views` |
+| `rules-rule-ui-view/examples/append/embedded-data-field` | Append Embedded Data Field | update | Embedded Data add | `Data-Embedded` reference + `authorContext` + `$views` |
+| `rules-rule-ui-view/examples/append/attachment-field` | Append Attachment Field | update | Attachment field add | File upload + `@ATTACHMENT` + `$attachments` |
+| `rules-rule-ui-view/examples/step-form-view` | Step Form View | create | Step form create | DefaultForm for a workflow step |
+| `rules-rule-ui-view/examples/edit-action-view` | Edit Action View | create | Edit action create | `pyEdit` with TextArea, Data Ref, Checkbox |
+| `rules-rule-ui-view/examples/details-view` | Details View | create | Details view create | `pyReview` with `pxViewType: "details"` |
+| `rules-rule-ui-view/examples/data-reference-autocomplete-view` | Data Reference Autocomplete View | create | DataReference create | AutoComplete lookup + flat layout + `$classesmetadata` |
+| `rules-rule-ui-view/examples/data-reference-table-select-view` | Data Reference Table Select View | create | DataReference create | SimpleTableSelect multi-select + presets + `$pagelists` |
+| `rules-rule-ui-view/examples/simple-table-view` | Simple Table View | create | SimpleTable create | Editable multi-record list + modal edit + `$actions` |
+| `rules-rule-ui-view/examples/landing-page-view` | Landing Page View | create | Landing page create | `WideNarrowPage` + Todo/Pulse/Announcement widgets + AI agents |
+| `rules-rule-ui-view/examples/data-reference-readonly-view` | DataReference Readonly View | create | DataReference readonly | SemanticLink navigation link with hover preview |
+| `rules-rule-ui-view/examples/field-group-table-view` | FieldGroup Table View | create | FieldGroup table | SimpleTable rendered as stacked card layout |
+| `rules-rule-ui-view/examples/end-to-end/data-reference-chain` | Data Reference Chain | create | Data Reference chain | Full dependency chain for DataReference fields |
+| `rules-rule-ui-view/examples/end-to-end/embedded-data-chain` | Embedded Data Chain | create | Embedded Data chain | Full dependency chain for Embedded Data fields |
 
 
 ## References
 
-| Skill | When to load |
-|------|-------------|
-| `view-anti-patterns` | Before any view create or update — common field duplication and layout mistakes |
-| `view-pagelist-selection` | When implementing row selection from a case-owned embedded PageList — staging pattern, checkbox-per-row, submit shapes, anti-patterns |
+| Skill | Label | When to load |
+|---|---|---|
+| `rules-rule-ui-view/references/view-anti-patterns` | view-anti-patterns | Before any view create or update — common field duplication and layout mistakes |
+| `rules-rule-ui-view/references/constellation-pagelist-selection` | view-pagelist-selection | When implementing row selection from a case-owned embedded PageList — staging pattern, checkbox-per-row, submit shapes, anti-patterns |
 
 ## View-to-Surface Mapping
 
@@ -168,7 +170,7 @@ Standard view names control specific UI surfaces:
 | `pyEdit` | Full edit form | All editable fields for the case |
 | `pyReview` | Read-only case details | Non-editable summary |
 | `pyCaseSummary` | Case summary widget | Compact case overview |
-| `pyDetails` | Case page shell (CaseView template) | No scalar fields — override to customize Utilities widgets (Attachments, Followers, Tags). See `case-view-architecture` |
+| `pyDetails` | Case page shell (CaseView template) | No scalar fields — override to customize Utilities widgets (Attachments, Followers, Tags). See `rules-rule-ui-view/references/case-view-architecture` |
 | `pySummary` | Summary view | Compact summary display |
 | `pyWorkList` | Work list page | Uses `listpage` view type |
 | *(step name)* | Assignment form for that workflow step | e.g., `ConfirmScope` controls the Confirm Scope step |
@@ -231,7 +233,7 @@ The structure is a recursive tree of `ComponentNode` objects:
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `type` | String | DX component type. See `view-field-type-selection` for the complete mapping and examples. |
+| `type` | String | DX component type. See `rules-rule-ui-view/references/field-type-selection` for the complete mapping and examples. |
 | `name` | String | Logical name (required for Regions, optional otherwise) |
 | `config` | Object | Component-specific configuration (see below) |
 | `children` | Array | Nested child ComponentNodes |

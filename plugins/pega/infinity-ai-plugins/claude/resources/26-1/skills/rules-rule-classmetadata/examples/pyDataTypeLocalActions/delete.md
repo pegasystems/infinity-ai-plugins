@@ -1,6 +1,6 @@
 ---
 name: classmetadata-local-action-delete
-description: The OOTB Delete action — removes the selected data record after confirmation.
+description: Load when adding the OOTB Delete row to pyDataTypeLocalActions. Contains the confirmed-delete action payload.
 ---
 
 ```json

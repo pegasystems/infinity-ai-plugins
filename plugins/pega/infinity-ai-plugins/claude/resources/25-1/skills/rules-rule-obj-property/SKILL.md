@@ -7,27 +7,27 @@ description: Authoring guide for Pega property rules (Rule-Obj-Property), includ
 
 ## Examples
 
-| Skill | Description |
-|------|-------------|
-| `Stub Property` | Minimal property — smallest valid String/Text create payload |
-| `String/Text Multi-line` | String/Text rendered as multi-line text area (pyStreamName override) |
-| `Paragraph Field` | String/Text rendered as paragraph — ask the user whether plain text (`pxTextArea`) or rich text (`pxRichTextEditor`) before authoring |
-| `String/Date` | String/Date — no pyMaxLength needed for non-Text types |
-| `Page Property` | Single embedded page — requires pyPageClass, no pyStringType |
-| `PageList Property` | Ordered list of embedded pages — same fields as Page, different mode value |
-| `Dropdown with Prompt List` | Dropdown with inline static values — three fields required together |
-| `URL Field` | String/Text property rendered with `pxURL` and validated with `pxIsValidURL` |
-| `Time Only` | String/TimeOfDay property rendered with `pxDateTime` for time-only input |
-| `Phone Field` | String/Text property rendered with `pxPhone` and validated with `ValidPhoneNumber` |
-| `Percentage Field` | String/Decimal property rendered with `pxPercentage` for percentage-style input |
-| `Email Field` | String/Text property rendered with `pxEmail` and validated with `ValidEmailAddress` |
-| `Date Only` | String/Date property rendered with `pxDateTime` for date-only input |
-| `Date And Time` | String/DateTime property rendered with `pxDateTime` for timestamp input |
-| `Currency Field` | String/Decimal property rendered with `pxCurrency` for currency-style input |
-| `Refer to Data Page` | Use when a Page/PageList property should stay linked to source data. Set `AUTOMATIC`; map `pyDOParamList` as `pyName: pyID`, `pyValue: <property path>`. |
-| `Copy Data from Data Page` | Use when a Page/PageList property should copy source data once. Set `AUTOMATICNONREF`; map `pyDOParamList` as `pyName: pyID`, `pyValue: <property path>`. |
-| `Attachment Property (Page)` | Single-file Page of Embed-Attach-File with D_pzAttachmentFieldInfo data page and 4 auto-derived parameters |
-| `Attachment Property (PageList)` | Multi-file PageList of Embed-Attach-File with D_pzAttachmentFieldInfo data page and 4 auto-derived parameters |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-obj-property/examples/stub` | Stub Property | Minimal property — smallest valid String/Text create payload |
+| `rules-rule-obj-property/examples/text-textarea` | String/Text Multi-line | String/Text rendered as multi-line text area (pyStreamName override) |
+| `rules-rule-obj-property/examples/paragraph-rich-text` | Paragraph Field | String/Text rendered as paragraph — ask the user whether plain text (`pxTextArea`) or rich text (`pxRichTextEditor`) before authoring |
+| `rules-rule-obj-property/examples/string-date` | String/Date | String/Date — no pyMaxLength needed for non-Text types |
+| `rules-rule-obj-property/examples/page` | Page Property | Single embedded page — requires pyPageClass, no pyStringType |
+| `rules-rule-obj-property/examples/page-list` | PageList Property | Ordered list of embedded pages — same fields as Page, different mode value |
+| `rules-rule-obj-property/examples/dropdown-promptlist` | Dropdown with Prompt List | Dropdown with inline static values — three fields required together |
+| `rules-rule-obj-property/examples/url` | URL Field | String/Text property rendered with `pxURL` and validated with `pxIsValidURL` |
+| `rules-rule-obj-property/examples/time-only` | Time Only | String/TimeOfDay property rendered with `pxDateTime` for time-only input |
+| `rules-rule-obj-property/examples/phone` | Phone Field | String/Text property rendered with `pxPhone` and validated with `ValidPhoneNumber` |
+| `rules-rule-obj-property/examples/percentage` | Percentage Field | String/Decimal property rendered with `pxPercentage` for percentage-style input |
+| `rules-rule-obj-property/examples/email` | Email Field | String/Text property rendered with `pxEmail` and validated with `ValidEmailAddress` |
+| `rules-rule-obj-property/examples/date-only` | Date Only | String/Date property rendered with `pxDateTime` for date-only input |
+| `rules-rule-obj-property/examples/date-time` | Date And Time | String/DateTime property rendered with `pxDateTime` for timestamp input |
+| `rules-rule-obj-property/examples/currency` | Currency Field | String/Decimal property rendered with `pxCurrency` for currency-style input |
+| `rules-rule-obj-property/examples/refer-to-data-page` | Refer to Data Page | Use when a Page/PageList property should stay linked to source data. Set `AUTOMATIC`; map `pyDOParamList` as `pyName: pyID`, `pyValue: <property path>`. |
+| `rules-rule-obj-property/examples/copy-from-data-page` | Copy Data from Data Page | Use when a Page/PageList property should copy source data once. Set `AUTOMATICNONREF`; map `pyDOParamList` as `pyName: pyID`, `pyValue: <property path>`. |
+| `rules-rule-obj-property/examples/attachment-property-page` | Attachment Property (Page) | Single-file Page of Embed-Attach-File with D_pzAttachmentFieldInfo data page and 4 auto-derived parameters |
+| `rules-rule-obj-property/examples/attachment-property-pagelist` | Attachment Property (PageList) | Multi-file PageList of Embed-Attach-File with D_pzAttachmentFieldInfo data page and 4 auto-derived parameters |
 
 ## References
 

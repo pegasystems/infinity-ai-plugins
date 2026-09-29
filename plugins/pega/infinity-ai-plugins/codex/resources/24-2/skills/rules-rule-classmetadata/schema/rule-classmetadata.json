@@ -15,7 +15,7 @@
     "pyRuleAvailable": { "type": "string", "enum": ["Yes", "No", "Withdrawn", "Final", "Blocked"], "x-pega-autoFill": "Yes" },
     "pyPrimaryFields": {
       "type": "array",
-      "description": "Ordered list of primary fields. For Work- subclasses the conventional first four entries are pyID, pyLabel, pxUrgencyWork, pyStatusWork. Updates merge positionally — to truncate trailing entries, read existing list with get-rule and resend the full intended list.",
+      "description": "Ordered list of primary fields. For Work- subclasses the conventional first four entries are pyID, pyLabel, pxUrgencyWork, pyStatusWork. For add, remove, or reorder updates, read the existing list, send the complete intended list, and use listUpdateMode='replace'.",
       "items": { "$ref": "#/$defs/PegaFieldsEntry" }
     },
     "pyListDataPage":     { "type": "string", "description": "List data page backing this data object (Data- subclasses only, e.g., 'D_MyDataObjectList')." },

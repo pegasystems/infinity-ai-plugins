@@ -52,12 +52,12 @@ Pass the identified test ruleset as `ruleSet` parameter when creating the rule.
    - Set `pyKeywordDescription` = Gherkin step text for each mapped keyword.
 6. **Get configured test personas for Login step data:**
 
-   Use the following data page to retrieve the list of personas configured for testing in the application. Refer `pyPersonaName` in Login keywords to ensure valid test execution.
+   Use the following data page to retrieve the list of personas configured for testing in the application. Refer `pyPersonaName` in Login keywords to ensure valid test execution. Pass `payload` as a JSON-encoded string, not as a raw JSON object. For this list data page, put all input parameters inside `dataViewParameters`.
    ```
    run-data-page(
      dataPage="D_pzGlobalTestPersonaList",
      dataPageType="list",
-     payload={ "AppName": "{AppName}", "AppVersion": "{AppVersion}" }
+     payload="{\"dataViewParameters\": { \"AppName\": \"{AppName}\", \"AppVersion\": \"{AppVersion}\" }}"
    )
    ```
 
@@ -151,19 +151,19 @@ needed.
 
 ## Examples — load via `get-skill`
 
-| Skill | Description |
-|------|-------------|
-| `testcase-stub` | Minimal test case — Login + CreateCase + one assertion |
-| `testcase-business-action-login` | URL and Persona from Global Test Data |
-| `testcase-business-action-create-case` | Output capture with unique CaseID alias |
-| `testcase-business-action-assignment` | CaseID from Keyword Output + input parameters |
-| `testcase-business-action` | Action without assignment form |
-| `testcase-business-action-optional-process` | Optional process trigger — CaseID only, no ValidationFails |
-| `testcase-business-action-assert-stage` | Stage transition verification |
-| `testcase-business-action-assert-status` | Final status assertion |
-| `testcase-business-action-assert-validation` | Error assertion pattern |
-| `testcase-multi-case-aliasing` | Multiple CaseID aliases for cross-case wiring |
-| `testcase-getcase-persona-switch` | Login→GetCase→Assignment sequence after persona switch |
-| `testcase-business-action-child-case-capture` | Capture child case for downstream wiring |
-| `testcase-update-parameter` | Change keyword parameter value |
-| `testcase-update-append` | Append new keyword to test case |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-test-application-case/examples/stub` | testcase-stub | Minimal test case — Login + CreateCase + one assertion |
+| `rules-rule-test-application-case/examples/pyTestKeywords/login` | testcase-business-action-login | URL and Persona from Global Test Data |
+| `rules-rule-test-application-case/examples/pyTestKeywords/create-case` | testcase-business-action-create-case | Output capture with unique CaseID alias |
+| `rules-rule-test-application-case/examples/pyTestKeywords/assignment-with-inputs` | testcase-business-action-assignment | CaseID from Keyword Output + input parameters |
+| `rules-rule-test-application-case/examples/pyTestKeywords/action` | testcase-business-action | Action without assignment form |
+| `rules-rule-test-application-case/examples/pyTestKeywords/optional-process` | testcase-business-action-optional-process | Optional process trigger — CaseID only, no ValidationFails |
+| `rules-rule-test-application-case/examples/pyTestKeywords/assert-case-stage` | testcase-business-action-assert-stage | Stage transition verification |
+| `rules-rule-test-application-case/examples/pyTestKeywords/assert-case-status` | testcase-business-action-assert-status | Final status assertion |
+| `rules-rule-test-application-case/examples/pyTestKeywords/assert-validation-error` | testcase-business-action-assert-validation | Error assertion pattern |
+| `rules-rule-test-application-case/references/multi-case-output-aliasing` | testcase-multi-case-aliasing | Multiple CaseID aliases for cross-case wiring |
+| `rules-rule-test-application-case/references/getcase-after-persona-switch` | testcase-getcase-persona-switch | Login→GetCase→Assignment sequence after persona switch |
+| `rules-rule-test-application-case/examples/pyTestKeywords/child-case-capture` | testcase-business-action-child-case-capture | Capture child case for downstream wiring |
+| `rules-rule-test-application-case/references/update-keyword-parameter-value` | testcase-update-parameter | Change keyword parameter value |
+| `rules-rule-test-application-case/references/update-append-keyword` | testcase-update-append | Append new keyword to test case |

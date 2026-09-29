@@ -61,9 +61,11 @@ a different Start shape class (`Data-MO-Event-Start-StartScreenFlow` vs
 (`pyFromMODefName: "Start"` with `pyMOId: "Start62"`), ScreenFlow
 assignments (`Data-MO-Activity-Assignment-WorkAction`), and ScreenFlow
 subprocesses (`Data-MO-Activity-SubProcess-ScreenflowProcess` with
-`pySubProcessCategory: "ScreenFlow"`). See the `flow-screenflow`,
-`flow-shape-start-screenflow`, `flow-shape-assignment-screenflow`, and
-`flow-shape-subprocess-screenflow` examples.
+`pySubProcessCategory: "ScreenFlow"`). See
+`rules-rule-obj-flow/examples/screenflow`,
+`rules-rule-obj-flow/examples/shapes/start-screenflow`,
+`rules-rule-obj-flow/examples/shapes/assignment-screenflow`, and
+`rules-rule-obj-flow/examples/shapes/subprocess-screenflow`.
 
 #### Per-shape category stamps
 
@@ -214,40 +216,40 @@ When a flow declares no parameters, emit a single empty placeholder row with `py
 
 ### Cross-references
 
-- ConversationFlow 17-field custom-fields cluster: see `rule-level-fields`.
+- ConversationFlow 17-field custom-fields cluster: see
+  `rules-rule-obj-flow/references/rule-level-fields`.
 
 ## References
 
 Whenever editing a flow, to ensure you understand the full context, load one or more of these skills
 
-| Skill | Description |
-|-------|-------------|
-| `blueprint-stub-discovery` | Load when working with a BluePrint-generated app to find stub shapes that need wiring |
-| `flow-creation-workflow` | Load when creating a brand-new flow from scratch |
-| `adding-steps-workflow` | Load when adding a new shape to an existing flow |
-| `enhancing-steps-workflow` | Load when modifying what an existing flow shape does — changing its backing rule without adding or removing shapes |
-| `flowaction-wiring-patterns` | Load when creating or configuring a FlowAction for a flow's Assignment shape — view connection and field pitfalls |
-| `canvas-structure` | Load when updating an existing flow's shapes or connectors — field sync rules and deep-merge |
-| `shapes-start-end` | Load when authoring Start or End shapes in a flow — field subsets, ScreenFlow Start variant, and Change-to-Stage End wiring |
-| `legacy-shape-ids` | Load when updating or recreating a pre-2020 imported flow that uses semantic shape IDs like FLOWEND or Fork592 instead of modern auto-generated IDs |
-| `shapes-subprocess` | Load when authoring a SubProcess or Spinoff shape in a flow — shape fields, parameter passing, Spinoff subclass, and Annotation shapes |
-
-| `top-level-rollups` | Load when a flow needs rule-level summary lists that mirror shape-level data — pyUseCaseLinks, pyCoveredBy, pyTaskInfo, pxDataReferences |
-| `rule-level-fields` | Load when copying or recreating a flow and encountering unfamiliar rule-level fields |
-| `shapes-assignment` | Load when authoring an Assignment shape in a flow — routing fields, BPMN differences, ticket wiring |
-| `routing-assignment` | Load when configuring who a flow's Assignment routes work to — current operator, worklist, or workbasket |
-| `shapes-utility` | Load when authoring a Utility shape in a flow — smart-shape variants (data transform, notification, change-to-stage), plain-activity wiring, and variant differences |
-| `shapes-decision` | Load when authoring a Decision shape in a flow (any variant) — required fields, connector wiring, type-specific gotchas |
-| `shapes-genai` | Load when authoring a GenerativeAI shape in a flow — pxConnectToGenerativeAI wiring, pyGenAIPage sub-page, placeholder vs configured differences |
-| `shapes-parallel` | Load when authoring parallel execution in a flow — SplitForEach iteration, SplitJoin parallel branches, Fork shapes, and pyFromTasks wiring |
-| `connectors-and-mo-id-naming` | Load when wiring connectors between flow shapes — condition types, expressions, likelihoods, naming |
-| `routing-decision` | Load when a flow's Decision shape has multiple outgoing branches — ordering, pyFromTasks mirroring, multi-destination keying |
-| `flow-schema-vs-modeler-validation` | Load when a shape passes schema validation but renders incorrectly in Process Modeler — verification approach and common symptoms |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-obj-flow/references/blueprint-stub-discovery` | blueprint-stub-discovery | Load when working with a BluePrint-generated app to find stub shapes that need wiring |
+| `rules-rule-obj-flow/references/flow-creation-workflow` | flow-creation-workflow | Load when creating a brand-new flow from scratch |
+| `rules-rule-obj-flow/references/adding-steps-workflow` | adding-steps-workflow | Load when adding a new shape to an existing flow |
+| `rules-rule-obj-flow/references/enhancing-steps-workflow` | enhancing-steps-workflow | Load when modifying what an existing flow shape does — changing its backing rule without adding or removing shapes |
+| `rules-rule-obj-flow/references/flowaction-wiring-patterns` | flowaction-wiring-patterns | Load when creating or configuring a FlowAction for a flow's Assignment shape — view connection and field pitfalls |
+| `rules-rule-obj-flow/references/canvas-structure` | canvas-structure | Load when updating an existing flow's shapes or connectors — field sync rules and deep-merge |
+| `rules-rule-obj-flow/references/shapes-start-end` | shapes-start-end | Load when authoring Start or End shapes in a flow — field subsets, ScreenFlow Start variant, and Change-to-Stage End wiring |
+| `rules-rule-obj-flow/references/legacy-shape-ids` | legacy-shape-ids | Load when updating or recreating a pre-2020 imported flow that uses semantic shape IDs like FLOWEND or Fork592 instead of modern auto-generated IDs |
+| `rules-rule-obj-flow/references/shapes-subprocess` | shapes-subprocess | Load when authoring a SubProcess or Spinoff shape in a flow — shape fields, parameter passing, Spinoff subclass, and Annotation shapes |
+| `rules-rule-obj-flow/references/top-level-rollups` | top-level-rollups | Load when a flow needs rule-level summary lists that mirror shape-level data — pyUseCaseLinks, pyCoveredBy, pyTaskInfo, pxDataReferences |
+| `rules-rule-obj-flow/references/rule-level-fields` | rule-level-fields | Load when copying or recreating a flow and encountering unfamiliar rule-level fields |
+| `rules-rule-obj-flow/references/shapes-assignment` | shapes-assignment | Load when authoring an Assignment shape in a flow — routing fields, BPMN differences, ticket wiring |
+| `rules-rule-obj-flow/references/routing-assignment` | routing-assignment | Load when configuring who a flow's Assignment routes work to — current operator, worklist, or workbasket |
+| `rules-rule-obj-flow/references/shapes-utility` | shapes-utility | Load when authoring a Utility shape in a flow — smart-shape variants (data transform, notification, change-to-stage), plain-activity wiring, and variant differences |
+| `rules-rule-obj-flow/references/shapes-decision` | shapes-decision | Load when authoring a Decision shape in a flow (any variant) — required fields, connector wiring, type-specific gotchas |
+| `rules-rule-obj-flow/references/shapes-genai` | shapes-genai | Load when authoring a GenerativeAI shape in a flow — pxConnectToGenerativeAI wiring, pyGenAIPage sub-page, placeholder vs configured differences |
+| `rules-rule-obj-flow/references/shapes-parallel` | shapes-parallel | Load when authoring parallel execution in a flow — SplitForEach iteration, SplitJoin parallel branches, Fork shapes, and pyFromTasks wiring |
+| `rules-rule-obj-flow/references/connectors` | connectors-and-mo-id-naming | Load when wiring connectors between flow shapes — condition types, expressions, likelihoods, naming |
+| `rules-rule-obj-flow/references/routing-decision` | routing-decision | Load when a flow's Decision shape has multiple outgoing branches — ordering, pyFromTasks mirroring, multi-destination keying |
+| `rules-rule-obj-flow/references/schema-vs-modeler-validation` | flow-schema-vs-modeler-validation | Load when a shape passes schema validation but renders incorrectly in Process Modeler — verification approach and common symptoms |
 
 ## Verification Checklists
 
 **Schema-tolerated vs modeler-significant fields:** See
-`flow-schema-vs-modeler-validation` — schema validation alone is not
+`rules-rule-obj-flow/references/schema-vs-modeler-validation` — schema validation alone is not
 sufficient for flow shapes; fields the schema accepts may not render in
 Process Modeler.
 
@@ -315,56 +317,56 @@ Example descriptions follow the pattern: `Shape type → Shape type (variant) �
 
 ### Rule-level
 
-| Skill | Description | References |
-|-------|-------------|------------|
-| `flow-stub` | Start → End. Smallest valid FlowStandard create payload | |
-| `flow-screenflow` | Start → Assignment (ScreenFlow) → End. Minimal valid ScreenFlow create payload | `shapes-start-end` |
-| `flow-sparse-update` | Use when adding a shape to an existing flow via deep-merge update | `canvas-structure` |
-| `flow-sparse-update-single-field` | Use when updating a single field on an existing flow shape | `canvas-structure` |
-| `flow-assignment-step` | Start → Assignment (worklist) → End. Use when creating a flow that routes work to an operator worklist with a flow action | `shapes-assignment`, `routing-assignment`, `flowaction-wiring-patterns` |
-| `flow-conversation-flow-template` | Start → SubProcess (AskAQuestion) → End. Use when creating a ConversationFlow | `rule-level-fields` |
-| `flow-decision-step` | Start → Decision (DataXOR) → End, End. Use when creating a flow that branches on a property comparison with WHEN/ELSE connectors | `shapes-decision`, `routing-decision` |
-| `flow-fork-split-join` | Start → Decision → SplitJoin (SubProcess) → Decision (multi-destination) → End. Use when creating a flow with parallel branches | `shapes-parallel`, `routing-decision` |
-| `flow-genai-step` | Start → Utility (GenerativeAI) → End. Use when wiring a generative AI connector into a flow | `shapes-genai` |
-| `flow-loopback-cascading-approval` | Start → Utility → Decision → SubProcess (approval) → Utility → Decision (loopback) → End. Use when creating a cascading approval flow | `connectors-and-mo-id-naming`, `routing-decision`, `shapes-subprocess` |
-| `flow-notify-smart-shape` | Start → Utility (notification) → End. Use when wiring a notification smart-shape into a flow | `shapes-utility` |
-| `flow-split-foreach-subcase` | Start → Assignment (workbasket) → Utility → SplitForEach → SubProcess → End. Use when creating a BPMN flow that iterates a list and spawns sub-cases | `shapes-parallel` |
-| `flow-subprocess-approval` | Start → SubProcess (approval) → End. Use when wiring a pxApproval subprocess into a flow | `shapes-subprocess` |
-| `flow-utility-change-to-stage` | Start → Utility (change-to-stage) → End. Use when creating a flow that transitions to a different case stage | `shapes-utility` |
-| `flow-utility-data-transform` | Start → Utility (data transform) → End. Use when wiring a data transform smart-shape into a flow | `shapes-utility` |
-| `flow-utility-plain-activity` | Start → Utility (plain activity) → End. Use when wiring a plain activity into a flow | `shapes-utility` |
+| Skill | Label | Description | References |
+|---|---|---|---|
+| `rules-rule-obj-flow/examples/stub` | flow-stub | Start → End. Smallest valid FlowStandard create payload |  |
+| `rules-rule-obj-flow/examples/screenflow` | flow-screenflow | Start → Assignment (ScreenFlow) → End. Minimal valid ScreenFlow create payload | `rules-rule-obj-flow/references/shapes-start-end` |
+| `rules-rule-obj-flow/examples/sparse-update` | flow-sparse-update | Use when adding a shape to an existing flow via deep-merge update | `rules-rule-obj-flow/references/canvas-structure` |
+| `rules-rule-obj-flow/examples/sparse-update-single-field` | flow-sparse-update-single-field | Use when updating a single field on an existing flow shape | `rules-rule-obj-flow/references/canvas-structure` |
+| `rules-rule-obj-flow/examples/assignment-step` | flow-assignment-step | Start → Assignment (worklist) → End. Use when creating a flow that routes work to an operator worklist with a flow action | `rules-rule-obj-flow/references/shapes-assignment`, `rules-rule-obj-flow/references/routing-assignment`, `rules-rule-obj-flow/references/flowaction-wiring-patterns` |
+| `rules-rule-obj-flow/examples/conversation-flow-template` | flow-conversation-flow-template | Start → SubProcess (AskAQuestion) → End. Use when creating a ConversationFlow | `rules-rule-obj-flow/references/rule-level-fields` |
+| `rules-rule-obj-flow/examples/decision-step` | flow-decision-step | Start → Decision (DataXOR) → End, End. Use when creating a flow that branches on a property comparison with WHEN/ELSE connectors | `rules-rule-obj-flow/references/shapes-decision`, `rules-rule-obj-flow/references/routing-decision` |
+| `rules-rule-obj-flow/examples/fork-split-join` | flow-fork-split-join | Start → Decision → SplitJoin (SubProcess) → Decision (multi-destination) → End. Use when creating a flow with parallel branches | `rules-rule-obj-flow/references/shapes-parallel`, `rules-rule-obj-flow/references/routing-decision` |
+| `rules-rule-obj-flow/examples/genai-step` | flow-genai-step | Start → Utility (GenerativeAI) → End. Use when wiring a generative AI connector into a flow | `rules-rule-obj-flow/references/shapes-genai` |
+| `rules-rule-obj-flow/examples/loopback-cascading-approval` | flow-loopback-cascading-approval | Start → Utility → Decision → SubProcess (approval) → Utility → Decision (loopback) → End. Use when creating a cascading approval flow | `rules-rule-obj-flow/references/connectors`, `rules-rule-obj-flow/references/routing-decision`, `rules-rule-obj-flow/references/shapes-subprocess` |
+| `rules-rule-obj-flow/examples/notify-smart-shape` | flow-notify-smart-shape | Start → Utility (notification) → End. Use when wiring a notification smart-shape into a flow | `rules-rule-obj-flow/references/shapes-utility` |
+| `rules-rule-obj-flow/examples/split-foreach-subcase` | flow-split-foreach-subcase | Start → Assignment (workbasket) → Utility → SplitForEach → SubProcess → End. Use when creating a BPMN flow that iterates a list and spawns sub-cases | `rules-rule-obj-flow/references/shapes-parallel` |
+| `rules-rule-obj-flow/examples/subprocess-approval` | flow-subprocess-approval | Start → SubProcess (approval) → End. Use when wiring a pxApproval subprocess into a flow | `rules-rule-obj-flow/references/shapes-subprocess` |
+| `rules-rule-obj-flow/examples/utility-change-to-stage` | flow-utility-change-to-stage | Start → Utility (change-to-stage) → End. Use when creating a flow that transitions to a different case stage | `rules-rule-obj-flow/references/shapes-utility` |
+| `rules-rule-obj-flow/examples/utility-data-transform` | flow-utility-data-transform | Start → Utility (data transform) → End. Use when wiring a data transform smart-shape into a flow | `rules-rule-obj-flow/references/shapes-utility` |
+| `rules-rule-obj-flow/examples/utility-plain-activity` | flow-utility-plain-activity | Start → Utility (plain activity) → End. Use when wiring a plain activity into a flow | `rules-rule-obj-flow/references/shapes-utility` |
 
 ### Shape-level
 
-| Skill | Shape type | Description | References |
-|-------|-----------|-------------|------------|
-| `flow-shape-start` | Start | Use when adding a Start shape as the entry point of a FlowStandard flow | `shapes-start-end` |
-| `flow-shape-start-screenflow` | Start (screen flow) | Use when adding a Start (screen flow) shape as the entry point of a ScreenFlow | `shapes-start-end` |
-| `flow-shape-end` | End | Use when adding an End shape as the terminal point of a flow | `shapes-start-end` |
-| `flow-shape-assignment-worklist` | Assignment (worklist) | Use when adding an Assignment (worklist) shape to a flow | `shapes-assignment`, `routing-assignment` |
-| `flow-shape-assignment-workbasket` | Assignment (workbasket) | Use when adding an Assignment (workbasket) shape to a flow | `shapes-assignment`, `routing-assignment` |
-| `flow-shape-assignment-screenflow` | Assignment (ScreenFlow) | Use when adding an Assignment (ScreenFlow) shape. Shows FlowAction wiring for a screen flow step | `shapes-assignment`, `flowaction-wiring-patterns` |
-| `flow-shape-utility-activity` | Utility (activity) | Use when adding a Utility (activity) shape that calls an activity directly | `shapes-utility` |
-| `flow-shape-utility-data-transform` | Utility (data transform) | Use when adding a Utility (data transform) shape that runs a data transform via pzRunDataTransform | `shapes-utility` |
-| `flow-shape-utility-data-transform-screenflow` | Utility (data transform, ScreenFlow) | Use when adding a Utility (data transform) shape to a ScreenFlow — ScreenFlow category stamps and verified Modeler-compatible fields | `shapes-utility` |
-| `flow-shape-utility-notification` | Utility (notification) | Use when adding a Utility (notification) shape that sends a notification via pzNotifyWrapper | `shapes-utility` |
-| `flow-shape-generative-ai` | Utility (generative AI) | Use when adding a Utility (generative AI) shape that invokes a Rule-Connect-GenerativeAI connector | `shapes-genai`, `shapes-utility` |
-| `flow-shape-subprocess` | SubProcess | Use when adding a SubProcess shape that calls another flow within the current case | `shapes-subprocess` |
-| `flow-shape-subprocess-screenflow` | SubProcess (screen flow) | Use when adding a SubProcess (screen flow) shape that calls another screen flow within the current case | `shapes-subprocess` |
-| `flow-shape-decision-expression` | Decision (expression) | Use when adding a Decision (expression) shape to a flow that branches on a boolean property reference | `shapes-decision`, `routing-decision`, `connectors-and-mo-id-naming` |
-| `flow-shape-decision-table` | Decision (decision table) | Use when adding a Decision (decision table) shape to a flow that branches via a decision table | `shapes-decision`, `routing-decision`, `connectors-and-mo-id-naming` |
-| `flow-shape-decision-tree` | Decision (decision tree) | Use when adding a Decision (decision tree) shape to a flow that branches via a decision tree | `shapes-decision`, `routing-decision`, `connectors-and-mo-id-naming` |
-| `flow-shape-decision-fork` | Decision (fork) | Use when adding a Decision (fork) shape to a flow that branches on a property value | `shapes-decision`, `routing-decision`, `connectors-and-mo-id-naming` |
-| `flow-shape-decision-map-value` | Decision (map value) | Use when adding a Decision (map value) shape to a flow that branches via a map value lookup | `shapes-decision`, `routing-decision`, `connectors-and-mo-id-naming` |
-| `flow-shape-decision-predictive-model` | Decision (predictive model) | Use when adding a Decision (predictive model) shape to a flow that branches on a model propensity score | `shapes-decision`, `routing-decision`, `connectors-and-mo-id-naming` |
-| `flow-shape-decision-scorecard` | Decision (scorecard) | Use when adding a Decision (scorecard) shape to a flow that branches on a weighted score | `shapes-decision`, `routing-decision`, `connectors-and-mo-id-naming` |
-| `flow-shape-wait-timer` | Wait (timer) | Use when adding a Wait (timer) shape that pauses flow execution until a timer fires | `shapes-assignment`, `routing-assignment` |
-| `flow-shape-send-a-message` | SubProcess (send a message) | Use when adding a SubProcess (send a message) shape to a ConversationFlow | `shapes-subprocess` |
-| `flow-connector-status` | Connector (status) | Use when adding a Status connector to a flow Decision shape that fires on a specific result | `connectors-and-mo-id-naming`, `shapes-decision` |
-| `flow-connector-else` | Connector (else) | Use when adding a default Else connector to a flow Decision shape | `connectors-and-mo-id-naming`, `shapes-decision` |
+| Skill | Label | Shape type | Description | References |
+|---|---|---|---|---|
+| `rules-rule-obj-flow/examples/shapes/start` | flow-shape-start | Start | Use when adding a Start shape as the entry point of a FlowStandard flow | `rules-rule-obj-flow/references/shapes-start-end` |
+| `rules-rule-obj-flow/examples/shapes/start-screenflow` | flow-shape-start-screenflow | Start (screen flow) | Use when adding a Start (screen flow) shape as the entry point of a ScreenFlow | `rules-rule-obj-flow/references/shapes-start-end` |
+| `rules-rule-obj-flow/examples/shapes/end` | flow-shape-end | End | Use when adding an End shape as the terminal point of a flow | `rules-rule-obj-flow/references/shapes-start-end` |
+| `rules-rule-obj-flow/examples/shapes/assignment-worklist` | flow-shape-assignment-worklist | Assignment (worklist) | Use when adding an Assignment (worklist) shape to a flow | `rules-rule-obj-flow/references/shapes-assignment`, `rules-rule-obj-flow/references/routing-assignment` |
+| `rules-rule-obj-flow/examples/shapes/assignment-workbasket` | flow-shape-assignment-workbasket | Assignment (workbasket) | Use when adding an Assignment (workbasket) shape to a flow | `rules-rule-obj-flow/references/shapes-assignment`, `rules-rule-obj-flow/references/routing-assignment` |
+| `rules-rule-obj-flow/examples/shapes/assignment-screenflow` | flow-shape-assignment-screenflow | Assignment (ScreenFlow) | Use when adding an Assignment (ScreenFlow) shape. Shows FlowAction wiring for a screen flow step | `rules-rule-obj-flow/references/shapes-assignment`, `rules-rule-obj-flow/references/flowaction-wiring-patterns` |
+| `rules-rule-obj-flow/examples/shapes/utility-activity` | flow-shape-utility-activity | Utility (activity) | Use when adding a Utility (activity) shape that calls an activity directly | `rules-rule-obj-flow/references/shapes-utility` |
+| `rules-rule-obj-flow/examples/shapes/utility-data-transform` | flow-shape-utility-data-transform | Utility (data transform) | Use when adding a Utility (data transform) shape that runs a data transform via pzRunDataTransform | `rules-rule-obj-flow/references/shapes-utility` |
+| `rules-rule-obj-flow/examples/shapes/utility-data-transform-screenflow` | flow-shape-utility-data-transform-screenflow | Utility (data transform, ScreenFlow) | Use when adding a Utility (data transform) shape to a ScreenFlow — ScreenFlow category stamps and verified Modeler-compatible fields | `rules-rule-obj-flow/references/shapes-utility` |
+| `rules-rule-obj-flow/examples/shapes/utility-notification` | flow-shape-utility-notification | Utility (notification) | Use when adding a Utility (notification) shape that sends a notification via pzNotifyWrapper | `rules-rule-obj-flow/references/shapes-utility` |
+| `rules-rule-obj-flow/examples/shapes/generative-ai` | flow-shape-generative-ai | Utility (generative AI) | Use when adding a Utility (generative AI) shape that invokes a Rule-Connect-GenerativeAI connector | `rules-rule-obj-flow/references/shapes-genai`, `rules-rule-obj-flow/references/shapes-utility` |
+| `rules-rule-obj-flow/examples/shapes/subprocess` | flow-shape-subprocess | SubProcess | Use when adding a SubProcess shape that calls another flow within the current case | `rules-rule-obj-flow/references/shapes-subprocess` |
+| `rules-rule-obj-flow/examples/shapes/subprocess-screenflow` | flow-shape-subprocess-screenflow | SubProcess (screen flow) | Use when adding a SubProcess (screen flow) shape that calls another screen flow within the current case | `rules-rule-obj-flow/references/shapes-subprocess` |
+| `rules-rule-obj-flow/examples/shapes/decision-expression` | flow-shape-decision-expression | Decision (expression) | Use when adding a Decision (expression) shape to a flow that branches on a boolean property reference | `rules-rule-obj-flow/references/shapes-decision`, `rules-rule-obj-flow/references/routing-decision`, `rules-rule-obj-flow/references/connectors` |
+| `rules-rule-obj-flow/examples/shapes/decision-table` | flow-shape-decision-table | Decision (decision table) | Use when adding a Decision (decision table) shape to a flow that branches via a decision table | `rules-rule-obj-flow/references/shapes-decision`, `rules-rule-obj-flow/references/routing-decision`, `rules-rule-obj-flow/references/connectors` |
+| `rules-rule-obj-flow/examples/shapes/decision-tree` | flow-shape-decision-tree | Decision (decision tree) | Use when adding a Decision (decision tree) shape to a flow that branches via a decision tree | `rules-rule-obj-flow/references/shapes-decision`, `rules-rule-obj-flow/references/routing-decision`, `rules-rule-obj-flow/references/connectors` |
+| `rules-rule-obj-flow/examples/shapes/decision-fork` | flow-shape-decision-fork | Decision (fork) | Use when adding a Decision (fork) shape to a flow that branches on a property value | `rules-rule-obj-flow/references/shapes-decision`, `rules-rule-obj-flow/references/routing-decision`, `rules-rule-obj-flow/references/connectors` |
+| `rules-rule-obj-flow/examples/shapes/decision-map-value` | flow-shape-decision-map-value | Decision (map value) | Use when adding a Decision (map value) shape to a flow that branches via a map value lookup | `rules-rule-obj-flow/references/shapes-decision`, `rules-rule-obj-flow/references/routing-decision`, `rules-rule-obj-flow/references/connectors` |
+| `rules-rule-obj-flow/examples/shapes/decision-predictive-model` | flow-shape-decision-predictive-model | Decision (predictive model) | Use when adding a Decision (predictive model) shape to a flow that branches on a model propensity score | `rules-rule-obj-flow/references/shapes-decision`, `rules-rule-obj-flow/references/routing-decision`, `rules-rule-obj-flow/references/connectors` |
+| `rules-rule-obj-flow/examples/shapes/decision-scorecard` | flow-shape-decision-scorecard | Decision (scorecard) | Use when adding a Decision (scorecard) shape to a flow that branches on a weighted score | `rules-rule-obj-flow/references/shapes-decision`, `rules-rule-obj-flow/references/routing-decision`, `rules-rule-obj-flow/references/connectors` |
+| `rules-rule-obj-flow/examples/shapes/wait-timer` | flow-shape-wait-timer | Wait (timer) | Use when adding a Wait (timer) shape that pauses flow execution until a timer fires | `rules-rule-obj-flow/references/shapes-assignment`, `rules-rule-obj-flow/references/routing-assignment` |
+| `rules-rule-obj-flow/examples/shapes/send-a-message` | flow-shape-send-a-message | SubProcess (send a message) | Use when adding a SubProcess (send a message) shape to a ConversationFlow | `rules-rule-obj-flow/references/shapes-subprocess` |
+| `rules-rule-obj-flow/examples/shapes/connector-status` | flow-connector-status | Connector (status) | Use when adding a Status connector to a flow Decision shape that fires on a specific result | `rules-rule-obj-flow/references/connectors`, `rules-rule-obj-flow/references/shapes-decision` |
+| `rules-rule-obj-flow/examples/shapes/connector-else` | flow-connector-else | Connector (else) | Use when adding a default Else connector to a flow Decision shape | `rules-rule-obj-flow/references/connectors`, `rules-rule-obj-flow/references/shapes-decision` |
 
 ### Component-level
 
-| Skill | Description | References |
-|-------|-------------|------------|
-| `flow-local-action` | Use when wiring a FlowAction to a flow via a pyLocalActions entry | `flowaction-wiring-patterns` |
+| Skill | Label | Description | References |
+|---|---|---|---|
+| `rules-rule-obj-flow/examples/pyLocalActions/local-action` | flow-local-action | Use when wiring a FlowAction to a flow via a pyLocalActions entry | `rules-rule-obj-flow/references/flowaction-wiring-patterns` |

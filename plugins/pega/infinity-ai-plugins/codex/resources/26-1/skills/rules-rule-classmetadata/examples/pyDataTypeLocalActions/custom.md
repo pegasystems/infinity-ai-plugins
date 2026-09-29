@@ -1,6 +1,6 @@
 ---
 name: classmetadata-local-action-custom
-description: A Custom data-type action — pick this subclass when the action is not one of the OOTB UpdateDetails / Add / Delete operations. Wire pyActionName / pyActionLabel to the application-specific behaviour.
+description: Load when adding an application-specific row to pyDataTypeLocalActions. Contains the Custom action payload.
 ---
 
 ```json

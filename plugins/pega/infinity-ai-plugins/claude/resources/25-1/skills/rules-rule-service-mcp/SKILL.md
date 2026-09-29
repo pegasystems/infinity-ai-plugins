@@ -7,12 +7,12 @@ description: Load when authoring Rule-Service-MCP rules. Covers tool configurati
 
 ## Examples
 
-| Skill | Description |
-|-------|-------------|
-| `Minimal MCP Service` | Smallest valid Rule-Service-MCP create payload -- MCP service with no custom tools. |
-| `MCP Service with Custom Tools` | MCP service with custom tools configured for case management and knowledge agent integration. |
-| `MCP Service with Case Type Tools` | MCP service with case type tools configured to expose specific case types as MCP tools. |
-| `MCP Service with Multiple Categories` | MCP service with tools spanning automation and data page categories |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-service-mcp/examples/stub` | Minimal MCP Service | Smallest valid Rule-Service-MCP create payload -- MCP service with no custom tools. |
+| `rules-rule-service-mcp/examples/with-custom-tools` | MCP Service with Custom Tools | MCP service with custom tools configured for case management and knowledge agent integration. |
+| `rules-rule-service-mcp/examples/with-casetype-tools` | MCP Service with Case Type Tools | MCP service with case type tools configured to expose specific case types as MCP tools. |
+| `rules-rule-service-mcp/examples/multi-category` | MCP Service with Multiple Categories | MCP service with tools spanning automation and data page categories |
 
 ## Mandatory Pre-Creation Workflow: Tool Configuration
 

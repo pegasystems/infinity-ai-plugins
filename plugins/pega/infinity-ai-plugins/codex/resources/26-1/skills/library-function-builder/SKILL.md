@@ -148,121 +148,121 @@ without arguments and always evaluates with empty strings.
 
 ### Comparison
 
-| Skill | Description |
-|-------|-------------|
-| `CompareTwoValues` | [first value] [relation] [second value] |
-| `CompareTwoNumbers` | [first number] [relation] [second number] |
-| `CompareTwoDateTimes` | [First DateTime] [relation] [Second DateTime] |
-| `pxCompareDateTimes` | compare DateTimes using [lDate] [relation] [rDate] |
+| Skill | Label | Description |
+|---|---|---|
+| `library-function-builder/examples/compare-two-values` | CompareTwoValues | [first value] [relation] [second value] |
+| `library-function-builder/examples/compare-two-numbers` | CompareTwoNumbers | [first number] [relation] [second number] |
+| `library-function-builder/examples/compare-two-date-times` | CompareTwoDateTimes | [First DateTime] [relation] [Second DateTime] |
+| `library-function-builder/examples/px-compare-date-times` | pxCompareDateTimes | compare DateTimes using [lDate] [relation] [rDate] |
 
 ### String
 
-| Skill | Description |
-|-------|-------------|
-| `compareTwoStrings` | [first String] [relation] [Second String] |
-| `StringEquals` | [the first string] equals [the second string] |
-| `StringEqualsIgnoreCase` | [first string] equals (ignore case) [second string] |
-| `StringNotEqualsIgnoreCase` | [first string] does not equal (ignore case) [second string] |
-| `contains` | [string to search on] contains [string to search for] |
-| `pzContainsIgnoreCase` | [string to search on] contains (ignore case) [string to search for] |
+| Skill | Label | Description |
+|---|---|---|
+| `library-function-builder/examples/compare-two-strings` | compareTwoStrings | [first String] [relation] [Second String] |
+| `library-function-builder/examples/string-equals` | StringEquals | [the first string] equals [the second string] |
+| `library-function-builder/examples/string-equals-ignore-case` | StringEqualsIgnoreCase | [first string] equals (ignore case) [second string] |
+| `library-function-builder/examples/string-not-equals-ignore-case` | StringNotEqualsIgnoreCase | [first string] does not equal (ignore case) [second string] |
+| `library-function-builder/examples/contains` | contains | [string to search on] contains [string to search for] |
+| `library-function-builder/examples/pz-contains-ignore-case` | pzContainsIgnoreCase | [string to search on] contains (ignore case) [string to search for] |
 
 ### Null/value
 
-| Skill | Description |
-|-------|-------------|
-| `PropertyHasValue` | [property reference] has a value |
-| `PropertyExistsAndHasValue` | Property [strReference] exists and has a value |
-| `LocalEvaluateProperty` | value is [expression] |
+| Skill | Label | Description |
+|---|---|---|
+| `library-function-builder/examples/property-has-value` | PropertyHasValue | [property reference] has a value |
+| `library-function-builder/examples/property-exists-and-has-value` | PropertyExistsAndHasValue | Property [strReference] exists and has a value |
+| `library-function-builder/examples/local-evaluate-property` | LocalEvaluateProperty | value is [expression] |
 
 ### Property
 
-| Skill | Description |
-|-------|-------------|
-| `setPropertyValue` | Set [Property] equal to [Value] |
+| Skill | Label | Description |
+|---|---|---|
+| `library-function-builder/examples/set-property-value` | setPropertyValue | Set [Property] equal to [Value] |
 
 ### Date/time
 
-| Skill | Description |
-|-------|-------------|
-| `CurrentDateTime` | the current DateTime (GMT) |
-| `pxCompareDateTimeToSymbolicDate` | Compare [date] using [comparator] to [symbolic date] |
-| `pxDateTimeisPastOrFuture` | [a datetime] is in the [past/future] |
-| `WithinDaysOfNow` | [date] is within [num] days of the current time |
-| `CreatedRecently` | created within the last [num] days |
-| `ResolvedRecently` | resolved within the last [num] days |
+| Skill | Label | Description |
+|---|---|---|
+| `library-function-builder/examples/current-date-time` | CurrentDateTime | the current DateTime (GMT) |
+| `library-function-builder/examples/px-compare-date-time-to-symbolic-date` | pxCompareDateTimeToSymbolicDate | Compare [date] using [comparator] to [symbolic date] |
+| `library-function-builder/examples/px-date-timeis-past-or-future` | pxDateTimeisPastOrFuture | [a datetime] is in the [past/future] |
+| `library-function-builder/examples/within-days-of-now` | WithinDaysOfNow | [date] is within [num] days of the current time |
+| `library-function-builder/examples/created-recently` | CreatedRecently | created within the last [num] days |
+| `library-function-builder/examples/resolved-recently` | ResolvedRecently | resolved within the last [num] days |
 
 ### Math
 
-| Skill | Description |
-|-------|-------------|
-| `MathGreaterThan` | [first number] is greater than [second number] |
-| `MathGreaterThanEqualTo` | [first number] is greater than or equal to [second number] |
-| `MathLessThan` | [the first number] is less than [the second number] |
-| `MathLessThanEqualTo` | [the first number] is less than or equal to [the second number] |
+| Skill | Label | Description |
+|---|---|---|
+| `library-function-builder/examples/math-greater-than` | MathGreaterThan | [first number] is greater than [second number] |
+| `library-function-builder/examples/math-greater-than-equal-to` | MathGreaterThanEqualTo | [first number] is greater than or equal to [second number] |
+| `library-function-builder/examples/math-less-than` | MathLessThan | [the first number] is less than [the second number] |
+| `library-function-builder/examples/math-less-than-equal-to` | MathLessThanEqualTo | [the first number] is less than or equal to [the second number] |
 
 ### Page-list membership
 
-| Skill | Description |
-|-------|-------------|
-| `pxValueIsInPageList` | [Pagelist Name] contains a page where [Property Name] equals [Value] |
-| `pxValueIsNotInPageList` | [pagelist to look in] does not contain a page where [property name to look at] equals [value to look for] |
-| `pxIsInPageListWhen` | [pagelist to look in] contains a page where [when record] evaluates to true |
-| `pxPageListLengthCompare` | length of [a pagelist property] is [comparison operator] [value] |
-| `pxHasPagesCountInPageListWhen` | [page list to look in] contains pages with count [comparator] [count to check the match] where [whenName] evaluates to true |
+| Skill | Label | Description |
+|---|---|---|
+| `library-function-builder/examples/px-value-is-in-page-list` | pxValueIsInPageList | [Pagelist Name] contains a page where [Property Name] equals [Value] |
+| `library-function-builder/examples/px-value-is-not-in-page-list` | pxValueIsNotInPageList | [pagelist to look in] does not contain a page where [property name to look at] equals [value to look for] |
+| `library-function-builder/examples/px-is-in-page-list-when` | pxIsInPageListWhen | [pagelist to look in] contains a page where [when record] evaluates to true |
+| `library-function-builder/examples/px-page-list-length-compare` | pxPageListLengthCompare | length of [a pagelist property] is [comparison operator] [value] |
+| `library-function-builder/examples/px-has-pages-count-in-page-list-when` | pxHasPagesCountInPageListWhen | [page list to look in] contains pages with count [comparator] [count to check the match] where [whenName] evaluates to true |
 
 ### List-of-values
 
-| Skill | Description |
-|-------|-------------|
-| `pxIsInListOfValues` | [value] is in [list of values] |
-| `pxIsNotInListOfValues` | [value] is not in [list of values] |
-| `pxIsInListOfValuesWCB` | [value] is in [list of values] |
-| `pxIsNotInListOfValuesWCB` | [value to search for] is not in [list of values] |
-| `pxIsInListOfValuesInPageList` | [the property list to look in] contains a page where [the property name to get value of] is in [comma delimited list of values to compare against] |
-| `pxIsNotInListOfValuesInPageList` | [the property list to look in] does not contain a page where [the property name to get value of] is in [comma delimited list of values to compare against] |
-| `pxIsInListOfValuesWCBInPageList` | [lookIn] contains a page where [lookAt] is in [listOfValues] |
-| `pxIsNotInListOfValuesWCBInPageList` | [the property list to look in] does not contain a page where [the property name to get value of] is in [comma delimited list of values to compare against] |
+| Skill | Label | Description |
+|---|---|---|
+| `library-function-builder/examples/px-is-in-list-of-values` | pxIsInListOfValues | [value] is in [list of values] |
+| `library-function-builder/examples/px-is-not-in-list-of-values` | pxIsNotInListOfValues | [value] is not in [list of values] |
+| `library-function-builder/examples/px-is-in-list-of-values-wcb` | pxIsInListOfValuesWCB | [value] is in [list of values] |
+| `library-function-builder/examples/px-is-not-in-list-of-values-wcb` | pxIsNotInListOfValuesWCB | [value to search for] is not in [list of values] |
+| `library-function-builder/examples/px-is-in-list-of-values-in-page-list` | pxIsInListOfValuesInPageList | [the property list to look in] contains a page where [the property name to get value of] is in [comma delimited list of values to compare against] |
+| `library-function-builder/examples/px-is-not-in-list-of-values-in-page-list` | pxIsNotInListOfValuesInPageList | [the property list to look in] does not contain a page where [the property name to get value of] is in [comma delimited list of values to compare against] |
+| `library-function-builder/examples/px-is-in-list-of-values-wcb-in-page-list` | pxIsInListOfValuesWCBInPageList | [lookIn] contains a page where [lookAt] is in [listOfValues] |
+| `library-function-builder/examples/px-is-not-in-list-of-values-wcb-in-page-list` | pxIsNotInListOfValuesWCBInPageList | [the property list to look in] does not contain a page where [the property name to get value of] is in [comma delimited list of values to compare against] |
 
 ### When delegation
 
-| Skill | Description |
-|-------|-------------|
-| `Rule-Obj-When` | Rule [When record] evaluates to true |
-| `pzRule-Obj-Whenfalse` | Rule [R-O-When] evaluates to false |
-| `pxCallWhenUsingPage` | Call when [blockName] using page [stepPage] evaluates to [evaluatesTo] |
+| Skill | Label | Description |
+|---|---|---|
+| `library-function-builder/examples/rule-obj-when` | Rule-Obj-When | Rule [When record] evaluates to true |
+| `library-function-builder/examples/pz-rule-obj-whenfalse` | pzRule-Obj-Whenfalse | Rule [R-O-When] evaluates to false |
+| `library-function-builder/examples/px-call-when-using-page` | pxCallWhenUsingPage | Call when [blockName] using page [stepPage] evaluates to [evaluatesTo] |
 
 ### Collection eval
 
-| Skill | Description |
-|-------|-------------|
-| `pyCollectionEvalReturnBoolean` | Return value is [True / False] |
-| `pyCollectionEvalReturnNumber` | Return value [relation] [number] |
-| `pyCollectionEvalReturnDate` | Return value [relation] [Second DateTime] |
-| `pyCollectionEvalReturnString` | Return value [relation] [Second String] |
-| `pyCollectionHasReturnValue` | Return value has value |
+| Skill | Label | Description |
+|---|---|---|
+| `library-function-builder/examples/py-collection-eval-return-boolean` | pyCollectionEvalReturnBoolean | Return value is [True / False] |
+| `library-function-builder/examples/py-collection-eval-return-number` | pyCollectionEvalReturnNumber | Return value [relation] [number] |
+| `library-function-builder/examples/py-collection-eval-return-date` | pyCollectionEvalReturnDate | Return value [relation] [Second DateTime] |
+| `library-function-builder/examples/py-collection-eval-return-string` | pyCollectionEvalReturnString | Return value [relation] [Second String] |
+| `library-function-builder/examples/py-collection-has-return-value` | pyCollectionHasReturnValue | Return value has value |
 
 ### Validation/toggle
 
-| Skill | Description |
-|-------|-------------|
-| `invokeValidate` | Validation of [Property Name] using [Edit Validate Name] fails |
-| `pzIsToggleEnabled` | Is Toggle Enabled using [ToggleType] [ToggleIdentifier] |
-| `pxIsAttachmentOfCategoryInCase` | A [attachment category] is [attached/not attached] to the current case |
-| `pxAssignedToMyStaff` | Check if assignment is to current operator's staff |
+| Skill | Label | Description |
+|---|---|---|
+| `library-function-builder/examples/invoke-validate` | invokeValidate | Validation of [Property Name] using [Edit Validate Name] fails |
+| `library-function-builder/examples/pz-is-toggle-enabled` | pzIsToggleEnabled | Is Toggle Enabled using [ToggleType] [ToggleIdentifier] |
+| `library-function-builder/examples/px-is-attachment-of-category-in-case` | pxIsAttachmentOfCategoryInCase | A [attachment category] is [attached/not attached] to the current case |
+| `library-function-builder/examples/px-assigned-to-my-staff` | pxAssignedToMyStaff | Check if assignment is to current operator's staff |
 
 ### Free-form
 
-| Skill | Description |
-|-------|-------------|
-| `1FreeFormExpressionBoolean` | [expression evaluates to true] |
+| Skill | Label | Description |
+|---|---|---|
+| `library-function-builder/examples/1-free-form-expression-boolean` | 1FreeFormExpressionBoolean | [expression evaluates to true] |
 
 ### Date comparison (days)
 
-| Skill | Description |
-|-------|-------------|
-| `CompareDatesInDays` | [first date] is a full day or more after [second date] |
-| `CompareDates` | [first date] is on the next day or later than [second date] using [daysOnly] |
-| `CompareDateTimes` | [first date] is after [second date] |
+| Skill | Label | Description |
+|---|---|---|
+| `library-function-builder/examples/compare-dates-in-days` | CompareDatesInDays | [first date] is a full day or more after [second date] |
+| `library-function-builder/examples/compare-dates` | CompareDates | [first date] is on the next day or later than [second date] using [daysOnly] |
+| `library-function-builder/examples/compare-date-times` | CompareDateTimes | [first date] is after [second date] |
 
 ## Key Authoring Rules
 
@@ -342,7 +342,7 @@ without arguments and always evaluates with empty strings.
     `pxIsInListOfValuesInPageList`), and all `*InPageList` counterparts.
     Only plain `pxIsNotInListOfValues` (non-WCB, non-PageList) accepts a
      bare `"CA,NY,TX"`; when in doubt, apply the full template. See
-     `examples/px-is-in-list-of-values.md`.
+     `library-function-builder/examples/px-is-in-list-of-values`.
 13. **`Values` dropdown params need BOTH `pyParametersParamIntelliValidateAs`
     AND `pyParametersParamDropdownValues`** — and they must appear on BOTH the
     `pyParameters[*]` entry AND its mirror in `pyUIParameters[*]`. Setting
@@ -404,5 +404,5 @@ For the full catalogue of validated Pega expression functions
 **`library/string-manipulation`**, **`library/numeric-and-math`**,
 **`library/date-and-time`**, and **`library/collection-operations`**.
 
-See `examples/1-free-form-expression-boolean.md` for the full pitfalls section
+See `library-function-builder/examples/1-free-form-expression-boolean` for the full pitfalls section
 and copy-ready expression patterns.
