@@ -1,0 +1,241 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-ruleset-version.json",
+  "title": "Rule-RuleSet-Version",
+  "description": "JSON schema for creating or updating a Pega ruleset version record (Rule-RuleSet-Version). This is an infrastructure rule type with no class association. pyRuleSetVersion is always empty — the version identifier is pyRuleSetVersionID.",
+  "type": "object",
+  "required": [
+    "pxObjClass",
+    "pyRuleSetName",
+    "pyRuleSetVersionID",
+    "pyLabel"
+  ],
+  "properties": {
+    "pxObjClass": {
+      "type": "string",
+      "const": "Rule-RuleSet-Version",
+      "description": "Rule type class — always 'Rule-RuleSet-Version'.",
+      "x-pega-autoFill": "Rule-RuleSet-Version"
+    },
+    "pyRuleSet": {
+      "type": "string",
+      "description": "Self-referential — always equals pyRuleSetName. The server forces this on save.",
+      "x-pega-autoDerived": true,
+      "x-pega-deriveFrom": "pyRuleSetName"
+    },
+    "pyRuleSetName": {
+      "type": "string",
+      "description": "The ruleset name — must match pyRuleSet. Required by the server to validate the parent Rule-RuleSet-Name exists. Without this field, version creation fails with 'Unknown RuleSet'."
+    },
+    "pyRuleSetVersionID": {
+      "type": "string",
+      "pattern": "^[0-9]{2}-[0-9]{2}-[0-9]{2}$",
+      "description": "Version number in MAJOR-MINOR-PATCH format with two-digit zero-padded segments (e.g., '01-01-01'). Cannot be '00-00-00'.",
+      "x-pega-autoFill": "01-01-01",
+      "x-pega-hints": {
+        "1.0.0": "01-01-01",
+        "1-1-1": "01-01-01",
+        "01.01.01": "01-01-01"
+      }
+    },
+    "pyLabel": {
+      "type": "string",
+      "description": "Display label — convention is '{RuleSetName}:{Version}' (e.g., 'MyApp:01-01-01').",
+      "x-pega-autoFill": "{pyRuleSetName}:{pyRuleSetVersionID}"
+    },
+    "pyDescription": {
+      "type": "string",
+      "description": "Human-readable description of what is in this version."
+    },
+    "pyRuleSetVersionEffectiveDate": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+      "description": "Date the version became (or becomes) effective — format 'YYYY-MM-DD'. Auto-generated from pxCreateDateTime when blank.",
+      "x-pega-autoFill": "{currentDate}"
+    },
+    "pyVersionSecure": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "'true' to password-protect rule checkout in this version.",
+      "x-pega-hints": {
+        "True": "true",
+        "False": "false"
+      }
+    },
+    "pyVersionPassword": {
+      "type": "string",
+      "description": "Bcrypt-hashed password (set when pyVersionSecure is 'true'). Leave empty for unsecured versions. Cannot be set as plaintext via the API."
+    },
+    "pyRequiresApproval": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "'true' to require approval for rule check-in in this version.",
+      "x-pega-hints": {
+        "True": "true",
+        "False": "false"
+      }
+    },
+    "pyDisplayMode": {
+      "type": "string",
+      "description": "Display mode for Dev Studio UI — typically 'advanced' or ''."
+    },
+    "pyRulePrefix": {
+      "type": "string",
+      "description": "Custom prefix applied to rule names created in this version (usually '')."
+    },
+    "pyUsage": {
+      "type": "string",
+      "description": "Brief usage note — same convention as pyLabel ('{RuleSetName}:{Version}')."
+    },
+    "pyBranchRuleSet": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "'true' if this version record belongs to a branch ruleset.",
+      "x-pega-hints": {
+        "True": "true",
+        "False": "false"
+      }
+    },
+    "pyBranchID": {
+      "type": "string",
+      "description": "Branch only. The branch identifier — must match the pyBranchID on the parent Rule-RuleSet-Name."
+    },
+    "pyBranchOrigin": {
+      "type": "string",
+      "description": "Branch only. The base ruleset this branch was created from — must match the pyBranchOrigin on the parent Rule-RuleSet-Name."
+    },
+    "pyRequiresRuleSetVersion": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Dependency declarations — each entry is '{RuleSetName}:{Version}' (e.g., 'Pega-ProcessCommander:08-01-01'). At least one prerequisite is required unless the ruleset is Pega-RULES."
+    },
+    "pyRequiresRuleSetVersionPageList": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/EmbedRuleRuleSetVersion"
+      },
+      "description": "Page-list mirror of pyRequiresRuleSetVersion (same data, different format). Populate pyRequiresRuleSetVersion only — the server mirrors the data into this field on save."
+    },
+    "pyComponentEntryPoints": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/EmbedComponentEntryPoints"
+      },
+      "description": "Entry points this ruleset exposes (Component framework). Empty for standard application rulesets."
+    },
+    "pyDeclarativeComponentCallbacks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/EmbedDeclarativeComponentCallbacks"
+      },
+      "description": "Declarative callbacks (Component framework). Empty for standard application rulesets."
+    },
+    "pyRuleAvailable": {
+      "type": "string",
+      "enum": ["Yes", "No", "Withdrawn"],
+      "description": "Availability status.",
+      "x-pega-autoFill": "Yes"
+    },
+    "pyRuleSetVersion": {
+      "type": "string",
+      "const": "",
+      "description": "Always empty for Rule-RuleSet-Version (the version identifier is pyRuleSetVersionID, not this field).",
+      "x-pega-autoDerived": true
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "pyBranchRuleSet": { "const": "true" }
+        },
+        "required": ["pyBranchRuleSet"]
+      },
+      "then": {
+        "required": ["pyBranchID", "pyBranchOrigin"],
+        "properties": {
+          "pyRuleSetVersionID": { "const": "01-01-01" }
+        },
+        "x-pega-condition": "pyBranchRuleSet is 'true'"
+      },
+      "else": {
+        "required": ["pyDescription"],
+        "x-pega-condition": "pyBranchRuleSet is not 'true'"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "pyRuleSetName": { "pattern": "_Branch_" }
+        },
+        "required": ["pyRuleSetName"]
+      },
+      "then": {
+        "properties": {
+          "pyBranchRuleSet": { "const": "true" }
+        },
+        "required": ["pyBranchRuleSet"],
+        "x-pega-condition": "pyRuleSetName contains '_Branch_'"
+      }
+    }
+  ],
+  "$defs": {
+    "EmbedRuleRuleSetVersion": {
+      "type": "object",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-Rule-RuleSetVersion",
+          "x-pega-autoFill": "Embed-Rule-RuleSetVersion"
+        },
+        "pyRequiresRuleSetVersionElement": {
+          "type": "string",
+          "description": "Dependency in '{RuleSetName}:{Version}' format."
+        }
+      }
+    },
+    "EmbedComponentEntryPoints": {
+      "type": "object",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-ComponentEntryPoints",
+          "x-pega-autoFill": "Embed-ComponentEntryPoints"
+        },
+        "pyComponentEntryPointType": {
+          "type": "string",
+          "enum": ["Flow", "Activity"],
+          "description": "Type of entry point."
+        },
+        "pyComponentEntryPointName": {
+          "type": "string",
+          "description": "Rule name of the entry point."
+        },
+        "pyComponentEntryPointDescription": {
+          "type": "string",
+          "description": "Human-readable description."
+        },
+        "pyComponentEntryPointNameParams": {
+          "type": "string",
+          "description": "Parameter list (if any)."
+        }
+      }
+    },
+    "EmbedDeclarativeComponentCallbacks": {
+      "type": "object",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-DeclarativeComponentCallbacks",
+          "x-pega-autoFill": "Embed-DeclarativeComponentCallbacks"
+        },
+        "pyDeclarativeComponentProperty": {
+          "type": "string",
+          "description": "Property name on the interface class."
+        }
+      }
+    }
+  }
+}

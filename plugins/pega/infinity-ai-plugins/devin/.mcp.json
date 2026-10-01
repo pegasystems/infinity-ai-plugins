@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "pega-infinity-authoring": {
+      "command": "java",
+      "args": [
+        "-jar",
+        "${CLAUDE_PLUGIN_ROOT}/resources/infinity-rules-mcp.jar",
+        "--spring.profiles.active=stdio"
+      ],
+      "env": {
+        "PEGA_SKILLS_PATH": "${CLAUDE_PLUGIN_ROOT}/resources",
+        "PEGA_CLIENT_MODE": "devin-plugin",
+        "PEGA_BASE_URL": "${PEGA_BASE_URL}",
+        "PEGA_INFINITY_VERSION": "${PEGA_INFINITY_VERSION}"
+      }
+    }
+  }
+}
