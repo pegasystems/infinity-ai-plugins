@@ -10,7 +10,7 @@ It includes plugins for the following clients:
 - `devin/`
 - `opencode/`
 
-## Claude, Copilot, and Codex
+## Claude, Copilot, Codex, and Devin
 
 The checked-in source trees are directly installable from this repository.
 
@@ -25,6 +25,6 @@ Each plugin directory is self-contained and does not rely on wrapper scripts or 
 
 There is no bootstrap download step, lock file, or separate artifact hosting location.
 
-## Devin and OpenCode
+## OpenCode
 
-Devin and OpenCode plugins require manual MCP and skill setup. Both clients reuse the bundled runtime and skills from the `claude/` plugin directory.
+The OpenCode plugin requires manual MCP and skill setup. It reuses the bundled runtime and skills from the `claude/` plugin directory.

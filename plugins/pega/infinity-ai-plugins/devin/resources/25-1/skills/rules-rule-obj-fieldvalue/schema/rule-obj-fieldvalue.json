@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-obj-fieldvalue.json",
+  "title": "Rule-Obj-FieldValue",
+  "description": "JSON schema for creating or updating a Pega field value rule (Rule-Obj-FieldValue). Field values store localizable text strings — labels, messages, captions, prompts, button text, notification messages, and error classifications — associated with a property on a class. Only authored and identity fields are included; system-managed and versioning fields are omitted.",
+  "type": "object",
+  "required": [
+    "pxObjClass",
+    "pyClassName",
+    "pyFieldName",
+    "pyFieldValue",
+    "pyLabel"
+  ],
+  "properties": {
+    "pxObjClass": {
+      "type": "string",
+      "const": "Rule-Obj-FieldValue",
+      "description": "Rule type class — always 'Rule-Obj-FieldValue'.",
+      "x-pega-autoFill": "Rule-Obj-FieldValue"
+    },
+    "pyClassName": {
+      "type": "string",
+      "description": "The applies-to class for this field value (e.g., '@baseclass', 'MyOrg-MyApp-Work-MyCase', 'Pega-API'). Use '@baseclass' for values available across all classes."
+    },
+    "pyFieldName": {
+      "type": "string",
+      "description": "The property name this field value belongs to. Common values: 'pyMessageLabel' (API/UI messages), 'pyCaption' (labels/captions), 'pyButtonLabel' (button text), 'pyNotificationMessage' (flow notifications), 'pyGenerativeAIPrompt' (user prompt for GenAI connectors -- referenced by pyGenAIDef.pyUserPrompt), 'pyGenerativeAISystemPrompt' (system prompt for GenAI connectors -- referenced by pyGenAIDef.pySystemPrompt), 'pyErrorClassification' (error categories), 'pyActionPrompt' (helper/tooltip text), 'pyMessage' (general-purpose messages), 'pzErrorMessage' (internal platform error messages), 'pxDecisioningClass' (strategy result class mapping for decisioning). Together with pyFieldValue, forms the unique identity key."
+    },
+    "pyFieldValue": {
+      "type": "string",
+      "description": "The unique value identifier within the pyFieldName (e.g., 'InvalidStepID', 'pzAllowedStartingFields', 'NotifyComplianceOfficer_0'). Together with pyFieldName, forms the unique identity key."
+    },
+    "pyLabel": {
+      "type": "string",
+      "description": "Human-readable display label for this field value."
+    },
+    "pyLocalizedValue": {
+      "type": "string",
+      "description": "The actual text content. Supports two substitution mechanisms: (1) numbered placeholders like {1}, {2} resolved via pyFieldValueParams entries, and (2) inline Pega property reference expressions like {.pyPropertyName} or {.pyPageList(N).pyField} resolved directly from the clipboard at runtime. This is the primary authored content of the rule."
+    },
+    "pyRuleName": {
+      "type": "string",
+      "description": "Internal rule name — auto-derived as 'pyFieldName pyFieldValue' (e.g., 'pyMessageLabel InvalidStepID').",
+      "x-pega-autoDerived": true,
+      "x-pega-deriveFrom": "pyFieldName + ' ' + pyFieldValue"
+    },
+    "pyDescription": {
+      "type": "string",
+      "description": "Developer-facing description of this field value's purpose."
+    },
+    "pyUsage": {
+      "type": "string",
+      "description": "Usage notes — where and how this field value is referenced."
+    },
+    "pyMemo": {
+      "type": "string",
+      "description": "Developer change memo saved with the rule."
+    },
+    "pyRuleSet": {
+      "type": "string",
+      "description": "Rule set the field value is saved to."
+    },
+    "pyRuleSetVersion": {
+      "type": "string",
+      "pattern": "^\\d{2}-\\d{2}-\\d{2}$",
+      "description": "Rule set version (e.g., '01-01-01')."
+    },
+    "pyRuleAvailable": {
+      "type": "string",
+      "enum": ["Yes", "No", "Final", "Withdrawn", "Blocked"],
+      "description": "Availability status of the rule.",
+      "x-pega-autoFill": "Yes"
+    },
+    "pyDisplayMode": {
+      "type": "string",
+      "enum": ["basic", "clone", "specialize", ""],
+      "description": "Display mode for the rule form. 'basic' for new rules, 'clone' for copied rules.",
+      "x-pega-autoFill": "basic"
+    },
+    "pyValueChanged": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "Tracks whether the localized value has been modified from its original.",
+      "x-pega-autoFill": "false"
+    },
+    "pyRuleStarts": {
+      "type": "string",
+      "description": "Effective start date. Default is epoch (no restriction).",
+      "x-pega-autoDerived": true
+    },
+    "pyRuleEnds": {
+      "type": "string",
+      "description": "Effective end date. Default is epoch (no restriction).",
+      "x-pega-autoDerived": true
+    },
+    "pySortDateCircumWithinRSMajor": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "Internal sort flag for circumstance resolution within a ruleset major version.",
+      "x-pega-autoDerived": true,
+      "x-pega-autoFill": "true"
+    },
+    "pyCircumstanceProp": {
+      "type": "string",
+      "description": "Property used for circumstancing. Empty for no circumstancing. Advanced — only needed for circumstanced rule variants."
+    },
+    "pyCircumstanceVal": {
+      "type": "string",
+      "description": "Circumstance value to match."
+    },
+    "pyCircumstanceType": {
+      "type": "string",
+      "description": "Circumstance type."
+    },
+    "pyCircumstanceDate": {
+      "type": "string",
+      "description": "Circumstance date. Default is epoch."
+    },
+    "pyCircumstanceDateProp": {
+      "type": "string",
+      "description": "Property holding the circumstance date."
+    },
+    "pyCircumstanceDefinition": {
+      "type": "string",
+      "description": "Circumstance definition rule name."
+    },
+    "pyCircumstanceTemplate": {
+      "type": "string",
+      "description": "Circumstance template."
+    },
+    "pyBaseRule": {
+      "type": "string",
+      "enum": ["", "true", "false"],
+      "description": "Whether this is a platform-defined base rule.",
+      "x-pega-autoFill": "false"
+    },
+    "pyEditable": {
+      "type": "string",
+      "enum": ["", "true", "false"],
+      "description": "Whether the field value is editable at runtime."
+    },
+    "pyMethodStatus": {
+      "type": "string",
+      "enum": ["API", "Deprecated", "Extension", "Internal", "Template", ""],
+      "description": "Method status. Usually empty for application rules, 'Internal' for platform-internal rules.",
+      "x-pega-autoFill": ""
+    },
+    "pyFieldValueParams": {
+      "type": "array",
+      "description": "Message parameters for parameterized text. Each entry maps a placeholder ({1}, {2}, etc.) in pyLocalizedValue to a property reference or default value. Order matches placeholder numbering.",
+      "items": { "$ref": "#/$defs/MessageParameter" }
+    }
+  },
+  "$defs": {
+    "MessageParameter": {
+      "type": "object",
+      "description": "A message parameter entry (Embed-Message-Parameter). Maps a {N} placeholder in pyLocalizedValue to a property reference.",
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-Message-Parameter",
+          "description": "Always 'Embed-Message-Parameter'.",
+          "x-pega-autoFill": "Embed-Message-Parameter"
+        },
+        "pyValue": {
+          "type": "string",
+          "description": "Parameter key/identifier that maps to the {N} placeholder by position. Can be a numeric string matching the placeholder number (e.g., '1' for {1}), or a descriptive key name (e.g., 'channelType'). This is the name the calling code uses to reference this parameter."
+        },
+        "pyDefault": {
+          "type": "string",
+          "description": "Default value expression that provides the substitution text at runtime. Typically a property reference (e.g., 'Application.pyLabel', '.pyLabel') resolved from the clipboard. Can also be a literal string or empty."
+        }
+      }
+    }
+  }
+}

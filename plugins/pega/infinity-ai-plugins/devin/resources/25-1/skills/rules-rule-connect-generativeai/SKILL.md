@@ -1,0 +1,231 @@
+---
+name: rules-rule-connect-generativeai
+description: Authoring guide for Pega GenerativeAI connector rules (Rule-Connect-GenerativeAI), including model configuration, prompt FieldValue references, response mappings, and examples
+---
+
+**Prerequisite:** Load `methodology-rule-authoring` first
+
+## Examples
+
+`rules-rule-connect-generativeai/examples/stub` is the minimal valid create payload — only required fields.
+The remaining examples are grouped by `pyExpectedResponseEntity`.
+
+### Custom — `pyExpectedResponseEntity = "Custom"`
+
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-connect-generativeai/examples/custom/unstructured` | genai-custom-unstructured | Q&A connector returning unstructured text to `.pyResponseData` (temperature 0.2) |
+| `rules-rule-connect-generativeai/examples/custom/structured` | genai-custom-structured | Custom use-case returning structured JSON to `.pyJsonData` (temperature 0.6) |
+| `rules-rule-connect-generativeai/examples/custom/with-parameters` | genai-custom-with-parameters | Connector with input parameters — accepts named STRING parameters passed by the caller |
+
+### Single — `pyExpectedResponseEntity = "Single"`
+
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-connect-generativeai/examples/single/flat` | genai-single-flat | Multiple top-level scalar response fields, privacy enabled (temperature 0.4) |
+| `rules-rule-connect-generativeai/examples/single/flat-with-attachment` | genai-single-flat-with-attachment | Attachment input enabled — `pyIncludeAttachment='true'` with `pyGenAIDef.pyImageAttachRefValue` (temperature 0.4) |
+| `rules-rule-connect-generativeai/examples/single/page-inside-fields` | genai-single-page-inside-fields | Embedded `Page` whose children use `.pyPage.pyChild` dot notation |
+| `rules-rule-connect-generativeai/examples/single/nested-pages-deep` | genai-single-nested-pages-deep | Multi-level embedded pages: `.pyOuter.pyInner.pyLeaf` |
+| `rules-rule-connect-generativeai/examples/single/nested-pagelist-deep` | genai-single-nested-pagelist-deep | Top-level scalar plus a 3-level-deep nested pagelist (`.pyStages().pySteps().pyDynamicCaseFields()`) |
+
+### List — `pyExpectedResponseEntity = "List"`
+
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-connect-generativeai/examples/list/flat` | genai-list-flat | Flat list extraction; outer list named by `pyListName`, items hold scalars (temperature 0.8) |
+| `rules-rule-connect-generativeai/examples/list/pagelist-inside-pagelist` | genai-list-pagelist-inside-pagelist | List items each contain a child pagelist (`.pyChild().pyLeaf`) (temperature 1.0) |
+
+## Authoring Notes
+
+### Prompt FieldValue reference
+A GenerativeAI connector references a `Rule-Obj-FieldValue` rule for the user prompt
+(property family `pyGenerativeAIPrompt`) via `pyPromptName`, and a system prompt
+FieldValue (property family `pyGenerativeAISystemPrompt`) via `pySystemPromptName`.
+
+**Defaults are the norm.** The platform ships two default FieldValues —
+`pyGenerativeAIPromptTemplate` (user) and `pzDefaultSystemPrompt` (system) — and the
+vast majority of connectors reference them as-is. Prefer the defaults unless you have
+a concrete reason to override.
+
+**Custom prompt FieldValues are an advanced override.** When the default prompts are
+insufficient (e.g., you need a domain-specific system persona or a reusable parameterized
+user prompt), author a `Rule-Obj-FieldValue` with `pyFieldName = pyGenerativeAIPrompt`
+or `pyGenerativeAISystemPrompt` and reference its `pyFieldValue` from the connector.
+Authoring `Rule-Obj-FieldValue` itself is out of scope for this skill.
+
+**Pre-flight: verify prompt Field Values exist before creating the connector.**
+Before setting `pyGenAIDef.pyUserPrompt` or `pyGenAIDef.pySystemPrompt`, call
+`list-rules` scoped to the connector's class to confirm the named Field Value exists.
+For `Rule-Obj-FieldValue`, `ruleName` is the `pyFieldName` of the Field Value rule:
+
+- For user prompt: `list-rules` with `ruleType="Rule-Obj-FieldValue"`,
+  `ruleName="pyGenerativeAIPrompt"` (i.e. `pyFieldName='pyGenerativeAIPrompt'`),
+  `className=<connector's pyClassName>`.
+- For system prompt: `list-rules` with `ruleType="Rule-Obj-FieldValue"`,
+  `ruleName="pyGenerativeAISystemPrompt"` (i.e. `pyFieldName='pyGenerativeAISystemPrompt'`),
+  `className=<connector's pyClassName>`.
+
+Present the results to the user and ask them to select one. Default to
+`"pyGenerativeAIPromptTemplate"` (user) or `"pzDefaultSystemPrompt"` (system) only
+when the user does not provide a value and no custom FieldValues are found.
+If a required Field Value is missing, create it first (via `Rule-Obj-FieldValue`)
+before creating the connector — Pega validates these against the ruleset stack on
+save and will reject the connector if the named entry does not exist.
+
+### Identity & defaults
+- **Prefer the default prompts.** Set `pyPromptName` to `"pyGenerativeAIPromptTemplate"`
+  and `pySystemPromptName` to `"pzDefaultSystemPrompt"`, and keep `pyCustomizeSystemPrompt`
+  as `"false"`. All examples in this skill use the defaults.
+- **Custom system prompt.** To override the system prompt, set `pyCustomizeSystemPrompt`
+  to `"true"` and point `pySystemPromptName` at a custom FieldValue's `pyFieldValue`
+  (authored under `pyFieldName = pyGenerativeAISystemPrompt`).
+  **Gate:** When `pyCustomizeSystemPrompt` is `"true"`, always ask the user what
+  `pyGenAIDef.pySystemPrompt` value to use before setting the field. Do not default to
+  `"pzDefaultSystemPrompt"` or any other value — the whole point of enabling
+  customization is to use a specific system prompt, so the name must come from
+  the user explicitly.
+- **Custom user prompt.** To override the user prompt, point `pyPromptName` at a custom
+  FieldValue's `pyFieldValue` (authored under `pyFieldName = pyGenerativeAIPrompt`).
+  No separate toggle is required.
+
+### Version-dependent fields (`pyGenAIDef` and `pyGenAIConfig`)
+In Pega 24.2+, the Validate activity reads from `pyGenAIDef` (prompt references,
+use case) and `pyGenAIConfig` (model configuration) during save. These properties
+were introduced in 24.2 — include them when creating on 24.2+, but omit them
+on pre-24.2 where they do not exist and will cause validation errors.
+
+**Try with them first.** If the create fails with a validation error indicating
+`pyGenAIDef` or `pyGenAIConfig` are not recognized, retry without these fields:
+
+```json
+{
+  "pyGenAIDef": {
+    "pxObjClass": "Embed-GenAI-Definition",
+    "pyUseCase": "qa",
+    "pyUserPrompt": "pyGenerativeAIPromptTemplate",
+    "pySystemPrompt": "pzDefaultSystemPrompt"
+  },
+  "pyGenAIConfig": {
+    "pxObjClass": "Embed-GenAI-Config",
+    "pyEnableLocalization": "false",
+    "pyEnablePII": "false",
+    "pyModelConfiguration": {
+      "pxObjClass": "Embed-GenAI-Model",
+      "pyModelId": "pega-default-fast",
+      "pyModelParameters": [
+        {
+          "pxObjClass": "Embed-GenAI-Model-Parameters",
+          "pyName": "temperature",
+          "pyType": "float",
+          "pyValue": "0.2"
+        }
+      ]
+    }
+  }
+}
+```
+
+Set `pyGenAIDef.pyUseCase` to match the top-level `pyUseCase`. Set
+`pyGenAIDef.pyUserPrompt` and `pyGenAIDef.pySystemPrompt` to match `pyPromptName`
+and `pySystemPromptName` respectively. Set `pyModelId` to `"pega-default-fast"`
+(default) or `"pega-default-smart"` for more capable tasks. Set the temperature
+`pyValue` in `pyModelParameters` to match the desired randomness level.
+- **`pyResponseFieldsInfo` is auto-generated.** The Validate activity regenerates this
+  field from `pyResponseFields` on every save. Do not set it manually.
+- **`pyGenAIConfig.pyEnablePII`.** Observed as `"false"` on most real rules; set `"true"` only
+  when PII redaction is required. Include in create payloads for completeness.
+
+### Temperature (`pyGenAIConfig.pyModelConfiguration.pyModelParameters`)
+
+Controls response randomness. The temperature value is stored as a
+`pyModelParameters` entry (with `pyName = "temperature"` and `pyType = "float"`)
+inside `pyGenAIConfig.pyModelConfiguration`. Valid values are strings in 0.2
+increments from `"0.2"` to `"2.0"`. Lower = more deterministic, higher = more
+creative. Choose based on the task:
+
+| Range            | When to use                                                   |
+|------------------|---------------------------------------------------------------|
+| `"0.2"`          | Deterministic extraction, classification, Q&A over known facts |
+| `"0.4"` – `"0.6"`| Structured output (JSON), entity extraction with mild variation |
+| `"0.8"` – `"1.0"`| List generation, summaries, balanced creative tasks            |
+| `"1.2"` – `"2.0"`| Brainstorming, paraphrasing, open-ended generation             |
+
+When in doubt prefer `"0.2"` for parseable/structured responses and `"0.8"` for
+list or narrative output — these match the dominant settings on observed rules.
+
+### Response shape rules (`pyResponseFields`)
+
+The `pyFieldName` syntax encodes the clipboard structure of the AI response:
+
+| Notation                          | Shape                                      |
+|-----------------------------------|--------------------------------------------|
+| `.pyLeaf`                         | Top-level scalar                           |
+| `.pyPage.pyLeaf`                  | Page inside fields (one level)             |
+| `.pyOuter.pyInner.pyLeaf`         | Page inside page inside fields             |
+| `.pyList().pyLeaf`                | Pagelist inside fields                     |
+| `.pyOuter().pyInner().pyLeaf`     | Pagelist inside pagelist                   |
+| `.pyPage.pyList().pyLeaf`         | Pagelist inside a page (mixed)             |
+| `.pyList().pyChildPage.pyLeaf`    | Page inside a pagelist item (mixed)        |
+
+`()` means "iterate this Page List"; a plain `.` means "descend into this single Page".
+Every leaf must repeat the **full** prefix — there is no row that "declares" an
+intermediate page or list; the server infers structure from shared prefixes. All
+intermediate properties must already exist on the appropriate class with the correct
+mode (`Page` vs `Page List`), and each leaf scalar must exist on the innermost class.
+
+**Pre-flight: verify response properties exist before creating the connector.**
+For every `pyFieldName` entry the user wants to map, call `list-rules` with
+`ruleType="Rule-Obj-Property"`, `ruleName=<property name without the dot>`,
+`className=<connector's pyClassName>` to confirm the property is declared on that
+class. If any property is missing, create it first (via `Rule-Obj-Property`) before
+creating the connector. Do not attempt to create the connector with undeclared
+properties — Pega will reject it with a "does not exist or is not a valid entry for
+this ruleset and its prerequisites" error.
+
+### Input parameters (`pyParameters`)
+
+Connectors can accept named input parameters passed by the caller (Activity, Flow,
+or other invocation context). Parameters are defined in `pyParameters` as an array
+of `Embed-MethodParams` entries.
+
+Each parameter entry requires:
+- `pyParametersParamName` — PascalCase name (e.g., `"AdditionalContext"`, `"Name"`)
+- `pyParametersParamType` — data type (`STRING`, `INTEGER`, `DOUBLE`, `BOOLEAN`, `DATE`, `DATETIME`)
+
+`STRING` is the dominant type for GenAI connector parameters since they typically
+pass textual context to the prompt. Parameters are referenced in the prompt FieldValue
+using `{.ParamName}` substitution syntax.
+
+```json
+"pyParameters": [
+  {
+    "pxObjClass": "Embed-MethodParams",
+    "pyParametersParamName": "AdditionalContext",
+    "pyParametersParamType": "STRING"
+  }
+]
+```
+
+### Single vs List at the root
+- `pyExpectedResponseEntity = "Single"` → response is one object. Do NOT set `pyListName`.
+  Nested lists are allowed *inside* the object via `()` notation.
+- `pyExpectedResponseEntity = "List"` → outer list container is named by `pyListName`
+  (e.g., `".pyStages"`) and is **implicit** in `pyResponseFields`. Do not re-prefix item
+  rows with the outer list name.
+
+### Prompt design at depth
+For deeply nested response shapes, instruct the model with an explicit JSON skeleton
+showing each level so the response parses cleanly into the clipboard structure.
+
+### Prompt Design Guidelines
+
+When authoring custom prompt FieldValues (`pyLocalizedValue`):
+
+| Guideline | Example |
+|-----------|---------|
+| Open with a persona statement | `"You are a risk analyst. Based on the engagement scope..."` |
+| Reference case properties to ground the LLM | `{.AssessmentName}`, `{.ClientInformationReference.ClientName}`, `{.pyLabel}` |
+| Specify desired output format explicitly | `"Format: Risk: [description] | Recommendation: [action]"` |
+| Keep prompts focused — one task per connector | Split multi-task prompts into separate connectors |
+
+**Property substitution syntax:** Use `{.PropertyName}` (curly braces, dot-prefix) to embed clipboard values at runtime. Nested references follow dot notation: `{.PageRef.ChildProperty}`.
