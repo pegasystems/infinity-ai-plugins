@@ -1,10 +1,10 @@
 # Pega Infinity Authoring Codex Plugin
 
-This directory contains the source template for the Codex plugin variant of Pega Infinity Authoring.
+This directory contains the source template for the Codex variant of Pega Infinity Authoring plugin.
 
-The final packaged plugin is expected to bundle:
+The final packaged plugin bundles:
 
-- the pinned `infinity-rules-mcp` runtime JAR
+- the pinned `infinity-rules-mcp` run-time JAR
 - the pinned `infinity-skills` payloads for versions `24-2`, `25-1`, and `26-1`
 - Codex-facing skills and launcher wiring
 
