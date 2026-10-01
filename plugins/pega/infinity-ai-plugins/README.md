@@ -1,12 +1,16 @@
-# Pega Infinity Rules MCP Plugins
+# Pega Infinity Authoring Plugins
 
-This directory contains the plugin source trees for the Pega Infinity Authoring surfaces built around `infinity-rules-mcp`.
+This folder contains the plugin source trees for the Pega Infinity Authoring surfaces built around `infinity-rules-mcp`.
 
-Client-specific plugin source trees live under:
+It includes plugins for the following clients:
 
 - `claude/`
 - `copilot/`
 - `codex/`
+- `devin/`
+- `opencode/`
+
+## Claude, Copilot, and Codex
 
 The checked-in source trees are directly installable from this repository.
 
@@ -20,3 +24,7 @@ contains its own `manifest.json`, `library/`, and `skills/` payload.
 Each plugin directory is self-contained and does not rely on wrapper scripts or runtime extraction.
 
 There is no bootstrap download step, lock file, or separate artifact hosting location.
+
+## Devin and OpenCode
+
+Devin and OpenCode plugins require manual MCP and skill setup. Both clients reuse the bundled runtime and skills from the `claude/` plugin directory.

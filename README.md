@@ -1,4 +1,4 @@
-# Pega Infinity Authoring plugin
+# Pega Infinity Authoring plugins
 
 Pega Infinity Authoring plugins connect development environments to Pega MCP, enabling you to build Pega applications from a development environment of your choice. By making internal assets available to external tools and agents, Pega is evolving its low-code approach to make application development more automated and accessible to users with different tool preferences.
 
