@@ -14,6 +14,7 @@ Add the following server to Devin's MCP metadata file. Use a project-level `.dev
 
 - macOS and Linux: `~/.config/devin/mcp_config.json`
 - Windows: `%APPDATA%\devin\mcp_config.json` (open the Run dialog box with Windows + R and enter `%appdata%`)
+  - If `devin` directory does not exist already, please create a new directory
 
 Use absolute paths and replace the placeholder values:
 
@@ -57,7 +58,6 @@ Set `pega_infinity_version` to the directory name that matches the target enviro
 - Pega Infinity 24.2: `24-2`
 - Pega Infinity 25.1: `25-1`
 - Pega Infinity 26.1: `26-1`
-- Pega Infinity 27.1: `27-1`
 
 At run time, the MCP reads the Pega connection settings from this file. Set `pega_base_url` to the Pega environment root URL only; do not include `/prweb` or another path segment. Use a different `pega_oauth_client_id` only when the Pega environment requires a custom client ID.
 
