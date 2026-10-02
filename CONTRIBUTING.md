@@ -13,6 +13,7 @@
 - Run `git diff --check` before submitting changes.
 - Update documentation when behavior, installation, or packaging changes.
 - When changing packaging or runtime wiring, verify that the affected plugin metadata and bootstrap files stay aligned.
+- When releasing the Devin plugin, bump `packages/infinity-rules-mcp/package.json`, the version pinned in `plugins/pega/infinity-ai-plugins/devin/.mcp.json`, and both `.devin-plugin/plugin.json` manifests together, then run `node packages/infinity-rules-mcp/scripts/check-release.mjs`. Push a `v<version>` tag to publish the npm package.
 - If you change user-facing configuration or startup requirements, update `README.md`.
 
 ## Submitting Changes

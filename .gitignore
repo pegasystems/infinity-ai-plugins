@@ -6,3 +6,9 @@ build/
 *.log
 .idea/
 oauth-session.json
+node_modules/
+dist/
+*.tgz
+# Staged by packages/infinity-rules-mcp/scripts/stage.mjs; never committed.
+packages/infinity-rules-mcp/resources/
+packages/infinity-rules-mcp/LICENSE

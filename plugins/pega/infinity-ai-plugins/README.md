@@ -14,7 +14,7 @@ It includes plugins for the following clients:
 
 The checked-in source trees are directly installable from this repository.
 
-Each supported client launches `resources/infinity-rules-mcp.jar` directly with `java -jar` and
+Each of these clients launches `resources/infinity-rules-mcp.jar` directly with `java -jar` and
 points `PEGA_SKILLS_PATH` at the plugin `resources` directory. The runtime selects the version
 under that directory using `pega_infinity_version` from `~/.infinity-rules-mcp/config.json`.
 
@@ -25,6 +25,15 @@ Each plugin directory is self-contained and does not rely on wrapper scripts or 
 
 There is no bootstrap download step, lock file, or separate artifact hosting location.
 
-## Devin and OpenCode
+## Devin
 
-Devin and OpenCode plugins require manual MCP and skill setup. Both clients reuse the bundled runtime and skills from the `claude/` plugin directory.
+The Devin plugin contains only metadata and skills, so it stays well within Devin's plugin size
+limit. Its MCP server runs `npx -y @pega/infinity-rules-mcp@<version>`. The
+[`@pega/infinity-rules-mcp`](../../../packages/infinity-rules-mcp/README.md) npm package contains the
+same runtime JAR and `resources/` payload, plus a dependency-free Node launcher that finds Java 17+
+and starts the JAR. The package version is pinned exactly and always equals the Devin plugin
+version.
+
+## OpenCode
+
+The OpenCode plugin requires manual MCP and skill setup. It reuses the bundled runtime and skills from the `claude/` plugin directory.

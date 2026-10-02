@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "pega-infinity-authoring": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@pega/infinity-rules-mcp@0.1.6"
+      ],
+      "env": {
+        "PEGA_CLIENT_MODE": "devin-plugin",
+        "PEGA_BASE_URL": "${PEGA_BASE_URL}",
+        "PEGA_INFINITY_VERSION": "${PEGA_INFINITY_VERSION}"
+      }
+    }
+  }
+}

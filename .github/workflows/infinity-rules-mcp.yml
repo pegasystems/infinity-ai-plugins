@@ -1,0 +1,106 @@
+name: infinity-rules-mcp
+
+# Tests and publishes the @pega/infinity-rules-mcp npm package used by the
+# Devin plugin. Publishing runs only for v* tags (path filters don't apply to tags).
+
+on:
+  pull_request:
+    paths:
+      - packages/infinity-rules-mcp/**
+      - plugins/pega/infinity-ai-plugins/devin/**
+      - plugins/pega/infinity-ai-plugins/claude/resources/**
+      - plugins/pega/infinity-ai-plugins/README.md
+      - .devin-plugin/**
+      - README.md
+      - .github/workflows/infinity-rules-mcp.yml
+  push:
+    branches: [main]
+    tags: ['v*']
+    paths:
+      - packages/infinity-rules-mcp/**
+      - plugins/pega/infinity-ai-plugins/devin/**
+      - plugins/pega/infinity-ai-plugins/claude/resources/**
+      - plugins/pega/infinity-ai-plugins/README.md
+      - .devin-plugin/**
+      - README.md
+      - .github/workflows/infinity-rules-mcp.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  check:
+    name: Release alignment and plugin size
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check versions, pins, and Devin plugin size
+        run: node packages/infinity-rules-mcp/scripts/check-release.mjs
+
+  test:
+    name: Test (${{ matrix.os }}, Node ${{ matrix.node }})
+    needs: check
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node: [18, 22]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - name: Launcher unit tests
+        run: node --test packages/infinity-rules-mcp/test/launcher.test.js
+      - name: Stage runtime JAR and skills
+        run: node packages/infinity-rules-mcp/scripts/stage.mjs
+      - name: Pack
+        run: mkdir -p dist && npm pack ./packages/infinity-rules-mcp --pack-destination dist
+      # Run from the repo root so npx resolves the tarball, not the package source tree.
+      - name: Smoke test (npx, initialize, tools/list, list-skills)
+        run: node packages/infinity-rules-mcp/scripts/smoke.mjs --expect-tools 29 dist/pega-infinity-rules-mcp-*.tgz
+
+  publish:
+    name: Publish to npm
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: test
+    runs-on: ubuntu-latest
+    environment: npm-publish
+    permissions:
+      contents: read
+      id-token: write # npm trusted publishing (OIDC) and provenance
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - name: Use an npm CLI that supports trusted publishing
+        run: npm install -g npm@^11.5.1
+      - name: Check that the tag matches the package version
+        run: node packages/infinity-rules-mcp/scripts/check-release.mjs --tag "$GITHUB_REF_NAME"
+      - name: Stage runtime JAR and skills
+        run: node packages/infinity-rules-mcp/scripts/stage.mjs
+      - name: Pack
+        run: mkdir -p dist && npm pack ./packages/infinity-rules-mcp --pack-destination dist
+      - name: Smoke test the exact tarball being published
+        run: node packages/infinity-rules-mcp/scripts/smoke.mjs --expect-tools 29 dist/pega-infinity-rules-mcp-*.tgz
+      - name: Publish
+        run: npm publish dist/pega-infinity-rules-mcp-*.tgz --access public --provenance

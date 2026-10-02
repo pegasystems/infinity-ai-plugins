@@ -1,0 +1,19 @@
+{
+  "name": "pega",
+  "version": "0.1.6",
+  "description": "Pega plugins for Devin. Installing this plugin installs Pega Infinity Authoring.",
+  "author": {
+    "name": "Pegasystems"
+  },
+  "homepage": "https://github.com/pegasystems/infinity-ai-plugins",
+  "repository": "https://github.com/pegasystems/infinity-ai-plugins",
+  "license": "Pega Infinity AI Plugins License Version 1.0",
+  "skills": [],
+  "requiredPlugins": [
+    {
+      "source": "git-subdir",
+      "url": "https://github.com/pegasystems/infinity-ai-plugins.git",
+      "path": "plugins/pega/infinity-ai-plugins/devin"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "name": "@pega/infinity-rules-mcp",
+  "version": "0.1.6",
+  "description": "Launcher for the Pega Infinity Rules MCP server (stdio). Bundles the runtime JAR and versioned Pega skills; requires Java 17+.",
+  "license": "SEE LICENSE IN LICENSE",
+  "author": "Pegasystems",
+  "homepage": "https://github.com/pegasystems/infinity-ai-plugins",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pegasystems/infinity-ai-plugins.git",
+    "directory": "packages/infinity-rules-mcp"
+  },
+  "keywords": [
+    "pega",
+    "mcp",
+    "infinity",
+    "devin"
+  ],
+  "bin": {
+    "infinity-rules-mcp": "bin/infinity-rules-mcp.js"
+  },
+  "files": [
+    "bin/",
+    "resources/"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "pega": {
+    "runtimeVersion": "0.7.1",
+    "infinityVersions": [
+      "24-2",
+      "25-1",
+      "26-1"
+    ]
+  }
+}
