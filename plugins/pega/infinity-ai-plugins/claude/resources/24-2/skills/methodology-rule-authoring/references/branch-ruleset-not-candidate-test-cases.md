@@ -24,7 +24,7 @@ this:
 4. **Create the test case in the test ruleset** — once identified, pass the test ruleset
    name via the `ruleSet` parameter on `create-rule`:
    ```
-   create-rule(ruleType="Rule-Test-Unit-Case", ruleSet="MyAppTest", content=..., changeRequestID=...)
+   create-rule(ruleType="Rule-Test-Unit-Case", ruleSet="MyAppTest", content=..., branchID=..., changeDescription="Create branch test case")
    ```
 5. **If no test ruleset is found** — if none of the rulesets in `pyRuleSetList` have
    `pyIsTestRuleSet` set to `"true"`, ask the user which ruleset to use for test cases.

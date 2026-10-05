@@ -77,7 +77,7 @@ After `run-data-page` with `D_pxRuleReview` returns:
 - Wait for explicit confirmation such as "yes", "approved", or "apply these changes"
 - If the user does not confirm, stop after presenting the review findings
 
-Do **not** call `create-rule`, `update-rule`, `copy-rule`, `initiate-authoring-change`, or assignment
+Do **not** call `create-rule`, `update-rule`, `copy-rule`, or assignment
 submission actions before the user explicitly confirms.
 
 ## Inputs Needed
@@ -228,16 +228,13 @@ When `run-data-page` returns `pxWarningsToDisplay` successfully:
 
 Once the user has explicitly confirmed the changes:
 
-1. Load `methodology-change-request-workflow`
-2. Follow its **Pre-flight: Determine the Authoring Path** section
-3. If a matching deterministic authoring workflow exists and is within limitations, use it
-4. Otherwise load `methodology-rule-authoring`
-5. Treat the approved review suggestions as the full and exact change scope. Do **not** reinterpret approval as permission to redesign, refactor, or reimplement the rule.
-6. Load the specific `rules-*` skill for the target rule type before writing
-7. If the rule is not already in the branch ruleset for the Change Request, copy it first with `copy-rule`
-8. Apply the approved changes with `update-rule` (or the matched workflow if applicable) using a **sparse** payload that includes only the fields needed to implement the approved suggestions
-9. Verify the final rule state with `get-rule(detail="full")`
-10. Return the authored changes to the Change Request review stage for human approval as required by `methodology-change-request-workflow`
+1. Load `methodology-rule-authoring` and establish the selected branch
+2. Treat the approved review suggestions as the full and exact change scope. Do **not** reinterpret approval as permission to redesign, refactor, or reimplement the rule.
+3. Load the specific `rules-*` skill for the target rule type before writing
+4. If the rule is not already in the selected branch, copy it first with `copy-rule` when Save As behavior is required
+5. Apply the approved changes with `update-rule`, passing the selected `branchID` and using a **sparse** payload that includes only the fields needed to implement the approved suggestions
+6. Verify the final rule state with `get-rule(detail="full")`
+7. Report the authored changes and leave branch review and merge to standard Pega branch management
 
 ## Call Discipline
 
@@ -248,7 +245,7 @@ Once the user has explicitly confirmed the changes:
 | Review before write | Always complete the review call and confirmation gate before authoring |
 | No implicit approval | Silence, partial discussion, or curiosity is not approval |
 | Approved scope only | Implement only the suggestions the user explicitly approved |
-| Standard write safety | All rule changes still go through ChangeRequest-safe authoring |
+| Standard write safety | All rule changes use the selected branch and the normal branch-scoped authoring APIs |
 | Honor guidelines | When `pyRuleReviewGuidelines` is present and non-empty, extract and present it; if Platform and Application-specific sections conflict, surface the conflict to the user, wait for explicit precedence confirmation, and honor the user's choice — do not choose precedence unilaterally |
 
 ## Anti-Patterns
@@ -258,7 +255,7 @@ Once the user has explicitly confirmed the changes:
 - **Do not author directly after the data page call.** Review findings alone are not authorization to change the rule.
 - **Do not review an ambiguous rule match.** If more than one rule fits, ask the user to choose.
 - **Do not apply all suggestions automatically.** The user may approve only selected recommendations.
-- **Do not bypass the ChangeRequest workflow after approval.** Approved changes still require the normal branch-safe authoring path.
+- **Do not bypass branch-scoped authoring after approval.** Approved changes still require the selected `branchID` on every rule write.
 - **Do not silently ignore justified warnings.** Warnings with `pxIsWarningJustified: "true"` must be presented in an **"Already Justified Warnings"** section and the user must be explicitly asked: *"These warnings have been previously justified. Would you like to address any of them?"* Passively surfacing them without asking is a workflow violation.
 - **Do not reimplement the rule while addressing review suggestions.** Post-review authoring is limited to the exact approved suggestions. Use targeted `update-rule` changes only for the affected fields, steps, or list elements, and leave unrelated rule structure untouched.
 - **Do not omit `pyRuleReviewGuidelines`.** When the review response includes guidelines, extract and present them. Skipping guidelines is a workflow violation.

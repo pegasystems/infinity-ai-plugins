@@ -124,7 +124,7 @@
     "pySPRuleSetName": {
       "type": "string",
       "x-pega-autoDerived": true,
-      "description": "Branch ruleset name used during ChangeRequest workflow. Auto-derived from the ChangeRequest context when creating rules in a branch."
+      "description": "Branch ruleset name used during branch authoring. Auto-derived from the selected branch context when creating rules in a branch."
     },
     "pyGenAIConfig": {
       "type": "object",

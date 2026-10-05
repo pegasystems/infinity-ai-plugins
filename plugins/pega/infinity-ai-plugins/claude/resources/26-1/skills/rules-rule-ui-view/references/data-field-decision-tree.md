@@ -112,9 +112,8 @@ What kind of data field?
 
 ## Shared Steps (Paths A, B, D)
 
-> All `create-rule` and `update-rule` calls require a `changeRequestID` from
-> an active ChangeRequest case. See `methodology-change-request-workflow` for the full
-> lifecycle.
+> All `create-rule` and `update-rule` calls require the selected `branchID` and a
+> concise `changeDescription`. See `methodology-rule-authoring` for branch setup.
 
 ### Step 0 — Load Skills
 
@@ -160,7 +159,7 @@ Load `rules-rule-obj-class` and use the appropriate example:
 - **Data class** (persisted, shared): `rules-rule-obj-class/examples/data-class`
 
 ```
-create-rule(ruleType="Rule-Obj-Class", content={...}, changeRequestID="{crKey}")
+create-rule(ruleType="Rule-Obj-Class", content={...}, branchID="{branchID}", changeDescription="Create data class")
 ```
 
 Verify:
@@ -175,7 +174,7 @@ For each missing property, create it using `rules-rule-obj-property`.
 Match the property type to the appropriate example (text, date, dropdown, etc.).
 
 ```
-create-rule(ruleType="Rule-Obj-Property", content={...}, changeRequestID="{crKey}")
+create-rule(ruleType="Rule-Obj-Property", content={...}, branchID="{branchID}", changeDescription="Create data property")
 ```
 
 **Verify all properties exist before proceeding:**

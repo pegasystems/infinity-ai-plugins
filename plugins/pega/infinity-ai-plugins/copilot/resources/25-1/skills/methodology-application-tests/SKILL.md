@@ -10,7 +10,7 @@ description: Load this skill when the user asks to generate end-to-end Pega appl
 | `methodology-application-tests/references/test-scenarios` | scenario-design | Gherkin scenario design, coverage rules, step conventions |
 | `rules-rule-test-application-businessaction` |  | How to create or update Business Action rules |
 | `rules-rule-test-application-case` |  | Application Test rule creation using Business Actions |
-| `methodology-rule-authoring` |  | Write API selection and ChangeRequest lifecycle |
+| `methodology-rule-authoring` |  | Write API selection and branch-scoped authoring lifecycle |
 | `rules-rule-obj-flow` |  | Flow shape interpretation — CRITICAL for Decision shapes and ScreenFlow detection |
 | `rules-rule-obj-flowaction` |  | Flow action authoring guidance — CRITICAL for validation extraction (`pyValidateActivity`) |
 

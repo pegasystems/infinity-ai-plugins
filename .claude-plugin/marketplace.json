@@ -11,7 +11,7 @@
       "source": "./plugins/pega/infinity-ai-plugins/claude",
       "displayName": "Pega Infinity Authoring",
       "description": "Pega Infinity Authoring with bundled MCP tools and runtime skills. For first-time setup, run the `pega-setup` skill to configure your connection.",
-      "version": "0.1.5",
+      "version": "0.1.6",
       "repository": "https://github.com/pegasystems/infinity-ai-plugins"
     }
   ]

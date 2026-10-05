@@ -73,4 +73,3 @@ verifying the connection and completing configuration.
 ## Prerequisites
 
 - Install Java 17 or later and add `java` to the PATH.
-

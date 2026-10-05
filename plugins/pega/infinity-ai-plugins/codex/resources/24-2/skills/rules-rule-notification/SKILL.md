@@ -88,7 +88,7 @@ Each channel's parameter map is **independent**: every parameter declared on the
 | `pyCategory` | Default `"Default"`. Observed values: `Default`, `AssignedToMe`, `Mention`. |
 | `pyMessage` | Must resolve to an existing Rule-Obj-FieldValue (with `pyFieldName = pyNotificationMessage`) on the applies-to class hierarchy. There is no free-text fallback; any value that does not resolve to an indexed FieldValue causes save failure. Safe OOTB value: `pyAddPulsePost`. |
 | `pyRecipientContextPage` (PAGELIST) | Must resolve to a real PageList/PageGroup property on the applies-to class. Safe Work- value: `.pyWorkParty`. Arbitrary names like `.pyParticipantList` are rejected at create time. |
-| `pyRuleSet` / `pyRuleSetVersion` | REQUIRED for v1 create. Auto-derived by v2 from ChangeRequest branch context. For branch rulesets, version is always `01-01-01`. |
+| `pyRuleSet` / `pyRuleSetVersion` | REQUIRED for v1 create. Auto-derived by v2 from selected branch context. For branch rulesets, version is always `01-01-01`. |
 
 ### Auto-filled fields (omit from payloads unless overriding)
 

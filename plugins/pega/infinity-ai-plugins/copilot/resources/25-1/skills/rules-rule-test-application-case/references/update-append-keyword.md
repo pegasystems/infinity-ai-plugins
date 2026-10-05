@@ -13,7 +13,7 @@ We append a new AssertCaseStatus keyword at the end.
 
 ```
 1. get-rule(key="{tcKey}", detail="full")         → count existing keywords (7)
-2. update-rule(key, updates, changeRequestID)   → append new keyword at index 7
+2. update-rule(key, updates, branchID)   → append new keyword at index 7
 3. get-rule(key, detail="full")                     → verify 8 keywords now exist
 ```
 

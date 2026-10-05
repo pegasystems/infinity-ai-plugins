@@ -4,7 +4,8 @@ description: "Path D — Simple Table: create PageList property and SimpleTable 
 ---
 # Path D — Simple Table
 
-> All `create-rule` calls require a `changeRequestID`.
+> All `create-rule` calls require the selected `branchID` and a concise
+> `changeDescription`.
 
 ## Step D1 — Complete Shared Steps 0–3
 
@@ -17,7 +18,7 @@ Create a **PageList** property on the parent class pointing to the data class.
 Use `rules-rule-obj-property/examples/page-list`.
 
 ```
-create-rule(ruleType="Rule-Obj-Property", content={...}, changeRequestID="{crKey}")
+create-rule(ruleType="Rule-Obj-Property", content={...}, branchID="{branchID}", changeDescription="Create table property")
 ```
 
 ## Step D3 — Create the SimpleTable View
@@ -33,7 +34,7 @@ Key fields:
 - Define columns inside `config.children` as a `Columns` Region
 
 ```
-create-rule(ruleType="Rule-UI-View", content={...}, changeRequestID="{crKey}")
+create-rule(ruleType="Rule-UI-View", content={...}, branchID="{branchID}", changeDescription="Create simple table view")
 ```
 
 ## Step D4 — Wire Table into Parent View (if needed)

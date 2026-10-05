@@ -190,4 +190,4 @@ After performing the action:
 | `methodology-case-data-modeling` | When the work item involves data model design or Case Type changes |
 | `methodology-integration` | When the work item involves connector, REST, or Data Page configuration |
 | `methodology-explore-case-type` | When the work item asks to audit or verify a case type's configuration |
-| `methodology-change-request-workflow` | Required for all rule authoring — provides the `changeRequestID` |
+| `methodology-rule-authoring` | Required for all rule authoring — provides branch selection and branch-scoped writes |

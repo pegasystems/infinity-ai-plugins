@@ -77,7 +77,7 @@ are missing, create those properties first, then resume this step.
 ## Step 3: Apply the update
 
 If working in a branch and the view is not already in the branch ruleset, invoke
-`update-rule` directly with `changeRequestID`; the branch copy is handled internally.
+`update-rule` directly with the selected `branchID`; the branch copy is handled internally.
 
 Then:
 
@@ -86,7 +86,8 @@ Then:
 - `key`: the view's instance key
 - `updates`: JSON object containing the complete updated `pyContent`,
   `pxViewMetadata`, and `pxContextMetadata`
-- `changeRequestID`: the active Change Request key
+- `branchID`: the selected branch identifier
+- `changeDescription`: concise summary of the requested update
 - `listUpdateMode`: omit / `"patch"` for sparse positional updates; use `"replace"`
   when sending the full desired arrays
 - `listUpdateModeOverrides`: optional exact-path overrides when one nested list needs

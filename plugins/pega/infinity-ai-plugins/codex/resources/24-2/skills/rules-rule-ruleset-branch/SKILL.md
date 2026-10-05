@@ -26,5 +26,5 @@ records.
 is set by the platform on save (lowercase branch name) and can be omitted.
 
 - **Infrastructure rule type.**
-- Branch records are typically created automatically by the platform (ChangeRequest
+- Branch records are created or attached explicitly through the branch data-page APIs
   workflow, Dev Studio wizard, Branch Management API).

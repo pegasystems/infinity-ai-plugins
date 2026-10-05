@@ -68,6 +68,6 @@ See "Verification Checklists" in `SKILL.md` — "After creating a new flow".
 
 ## Branch Authoring
 
-When authoring inside a ChangeRequest branch, use the branch ruleset name
+When authoring inside a selected branch, use the branch ruleset name
 (`{base}_Branch_{branchID}`) and version `01-01-01`, NOT the base ruleset version.
-See `methodology-change-request-workflow`.
+See `methodology-rule-authoring`.

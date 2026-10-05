@@ -6,7 +6,8 @@ description: "Path B — Data Reference: create data page, DataReference templat
 
 Continue from Shared Steps in `rules-rule-ui-view/references/data-field-decision-tree`.
 
-> All `create-rule` and `update-rule` calls require a `changeRequestID`.
+> All `create-rule` and `update-rule` calls require the selected `branchID` and a
+> concise `changeDescription`.
 
 ## Step B4 — Create the Data Page (if missing)
 
@@ -14,7 +15,7 @@ The data page provides the lookup source for the DataReference picker.
 Load `rules-rule-declare-pages` for Data Page authoring guidance.
 
 ```
-create-rule(ruleType="Rule-Declare-Pages", content={...}, changeRequestID="{crKey}")
+create-rule(ruleType="Rule-Declare-Pages", content={...}, branchID="{branchID}", changeDescription="Create lookup data page")
 ```
 
 > Data pages use `create-rule`.
@@ -61,7 +62,7 @@ Choose the variant:
   - `presets` define table columns; `detailsDisplay` for row detail
 
 ```
-create-rule(ruleType="Rule-UI-View", content={...}, changeRequestID="{crKey}")
+create-rule(ruleType="Rule-UI-View", content={...}, branchID="{branchID}", changeDescription="Create data reference view")
 ```
 
 Verify:
@@ -79,7 +80,7 @@ For multi-select (SimpleTableSelect), create a **PageList** property instead
 using `rules-rule-obj-property/examples/page-list`.
 
 ```
-create-rule(ruleType="Rule-Obj-Property", content={...}, changeRequestID="{crKey}")
+create-rule(ruleType="Rule-Obj-Property", content={...}, branchID="{branchID}", changeDescription="Create reference property")
 ```
 
 ## Step B7 — Wire Data Reference Field in Parent View
@@ -115,7 +116,7 @@ All three surfaces:
 | ObjectReference (Infinity 26+) | `pxContextMetadata` | Property paths in `$properties`/`$fields`; data class in `$classesmetadata`; data page in `$pagelists` |
 
 ```
-update-rule(key="{pzInsKey}", updates={...}, changeRequestID="{crKey}")
+update-rule(key="{pzInsKey}", updates={...}, branchID="{branchID}", changeDescription="Wire data reference field")
 ```
 
 ## Step B8 — Verify

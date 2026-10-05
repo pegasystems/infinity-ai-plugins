@@ -26,7 +26,7 @@ See `rules-rule-ui-view/references/view-field-patterns` for the full patterns:
 
 ## Gotchas
 
-- **Branch awareness:** When working in a branch, the view you need to modify typically lives in the base ruleset — not the branch. Call `update-rule` with `changeRequestID`; if no branch copy exists yet, the update path creates/uses one automatically.
+- **Branch awareness:** When working in a branch, the view you need to modify typically lives in the base ruleset — not the branch. Call `update-rule` with the selected `branchID`; if no branch copy exists yet, the update path creates/uses one automatically.
 - **pyContent is the source of truth for field layout.** The Agentic Authoring API does NOT auto-regenerate `pxViewMetadata`/`pxContextMetadata` — update all three surfaces together.
 - **pxViewMetadata and pxContextMetadata must be JSON strings** — use `JSON.stringify`. Objects are rejected by the Pega API.
 - **pxRuleReferences is NOT auto-updated** after editing `pyContent`. May be stale. Not a blocker.

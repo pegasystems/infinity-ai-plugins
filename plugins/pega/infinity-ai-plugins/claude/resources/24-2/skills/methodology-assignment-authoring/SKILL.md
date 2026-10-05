@@ -9,8 +9,8 @@ patterns.
 
 ## Prerequisites
 
-- Load `methodology-change-request-workflow` for the ChangeRequest lifecycle.
-- Load `methodology-rule-authoring` for general create/update workflows.
+- Load `methodology-rule-authoring` for branch selection, deterministic workflow
+  routing, and general create/update workflows.
 
 ## Scenario A — Create a New Assignment Step
 

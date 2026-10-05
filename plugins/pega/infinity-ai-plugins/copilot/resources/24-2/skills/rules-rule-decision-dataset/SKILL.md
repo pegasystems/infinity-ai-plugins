@@ -11,11 +11,11 @@ Before calling `create-rule` for a Dataset, confirm the following:
 
 | # | Field | Description | Required |
 |---|-------|-------------|----------|
-| 1 | **Branch / ChangeRequest ID** | The ChangeRequest ID to create the dataset in | Yes — always ask |
-| 2 | **RuleSet** | Target ruleset name — pass as `ruleSet` parameter to `create-rule` to override | No — auto-derived from the ChangeRequest branch. Only ask if the user explicitly wants to target a different ruleset. |
-| 3 | **RuleSet Version** | Target ruleset version | No — auto-derived from the ChangeRequest branch. Only ask if the user explicitly provides one. Do **not** pass `pyRuleSetVersion` in the content payload unless the user specifies it. |
+| 1 | **Branch ID** | Selected branch for the dataset | Yes — always ask or confirm |
+| 2 | **RuleSet** | Target ruleset name — pass as `ruleSet` parameter to `create-rule` to override | No — auto-derived from the selected branch. Only ask if the user explicitly wants to target a different ruleset. |
+| 3 | **RuleSet Version** | Target ruleset version | No — auto-derived from the selected branch. Only ask if the user explicitly provides one. Do **not** pass `pyRuleSetVersion` in the content payload unless the user specifies it. |
 
-> **RuleSet and RuleSet Version are auto-derived from the ChangeRequest branch by default.**
+> **RuleSet and RuleSet Version are auto-derived from the selected branch by default.**
 > Do not ask for or pass these fields unless the user explicitly requests an override.
 
 ## Pre-creation property check (Snowflake)
@@ -23,7 +23,7 @@ Before calling `create-rule` for a Dataset, confirm the following:
 Before calling `create-rule` for a **Snowflake** dataset, verify that every property referenced in `pyMappings`, `pySelectKeys`, `pyResumeKeys`, and `pyPartitionKey` exists on the target class (`pyClassName`).
 
 1. For each `.PropertyName` in the mappings, use `search-rules` or `list-rules` with `ruleType=Rule-Obj-Property` to check if the property exists on the target class.
-2. If a property **does not exist**, create it first using `create-rule` with `ruleType=Rule-Obj-Property` and the same `changeRequestID`. Use `pyPropertyMode: "String"` and `pyStringType: "Text"` as defaults unless the user specifies otherwise.
+2. If a property **does not exist**, create it first using `create-rule` with `ruleType=Rule-Obj-Property`, the selected `branchID`, and a `changeDescription`. Use `pyPropertyMode: "String"` and `pyStringType: "Text"` as defaults unless the user specifies otherwise.
 3. Only proceed with the dataset `create-rule` call after **all** mapped properties exist.
 
 > **Important — dot-prefix rule:**
@@ -52,10 +52,10 @@ Before calling `create-rule` for a **Snowflake** dataset, verify that every prop
 
 ## Examples
 
-| File | Description |
-|------|-------------|
-| `database-table.md` | Complete Database Table dataset with keys and partition key |
-| `snowflake.md` | Complete Snowflake dataset with column mappings, select keys, resume keys, and partition key |
+| Skill | Label | Description |
+|---|---|---|
+| `rules-rule-decision-dataset/examples/stub` | Database Table Dataset | Complete Database Table dataset with keys and partition key |
+| `rules-rule-decision-dataset/examples/snowflake` | Snowflake Dataset | Complete Snowflake dataset with column mappings, select keys, resume keys, and partition key |
 
 ## Authoring Notes
 

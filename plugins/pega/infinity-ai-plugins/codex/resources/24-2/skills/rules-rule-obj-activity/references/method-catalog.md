@@ -33,11 +33,11 @@ keywords handled directly by the activity runtime, not Rule-Method rules.
 | Method | Label | Notes |
 |--------|-------|-------|
 | `Activity-Clear-Status` | Clear activity status | Param: `BackoutWorstOnly` |
-| `Activity-End` | Ends all currently running activities | Terminates the entire activity stack |
-| `Activity-List-Add` | Adds an Activity to a dispatching list | Agent/dispatcher pattern |
+| `Activity-End` | Ends all currently running activities | Use when you want to terminate the entire call stack which is extremely rare; Do not use. |
+| `Activity-List-Add` | Adds an Activity to a dispatching list | Agent/dispatcher pattern; Rarely used |
 | `Activity-Set-Status` | Activity-Set-Status | Set status programmatically |
 | `Exit-Activity` | Exit the currently running activity | |
-| `TaskStatus-Set` | Set the Value of pxActivityTaskStatus | `pyMethodStatus: API` |
+| `TaskStatus-Set` | Set the Value of pxActivityTaskStatus | Very rarely used in flow processing; Avoid using; There is no example for this |
 
 ### Apply / Parse
 

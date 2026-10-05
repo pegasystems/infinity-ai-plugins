@@ -1,6 +1,6 @@
 ---
 name: methodology-generate-tests
-description: "Load when the user asks to generate tests for an existing rule or case behavior. Produces a risk-based test plan, discovers existing linked PegaUnit tests first, then creates or updates PegaUnit or Application Test artifacts through the ChangeRequest-safe authoring path after explicit user confirmation."
+description: "Load when the user asks to generate tests for an existing rule or case behavior. Produces a risk-based test plan, discovers existing linked PegaUnit tests first, then creates or updates PegaUnit or Application Test artifacts through branch-scoped authoring after explicit user confirmation."
 ---
 
 # Recipe: Generate Tests for a Rule or Case Behavior
@@ -33,7 +33,6 @@ Given a target behavior, generate high-value tests that cover:
 
 | Skill | Purpose |
 |-------|---------|
-| `methodology-change-request-workflow` | Mandatory safe authoring lifecycle |
 | `methodology-rule-authoring` | Create and update rule calls when workflow fallback is needed |
 | `rules-rule-test-unit-case` | PegaUnit rule authoring guidance |
 | `methodology-application-tests` | Handles case-level or end-to-end application-test orchestration |
@@ -75,14 +74,14 @@ Decision guide:
 
 Do not create test rules before scope confirmation.
 
-### Phase 3: Mandatory authoring pre-flight (serial)
+### Phase 3: Mandatory branch authoring pre-flight
 
-Right before any rule create or update, run both steps in order:
+Right before any rule create or update:
 
-1. Load `methodology-change-request-workflow`.
-2. Run `list-available-authoring-workflows` and follow the `Pre-flight: Determine the Authoring Path` guidance.
+1. Load `methodology-rule-authoring` and select or establish the target branch.
+2. Validate the branch ID locally and pass it as `branchID` to every rule write.
 
-If a deterministic workflow matches, use it. Otherwise continue with `methodology-rule-authoring`.
+Continue with `methodology-rule-authoring`.
 
 ### Phase 4: Create or update test artifacts
 
@@ -121,7 +120,7 @@ When authored rules exist, include their `pzInsKey` values for client callback r
 |------|----------------|
 | Analyze before write | Always derive coverage from actual rule data |
 | Confirm scope | Require user confirmation before authoring tests |
-| ChangeRequest-safe | Use mandatory pre-flight before create/update |
+| Branch-safe | Use branch selection and workflow pre-flight before create/update |
 | Approved scope only | Do not add unrelated tests without user approval |
 | One increment at a time | Prefer small validated batches over large speculative generation |
 | Discover existing tests first | For rule-level PegaUnit generation, call `D_pxGetRuleTestCases` before proposing new tests |
@@ -131,7 +130,7 @@ When authored rules exist, include their `pzInsKey` values for client callback r
 
 - Generating tests without fetching the target rule or case artifacts
 - Creating test rules before user confirms matrix/scope
-- Skipping `methodology-change-request-workflow` pre-flight
+- Skipping branch selection or deterministic workflow pre-flight
 - Attempting broad app-wide coverage when user asked for one specific rule
 - Claiming full coverage while known branches remain untested
 - Generating new PegaUnit tests without first checking `D_pxGetRuleTestCases.pxResults`

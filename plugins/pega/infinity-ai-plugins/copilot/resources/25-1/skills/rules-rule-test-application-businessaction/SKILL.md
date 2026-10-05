@@ -19,8 +19,8 @@ When working standalone, gather them before starting.
 | Class Name | Case type work class (`pyClassName`) | `get-application` → case type list |
 | View Name | View rule name (usually same as Flow Action) | `get-rule` on `Rule-Obj-Flow` → assignment shape `pyFlowAction` |
 | Type | `Standalone`, `ScreenFlow (SF1)`, `ScreenFlow (SFN)`, or `PerformAction` | Check `pyCategory` on the flow — `ScreenFlow` = screen flow, else standalone |
+| Branch ID | Selected branch for saving rules | From `methodology-rule-authoring` |
 | Persona | Actor performing this assignment | `run-data-page(dataPage="D_pzGlobalTestPersonaList", dataPageType="list", payload="{\"dataViewParameters\":{\"AppName\":\"{AppName}\",\"AppVersion\":\"{AppVersion}\"}}")` |
-| ChangeRequest ID | Active change request for saving rules | From `methodology-rule-authoring` |
 | Test Data | Scenario-specific default values for input parameters — every interactive field MUST have a meaningful default | From test scenarios or methodology handover |
 
 If all inputs are present, proceed to the Procedure below.
