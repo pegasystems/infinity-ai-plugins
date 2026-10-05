@@ -58,7 +58,7 @@ Before touching a theme, determine the correct operation:
 
 1. Call `list-rules(ruleType="Rule-UI-Theme", ruleName=<themeName>)` to check whether the instance exists.
 2. If **no results** → the theme does not exist → create a new `Rule-UI-Theme` instance with `pyDefinition` populated.
-3. If **results returned** → `get-rule(detail="full")` on the matching instance, merge the requested change into `pyDefinition`, and `update-rule` with `changeRequestID` (branch-copy is handled automatically when required).
+3. If **results returned** → `get-rule(detail="full")` on the matching instance, merge the requested change into `pyDefinition`, and `update-rule` with the selected `branchID` (branch-copy is handled automatically when required).
 4. If the requested change is really a screen/layout adjustment, stop and switch to `rules-rule-ui-view`.
 
 ## Verification Rules

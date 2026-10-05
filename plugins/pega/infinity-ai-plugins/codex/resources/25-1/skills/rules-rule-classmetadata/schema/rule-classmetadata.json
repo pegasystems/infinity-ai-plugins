@@ -10,8 +10,8 @@
     "pyClassName": { "type": "string", "description": "Fully qualified class this metadata applies to (e.g., 'MyOrg-MyApp-Work-MyCase'). Drives pyRuleName and pyLabel." },
     "pyRuleName": { "type": "string", "description": "Always equal to pyClassName.", "x-pega-autoDerived": true, "x-pega-deriveFrom": "pyClassName" },
     "pyLabel": { "type": "string", "description": "Always equal to pyClassName.", "x-pega-autoDerived": true, "x-pega-deriveFrom": "pyClassName" },
-    "pyRuleSet": { "type": "string", "description": "Auto-derived from the ChangeRequest branch context." },
-    "pyRuleSetVersion": { "type": "string", "description": "Auto-derived from the ChangeRequest branch context." },
+    "pyRuleSet": { "type": "string", "description": "Auto-derived from the selected branch context." },
+    "pyRuleSetVersion": { "type": "string", "description": "Auto-derived from the selected branch context." },
     "pyRuleAvailable": { "type": "string", "enum": ["Yes", "No", "Withdrawn", "Final", "Blocked"], "x-pega-autoFill": "Yes" },
     "pyPrimaryFields": {
       "type": "array",

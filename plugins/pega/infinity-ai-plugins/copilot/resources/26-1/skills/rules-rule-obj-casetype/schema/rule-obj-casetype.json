@@ -37,7 +37,7 @@
     },
     "pyLabel": {
       "type": "string",
-      "description": "Human-readable display name shown in the case designer, portal headers, and work queues (e.g., 'Sprint', 'Bug', 'Change Request', 'Data Import'). Keep concise — 1-3 words."
+      "description": "Human-readable display name shown in the case designer, portal headers, and work queues (e.g., 'Sprint', 'Bug', 'Service Request', 'Data Import'). Keep concise — 1-3 words."
     },
     "pyDescription": {
       "type": "string",
@@ -51,7 +51,7 @@
     },
     "pyRuleSet": {
       "type": "string",
-      "description": "Ruleset where this rule is saved. During branch development, this is automatically set to the branch ruleset by the ChangeRequest workflow."
+      "description": "Ruleset where this rule is saved. During branch development, this is automatically set to the selected branch ruleset."
     },
     "pyRuleSetVersion": {
       "type": "string",
@@ -64,7 +64,7 @@
     },
     "pyBaseRuleHolder": {
       "type": "string",
-      "description": "Reference to the base rule this rule overrides, if any. Contains the pzInsKey of the base rule in the lower ruleset. Empty when this is the base rule itself. Observed on case types that specialize a framework-provided base case type (e.g., ChangeRequest overriding a PegaAccel base)."
+      "description": "Reference to the base rule this rule overrides, if any. Contains the pzInsKey of the base rule in the lower ruleset. Empty when this is the base rule itself. Observed on case types that specialize a framework-provided base case type (e.g., ServiceRequest overriding a framework base)."
     },
     "pyIcon": {
       "type": "string",

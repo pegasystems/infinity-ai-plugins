@@ -135,7 +135,7 @@ Use `pyInputParameters` and `pyOutputParameters` from the inventory (fetched via
 | Structural — insert/reorder | Full array replacement |
 | Re-classification (gains child cases) | Update `pyTestType`, `pyTestContext`, `pyClassName` |
 
-**Tool:** Use `update-rule` with the active `changeRequestID` for both branch and
+**Tool:** Use `update-rule` with the selected `branchID` for both branch and
 base/other-branch starting points; branch-copy behavior is handled internally when
 needed.
 

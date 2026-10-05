@@ -62,7 +62,7 @@ Before touching the view, determine the correct operation:
    - If any result has `pyRuleSet` matching the branch ruleset → use that branch
      result's instance key and use **Sequence B** (update) directly.
    - If no result is in the branch ruleset → use the best matching result key and
-     continue with **Sequence B**. `update-rule` with `changeRequestID` handles
+      continue with **Sequence B**. `update-rule` with the selected `branchID` handles
      branch-copy behavior internally when required.
 
 **Default assumption:** When a user asks to "add a field to a view" or "modify a
@@ -88,7 +88,7 @@ view," the view almost certainly already exists. Always run step 1 before decidi
 1. `get-rule(detail="full")` on the existing view to read current state.
 2. If multiple existing results were found, prefer the branch-ruleset result before
    fetching. If no branch result exists, proceed with the selected base result key;
-   `update-rule` with `changeRequestID` will branch-copy automatically as needed.
+   `update-rule` with the selected `branchID` will branch-copy automatically as needed.
 3. `update-rule` for `Rule-UI-View` — choose the list update strategy based on what
    you are sending:
    - **Appending fields (partial update):** omit `listUpdateMode` and use positional

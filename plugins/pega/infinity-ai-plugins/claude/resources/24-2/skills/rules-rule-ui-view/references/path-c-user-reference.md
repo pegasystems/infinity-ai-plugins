@@ -6,7 +6,8 @@ description: "Path C — User Reference: ensure text property and wire Pega-UI-C
 
 This is the lightest path — no class or view chain needed.
 
-> All `update-rule` calls require a `changeRequestID`.
+> All `create-rule` and `update-rule` calls require the selected `branchID` and a
+> concise `changeDescription`.
 
 ## Step C1 — Ensure Property Exists
 
@@ -19,7 +20,7 @@ list-rules(ruleType="Rule-Obj-Property", className="{ParentClassName}", ruleName
 If missing, create it using `rules-rule-obj-property` `rules-rule-obj-property/examples/stub`.
 
 ```
-create-rule(ruleType="Rule-Obj-Property", content={...}, changeRequestID="{crKey}")
+create-rule(ruleType="Rule-Obj-Property", content={...}, branchID="{branchID}", changeDescription="Create user reference property")
 ```
 
 ## Step C2 — Wire User Reference Field in Parent View
@@ -50,7 +51,7 @@ Three surfaces plus extra metadata:
 | `pxContextMetadata` | Property in `$properties`/`$fields`; property path in `$users`; `D_pyC11nOperatorsList` in `$pagelists` with `metaDataOnly: true` |
 
 ```
-update-rule(key="{pzInsKey}", updates={...}, changeRequestID="{crKey}")
+update-rule(key="{pzInsKey}", updates={...}, branchID="{branchID}", changeDescription="Wire user reference field")
 ```
 
 ## Step C3 — Verify

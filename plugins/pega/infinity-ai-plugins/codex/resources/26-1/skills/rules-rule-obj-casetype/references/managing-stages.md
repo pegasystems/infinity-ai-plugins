@@ -35,7 +35,7 @@ search-rules searchText="pxChangeToSpecifiedStage"  (filter to the work class)
 
 ## Branch authoring
 
-When authoring inside a ChangeRequest branch, use the branch ruleset name
+When authoring inside a selected branch, use the branch ruleset name
 (`{base}_Branch_{branchID}`) and version `01-01-01` — **not** the base
 ruleset version. See `rules-rule-ruleset-branch` for the full protocol.
 

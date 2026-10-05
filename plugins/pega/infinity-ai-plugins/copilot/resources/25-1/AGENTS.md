@@ -5,28 +5,47 @@ This repository contains Pega domain knowledge as structured markdown skills —
 ## Core instructions
 
 - You have MCP tools available that you can call directly. Tool descriptions in your system prompt explain what each tool does and its parameters.
-- When the user asks any rule-related or application-building related questions, the agent must call the following three mcp calls **in parallel**: `get-application` (with no arguments) **and** `list-casetypes` **and** `list-available-authoring-workflows` if not done already. For skill discovery, use `search-skills` first with a natural language query; only fall back to `list-skills` if `search-skills` returns no results or is unavailable.
-- Right before creating or updating any rules always complete both of the following two steps in serial:
-  1. First, get the skill `methodology-change-request-workflow`. All Pega rule create and updates must go through a ChangeRequest case.
-  2. Second, consider if the request matches the description returned in `list-available-authoring-workflows` mcp tool call considering the text in "Limitation:". Re-run the tool, if needed. If the user's request matches the workflow description, use the workflow as described in `methodology-change-request-workflow` in the section `### Pre-flight: Determine the Authoring Path`.
-- **Toggle enable/disable** — when the user asks to enable or disable a named toggle, treat this as a rule authoring task immediately. Do NOT search rules, list cases, or explore first — the toggle name from the user's request is sufficient context. Follow the two serial steps above: (1) get skill `methodology-change-request-workflow`, (2) call `list-available-authoring-workflows` and follow the Pre-flight path.
+- When the user asks any rule-related or application-building related questions, the agent must call the following two mcp calls **in parallel**: `get-application` (with no arguments) **and** `list-casetypes` if not done already. For skill discovery, use `search-skills` first with a natural language query; only fall back to `list-skills` if `search-skills` returns no results or is unavailable.
+- Before creating or updating rules, load `methodology-rule-authoring` and follow its branch authoring lifecycle. Use the selected `branchID` on every rule write.
 - **Agile work item** — act on a user story or backlog item | "work on US-162", "pick the next user story", "process the backlog", "what is the next priority work item", "what's my next work item" | Load `methodology-agile-userstory-processor` skill first, then follow its workflow (fetch → read → author)
 - **Case audit / history** — retrieve action history, audit trail, or timeline of a case | "show audit for W-123", "get history of I-4009", "what actions were taken on this case" | Load `methodology-retrieve-case-work-history` first, then call `D_pyWorkHistory` via `run-data-page`. Do NOT use `get-case-details` — it does not return action history. (load → run-data-page → present)
 - **Rule explain** — explain, walkthrough, understand, "what does this rule do", or `/explain` for an existing rule instance of any rule type | Load `methodology-rule-explain` first, resolve one exact target `pzInsKey`, fetch rule details read-only, and return an evidence-based natural-language functionality explanation (default concise, detailed only when requested in the current query). Do not create or update rules in explain flow.
 - **Rule review / inspection** — review, inspect, check, examine, analyze, assess, evaluate, audit, or `/review` for an existing rule instance of any rule type | Load `methodology-rule-review` first, resolve the target `pzInsKey`, then run `D_pxRuleReview` via `run-data-page` and present both `pxWarningsToDisplay` and `pyRuleReviewGuidelines` before any direct rule analysis or authoring decision. If Platform and Application-specific guideline sections conflict, pause and ask the user which source takes precedence before continuing. If the user approves follow-up changes, implement only the approved suggestions — do not reimplement the entire rule.
-- **Generate tests** — `/generate-tests`, generate tests, add test coverage, or create test cases for a rule/case behavior | Load `methodology-generate-tests` first, confirm scope from a target rule/case, produce the coverage matrix, and only then create or update test rules through ChangeRequest-safe authoring pre-flight.
+- **Generate tests** — `/generate-tests`, generate tests, add test coverage, or create test cases for a rule/case behavior | Load `methodology-generate-tests` first, confirm scope from a target rule/case, produce the coverage matrix, and only then create or update test rules through branch-scoped authoring.
 
 ## AI Authoring Data Pages
 
 This section includes Data Pages that agents can use to make authoring decisions. The **404 Not Found** row informs the
-agent what to do if the Data Page call returns a "404 Not Found" message
+agent what to do if the Data Page call returns a "404 Not Found" message. The Data Pages
+in this section are sorted alphabetically by data-page name.
+
+### `D_pxAddExistingBranchToTopApplication`
+* **Purpose** — Add an existing branch to the top application and set it as the current branch preference.
+* **Parameters** — `branchID` (required string): the branch to add. `Application` (optional string): the application in which to set the branch preference; blank uses the current top application.
+* **Confirmation** — Ask the user for explicit confirmation before calling this Data Page.
+* **Page or List** — Page
+* **404 Not Found** — The Data Page is unavailable in the current application/ruleset context. Inform the user and do not add the branch.
+
+### `D_pxBranchContext`
+* **Purpose** — Retrieve the durable context stored on an existing `Rule-RuleSet-Branch` record. Use to read the agent-managed task list, future-work notes, and completed-work overview.
+* **Parameters** — `branchID` (required).
+* **Page or List** — Page
+* **Branch not found** — The branch supplied does not exist in the system. Report this to the user.
+* **Branch unavailable in current application stack** — The branch exists in the system but is not accessible on the current application or any built on application. Summarize the error for the user.
+* **404 Not Found** — The Data Page is unavailable in the current application/ruleset context. Continue processing without the branch-context lookup and inform the user that the context could not be read.
 
 ### `D_pxBranchForAI`
 * **Purpose** — Retrieve branch summary details, including branch lock status and **the list of rules contained in the branch**. This is the ONLY correct way to list rules in a branch.
-* **Parameters** — `branchID` (required string, case-insensitive): pass the effective branch ID returned as `branchName` by `initiate-authoring-change`.
+* **Parameters** — `branchID` (required string, case-insensitive): pass the selected, validated branch ID.
 * **Page or List** — Page
 * **Details** — Use the returned `pyIsLocked` value to determine whether the branch is editable. The `pxResults` array lists the `pzInsKey` values for rules in the branch.
 * **404 Not Found** — Search for the branchID with allApps=true, matchMode=any, fullText=true
+
+### `D_pxCreateBranchAndAddToTopApplication`
+* **Purpose** — Create a new branch, add it to the top application, and set it as the current branch preference.
+* **Parameters** — `branchID` (required string): the new branch identifier. `Application` (optional string): the application in which to set the branch preference; blank uses the current top application.
+* **Page or List** — Page
+* **404 Not Found** — The Data Page is unavailable in the current application/ruleset context. Inform the user that the branch could not be created or added.
 
 ### `D_pxSetBranchDevelopmentPreferences`
 * **Purpose** — Set or clear the branch development preference for a branch and application in the current app stack. User may also call this their "Branch Preference"
@@ -38,15 +57,12 @@ agent what to do if the Data Page call returns a "404 Not Found" message
 * **Purpose** — Update durable context text on an existing `Rule-RuleSet-Branch` record. Use to store plans for future use.
 * **Parameters** — `branchID` (required); use `taskListOperation` and `taskListContent` to modify the list of tasks managed by the agent; use `futureNotesOperation` and `futureNotesContent` to modify notes regarding future work; use `completedSummaryOperation` and `completedSummaryContent` to modify an overview of work completed so far.
 * **Operation contract** — Each operation is optional and must be `replace`, `append`, or `clear`. `replace` assigns the content, `append` adds a newline followed by the content, and `clear` sets the target property to an empty string. Content is required for `replace` and `append`, and is not used for `clear`. An omitted operation leaves that property unchanged. At least one operation is required.
+* **Deferred work** — If the user says work should happen later, next, or in a future step, append a note to `pyNotesAboutIntendedFutureWork`, even when the current request explicitly excludes that work. Include the deferred action and its scope. “Do not do this yet” is not the same as “do not do this.”
+* **Completion updates** — Clearing `pyTaskList` must not clear or replace `pyNotesAboutIntendedFutureWork`. Preserve deferred-work notes unless the user explicitly cancels or completes them.
+* **Rule-write summaries** — `create-rule` and `update-rule` automatically append their `changeDescription` to `pySummaryOfCompletedWork`. Do not append the same description again. Add a separate summary only for new verification or milestone information.
 * **Page or List** — Page
+* **Returns** — durable context stored on an existing `Rule-RuleSet-Branch` record
 * **404 Not Found** — The Data Page is unavailable in the current application/ruleset context. Continue processing without the branch-context update and inform the user that the plan was not stored.
-
-### `D_pxBranchContext`
-* **Purpose** — Retrieve the durable context stored on an existing `Rule-RuleSet-Branch` record. Use to read the agent-managed task list, future-work notes, and completed-work overview.
-* **Parameters** — `branchID` (required).
-* **Branch not found** — The branch supplied does not exist in the system. Report this to the user.
-* **Branch unavailable in current application stack** — The branch exists in the system but is not accessible on the current application or any built on application. Summarize the error for the user.
-* **404 Not Found** — The Data Page is unavailable in the current application/ruleset context. Continue processing without the branch-context lookup and inform the user that the context could not be read.
 
 ## Skills repo overview
 

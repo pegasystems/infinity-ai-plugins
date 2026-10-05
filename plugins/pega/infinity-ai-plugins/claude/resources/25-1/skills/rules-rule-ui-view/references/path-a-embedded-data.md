@@ -6,7 +6,8 @@ description: "Path A — Embedded Data: create sub-view, Page/PageList property,
 
 Continue from Shared Steps in `rules-rule-ui-view/references/data-field-decision-tree`.
 
-> All `create-rule` and `update-rule` calls require a `changeRequestID`.
+> All `create-rule` and `update-rule` calls require the selected `branchID` and a
+> concise `changeDescription`.
 
 ## Step A4 — Create the Sub-View (DefaultForm)
 
@@ -20,7 +21,7 @@ Follow the **Required Tool Sequence** from `rules-rule-ui-view`:
 3. **create-rule** — submit the view
 
 ```
-create-rule(ruleType="Rule-UI-View", content={...}, changeRequestID="{crKey}")
+create-rule(ruleType="Rule-UI-View", content={...}, branchID="{branchID}", changeDescription="Create embedded data view")
 ```
 
 Verify:
@@ -39,7 +40,7 @@ Use `rules-rule-obj-property`:
 Set `pyPageClass` to the data class name.
 
 ```
-create-rule(ruleType="Rule-Obj-Property", content={...}, changeRequestID="{crKey}")
+create-rule(ruleType="Rule-Obj-Property", content={...}, branchID="{branchID}", changeDescription="Create page property")
 ```
 
 ## Step A6 — Wire Embedded Data Field in Parent View
@@ -88,7 +89,7 @@ All three surfaces must be updated:
 | EmbeddedDataMulti (Infinity 26+) | `pxContextMetadata` | Data class in `$classesmetadata`; PageList entry in `$pagelists` with `$actions`, `$views`, and `includePrimaryFields` |
 
 ```
-update-rule(key="{pzInsKey}", updates={...}, changeRequestID="{crKey}")
+update-rule(key="{pzInsKey}", updates={...}, branchID="{branchID}", changeDescription="Wire embedded data field")
 ```
 
 ## Step A7 — Verify

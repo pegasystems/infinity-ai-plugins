@@ -16,7 +16,7 @@ description: Authoring guide for Pega AI Tool rules (Rule-AI-Tool), including ba
 | `rules-rule-ai-tool/examples/complex-automation-tool` | Create Rule Activity-backed Tool | Rich activity-backed tool with confirmation, detailed instructions, and parameter mappings |
 | `rules-rule-ai-tool/examples/datapage-backed-tool` | Search Rule Data Page-backed Tool | Data page-backed tool with mirrored top-level and nested parameters |
 | `rules-rule-ai-tool/examples/flowaction-backed-tool` | Change Case Stage Flow Action-backed Tool | Flow action-backed tool |
-| `rules-rule-ai-tool/examples/minimal-tool` | Rule-AI-Tool Stub | Smallest valid Rule-AI-Tool create payload |
+| `rules-rule-ai-tool/examples/stub` | Rule-AI-Tool Stub | Smallest valid Rule-AI-Tool create payload |
 | `rules-rule-ai-tool/examples/section-backed-tool` | Display Case Summary Section-backed Tool | Section-backed tool for rendering a UI section |
 
 ## Authoring notes

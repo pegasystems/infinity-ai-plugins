@@ -1,6 +1,6 @@
 ---
 name: Activity-End
-description: Terminate the entire call stack
+description: Use when you want to terminate the entire call stack which is extremely rare; Do not use.
 ---
 
 ```json

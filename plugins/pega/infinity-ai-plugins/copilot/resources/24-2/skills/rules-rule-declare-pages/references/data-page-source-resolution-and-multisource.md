@@ -70,5 +70,5 @@ Example Data Transform `LoadMyEntity` defined on
   `pyClassName: "MyOrg-MyApp-Data-MyEntity"`; `Code-Pega-List` does not inherit
   from the data class.
 
-For multi-rule changes in a ChangeRequest branch, create or copy source rules
+For multi-rule changes in a selected branch, create or copy source rules
 first, then create Data Pages that reference them.

@@ -135,13 +135,6 @@
       "prompt": false
     },
     {
-      "name": "methodology-change-request-workflow",
-      "description": "Load before creating or updating any Pega rules. Covers the ChangeRequest 4-stage lifecycle (intake, authoring, review, complete), branch isolation, case properties, and resuming cases.",
-      "path": "skills/methodology-change-request-workflow/SKILL.md",
-      "category": "skill",
-      "prompt": false
-    },
-    {
       "name": "methodology-dx-api-assignment-action",
       "description": "Load when building a DX API assignment action payload for runtime case updates. Covers when to use content, when to use pageInstructions, how to combine them, and how to structure supported page, page-list, and page-group instructions for perform-action.",
       "path": "skills/methodology-dx-api-assignment-action/SKILL.md",
@@ -164,7 +157,7 @@
     },
     {
       "name": "methodology-generate-tests",
-      "description": "Load when the user asks to generate tests for an existing rule or case behavior. Produces a risk-based test plan, discovers existing linked PegaUnit tests first, then creates or updates PegaUnit or Application Test artifacts through the ChangeRequest-safe authoring path after explicit user confirmation.",
+      "description": "Load when the user asks to generate tests for an existing rule or case behavior. Produces a risk-based test plan, discovers existing linked PegaUnit tests first, then creates or updates PegaUnit or Application Test artifacts through branch-scoped authoring after explicit user confirmation.",
       "path": "skills/methodology-generate-tests/SKILL.md",
       "category": "skill",
       "prompt": false
@@ -185,7 +178,7 @@
     },
     {
       "name": "methodology-rule-authoring",
-      "description": "General instructions for creating and updating Pega rules",
+      "description": "Load before creating or updating Pega rules. Covers branch selection, deterministic workflow routing, branch-scoped write APIs, durable context, and verification.",
       "path": "skills/methodology-rule-authoring/SKILL.md",
       "category": "skill",
       "prompt": false
@@ -1688,18 +1681,6 @@
       ]
     },
     {
-      "name": "rules-rule-ai-tool/examples/minimal-tool",
-      "label": "Rule-AI-Tool Stub",
-      "description": "Minimal AI tool payload -- smallest valid create payload.",
-      "path": "skills/rules-rule-ai-tool/examples/minimal-tool.md",
-      "category": "skill",
-      "prompt": false,
-      "parent": "rules-rule-ai-tool",
-      "aliases": [
-        "Rule-AI-Tool Stub"
-      ]
-    },
-    {
       "name": "rules-rule-ai-tool/examples/section-backed-tool",
       "label": "Display Case Summary Section-backed Tool",
       "description": "Section-backed tool that renders a case summary section.",
@@ -1709,6 +1690,18 @@
       "parent": "rules-rule-ai-tool",
       "aliases": [
         "Display Case Summary Section-backed Tool"
+      ]
+    },
+    {
+      "name": "rules-rule-ai-tool/examples/stub",
+      "label": "Rule-AI-Tool Stub",
+      "description": "Minimal AI tool payload -- smallest valid create payload.",
+      "path": "skills/rules-rule-ai-tool/examples/stub.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "rules-rule-ai-tool",
+      "aliases": [
+        "Rule-AI-Tool Stub"
       ]
     },
     {
@@ -2288,18 +2281,6 @@
       ]
     },
     {
-      "name": "rules-rule-decision-dataset/examples/database-table",
-      "label": "Database Table Dataset",
-      "description": "Complete Database Table dataset (Rule-Decision-DataSet) with composite keys and partition key. Uses pyType \"Data-Admin-DataSet-DB\" with configuration pointing to a specific database table.",
-      "path": "skills/rules-rule-decision-dataset/examples/database-table.md",
-      "category": "skill",
-      "prompt": false,
-      "parent": "rules-rule-decision-dataset",
-      "aliases": [
-        "Database Table Dataset"
-      ]
-    },
-    {
       "name": "rules-rule-decision-dataset/examples/snowflake",
       "label": "Snowflake Dataset",
       "description": "Complete Snowflake dataset (Rule-Decision-DataSet) with column mappings, select keys, resume keys, and partition key. Uses pyType \"Data-Admin-DataSet-Snowflake\" with a Snowflake data instance connection.",
@@ -2309,6 +2290,18 @@
       "parent": "rules-rule-decision-dataset",
       "aliases": [
         "Snowflake Dataset"
+      ]
+    },
+    {
+      "name": "rules-rule-decision-dataset/examples/stub",
+      "label": "Database Table Dataset",
+      "description": "Complete Database Table dataset (Rule-Decision-DataSet) with composite keys and partition key. Uses pyType \"Data-Admin-DataSet-DB\" with configuration pointing to a specific database table.",
+      "path": "skills/rules-rule-decision-dataset/examples/stub.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "rules-rule-decision-dataset",
+      "aliases": [
+        "Database Table Dataset"
       ]
     },
     {
@@ -2938,7 +2931,7 @@
     {
       "name": "rules-rule-obj-activity/examples/pySteps/activity-end",
       "label": "Activity-End",
-      "description": "Terminate the entire call stack",
+      "description": "Use when you want to terminate the entire call stack which is extremely rare; Do not use.",
       "path": "skills/rules-rule-obj-activity/examples/pySteps/activity-end.md",
       "category": "skill",
       "prompt": false,

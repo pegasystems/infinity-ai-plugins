@@ -14,7 +14,7 @@ or parameter.
 
 ```
 1. get-rule(key="{tcKey}", detail="full")         → identify keyword index and param index
-2. update-rule(key, updates, changeRequestID)   → apply nested positional merge
+2. update-rule(key, updates, branchID)   → apply nested positional merge
 3. get-rule(key, detail="full")                     → verify only target value changed
 ```
 

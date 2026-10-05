@@ -1,6 +1,6 @@
 ---
 name: methodology-rule-authoring
-description: General instructions for creating and updating Pega rules
+description: Load before creating or updating Pega rules. Covers branch selection, deterministic workflow routing, branch-scoped write APIs, durable context, and verification.
 ---
 
 # Rule Authoring — General Guide
@@ -8,82 +8,95 @@ description: General instructions for creating and updating Pega rules
 This skill explains how to choose the correct write API for a Pega rule type, then
 create or update the rule using that API.
 
+## Maintaining Branch Context
+
+Branch context is a durable summary for future sessions, not a transcript of tool calls.
+Follow this lifecycle after the target branch has been identified:
+
+1. **Read the existing context.** At the start of the session, call `D_pxBranchContext`
+   with the selected `branchID`, before deciding what work remains. If the data page is
+   unavailable, continue and inform the user that the context could not be read.
+2. **Record the initial plan.** Once the intended approach and remaining work are clear,
+   call `D_pxUpdateBranchContext` to replace `pyTaskList` with the remaining tasks. Put
+   important decisions, constraints, or future-work notes in `pyNotesAboutIntendedFutureWork`.
+3. **Record meaningful milestones.** After a phase is complete, append a concise summary
+   to `pySummaryOfCompletedWork` if it adds useful durable context, and replace
+   `pyTaskList` with the current remaining tasks. Group related actions into one
+   milestone; do not update after every rule or tool call.
+   `create-rule` and `update-rule` automatically append their `changeDescription` to
+   `pySummaryOfCompletedWork` so there is no need to append again that the rule has been created
+   or updated.
+4. **Record completion.** When the requested work is finished, append only new completion
+   or verification details to `pySummaryOfCompletedWork`; do not repeat a rule-write
+   description already added automatically by `create-rule` or `update-rule`. Then clear
+   `pyTaskList` so no completed tasks remain active. Preserve future-work notes.
+5. **Record deferred work.** If the user says to do something later, next, or in a future
+   step, append a note to `pyNotesAboutIntendedFutureWork` describing the deferred action
+   and its scope. “Do not do this yet” is not the same as “do not do this.” Deferred work
+   belongs in future notes, not `pyTaskList`, unless the user explicitly asks for it to be
+   active work in the current session.
+6. **Record exceptions.** For a blocker, changed scope, important decision, or handoff,
+   append the situation and the required next step to `pyNotesAboutIntendedFutureWork`.
+
+Do not update branch context after skill loads, lookups, searches, or routine verification
+calls unless one of those actions completes a meaningful milestone. For a trivial,
+one-step task, skip the initial plan update when there is no useful durable context to
+preserve, but still record explicitly deferred future work. Record completion if the
+result will help a future session. See the `D_pxUpdateBranchContext` section in
+`AGENTS.md` for the operation contract.
+
+## Branch Authoring Lifecycle
+
+All rule writes are branch-scoped. Rule writes do not merge automatically into the
+base application ruleset.
+
+1. **Select a branch.** If a Branch Preference exists, confirm with the user that it
+   should be used. If the user declines, change or remove the preference. If no
+   preference exists, ask which existing branch to use or whether to create one.
+2. **Create or attach the branch.** Create a new branch with
+   `D_pxCreateBranchAndAddToTopApplication`. Before adding an existing branch with
+   `D_pxAddExistingBranchToTopApplication`, ask for explicit confirmation.
+3. **Validate the branch ID locally.** Trim it, require 3–16 characters, allow only
+   letters, numbers, `_`, and `-`, require an alphanumeric first character, and reject
+   `px`, `py`, and `pz` prefixes. Do not use local validation as an existence or access
+   check; let the write API report those errors.
+4. **Use branch-scoped writes.** Pass the selected `branchID` to every `create-rule`
+   and `update-rule` call. Pass `branchID` and `sourceKey` to `copy-rule` when the user
+   explicitly requests Save As.
+5. **Verify and report.** Verify each write with `get-rule(detail="full")`. Run
+   branch-scoped PegaUnit tests when applicable. Summarize changes and verification;
+   leave review and merge to standard Pega branch management.
+
 ## Tool Selection
 
 Do not guess which write API to use.
-All rule types in `## Supported Rule Types` use `create-rule` / `update-rule`.
-
-If the rule type does not appear in the table, stop and verify support before
-authoring.
-
-## Supported Rule Types
-
-Use the rule-type-specific API based on the support table below.
-
-### Supported create/update rule types
-
-These rule types have dedicated `rules-*` skills in this skills repo and should be
-authored with `create-rule` / `update-rule`.
-
-| Rule type | Skill | API |
-|-----------|-------|-----|
-| `Rule-Admin-System-Settings` | `rules-rule-admin-system-settings` | `create-rule` and `update-rule` both supported; omit `pySettingMetaData.pyCategoryName` on create unless reusing a category that already exists |
-| `Rule-Async-JobScheduler` | `rules-rule-async-jobscheduler` | `create-rule` / `update-rule` |
-| `Rule-Async-QueueProcessor` | `rules-rule-async-queueprocessor` | `create-rule` / `update-rule` |
-| `Rule-ClassMetadata` | `rules-rule-classmetadata` | `create-rule` / `update-rule` |
-| `Rule-Connect-GenerativeAI` | `rules-rule-connect-generativeai` | `create-rule` / `update-rule` |
-| `Rule-Connect-REST` | `rules-rule-connect-rest` | `create-rule` / `update-rule` |
-| `Rule-Declare-DecisionTable` | `rules-rule-declare-decision-table` | `create-rule` / `update-rule` |
-| `Rule-Declare-Pages` | `rules-rule-declare-pages` | `create-rule` / `update-rule` |
-| `Rule-Decision-DataSet` | `rules-rule-decision-dataset` | `create-rule` / `update-rule` |
-| `Rule-Edit-Validate` | `rules-rule-edit-validate` | `create-rule` / `update-rule` |
-| `Rule-Obj-Activity` | `rules-rule-obj-activity` | `create-rule` / `update-rule` |
-| `Rule-Obj-CaseType` | `rules-rule-obj-casetype` | `create-rule` / `update-rule` |
-| `Rule-Obj-Class` | `rules-rule-obj-class` | `create-rule` / `update-rule` |
-| `Rule-Obj-Corr` | `rules-rule-corrtype` | `create-rule` / `update-rule` |
-| `Rule-Obj-FieldValue` | `rules-rule-obj-fieldvalue` | `create-rule` / `update-rule` |
-| `Rule-Obj-Flow` | `rules-rule-obj-flow` | `create-rule` / `update-rule` |
-| `Rule-Obj-FlowAction` | `rules-rule-obj-flowaction` | `create-rule` / `update-rule` |
-| `Rule-Obj-Model` | `rules-rule-obj-model` | `create-rule` / `update-rule` |
-| `Rule-Obj-Property` | `rules-rule-obj-property` | `create-rule` / `update-rule` |
-| `Rule-Obj-Report-Definition` | `rules-rule-obj-report-definition` | `create-rule` / `update-rule` |
-| `Rule-Obj-ServiceLevel` | `rules-rule-obj-servicelevel` | `create-rule` / `update-rule` |
-| `Rule-Obj-Validate` | `rules-rule-obj-validate` | `create-rule` / `update-rule` |
-| `Rule-Obj-When` | `rules-rule-obj-when` | `create-rule` / `update-rule` |
-| `Rule-RuleSet-Branch` | `rules-rule-ruleset-branch` | `create-rule` / `update-rule` |
-| `Rule-RuleSet-Name` | `rules-rule-ruleset-name` | `create-rule` / `update-rule` |
-| `Rule-RuleSet-Version` | `rules-rule-ruleset-version` | `create-rule` / `update-rule` |
-| `Rule-Test-Unit-Case` | `rules-rule-test-unit-case` | `create-rule` / `update-rule` |
-| `Rule-UI-View` | `rules-rule-ui-view` | `create-rule` / `update-rule` |
-
-If a rule type is not listed in the table above, inform the user it is not available
-for creation or modification.
+When creating, updating, or copying a rule, ensure that the corresponding `rules-*` skill exists. If it does not, stop
+and verify support before authoring.
 
 ## Creating a Rule
 
 ### Workflow
 
-1. **Load the rule-type skill** — use `get-skill` to load the matching `rules-*` skill for
-    the target rule type. This provides instructions on how to understand the rule, examples,
-    and references to skills that contain additional information.
-2. **Find the closest example and use it as-is** — identify the example from the
-    skill's `examples/` directory that most closely matches what you need to create.
-   `examples/` contains full rule examples while subfolders in `examples/` contain
-   example steps or shapes or rows. The canonical stub example returned by the
-   parent skill's examples table is a good start if
-   you want to create the simplest possible rule. **Treat the example as a rigid
-   template:** use the exact same property names, nesting structure, and field
-    patterns it uses. Only change the _values_ to match the user's requirements. Do
-    not invent property names or guess at field structures.
-3. **Adapt the example** — change the field values to match the user's requirements.
-    Base all of your decision regarding the data model on the examples. Do not remove
-    or add fields you don't need. Look for additional examples that might give guidance
-    rather than changing the data model.
-4. **Call `create-rule`.**
-    See `methodology-change-request-workflow` for the full ChangeRequest lifecycle
-    that provides the `changeRequestID`.
-5. **Verify** — call `get-rule` on the returned key to confirm the rule was created
-   correctly.
+1. **Load guidance** — use `get-skill` to load the matching `rules-*` skill for the
+   target rule type. Follow its authoring guidance and use its examples table to
+   identify relevant examples and references.
+2. **Read a top-level example** — read at least one example file directly under the
+   rule skill's `examples/` directory, such as `rules-rule-obj-property/examples/stub`.
+   Do not satisfy this requirement by reading only an example in an `examples/` subdirectory.
+   Top-level examples are complete rule templates; subdirectory examples describe reusable
+   steps, shapes, rows, or other components and may be read in addition.
+3. **Select the template** — choose the top-level example that most closely matches
+   the rule being created. Use the canonical stub when creating the simplest possible
+   rule. Treat the selected example as a rigid template: preserve its property names,
+   nesting structure, and field patterns. Only change values to match the user's
+   requirements.
+4. **Adapt safely** — base the data model on the selected example and any additional
+   relevant examples. Do not invent property names or guess at field structures. Do not
+   remove or add fields unless the examples and the user's requirements justify it.
+5. **Create** — call `create-rule` with the selected `branchID` and a concise,
+   non-empty `changeDescription`.
+6. **Verify** — call `get-rule` on the returned key with `detail="full"` to confirm that
+   the rule was created correctly.
 
 ## Updating a Rule
 
@@ -133,17 +146,16 @@ replace. Examples: `{"pySteps.pySteps":"replace"}` or
 
 1. **Identify the rule** — obtain the `pzInsKey` via `list-rules` if possible. If not,
    use `search-rules`.
-2. **Read current state** — call `get-rule` with `detail='full'` to see the current
-   fields and structure. If the rule is not already in the branch ruleset defined
-   in the Change Request, continue with `update-rule` directly using the active
-   `changeRequestID`; the update call handles branch-copy behavior internally.
+  2. **Read current state** — call `get-rule` with `detail='full'` to see the current
+     fields and structure. If the rule is not already in the selected branch, continue
+     with `update-rule` using the selected `branchID`; the update call handles the
+     branch copy behavior internally.
 3. **Construct the update** — find the closest update example above, then adapt it.
    Provide only the fields you want to change. Use `{}` placeholders in lists to skip
    elements you want to keep unchanged. Add `listUpdateModeOverrides` when one nested
    list needs different behavior from the global default.
-4. **Call `update-rule`.**
-   See `methodology-change-request-workflow` for the full ChangeRequest lifecycle
-   that provides the `changeRequestID`.
+  4. **Call `update-rule`** with the selected `branchID` and a concise, non-empty
+     `changeDescription`.
 5. **Verify** — call `get-rule` with `detail='full'` to confirm the update persisted.
 
 **Never substitute a different rule type because creation failed.** Rule types serve

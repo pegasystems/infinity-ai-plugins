@@ -86,7 +86,7 @@ those three it is an **AUTOMATION**, not an ACTIVITY.
 | `pyRuleParamsStreamName` | `"pzChangeToSpecifiedStage"` |
 | `pyUseCaseName` | `"Changetoaspecificstage"` (use-case label, not the activity name) |
 | `pyUseCaseApplication` | stamping application (e.g. `"AgenticAuthoringPegaDevelopment"`) |
-| `pyUseCaseWorkType` | case-type class short name (e.g. `"GenAIChangeRequest"`) |
+| `pyUseCaseWorkType` | case-type class short name (e.g. `"GenAIWorkItem"`) |
 | `pzIsAPI` | `"true"` |
 
 **`pzRuleParamsHolder` shape** — a mini-page with the stage-change selection:
@@ -233,7 +233,7 @@ stage-navigation helpers, or any custom `Rule-Obj-Activity`.
 | `pyImplementation` | activity rule name (e.g. `"pzCreateBranchForGenAI"`) |
 | `pyActivityType` | `"ACTIVITY"` or `"UTILITY"` (both observed; preserve whichever the server wrote) |
 | `pyActivityTypeSelector` | `"ACTIVITY"` |
-| `pyUseCaseName` | the activity's authored **use-case label** (e.g. `"RunallPegaUnitsinBranch"` for `pzRunAllTestCasesInRuleset`, `"CreateBranchForChangeRequest"` for `pzCreateBranchForGenAI`) — same convention as smart-shape Utilities. **Not** the literal `"Utility"`, and **not** the implementation activity name. |
+| `pyUseCaseName` | the activity's authored **use-case label** (e.g. `"RunallPegaUnitsinBranch"` for `pzRunAllTestCasesInRuleset`, `"CreateBranchForWorkItem"` for `pzCreateBranchForWorkItem`) — same convention as smart-shape Utilities. **Not** the literal `"Utility"`, and **not** the implementation activity name. |
 | `pyBaseClass` | the flow's work class |
 | `pzIsAPI` | `"false"` (contrast with smart-shape Utilities which use `"true"`) |
 | `pyRuleParamsStreamName` | **absent** (no smart-shape UI stream) |
