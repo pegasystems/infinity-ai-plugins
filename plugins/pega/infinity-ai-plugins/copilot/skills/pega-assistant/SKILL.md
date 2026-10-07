@@ -22,6 +22,5 @@ configuration, or authoring workflows through the bundled Pega Infinity Authorin
 ## Useful Starting Points
 
 - `list-skills`
-- `get-skill("recipes/change-request-workflow")`
 - `list-available-applications`
 - `get-application`

@@ -6,7 +6,7 @@
   "plugins": [
     {
       "name": "pega-infinity-authoring",
-      "version": "0.1.6",
+      "version": "0.1.7",
       "displayName": "Pega Infinity Authoring",
       "source": {
         "source": "local",

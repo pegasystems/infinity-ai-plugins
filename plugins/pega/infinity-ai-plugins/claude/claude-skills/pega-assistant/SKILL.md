@@ -19,6 +19,5 @@ Operating rules:
 Useful starting points:
 
 - `list-skills`
-- `get-skill("recipes/change-request-workflow")`
 - `list-available-applications`
 - `get-application`

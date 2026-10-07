@@ -173,7 +173,6 @@ value is present, it is the value the runtime uses even when an environment vari
 
 1. **Confirm remote app context**: Call `list-available-applications` to see available applications
 2. **Load runtime skills**: Call `list-skills` then `get-skill` to load Pega-specific guidance
-3. **For authoring changes**: Use `get-skill("recipes/change-request-workflow")` to learn the authoring workflow
 
 ## Troubleshooting
 

@@ -154,7 +154,6 @@ If verification fails, check:
 
 1. Call `list-available-applications` to see available applications
 2. Call `list-skills` then `get-skill` to load Pega-specific guidance
-3. If the user plans to author changes, use `get-skill("recipes/change-request-workflow")` to learn the authoring workflow
 
 ## Troubleshooting
 
