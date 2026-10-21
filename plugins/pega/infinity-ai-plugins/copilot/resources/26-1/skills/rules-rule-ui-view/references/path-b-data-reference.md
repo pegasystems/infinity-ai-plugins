@@ -23,7 +23,7 @@ create-rule(ruleType="Rule-Declare-Pages", content={...}, branchID="{branchID}",
 Verify:
 
 ```
-search-rules(ruleType="Rule-Declare-Pages", searchText="{DataPageName}")
+search(ruleType="Rule-Declare-Pages", searchText="{DataPageName}")
 ```
 
 ## Pattern Choice

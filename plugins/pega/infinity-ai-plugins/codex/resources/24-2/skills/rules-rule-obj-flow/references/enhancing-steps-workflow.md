@@ -41,7 +41,7 @@ Backed by a Decision Table, Decision Tree, or When rule.
 | Switch which rule the shape uses | Update `pyImplementation` and `pyDecisionClass` on the Decision shape via `update-rule` on the flow |
 
 **Steps:**
-1. `search-rules` to find the decision rule
+1. `search` to find the decision rule
 2. `get-rule` on the decision rule (`detail="full"`)
 3. `update-rule` on the decision rule with new/modified rows
 4. If shape must point to a different rule, `update-rule` on the flow to change the shape's `pyImplementation` and `pyDecisionClass`
@@ -61,7 +61,7 @@ Backed by an Activity (`Rule-Obj-Activity`) or Data Transform (`Rule-Obj-Model`)
 | Change routing target | Update routing Property-Set steps |
 
 **Steps:**
-1. `search-rules` to find the Activity/DT
+1. `search` to find the Activity/DT
 2. `get-rule` (`detail="full"`)
 3. `update-rule` on the Activity / DT with a sparse `pySteps` or `pyProperties`
    patch using `{}` placeholders for untouched rows, or the complete desired list
@@ -85,7 +85,7 @@ flow Utility shape).
 
 **Steps:**
 1. `get-rule` on the flow (`detail="full"`) to identify the Utility shape's called activity
-2. `search-rules` for the correspondence template (`Rule-Obj-Corr`)
+2. `search` for the correspondence template (`Rule-Obj-Corr`)
 3. `get-rule` on the template (`detail="full"`)
 4. `update-rule` with updated message fields
 5. For recipient changes, `update-rule` on the flow to update the Utility shape's config

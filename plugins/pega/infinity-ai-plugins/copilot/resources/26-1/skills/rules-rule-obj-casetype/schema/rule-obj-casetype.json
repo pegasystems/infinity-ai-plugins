@@ -111,7 +111,7 @@
     "pyOfflineEnabled": {
       "type": "string",
       "enum": ["true", "false", ""],
-      "description": "When 'true', enables offline support for this case type. Cases can be created and worked on in Pega mobile apps without network connectivity, then synced when connectivity is restored."
+      "description": "When 'true', enables offline support for this case type. Cases can be created and worked on in Pega mobile apps without network connectivity, then synced when connectivity is restored. Setting this field alone does not verify that the case type's stages, steps, actions, views, and Data Pages are offline-compatible, and does not add the case type to a Mobile channel's offline configuration — both are separate, required steps."
     },
     "pyOfflineStatus": {
       "type": "string",

@@ -422,7 +422,7 @@ In `pxContextMetadata`, use the appropriate key: `$whens` (visibility), `$readOn
 - **pxRuleReferences is NOT auto-updated** after editing `pyContent`. May be stale. Not a blocker.
 - **pyRuleAvailable must be `"Yes"` for label resolution.** Properties without it produce blank labels (`@FL` cannot resolve).
 - **Operation order for removing fields:** Remove from all views first, then block the property. Blocking while a view references it causes blank labels.
-- **Blocked views:** `list-rules` does NOT show blocked rules; `search-rules` DOES; `get-rule` by key shows them.
+- **Blocked views:** `list-rules` does NOT show blocked rules; `search` DOES; `get-rule` by key shows them.
 - **Send the entire `pyContent` outer array** (region wrapper + inner array), not just the new field.
 - **`listUpdateMode` and `listUpdateModeOverrides` control how arrays are applied.** Omit `listUpdateMode` (or use `"patch"`) when sending sparse lists with `{}` no-op placeholders. Use `listUpdateMode="replace"` when sending the complete desired field list. Use `listUpdateModeOverrides` only when a specific nested list path needs different behavior than the global default. Dot notation is supported only in override paths, not in update payload keys.
 - **`pyRuleFormStatus`** should be `"Good"` after a successful update.

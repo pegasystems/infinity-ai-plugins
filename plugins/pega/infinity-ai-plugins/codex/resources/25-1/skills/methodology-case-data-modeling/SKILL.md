@@ -150,12 +150,14 @@ If multiple case types need the same data structure (e.g., Address, ContactInfo)
 - **Visual Data Model:** Use Infinity Studio's visual data modeler to audit relationships across Case Types and Data Objects before delivery.
 - **Flat data model:** Putting everything in one class makes rules unresolvable and breaks specialization — always separate work, data, and integration classes.
 - **Overloaded case type:** One case type handling multiple unrelated processes creates unmaintainable flows — create separate case types and use child cases for dependencies.
+- **Offline mobile Case Types:** Before modeling a Case Type or Data Object that must work in an offline-enabled Mobile channel, confirm the platform release and UI architecture (Traditional UI vs. Constellation) and whether the journey is genuinely required offline — offline support covers only a subset of Case processing, not full parity with the web app. Ask the user if these are unknown and material to the design, and load `methodology-mobile-app-development/references/offline-support` before finalizing the model.
 
 ---
 
 ## References
 
-| Skill | When to load |
-|-------|--------------|
-| `rules-rule-obj-property` | Creating or modifying properties on a Case Type or Data Object |
-| `rules-rule-declare-pages` | Creating or configuring Data Pages for a Data Object |
+| Skill | Label | When to load |
+|-------|-------|--------------|
+| `rules-rule-obj-property` | | Creating or modifying properties on a Case Type or Data Object |
+| `rules-rule-declare-pages` | | Creating or configuring Data Pages for a Data Object |
+| `methodology-mobile-app-development/references/offline-support` | mobile-app-offline-support | Confirming offline-mobile eligibility before modeling a Case Type or Data Object for offline use |

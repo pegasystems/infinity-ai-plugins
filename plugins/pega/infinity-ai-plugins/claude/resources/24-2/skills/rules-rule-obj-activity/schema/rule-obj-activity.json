@@ -269,9 +269,10 @@
             { "pattern": "^[Cc][Aa][Ll][Ll] .+$" },
             { "pattern": "^[Bb][Rr][Aa][Nn][Cc][Hh] .+$" },
             { "pattern": "^[Qq][Uu][Ee][Uu][Ee] .+$" },
-            { "pattern": "^[Cc][Oo][Ll][Ll][Ee][Cc][Tt] .+$" }
+            { "pattern": "^[Cc][Oo][Ll][Ll][Ee][Cc][Tt] .+$" },
+            { "const": "" }
           ],
-          "description": "The method to invoke. Fixed method names (e.g. 'Log-Message', 'Page-New') or composite format for Call/Branch/Queue/Collect: 'Call <ActivityName>', 'Call <Class>.<Activity>', 'Branch <ActivityName>', etc. The composite keywords MUST include the target activity name after a space — bare 'Call' or 'Branch' is rejected by the server. See references/method-catalog.md for the full categorized catalog.",
+          "description": "The method to invoke. Fixed method names (e.g. 'Log-Message', 'Page-New') or composite format for Call/Branch/Queue/Collect: 'Call <ActivityName>', 'Call <Class>.<Activity>', 'Branch <ActivityName>', etc. The composite keywords MUST include the target activity name after a space — bare 'Call' or 'Branch' is rejected by the server. A blank value is valid only for a structural parent step containing one or more nested pySteps. See references/method-catalog.md for the full categorized catalog.",
           "x-pega-autoFill": ""
         },
         "pyStepsDescription": {
@@ -385,6 +386,22 @@
           }
         }
       },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "pyStepsActivityName": { "const": "" }
+            },
+            "required": ["pyStepsActivityName"]
+          },
+          "then": {
+            "required": ["pySteps"],
+            "properties": {
+              "pySteps": { "minItems": 1 }
+            }
+          }
+        }
+      ],
       "if": {
         "properties": {
           "pyStepsActivityName": { "const": "Queue-For-Processing" }
@@ -619,12 +636,12 @@
         },
         "pyParametersParamType": {
           "type": "string",
-          "enum": ["String", "Boolean", "char", "double", "int", "Decimal", "Object", "StringBuffer"],
+          "enum": ["String", "Boolean", "boolean", "char", "double", "int", "Decimal", "Object", "StringBuffer"],
           "x-pega-hints": {
             "Integer": "int",
             "BigDecimal": "Decimal"
           },
-          "description": "Java type for the local variable. Exactly 8 supported values. Primitive types: 'char', 'double', 'int' (displayed as 'Integer'). Class types: 'String' (default), 'Boolean', 'Decimal' (renders java.math.BigDecimal), 'Object', 'StringBuffer'. Use the Pega rule-parameter type enum on `MethodParam.pyParametersParamType` instead for activity parameters — local variables use Java types, not Pega parameter types."
+          "description": "Java type for the local variable. Exactly 9 supported values. Primitive types: 'boolean', 'char', 'double', 'int' (displayed as 'Integer'). Class types: 'String' (default), 'Boolean', 'Decimal' (renders java.math.BigDecimal), 'Object', 'StringBuffer'. Use the Pega rule-parameter type enum on `MethodParam.pyParametersParamType` instead for activity parameters — local variables use Java types, not Pega parameter types."
         }
       }
     },

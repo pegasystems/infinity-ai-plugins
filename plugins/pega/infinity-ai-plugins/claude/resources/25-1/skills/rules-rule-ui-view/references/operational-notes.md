@@ -35,7 +35,7 @@ See `rules-rule-ui-view/references/view-field-patterns` for the full patterns:
   `Rule-Obj-FieldValue` for `pyCaption`, or use a literal label in `pxViewMetadata`
   when the label should be local to one form.
 - **Operation order for removing fields:** Remove from all views first, then block the property. Blocking while a view references it causes blank labels.
-- **Blocked views:** `list-rules` does NOT show blocked rules; `search-rules` DOES; `get-rule` by key shows them.
+- **Blocked views:** `list-rules` does NOT show blocked rules; `search` DOES; `get-rule` by key shows them.
 - **Send the entire `pyContent` outer array** (region wrapper + inner array), not just the new field.
 - **`pyRuleFormStatus`** should be `"Good"` after a successful update.
 - **`Pega-UI-Content-Field-Checkbox` and `Pega-UI-Content-Field-Boolean` are both invalid** — either causes HTTP 500. Use `Pega-UI-Content-Field-Text` with `pyComponentName: "Checkbox"`.

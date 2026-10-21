@@ -22,7 +22,7 @@ Before calling `create-rule` for a Dataset, confirm the following:
 
 Before calling `create-rule` for a **Snowflake** dataset, verify that every property referenced in `pyMappings`, `pySelectKeys`, `pyResumeKeys`, and `pyPartitionKey` exists on the target class (`pyClassName`).
 
-1. For each `.PropertyName` in the mappings, use `search-rules` or `list-rules` with `ruleType=Rule-Obj-Property` to check if the property exists on the target class.
+1. For each `.PropertyName` in the mappings, use `search` or `list-rules` with `ruleType=Rule-Obj-Property` to check if the property exists on the target class.
 2. If a property **does not exist**, create it first using `create-rule` with `ruleType=Rule-Obj-Property`, the selected `branchID`, and a `changeDescription`. Use `pyPropertyMode: "String"` and `pyStringType: "Text"` as defaults unless the user specifies otherwise.
 3. Only proceed with the dataset `create-rule` call after **all** mapped properties exist.
 

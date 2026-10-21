@@ -126,7 +126,7 @@ Before creating anything, verify what already exists.
 **1a. Does the data class exist?**
 
 ```
-search-rules(ruleType="Rule-Obj-Class", searchText="{DataClassName}")
+search(ruleType="Rule-Obj-Class", searchText="{DataClassName}")
 ```
 
 If found, skip to Step 1b. If not found, proceed to Step 2.
@@ -143,7 +143,7 @@ Record which exist and which need creation.
 
 **1d. (Path B only) Does the data page exist?**
 
-`search-rules(ruleType="Rule-Declare-Pages", searchText="{DataPageName}")`
+`search(ruleType="Rule-Declare-Pages", searchText="{DataPageName}")`
 
 **1e. Does the sub-view / template view already exist?**
 
@@ -165,7 +165,7 @@ create-rule(ruleType="Rule-Obj-Class", content={...}, branchID="{branchID}", cha
 Verify:
 
 ```
-search-rules(ruleType="Rule-Obj-Class", searchText="{DataClassName}")
+search(ruleType="Rule-Obj-Class", searchText="{DataClassName}")
 ```
 
 ### Step 3 — Create Properties on the Data Class

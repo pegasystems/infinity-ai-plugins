@@ -29,14 +29,14 @@ exist on the case class but are **not** the form shown during an assignment step
 **Always trace from the flow to the view:**
 
 1. **Find the flow** that contains the assignment step.
-   - `search-rules` with `searchText="{CaseTypeName}"`, filter to `Rule-Obj-Flow`
+   - `search` with `searchText="{CaseTypeName}"`, filter to `Rule-Obj-Flow`
    - Use `get-rule` (full) on the flow; inspect `pyModelProcess.pyShapes` for the
      `Data-MO-Activity-Assignment` shape whose `pyMOName` matches the step name.
 
 2. **Get the FlowAction name** from the shape's `pyMOName` field.
 
 3. **Find the FlowAction rule.**
-   - `search-rules` with `searchText="{FlowActionName}"`, filter to `Rule-Obj-FlowAction`
+   - `search` with `searchText="{FlowActionName}"`, filter to `Rule-Obj-FlowAction`
    - Use `get-rule` (full); read `pyViewReference` — that is the name of the backing
      `Rule-UI-View` that is actually rendered when the user works the assignment.
 

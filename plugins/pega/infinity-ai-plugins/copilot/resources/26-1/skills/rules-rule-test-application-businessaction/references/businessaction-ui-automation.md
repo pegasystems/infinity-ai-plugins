@@ -51,7 +51,7 @@ const travelClass = params["What's your preferred travel class?"];
 | PerformAction | `await caseUtils.openCaseWideActions(page, "ACTION_LABEL");` |
 | TriggerOptionalProcess | `await caseUtils.openCaseWideActions(page, "PROCESS_LABEL");` |
 
-- `CASE_TYPE_LABEL`: Fetch via `get-rule` on `Rule-Obj-CaseType` → use `pyLabel`. Never guess.
+- `CASE_TYPE_LABEL`: First call `run-data-page(dataPage="D_pxAvailableCaseTypesForPortal", dataPageType="page")` and use the `pyLabel` of the `pyCaseTypesAvailableToCreate` entry whose `pyClassName` matches the case type work class (this is the label the portal Create menu shows). If the data page returns no results or no matching entry, fall back to `get-rule` on `Rule-Obj-CaseType` → use `pyLabel`. Never guess.
 - `ASSIGNMENT_NAME`: Fetch flow rule (`Rule-Obj-Flow`, detail=full) → `pyShapes.AssignmentN.pyMOName` exactly. For approval shapes use `"Get Approval"`.
 - `ACTION_LABEL`: `pyActionLabel` from the case type flow.
 - `PROCESS_LABEL`: `pyLabel` of the optional process entry from the case type rule (`pyCaseOptionalProcesses` or `pyOptionalProcesses`). The click launches the process directly — no `clickSubmit`.

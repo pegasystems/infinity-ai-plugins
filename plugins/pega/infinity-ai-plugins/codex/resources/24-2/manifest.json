@@ -163,6 +163,13 @@
       "prompt": false
     },
     {
+      "name": "methodology-mobile-app-development",
+      "description": "Load when someone wants to make an existing Pega application available on mobile devices in Pega Infinity versions earlier than 26. Provides self-contained, read-only guidance for planning, configuring, previewing, building, securing, distributing, and maintaining an installable app.",
+      "path": "skills/methodology-mobile-app-development/SKILL.md",
+      "category": "skill",
+      "prompt": false
+    },
+    {
       "name": "methodology-retrieve-case-work-history",
       "description": "Load when the user asks about case history, timeline, past actions, or audit trail for a specific case. Contains step-by-step instructions for calling D_pyWorkHistory and presenting results.",
       "path": "skills/methodology-retrieve-case-work-history/SKILL.md",
@@ -191,9 +198,23 @@
       "prompt": false
     },
     {
+      "name": "methodology-speckit",
+      "description": "Load when executing any SpecKit command. Provides lifecycle context and stop rules. After loading this, load the specific instruction file for the stage being executed.",
+      "path": "skills/methodology-speckit/SKILL.md",
+      "category": "skill",
+      "prompt": false
+    },
+    {
       "name": "rules-rule-admin-system-settings",
       "description": "Authoring guide for Pega Application Settings (Rule-Admin-System-Settings) used by integrations for environment-specific base URLs, authentication profile names, and similar configuration values. Use when creating a new Application Setting, updating an existing one, or wiring REST connectors to SETTING-based URL/auth references.",
       "path": "skills/rules-rule-admin-system-settings/SKILL.md",
+      "category": "skill",
+      "prompt": false
+    },
+    {
+      "name": "rules-rule-application-usecase",
+      "description": "Authoring guide for Pega specification rules (Rule-Application-UseCase, also called Use Case rules), including lifecycle categories, acceptance criteria, linked implementation patterns, and attachment-aware authoring",
+      "path": "skills/rules-rule-application-usecase/SKILL.md",
       "category": "skill",
       "prompt": false
     },
@@ -1255,6 +1276,42 @@
       ]
     },
     {
+      "name": "methodology-speckit/examples/plan",
+      "label": "speckit-plan-output",
+      "description": "Example of a development plan produced by the plan step of SpecKit. Shows sequenced steps across multiple rule types for a generic Pega feature.",
+      "path": "skills/methodology-speckit/examples/plan.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "methodology-speckit",
+      "aliases": [
+        "speckit-plan-output"
+      ]
+    },
+    {
+      "name": "methodology-speckit/examples/spec",
+      "label": "speckit-spec-output",
+      "description": "Example of a completed feature spec produced by the specify step of SpecKit. Pega-aware but implementation-independent — no rule types, rulesets, or tools are mentioned.",
+      "path": "skills/methodology-speckit/examples/spec.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "methodology-speckit",
+      "aliases": [
+        "speckit-spec-output"
+      ]
+    },
+    {
+      "name": "methodology-speckit/examples/tasks",
+      "label": "speckit-tasks-output",
+      "description": "Example of backlog items produced by the tasks step of SpecKit. Shows one item per rule across multiple rule types for a generic Pega feature.",
+      "path": "skills/methodology-speckit/examples/tasks.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "methodology-speckit",
+      "aliases": [
+        "speckit-tasks-output"
+      ]
+    },
+    {
       "name": "rules-rule-admin-system-settings/examples/pySettingMetaData/class",
       "label": "admin-system-settings-value-type-class",
       "description": "pySettingMetaData shape for a Class-typed Application Setting, used for authentication profile references.",
@@ -1288,6 +1345,102 @@
       "parent": "rules-rule-admin-system-settings",
       "aliases": [
         "admin-system-settings-stub"
+      ]
+    },
+    {
+      "name": "rules-rule-application-usecase/examples/application-defined-fields",
+      "label": "usecase-application-defined-fields",
+      "description": "Load when authoring a Use Case with application-defined specification, release, iteration, and business objective values.",
+      "path": "skills/rules-rule-application-usecase/examples/application-defined-fields.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "rules-rule-application-usecase",
+      "aliases": [
+        "usecase-application-defined-fields"
+      ]
+    },
+    {
+      "name": "rules-rule-application-usecase/examples/complete-api-usecase",
+      "label": "usecase-complete-api",
+      "description": "Load when authoring a complete API Use Case with an implementation rule, catalog metadata, and acceptance criteria.",
+      "path": "skills/rules-rule-application-usecase/examples/complete-api-usecase.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "rules-rule-application-usecase",
+      "aliases": [
+        "usecase-complete-api"
+      ]
+    },
+    {
+      "name": "rules-rule-application-usecase/examples/lifecycle-categories",
+      "label": "usecase-lifecycle-categories",
+      "description": "Load when selecting pyCategory for a Use Case. Shows stored lifecycle values and distinguishes them from UI labels.",
+      "path": "skills/rules-rule-application-usecase/examples/lifecycle-categories.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "rules-rule-application-usecase",
+      "aliases": [
+        "usecase-lifecycle-categories"
+      ]
+    },
+    {
+      "name": "rules-rule-application-usecase/examples/stub",
+      "label": "usecase-stub",
+      "description": "Load when you need the smallest valid Use Case starting point; contains a minimal create payload.",
+      "path": "skills/rules-rule-application-usecase/examples/stub.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "rules-rule-application-usecase",
+      "aliases": [
+        "usecase-stub"
+      ]
+    },
+    {
+      "name": "rules-rule-application-usecase/examples/with-acceptance-criteria",
+      "label": "usecase-with-acceptance-criteria",
+      "description": "Load when authoring a UserStory Use Case with acceptance criteria. Shows how to capture requirements in pyDescription and express expected outcomes as testable criteria.",
+      "path": "skills/rules-rule-application-usecase/examples/with-acceptance-criteria.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "rules-rule-application-usecase",
+      "aliases": [
+        "usecase-with-acceptance-criteria"
+      ]
+    },
+    {
+      "name": "rules-rule-application-usecase/examples/with-actors-triggers-criteria",
+      "label": "usecase-with-actors-triggers-criteria",
+      "description": "Load when authoring a Use Case with actors, triggers, acceptance criteria, and a file attachment.",
+      "path": "skills/rules-rule-application-usecase/examples/with-actors-triggers-criteria.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "rules-rule-application-usecase",
+      "aliases": [
+        "usecase-with-actors-triggers-criteria"
+      ]
+    },
+    {
+      "name": "rules-rule-application-usecase/examples/with-attachment",
+      "label": "usecase-with-attachment",
+      "description": "Load when authoring a Use Case with a file attachment in pyCustomFields. Shows the page group structure with a single file entry.",
+      "path": "skills/rules-rule-application-usecase/examples/with-attachment.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "rules-rule-application-usecase",
+      "aliases": [
+        "usecase-with-attachment"
+      ]
+    },
+    {
+      "name": "rules-rule-application-usecase/examples/with-linked-implementations",
+      "label": "usecase-with-linked-implementations",
+      "description": "Load when authoring a specification rule with Implementation tab entries — linking the spec to its implementing rules (activities, properties, views, data transforms).",
+      "path": "skills/rules-rule-application-usecase/examples/with-linked-implementations.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "rules-rule-application-usecase",
+      "aliases": [
+        "usecase-with-linked-implementations"
       ]
     },
     {
@@ -7627,6 +7780,114 @@
       ]
     },
     {
+      "name": "methodology-mobile-app-development/references/build-and-sign",
+      "label": "build-and-sign-mobile-app",
+      "description": "Load when preparing a signed mobile app package for a Mobile channel in Pega Infinity versions earlier than 26. Covers preview limits, build prerequisites, and signing identity.",
+      "path": "skills/methodology-mobile-app-development/references/build-and-sign.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "methodology-mobile-app-development",
+      "aliases": [
+        "build-and-sign-mobile-app"
+      ]
+    },
+    {
+      "name": "methodology-mobile-app-development/references/configure-and-preview",
+      "label": "configure-and-preview-mobile-app",
+      "description": "Load when creating or refining a Mobile channel in Pega Infinity versions earlier than 26. Covers channel setup, navigation, personas, and branding.",
+      "path": "skills/methodology-mobile-app-development/references/configure-and-preview.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "methodology-mobile-app-development",
+      "aliases": [
+        "configure-and-preview-mobile-app"
+      ]
+    },
+    {
+      "name": "methodology-mobile-app-development/references/distribution",
+      "label": "distribute-mobile-app",
+      "description": "Load when delivering a signed mobile app package for a Mobile channel in Pega Infinity versions earlier than 26, through direct install, EMM, or an app store.",
+      "path": "skills/methodology-mobile-app-development/references/distribution.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "methodology-mobile-app-development",
+      "aliases": [
+        "distribute-mobile-app"
+      ]
+    },
+    {
+      "name": "methodology-mobile-app-development/references/first-mobile-app",
+      "label": "create-first-mobile-app",
+      "description": "Load after importing a first Blueprint into Pega Infinity versions earlier than 26. Explains the generated application artifacts and gives a beginner-safe path from a working Case to a Mobile channel and first device Preview.",
+      "path": "skills/methodology-mobile-app-development/references/first-mobile-app.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "methodology-mobile-app-development",
+      "aliases": [
+        "create-first-mobile-app"
+      ]
+    },
+    {
+      "name": "methodology-mobile-app-development/references/offline-support",
+      "label": "mobile-app-offline-support",
+      "description": "Load when designing or enabling offline behavior for a Mobile channel in Pega Infinity versions earlier than 26.",
+      "path": "skills/methodology-mobile-app-development/references/offline-support.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "methodology-mobile-app-development",
+      "aliases": [
+        "mobile-app-offline-support"
+      ]
+    },
+    {
+      "name": "methodology-mobile-app-development/references/planning-and-prerequisites",
+      "label": "mobile-app-planning-and-prerequisites",
+      "description": "Load before configuring a Mobile channel in Pega Infinity versions earlier than 26. Covers the readiness checklist and the online/offline boundary.",
+      "path": "skills/methodology-mobile-app-development/references/planning-and-prerequisites.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "methodology-mobile-app-development",
+      "aliases": [
+        "mobile-app-planning-and-prerequisites"
+      ]
+    },
+    {
+      "name": "methodology-mobile-app-development/references/security",
+      "label": "secure-mobile-app",
+      "description": "Load when defining authentication, app locks, token lifetimes, or privacy controls for a Mobile channel in Pega Infinity versions earlier than 26.",
+      "path": "skills/methodology-mobile-app-development/references/security.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "methodology-mobile-app-development",
+      "aliases": [
+        "secure-mobile-app"
+      ]
+    },
+    {
+      "name": "methodology-mobile-app-development/references/troubleshooting",
+      "label": "troubleshoot-mobile-app",
+      "description": "Load when a mobile app fails to build, connect, authenticate, synchronize, or behave correctly on a device in Pega Infinity versions earlier than 26.",
+      "path": "skills/methodology-mobile-app-development/references/troubleshooting.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "methodology-mobile-app-development",
+      "aliases": [
+        "troubleshoot-mobile-app"
+      ]
+    },
+    {
+      "name": "methodology-mobile-app-development/references/updates-and-maintenance",
+      "label": "update-and-maintain-mobile-app",
+      "description": "Load when rebuilding or upgrading a Mobile channel in Pega Infinity versions earlier than 26. Covers compatibility, identity preservation, and regression checks.",
+      "path": "skills/methodology-mobile-app-development/references/updates-and-maintenance.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "methodology-mobile-app-development",
+      "aliases": [
+        "update-and-maintain-mobile-app"
+      ]
+    },
+    {
       "name": "methodology-rule-authoring/references/branch-ruleset-not-candidate-test-cases",
       "label": "authoring-branch-ruleset-not-candidate",
       "description": "Resolve \"Branch ruleset not candidate\" errors when creating Rule-Test-Unit-Case rules by finding and using the application's dedicated test ruleset.",
@@ -7636,6 +7897,94 @@
       "parent": "methodology-rule-authoring",
       "aliases": [
         "authoring-branch-ruleset-not-candidate"
+      ]
+    },
+    {
+      "name": "methodology-speckit/references/clarify",
+      "label": "speckit-clarify",
+      "description": "Instruction for the clarify step of SpecKit. Reads the existing Spec_<FeatureName> Rule-Application-UseCase instance, identifies ambiguities and gaps, asks targeted questions, and updates the rule instance in place.",
+      "path": "skills/methodology-speckit/references/clarify.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "methodology-speckit",
+      "aliases": [
+        "speckit-clarify"
+      ]
+    },
+    {
+      "name": "methodology-speckit/references/constitution-extension",
+      "description": "Load when an application supplies custom Pega rule-authoring principles. Defines the application constitution extension contract, merge rules, conflict handling, and runtime behavior.",
+      "path": "skills/methodology-speckit/references/constitution-extension.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "methodology-speckit"
+    },
+    {
+      "name": "methodology-speckit/references/constitution",
+      "description": "Load before any SpecKit stage that plans or authors Pega rules. Defines the platform constitution for safe rule authoring, application customization, lifecycle enforcement, and human review.",
+      "path": "skills/methodology-speckit/references/constitution.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "methodology-speckit"
+    },
+    {
+      "name": "methodology-speckit/references/implement",
+      "label": "speckit-implement",
+      "description": "Instruction for the implementation step of SpecKit. Reads the Task_<FeatureName>.md attachment from the Spec_<FeatureName> Rule-Application-UseCase instance (stored as a Rule-File-Binary rule) and authors each backlog item through the ChangeRequest workflow in dependency order, one rule at a time. No new Rule-Application-UseCase instance is created in this phase.",
+      "path": "skills/methodology-speckit/references/implement.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "methodology-speckit",
+      "aliases": [
+        "speckit-implement"
+      ]
+    },
+    {
+      "name": "methodology-speckit/references/plan",
+      "label": "speckit-plan",
+      "description": "Instruction for the plan step of SpecKit. Reads the Spec_<FeatureName> Rule-Application-UseCase instance, derives a sequenced development plan across all required Pega rule types, and attaches the plan as Plan_<FeatureName>.md to the existing spec rule via D_pxCreateSpecAttachments.",
+      "path": "skills/methodology-speckit/references/plan.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "methodology-speckit",
+      "aliases": [
+        "speckit-plan"
+      ]
+    },
+    {
+      "name": "methodology-speckit/references/specify",
+      "label": "speckit-specify",
+      "description": "Instruction for the specify step of SpecKit. Guides the agent to capture business intent, Pega context, desired outcome, constraints, and acceptance criteria — then creates a Rule-Application-UseCase instance named Spec_<FeatureName>. Does not determine rule types or implementation approach.",
+      "path": "skills/methodology-speckit/references/specify.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "methodology-speckit",
+      "aliases": [
+        "speckit-specify"
+      ]
+    },
+    {
+      "name": "methodology-speckit/references/tasks",
+      "label": "speckit-tasks",
+      "description": "Instruction for the tasks step of SpecKit. Reads the Plan_<FeatureName>.md attachment from the Spec_<FeatureName> Rule-Application-UseCase instance, converts it into one backlog item per rule, and attaches the backlog as Task_<FeatureName>.md to the same spec rule via D_pxCreateSpecAttachments.",
+      "path": "skills/methodology-speckit/references/tasks.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "methodology-speckit",
+      "aliases": [
+        "speckit-tasks"
+      ]
+    },
+    {
+      "name": "rules-rule-application-usecase/references/dropdown-sources",
+      "label": "usecase-dropdown-sources",
+      "description": "Reference for fixed and application-defined field values in Rule-Application-UseCase.",
+      "path": "skills/rules-rule-application-usecase/references/dropdown-sources.md",
+      "category": "skill",
+      "prompt": false,
+      "parent": "rules-rule-application-usecase",
+      "aliases": [
+        "usecase-dropdown-sources"
       ]
     },
     {

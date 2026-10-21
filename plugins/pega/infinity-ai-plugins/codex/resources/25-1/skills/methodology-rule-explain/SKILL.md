@@ -50,7 +50,7 @@ The purpose of this skill is to explain **what the rule does** — its functiona
 ### Step 1: Resolve one exact rule
 
 1. If the user provides `pzInsKey`, use it.
-2. Otherwise resolve using `list-rules` or `search-rules`.
+2. Otherwise resolve using `list-rules` or `search`.
 3. If multiple candidates match, present options and ask the user to choose.
 
 Do not explain an ambiguous target.

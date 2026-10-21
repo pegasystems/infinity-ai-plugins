@@ -278,6 +278,22 @@ Notes:
   pass-through from parameter page, `"literal"` = hardcoded, `"Param.X"` =
   explicit param reference).
 
+## Offline (mobile) use
+
+Data Pages are read-only offline data — never design one as a writable
+offline store; offline Case data is the only local store that syncs back,
+through case processing, not through a Data Page save. A Data Page intended
+for offline use should be backed by Case Type data, and if parameterized, its
+parameters must be non-required and its source a report definition that maps
+filters to `Param.<name>` and passes the current parameter page. The
+resulting offline packaging (Class Level, Data Page Level, or a snapshot) is
+decided by the platform at synchronization time, not by the author. Custom
+JavaScript populators used for large or parameterized Data Pages in
+Traditional UI apps typically do not carry over to Constellation; treat them
+as redesign candidates. See
+`methodology-mobile-app-development/references/offline-support` for the full
+compatibility checklist before promising offline support for a Data Page.
+
 ## References
 
 | Skill | Label | Covers |
@@ -286,3 +302,4 @@ Notes:
 | `rules-rule-declare-pages/references/data-page-parameter-mapping-details` | data-page-parameter-mapping-details | `Embed-NameValuePair`, `pyActivityParams`, dynamic path params, save-plan distinction |
 | `rules-rule-declare-pages/references/data-page-source-resolution-and-multisource` | data-page-source-resolution-and-multisource | Multi-source When routing, source rule existence, class hierarchy resolution |
 | `rules-rule-declare-pages/references/data-pages-simulation` | data-pages-simulation | Simulated Data Pages, source replacement, and preserving `pyDisabledSource` |
+| `methodology-mobile-app-development/references/offline-support` | mobile-app-offline-support | Verify a Data Page's offline eligibility, parameterization, and packaging before promising offline support |

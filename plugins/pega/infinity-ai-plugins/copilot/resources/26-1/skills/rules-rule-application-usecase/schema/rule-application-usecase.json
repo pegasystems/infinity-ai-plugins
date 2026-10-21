@@ -1,0 +1,521 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rule-application-usecase.json",
+  "title": "Rule-Application-UseCase",
+  "description": "JSON schema for creating or updating a Pega specification rule (Rule-Application-UseCase, also called a Use Case rule). Use cases define reusable capabilities or features that can be associated with activities, flows, or other rules. They provide a catalog of available operations for an application. Only authored and identity fields are included; system-managed and versioning fields are omitted.",
+  "type": "object",
+  "required": [
+    "pxObjClass",
+    "pyLabel",
+    "pyOwner",
+    "pyProductName",
+    "pyPurpose"
+  ],
+  "properties": {
+    "pxObjClass": {
+      "type": "string",
+      "const": "Rule-Application-UseCase",
+      "description": "Rule type class — always 'Rule-Application-UseCase'.",
+      "x-pega-autoFill": "Rule-Application-UseCase"
+    },
+    "pyRuleName": {
+      "type": "string",
+      "description": "Internal rule name — auto-derived as 'pyProductName pyOwner pyPurpose' (e.g., 'MyApp FraudReview ReviewClaim'). Do not set directly; supply pyProductName, pyOwner, and pyPurpose instead.",
+      "x-pega-autoDerived": true,
+      "x-pega-deriveFrom": "pyProductName + ' ' + pyOwner + ' ' + pyPurpose"
+    },
+    "pyClassName": {
+      "type": "string",
+      "description": "The Pega class this use case is associated with (e.g., 'MyOrg-MyApp-Work-MyCase'). Identifies the class context for case-type-scoped use cases."
+    },
+    "pyUseCaseName": {
+      "type": "string",
+      "description": "The unique name identifier for this use case within the class and application context. Used as a key when referencing this use case from flows or other rules."
+    },
+    "pyLabel": {
+      "type": "string",
+      "maxLength": 50,
+      "description": "Purpose identifier for this use case. Describes the intent or goal this use case fulfils within the application. Must match the value of pyPurpose."
+    },
+    "pyDescription": {
+      "type": "string",
+      "description": "A concise, developer-facing description explaining what this use case does, its intended purpose, and the context in which it should be invoked. Used in Dev Studio and App Studio catalogs to help developers identify and select the correct use case."
+    },
+    "pyUseCaseType": {
+      "type": "string",
+      "enum": ["Activity", "Flow", "Section", "DataTransform", "Utility", "API", ""],
+      "description": "The type of artifact this use case wraps. 'Activity' for Rule-Obj-Activity, 'Flow' for Rule-Obj-Flow, 'DataTransform' for Rule-Obj-Model, 'Section' for Rule-UI-Section, 'Utility' for utility operations, 'API' for API endpoints. Use empty string (\"\") when unspecified."
+    },
+    "pyUseCaseApplication": {
+      "type": "string",
+      "description": "Application name this use case belongs to. Used for application-scoped discovery and filtering."
+    },
+    "pyUseCaseWorkType": {
+      "type": "string",
+      "description": "Work type (case type short name) this use case is associated with. Used for case-type-scoped filtering and linking."
+    },
+    "pyProductName": {
+      "type": "string",
+      "description": "Application name for which this use case (specification rule) is being created. Identifies the owning application in the application stack."
+    },
+    "pyOwner": {
+      "type": "string",
+      "description": "Feature name associated with this use case requirement. Identifies the feature or capability area this use case belongs to (e.g., 'FraudReview', 'MyCase')."
+    },
+    "pyImplementationClass": {
+      "type": "string",
+      "description": "The class where the implementing rule (activity, flow, etc.) is defined."
+    },
+    "pyImplementationRule": {
+      "type": "string",
+      "description": "Name of the implementing rule (activity name, flow name, data transform name, etc.). This is the actual rule that executes when the use case is invoked."
+    },
+    "pyCategory": {
+      "type": "string",
+      "enum": ["Complete", "Deferred", "Implemented", "New", "Open", "Pending Info", "Pending-Blocked", "Pending-Development", "Pending-Implement", "Pending-Plan", "Pending-Review", "Pending-Tasks", "Withdrawn"],
+      "description": "Lifecycle status category for this use case. Store one of the allowed values directly; the UI may display a different label for Open, Deferred, and Pending Info.",
+      "default": "New",
+      "x-pega-autoFill": "New"
+    },
+    "pySubCategory": {
+      "type": "string",
+      "description": "Sub-category for further grouping within a category."
+    },
+    "pyRuleSet": {
+      "type": "string",
+      "description": "Rule set the use case is saved to."
+    },
+    "pyRuleSetVersion": {
+      "type": "string",
+      "pattern": "^\\d{2}-\\d{2}-\\d{2}$",
+      "description": "Rule set version (e.g., '01-01-01')."
+    },
+    "pyRuleAvailable": {
+      "type": "string",
+      "enum": ["Yes", "No", "Final", "Withdrawn", "Blocked"],
+      "description": "Availability status of the rule.",
+      "x-pega-autoFill": "Yes"
+    },
+    "pyBaseRule": {
+      "type": "string",
+      "enum": ["true", "false", ""],
+      "description": "Whether this is a platform-defined base rule.",
+      "x-pega-autoFill": "false"
+    },
+    "pyMethodStatus": {
+      "type": "string",
+      "enum": ["API", "Deprecated", "Extension", "Internal", "Template", ""],
+      "description": "Method status. 'API' for externally callable use cases, 'Internal' for platform-internal use cases, 'Deprecated' for legacy use cases to be phased out.",
+      "x-pega-autoFill": ""
+    },
+    "pyExposed": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "description": "'true' to expose this use case in the use case catalog for selection. 'false' to hide from catalog while keeping the rule active.",
+      "x-pega-autoFill": "true"
+    },
+    "pyIconSource": {
+      "type": "string",
+      "description": "Icon identifier or URL for displaying the use case in UI catalogs."
+    },
+    "pyUsage": {
+      "type": "string",
+      "description": "Usage notes describing where and how this use case is referenced."
+    },
+    "pyMemo": {
+      "type": "string",
+      "description": "Developer change memo saved with the rule."
+    },
+    "pyUsedAs": {
+      "type": "string",
+      "description": "The specification type for this use case. Enter the application-defined specification type value."
+    },
+    "pyEstimatedDevelopmentEffort": {
+      "type": "string",
+      "enum": ["Low", "Medium", "High", ""],
+      "description": "Estimated development effort required to implement this use case. Used for planning and backlog sizing."
+    },
+    "pyRelease": {
+      "type": "string",
+      "description": "Release this use case is targeted for. Enter the application-defined release value."
+    },
+    "pyIteration": {
+      "type": "string",
+      "description": "Iteration this use case is assigned to. Enter the application-defined iteration value."
+    },
+    "pyBusinessImpact": {
+      "type": "string",
+      "enum": ["Low", "Medium", "High", ""],
+      "description": "Business impact level of this use case. 'Low' for minimal impact, 'Medium' for moderate impact, 'High' for significant business impact."
+    },
+    "pyBusinessObjectivesList": {
+      "type": "array",
+      "description": "List of business objectives associated with this use case.",
+      "items": { "$ref": "#/$defs/BusinessObjective" }
+    },
+    "pyCircumstanceProp": {
+      "type": "string",
+      "description": "Property used for circumstancing. Empty for no circumstancing. Advanced — only needed for circumstanced rule variants."
+    },
+    "pyCircumstanceVal": {
+      "type": "string",
+      "description": "Circumstance value to match."
+    },
+    "pyCircumstanceType": {
+      "type": "string",
+      "description": "Circumstance type."
+    },
+    "pyCircumstanceDate": {
+      "type": "string",
+      "description": "Circumstance date. Default is epoch."
+    },
+    "pyCircumstanceDateProp": {
+      "type": "string",
+      "description": "Property holding the circumstance date."
+    },
+    "pyCircumstanceDefinition": {
+      "type": "string",
+      "description": "Circumstance definition rule name."
+    },
+    "pyRuleStarts": {
+      "type": "string",
+      "description": "Effective start date. Default is epoch (no restriction)."
+    },
+    "pyRuleEnds": {
+      "type": "string",
+      "description": "Effective end date. Default is epoch (no restriction)."
+    },
+    "pySpecFormat": {
+      "type": "string",
+      "enum": ["UserStory", "UseCase"],
+      "description": "Format of the specification. 'UserStory' for user story format. Used to control how the spec content is rendered and authored.",
+      "x-pega-autoFill": "UserStory"
+    },
+    "pyPurpose": {
+      "type": "string",
+      "maxLength": 15,
+      "description": "Purpose identifier for this use case. Must be at most 15 characters. Brief label describing the intent or goal this use case fulfils (e.g. 'FraudReview', 'BenefitName')."
+    },
+    "pyVersion": {
+      "type": "string",
+      "description": "Version string for this use case specification (e.g. '5.5'). Tracks the specification revision independently of the ruleset version."
+    },
+    "pyProductVersion": {
+      "type": "string",
+      "description": "Product version this use case targets (e.g. '01.01.01'). Must match the application version in the application stack."
+    },
+    "pyInterface": {
+      "type": "string",
+      "description": "Interface reference associated with this use case. Identifies the channel or integration surface this use case is designed for."
+    },
+    "pyTemplate": {
+      "type": "string",
+      "description": "Template rule name used to pre-populate this use case specification."
+    },
+    "pyPrimaryBusinessObjective": {
+      "type": "string",
+      "description": "The primary business objective this use case addresses. References the leading objective from pyBusinessObjectivesList."
+    },
+    "pyCustomFields": {
+      "type": "object",
+      "description": "Page group of file attachments associated with this use case. Each entry is keyed by a generated subscript and describes an attached file. Use pageInstructions with ADD/DELETE to manage entries.",
+      "additionalProperties": { "$ref": "#/$defs/CustomField" }
+    },
+    "pyAcceptanceCriteriaList": {
+      "type": "array",
+      "description": "List of acceptance criteria for this use case. Each entry defines a single testable acceptance condition.",
+      "items": { "$ref": "#/$defs/AcceptanceCriteria" }
+    },
+    "pyActorsList": {
+      "type": "array",
+      "description": "List of actors (users or systems) that interact with this use case.",
+      "items": { "$ref": "#/$defs/Actor" }
+    },
+    "pyTriggersList": {
+      "type": "array",
+      "description": "List of triggers that initiate this use case (e.g. 'Web Browser', 'API call').",
+      "items": { "$ref": "#/$defs/Trigger" }
+    },
+    "pySubjectMatterExperts": {
+      "type": "array",
+      "description": "List of subject matter experts associated with this use case.",
+      "items": { "$ref": "#/$defs/SubjectMatterExpert" }
+    },
+    "pyLinkedImps": {
+      "type": "array",
+      "description": "Implementation tab — page list of linked implementation rules (Data-Rule-Summary). Pass via pageInstructions APPEND only; never inside content. Pega creates Link-UseCase instances on save.",
+      "items": { "$ref": "#/$defs/LinkedImp" }
+    }
+  },
+  "$defs": {
+    "AcceptanceCriteria": {
+      "type": "object",
+      "description": "A single acceptance criteria entry (Embed-UseCase-AcceptanceCriteria).",
+      "required": ["pxObjClass", "pyCriteria"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-UseCase-AcceptanceCriteria",
+          "description": "Always 'Embed-UseCase-AcceptanceCriteria'.",
+          "x-pega-autoFill": "Embed-UseCase-AcceptanceCriteria"
+        },
+        "pyCriteria": {
+          "type": "string",
+          "description": "The acceptance criteria statement. A concise, testable condition that must be true for the use case to be considered complete."
+        }
+      }
+    },
+    "Actor": {
+      "type": "object",
+      "description": "An actor entry (Embed-Application-ActorMetadata) representing a user or system that interacts with this use case.",
+      "required": ["pxObjClass", "pyName"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-Application-ActorMetadata",
+          "description": "Always 'Embed-Application-ActorMetadata'.",
+          "x-pega-autoFill": "Embed-Application-ActorMetadata"
+        },
+        "pyName": {
+          "type": "string",
+          "description": "Name of the actor (e.g. 'Any', 'Customer', 'System')."
+        },
+        "pyDescription": {
+          "type": "string",
+          "description": "Description of the actor's role in this use case."
+        },
+        "pyAccess": {
+          "type": "string",
+          "enum": ["Browser", "API", "Mobile", ""],
+          "description": "Access channel used by this actor."
+        },
+        "pyUserType": {
+          "type": "string",
+          "enum": ["Operator", "System", ""],
+          "description": "Type of actor. 'Operator' for human users, 'System' for automated or integration actors."
+        },
+        "pyCountInterval": {
+          "type": "string",
+          "enum": ["Per Minute", "Per Hour", "Per Day", "Per Month", ""],
+          "description": "Time interval for volume counting of this actor's interactions."
+        },
+        "pyCountRepresents": {
+          "type": "string",
+          "enum": ["Total Users", "Concurrent Users", ""],
+          "description": "What the actor count represents — total or concurrent users."
+        }
+      }
+    },
+    "Trigger": {
+      "type": "object",
+      "description": "A trigger entry (Embed-UseCase-Trigger) that initiates this use case.",
+      "required": ["pxObjClass", "pyLabel"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-UseCase-Trigger",
+          "description": "Always 'Embed-UseCase-Trigger'.",
+          "x-pega-autoFill": "Embed-UseCase-Trigger"
+        },
+        "pyLabel": {
+          "type": "string",
+          "enum": ["Web Browser", "Email", "External Service Call", "Image", "Letter", "Phone", "SWIFT"],
+          "description": "Display label of the trigger. Identifies the channel or event that initiates this use case."
+        },
+        "pyDescription": {
+          "type": "string",
+          "description": "Description of the trigger condition or event that initiates this use case."
+        }
+      }
+    },
+    "CustomField": {
+      "type": "object",
+      "description": "A file attachment entry (Embed-CustomFieldsList) in the pyCustomFields page group.",
+      "required": ["pxObjClass", "pyCFieldName", "pyCFieldType", "pyCFieldValue", "pyCFileKey"],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "pyCFieldType": {
+                "const": "File"
+              }
+            }
+          },
+          "then": {
+            "required": ["pyCFileKey"],
+            "properties": {
+              "pyCFileKey": {
+                "type": "string",
+                "pattern": "^RULE-[A-Z0-9-].+",
+                "description": "For File entries, provide the attachment pzInsKey (for example: RULE-FILE-BINARY ...)."
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "pyCFieldType": {
+                "const": "URL"
+              }
+            }
+          },
+          "then": {
+            "required": ["pyCFieldNameForURL", "pyCFileKey"],
+            "properties": {
+              "pyCFieldNameForURL": {
+                "type": "string",
+                "format": "uri"
+              },
+              "pyCFileKey": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          }
+        }
+      ],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-CustomFieldsList",
+          "description": "Always 'Embed-CustomFieldsList'.",
+          "x-pega-autoFill": "Embed-CustomFieldsList"
+        },
+        "pyCFieldName": {
+          "type": "string",
+          "description": "Display name of the attached file (e.g. 'statement.pdf')."
+        },
+        "pyCFieldType": {
+          "type": "string",
+          "enum": ["File", "URL"],
+          "description": "Type of the custom field. 'File' for file attachments.",
+          "x-pega-autoFill": "File"
+        },
+        "pyCFieldValue": {
+          "type": "string",
+          "description": "Stored value or reference name for the attached file."
+        },
+        "pyCFieldNameForURL": {
+          "type": "string",
+          "description": "URL display/name field used for URL-type entries. When pyCFieldType is URL, provide a valid URL value."
+        },
+        "pyCFileKey": {
+          "type": "string",
+          "description": "For File entries, use the attachment pzInsKey (e.g. 'RULE-FILE-BINARY ...'). For URL entries, provide a valid URL value."
+        },
+        "pySelected": {
+          "type": "string",
+          "enum": ["true", "false"],
+          "description": "Whether this attachment is selected/active.",
+          "x-pega-autoFill": "true"
+        },
+        "pyUseAsDescription": {
+          "type": "string",
+          "enum": ["true", "false"],
+          "description": "Whether to use this file as the description for the use case.",
+          "x-pega-autoFill": "false"
+        }
+      }
+    },
+    "BusinessObjective": {
+      "type": "object",
+      "description": "A business objective entry (Embed-BusinessObjective) associated with the use case.",
+      "required": ["pxObjClass", "pyDescription"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-BusinessObjective",
+          "description": "Always 'Embed-BusinessObjective'.",
+          "x-pega-autoFill": "Embed-BusinessObjective"
+        },
+        "pyDescription": {
+          "type": "string",
+          "description": "Description of the business objective associated with this use case."
+        }
+      }
+    },
+    "SubjectMatterExpert": {
+      "type": "object",
+      "description": "A subject matter expert entry (Embed-Accel-SubjectMatterExpert) associated with this use case.",
+      "required": ["pxObjClass", "pyDescription"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Embed-Accel-SubjectMatterExpert",
+          "description": "Always 'Embed-Accel-SubjectMatterExpert'.",
+          "x-pega-autoFill": "Embed-Accel-SubjectMatterExpert"
+        },
+        "pyDescription": {
+          "type": "string",
+          "description": "Name or description of the subject matter expert for this use case."
+        }
+      }
+    },
+    "LinkedImp": {
+      "type": "object",
+      "description": "A linked implementation entry (Data-Rule-Summary) in pyLinkedImps. Identifies a Pega rule that implements this specification. Pass via pageInstructions APPEND — never inside content.",
+      "required": ["pxObjClass", "pzInsKey", "pyRuleKey", "pxInsName", "pyRuleName", "pyClassName", "pyClass", "pyClassLabel"],
+      "properties": {
+        "pxObjClass": {
+          "type": "string",
+          "const": "Data-Rule-Summary",
+          "description": "Always 'Data-Rule-Summary'.",
+          "x-pega-autoFill": "Data-Rule-Summary"
+        },
+        "pzInsKey": {
+          "type": "string",
+          "description": "Full instance key of the linked rule (e.g. 'RULE-OBJ-ACTIVITY @BASECLASS MYACTIVITY #20230101T000000.000 GMT')."
+        },
+        "pyRuleKey": {
+          "type": "string",
+          "description": "Same value as pzInsKey."
+        },
+        "pxInsName": {
+          "type": "string",
+          "description": "Short instance name (e.g. '@BASECLASS!MYACTIVITY' — class uppercased, exclamation separator, rule name uppercased)."
+        },
+        "pyRuleName": {
+          "type": "string",
+          "description": "Rule name of the linked rule, optionally with circumstance suffix (e.g. 'pxWizardScreenFlow-Connection details'). The suffix after the hyphen indicates circumstanced variants."
+        },
+        "pyClassName": {
+          "type": "string",
+          "description": "Applies-to class of the linked rule (e.g. '@baseclass', 'MyOrg-MyApp-Work-MyCase')."
+        },
+        "pyClass": {
+          "type": "string",
+          "description": "Rule type class of the linked rule (e.g. 'Rule-Obj-Activity', 'Rule-Obj-Property', 'Rule-UI-View', 'Rule-Obj-Model')."
+        },
+        "pyClassLabel": {
+          "type": "string",
+          "description": "Human-readable rule type label (e.g. 'Activity', 'Property', 'View', 'Data Transform')."
+        },
+        "pyLabel": {
+          "type": "string",
+          "description": "Display label of the linked rule."
+        },
+        "pyRuleSet": {
+          "type": "string",
+          "description": "Ruleset the linked rule belongs to."
+        },
+        "pyRuleSetVersion": {
+          "type": "string",
+          "description": "Ruleset version of the linked rule (e.g. '01-01-01')."
+        },
+        "pyProductName": {
+          "type": "string",
+          "description": "Application name of the linked rule."
+        },
+        "pyProductVersion": {
+          "type": "string",
+          "description": "Application version of the linked rule (e.g. '01.01.01'). May be empty if not specified."
+        },
+        "pyRuleAvailable": {
+          "type": "string",
+          "description": "Availability of the linked rule (e.g. 'Yes', 'Final')."
+        }
+      }
+    }
+  }
+}

@@ -145,7 +145,7 @@ replace. Examples: `{"pySteps.pySteps":"replace"}` or
 ### Workflow
 
 1. **Identify the rule** — obtain the `pzInsKey` via `list-rules` if possible. If not,
-   use `search-rules`.
+   use `search`.
   2. **Read current state** — call `get-rule` with `detail='full'` to see the current
      fields and structure. If the rule is not already in the selected branch, continue
      with `update-rule` using the selected `branchID`; the update call handles the

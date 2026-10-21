@@ -314,7 +314,7 @@ when you need direct programmatic access.
   creates a new page at the end of the list. Use subsequent Set steps under the Append
   to populate the new page's properties.
 - **Notes:** The Append action is a built-in Data Transform action, not a standalone
-  rule -- it cannot be discovered via `search-rules`. There is no `pxAppendPage`
+  rule -- it cannot be discovered via `search`. There is no `pxAppendPage`
   activity or function in Pega (the seeded entry was incorrect). For Activities, use
   the `Page-New` method to create a page and property-set methods to add it to a list.
   For PageGroups, use the `AppendToPageGroup` activity (see below).

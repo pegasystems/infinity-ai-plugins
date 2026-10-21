@@ -32,6 +32,11 @@ step skill for the parameter shape.
 | `rules-rule-obj-activity/examples/data-page-orchestration` | Data Page Orchestration Activity | Sequential clipboard page operations with error checking, ERR block, Page-New/Page-Remove pairing, and fallback |
 | `rules-rule-obj-activity/examples/chained-data-page-integration` | Chained Data Page Integration | Multi-API chaining with parameterized data pages (`D_Name[Param: value]`), early exit, and `pyOnException` fallback |
 | `rules-rule-obj-activity/examples/enqueue-and-dispatch` | Enqueue and Dispatch | Job Scheduler dispatch activity — Obj-Browse + EMBEDDED loop + Obj-Save + Queue-For-Processing |
+| `rules-rule-obj-activity/examples/loop-embedded` | Loop Embedded PageList | EMBEDDED loop that walks a PageList and appends values to a result list |
+| `rules-rule-obj-activity/examples/loop-embedded-substeps` | Loop Embedded with Sub-steps | EMBEDDED PageList loop with nested steps, precondition filters, and local/parameter updates |
+| `rules-rule-obj-activity/examples/loop-propertylist` | Loop PropertyList | PROPERTYLIST loop that iterates a scalar value list and uses `<CURRENT>` |
+| `rules-rule-obj-activity/examples/loop-repeat` | Loop Repeat Counted | REPEAT loop that uses `<CURRENT>` as a PageList subscript |
+| `rules-rule-obj-activity/examples/loop-with-precondition-filter` | Loop with Precondition Filter | EMBEDDED loop that skips matching elements with per-iteration preconditions |
 
 ### Step-level skills
 
@@ -77,7 +82,7 @@ Step examples are organized by category. Each skill contains frontmatter + one J
 | `rules-rule-obj-activity/references/activity-preconditions` | activity-preconditions | Pre-step "When" condition rows (`pyStepsPreCondition` + `pyStepsPreCondParams`) — canonical 7-value action-code enum, multi-row chaining (AND-gate, switch-case, loop-guard), feature-toggle gating, `pyOnException` block targeting, verification checklist |
 | `rules-rule-obj-activity/references/activity-transitions` | activity-transitions | Post-step "Jump" condition rows (`pyStepsTransition` + `pyStepsTransParams`) — canonical action-code enum, block-name jump targeting, status fan-out / method-dispatcher / early-exit patterns, casing notes (`StepStatusFail` / `stepstatusgood`), block-naming conventions |
 | `rules-rule-obj-activity/references/method-catalog` | activity-method-catalog | Complete catalog of all 108 activity step methods — organized by category with labels and parameter notes |
-| `rules-rule-obj-activity/references/step-looping` | Step Looping | Loop authoring reference — 5 loop types, `pyStepsRepeatDef` fields, `param.pyForEachCount`, `<CURRENT>`, common patterns |
+| `rules-rule-obj-activity/references/step-looping` | Step Looping | Loop authoring reference — 5 loop types, `pyStepsRepeatDef` fields, `param.pyForEachCount`, `<CURRENT>`, common patterns, and linked rule-level recipes |
 
 ## Notes
 
@@ -192,6 +197,9 @@ Always verify both fields after creation:
 See `rules-rule-obj-activity/examples/pySteps/exit-activity-conditional` for the
 step JSON and `rules-rule-obj-activity/references/activity-preconditions` for
 the full field reference table.
+
+For an EMBEDDED-loop payload whose preconditions filter individual elements,
+load `rules-rule-obj-activity/examples/loop-with-precondition-filter`.
 
 ### Avoid repeating the same precondition on consecutive steps
 
@@ -645,10 +653,10 @@ iterating over:
 
 | Loop Type | Use When | Example |
 |-----------|----------|---------|
-| `EMBEDDED` | Iterating over a **page list** (embedded pages, e.g. `pxResults` from Obj-Browse, any PageList property) | Loop over `BrowseList.pxResults` |
-| `PROPERTYLIST` | Iterating over a **value list** (list of scalars — strings, integers, decimals) | Loop over a list of email addresses |
+| `EMBEDDED` | Iterating over a **page list** (embedded pages, e.g. `pxResults` from Obj-Browse, any PageList property) | `rules-rule-obj-activity/examples/loop-embedded`; for nested operations, `rules-rule-obj-activity/examples/loop-embedded-substeps` |
+| `PROPERTYLIST` | Iterating over a **value list** (list of scalars — strings, integers, decimals) | `rules-rule-obj-activity/examples/loop-propertylist` |
 | `PAGE` | Iterating over top-level named pages on the clipboard | Loop over multiple top-level pages |
-| `REPEAT` | Fixed count iteration (N times) | Execute a step exactly 5 times |
+| `REPEAT` | Fixed count iteration (N times) | `rules-rule-obj-activity/examples/loop-repeat` |
 | `PROPERTYGROUP` | Iterating over a property group's keys | Loop over dynamic key-value pairs |
 
 **Common mistake:** Using `PROPERTYLIST` for a page list like `pxResults`.

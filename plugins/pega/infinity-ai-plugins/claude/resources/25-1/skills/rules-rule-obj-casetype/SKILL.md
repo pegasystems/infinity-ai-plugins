@@ -78,6 +78,7 @@ Operational guides for mutating an already-created case type:
 | Skill | Label | Description |
 |---|---|---|
 | `rules-rule-obj-casetype/references/managing-stages` | Managing Lifecycle Stages | Procedures for inserting, renaming, changing the flow of, reordering, and removing stages on an existing case type — including renumbering, supporting-rule dependencies, verification, and troubleshooting |
+| `methodology-mobile-app-development/references/offline-support` | mobile-app-offline-support | Checklist to verify Stages, Steps, Actions, Views, and Data Pages before enabling `pyOfflineEnabled` for a Mobile channel |
 
 ## Functionality Reference
 
@@ -331,6 +332,20 @@ has a `pyStatusGroup` name, optional `pyClassName` scope, and a
   Use for low-concurrency cases where data integrity is critical.
 - `Optimistic` — Allows concurrent edits, detects conflicts at save time.
   Use for high-concurrency scenarios like agile boards.
+
+### Offline-enabled Case Types
+
+Setting `pyOfflineEnabled: "true"` only marks the case type as offline-capable
+on the rule itself — it does not verify that the case type's Stages, Steps,
+Actions, Views, validation, and Data Pages are actually offline-compatible,
+and it does not add the case type to a Mobile channel's offline configuration
+(a separate step in Infinity Studio/App Studio). Before setting this field,
+review the entire intended journey against
+`methodology-mobile-app-development/references/offline-support` and confirm
+whether the target release uses Traditional UI or Constellation — offline
+support differs significantly between the two. Do not silently generate a
+case type that claims offline support when part of its journey is not
+actually supported offline; surface the gap and propose an alternative.
 
 ### Pega field misspelling
 

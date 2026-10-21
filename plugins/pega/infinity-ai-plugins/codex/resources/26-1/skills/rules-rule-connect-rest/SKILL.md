@@ -87,7 +87,7 @@ require the user to manually fix the connector in Infinity Studio, and any subse
 
 Before calling `create-rule`:
 - Ask the user for the Application Setting name (`RulesetName!settingName`) or
-  confirm it exists via `search-rules` on `Rule-Admin-System-Settings`.
+  confirm it exists via `search` on `Rule-Admin-System-Settings`.
 - Ask for (or confirm) the auth profile name when `pyAuthProfileSelectionType:
   "AUTH_PROFILE"` is intended.
 - If neither exists yet, create the Application Setting first, then create the

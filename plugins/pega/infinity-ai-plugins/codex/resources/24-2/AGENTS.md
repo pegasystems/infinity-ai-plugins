@@ -5,13 +5,37 @@ This repository contains Pega domain knowledge as structured markdown skills —
 ## Core instructions
 
 - You have MCP tools available that you can call directly. Tool descriptions in your system prompt explain what each tool does and its parameters.
-- When the user asks any rule-related or application-building related questions, the agent must call the following two mcp calls **in parallel**: `get-application` (with no arguments) **and** `list-casetypes` if not done already. For skill discovery, use `search-skills` first with a natural language query; only fall back to `list-skills` if `search-skills` returns no results or is unavailable.
+- When the user asks any rule-related or application-building related questions, the agent must call the following three mcp calls **in parallel**: `get-application` (with no arguments), `list-casetypes` if not done already, **and** `search-skills` with a natural language query. For skill discovery, use `search-skills` first with a natural language query; only fall back to `list-skills` if `search-skills` returns no results or is unavailable.
 - Before creating or updating rules, load `methodology-rule-authoring` and follow its branch authoring lifecycle. Use the selected `branchID` on every rule write.
 - **Agile work item** — act on a user story or backlog item | "work on US-162", "pick the next user story", "process the backlog", "what is the next priority work item", "what's my next work item" | Load `methodology-agile-userstory-processor` skill first, then follow its workflow (fetch → read → author)
 - **Case audit / history** — retrieve action history, audit trail, or timeline of a case | "show audit for W-123", "get history of I-4009", "what actions were taken on this case" | Load `methodology-retrieve-case-work-history` first, then call `D_pyWorkHistory` via `run-data-page`. Do NOT use `get-case-details` — it does not return action history. (load → run-data-page → present)
 - **Rule explain** — explain, walkthrough, understand, "what does this rule do", or `/explain` for an existing rule instance of any rule type | Load `methodology-rule-explain` first, resolve one exact target `pzInsKey`, fetch rule details read-only, and return an evidence-based natural-language functionality explanation (default concise, detailed only when requested in the current query). Do not create or update rules in explain flow.
 - **Rule review / inspection** — review, inspect, check, examine, analyze, assess, evaluate, audit, or `/review` for an existing rule instance of any rule type | Load `methodology-rule-review` first, resolve the target `pzInsKey`, then run `D_pxRuleReview` via `run-data-page` and present both `pxWarningsToDisplay` and `pyRuleReviewGuidelines` before any direct rule analysis or authoring decision. If Platform and Application-specific guideline sections conflict, pause and ask the user which source takes precedence before continuing. If the user approves follow-up changes, implement only the approved suggestions — do not reimplement the entire rule.
 - **Generate tests** — `/generate-tests`, generate tests, add test coverage, or create test cases for a rule/case behavior | Load `methodology-generate-tests` first, confirm scope from a target rule/case, produce the coverage matrix, and only then create or update test rules through branch-scoped authoring.
+- **SpecKit specify** — `/speckit.specify`, "specify this feature", "write a spec for", "capture requirements for" | Load `methodology-speckit` then `methodology-speckit/references/specify`. Gather Pega context, desired outcome, constraints, and acceptance criteria. Create a `Spec_<FeatureName>` Rule-Application-UseCase instance and **STOP** — do not proceed to clarify, plan, tasks, or implementation.
+- **SpecKit clarify** — `/speckit.clarify`, "clarify the spec", "resolve gaps in the spec" | Load `methodology-speckit` then `methodology-speckit/references/clarify`. Fetch the `Spec_<FeatureName>` rule instance, identify ambiguities, ask one question at a time as plain text (one question per message, mandatory pause after each — never list multiple questions), and update the rule instance in place. **STOP** — do not proceed to plan, tasks, or implementation.
+- **SpecKit plan** — `/speckit.plan`, "plan this feature", "create a development plan" | Load `methodology-speckit` then `methodology-speckit/references/plan`. Fetch the `Spec_<FeatureName>` rule instance, derive required Pega rules, sequence by dependency, and attach a `Plan_<FeatureName>.md` file to the `Spec_<FeatureName>` instance via `D_pxCreateSpecAttachments`. **STOP** — do not proceed to tasks or implementation.
+- **SpecKit tasks** — `/speckit.tasks`, "create backlog items", "generate tasks for this plan" | Load `methodology-speckit` then `methodology-speckit/references/tasks`. Fetch the `Plan_<FeatureName>.md` attachment from the `Spec_<FeatureName>` rule instance, convert into one backlog item per rule, and attach a `Task_<FeatureName>.md` file to the same spec rule via `D_pxCreateSpecAttachments`. **STOP** — do not begin authoring.
+- **SpecKit implementation** — `/speckit.implement`, "implement the backlog", "start authoring" | Load `methodology-speckit` then `methodology-speckit/references/implement`. Fetch the `Task_<FeatureName>.md` attachment from the `Spec_<FeatureName>` rule instance and author each backlog item through the applicable authoring workflow in dependency order, one rule at a time. No Rule-Application-UseCase instance is created in this phase.
+
+## SpecKit Orchestrator Constraints
+
+Before the first SpecKit stage, resolve
+`methodology-speckit/references/constitution` and the optional application constitution
+extension into an immutable lifecycle snapshot associated with `Spec_<FeatureName>`.
+Separated phases reuse that snapshot after a lightweight source-identity freshness
+check. If a source changed, pause for explicit rebaseline approval. Always perform the
+freshness check before implementation or any rule write. Application guidance may add
+or tighten requirements but may not weaken rule modeling, live-state verification,
+human review, or validation.
+
+These rules apply whenever the orchestrator coordinates any SpecKit stage:
+
+- **No auto-chaining — ever.** Auto-chaining phases (e.g. specify → clarify → plan → tasks → implement) in a single turn is strictly forbidden. Each phase MUST end with presenting the phase status to the user and stopping. A subagent completing a phase is NOT authorization to start the next phase — even if the user said "continue" in a prior message.
+- **"Continue" scoped to the current stage only.** If the user says "continue," "go ahead," or similar, this applies only to completing the *current* stage. It is NOT authorization to advance to the next stage.
+- **Explicit command required per phase.** A new `/speckit.<phase>` command from the user is the only valid trigger for the next phase. No inference, no assumption.
+- **Suggest only the next stage.** After presenting results for a completed stage, suggest only the immediately following stage (e.g. after specify → suggest clarify; after clarify → suggest plan). Never list or describe multiple future stages at once.
+- **Delegation does not bypass stop rules.** If a SpecKit phase runs via a delegated subagent, the orchestrator MUST present a high-level phase status summary to the user and HALT — it must NOT queue or trigger the next phase subagent. The "delegate the next unit" delegation pattern does not apply to SpecKit phases. A subagent returning phase results is never a loop iteration trigger.
 
 ## AI Authoring Data Pages
 
@@ -47,6 +71,13 @@ in this section are sorted alphabetically by data-page name.
 * **Page or List** — Page
 * **404 Not Found** — The Data Page is unavailable in the current application/ruleset context. Inform the user that the branch could not be created or added.
 
+### `D_pxCreateSpecAttachments`
+* **Purpose** — Attach a file to a `Rule-Application-UseCase` rule instance. Only applicable to `Rule-Application-UseCase` rules — do **not** use this data page to attach files to any other rule type or work object.
+* **Parameters** — `pzInsKey` (required, platform-defined parameter name): `pzInsKey` of the target `Rule-Application-UseCase` rule. `filePageJSON` (required): defined in `methodology-speckit/references/plan` (for `Plan_<FeatureName>.md`) and `methodology-speckit/references/tasks` (for `Task_<FeatureName>.md`).
+* **Page or List** — List (POST). Do **not** call as a page (GET) — the payload is too large for query parameters.
+* **Details** — Returns a list of all attachments on the spec rule, including the newly added one. Scan the `data` node in the response to confirm the new attachment is present before proceeding.
+* **404 Not Found** — Treat this as a Data Page availability issue in the current environment (for example, latest SpecKit attachment rules are not present). Inform the user this capability is unavailable right now and stop processing the request.
+
 ### `D_pxSetBranchDevelopmentPreferences`
 * **Purpose** — Set or clear the branch development preference for a branch and application in the current app stack. User may also call this their "Branch Preference"
 * **Parameters** — `BranchDevelopment`: "true" or "false" string; `Branch` (string, required when BranchDevelopment is true, exact match): the branch for which to set the branch development preference. `Application` (optional string): the application name in the app stack to use for the preference; blank defaults to the current application and influences which ruleset is selected.
@@ -63,6 +94,13 @@ in this section are sorted alphabetically by data-page name.
 * **Page or List** — Page
 * **Returns** — durable context stored on an existing `Rule-RuleSet-Branch` record
 * **404 Not Found** — The Data Page is unavailable in the current application/ruleset context. Continue processing without the branch-context update and inform the user that the plan was not stored.
+
+### `D_pxWorkBenchUserStories`
+* **Purpose** — Retrieve Agile Workbench user stories for backlog processing and next-item selection.
+* **Parameters** — Use `dataViewParameters` (optional) for pagination values such as `pageSize` and `pageNumber`.
+* **Page or List** — List (POST)
+* **Details** — Records are returned under `data`, use `resultCount` for response window count metadata.
+* **404 Not Found** — The Data Page is unavailable in the current application/ruleset context. Inform the user that Agile Workbench story retrieval is unavailable and stop that workflow.
 
 ## Skills repo overview
 
@@ -138,6 +176,7 @@ it is unavailable.**
 | Rule type | Name(s) | Notes |
 |-----------|---------|-------|
 | `Rule-Admin-System-Settings` | Application Setting | Omit `pySettingMetaData.pyCategoryName` on create unless reusing a category that already exists |
+| `Rule-Application-UseCase` | Use Case, Specification | |
 | `Rule-Async-JobScheduler` | Job Scheduler | |
 | `Rule-Async-QueueProcessor` | Queue Processor | |
 | `Rule-ClassMetadata` | Class Metadata | |
@@ -216,6 +255,3 @@ intake, authoring, and review screens — complete every step below against the
    When `get-assignment` returns `recommendedSkills`, read that skill file via
    the local filesystem (`Read` tool on `skills/{name}/SKILL.md`) or via
    `get-skill` before building the payload. Apply its guidance in full.
-
-## Skills Development
-- Commit messages: imperative mood, ~72 char summary, no conventional-commit prefixes

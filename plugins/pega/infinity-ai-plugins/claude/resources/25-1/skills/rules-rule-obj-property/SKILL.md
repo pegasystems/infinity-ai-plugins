@@ -163,7 +163,7 @@ retrieval modes:
 Set `pyDataObject` to the target data page name (e.g., `D_UserStory`
 for UserStory, `D_Epic` for Epic). To find a case type's lookup data page:
 
-1. Search with `search-rules` for `D_<CaseTypeName>` (e.g., `D_Epic`)
+1. Search with `search` for `D_<CaseTypeName>` (e.g., `D_Epic`)
 2. For Data- subclasses only: fetch the target class's `Rule-ClassMetadata`
    and read `pyLookUpDataPage` (this field does not exist on Work- classes)
 

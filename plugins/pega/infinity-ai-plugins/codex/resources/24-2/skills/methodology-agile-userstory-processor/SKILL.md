@@ -25,14 +25,14 @@ Pega Agile Workbench stores development work items as case instances in the `Peg
 
 **Current support scope:** process only `Pega-Agile-Work-UserStory`. If other `Pega-Agile-Work-*` subclasses appear, report them as unsupported and continue only with UserStory items.
 
-These are **case instances**, not rule instances. Fetching them requires `run-data-page` (to list items) and `get-case-details` (to read a full instance), not the rules API (`get-rule`, `list-rules`).
+These are **case instances**, not rule instances. Use `run-data-page` with `D_pxWorkBenchUserStories` to list items and `get-case-details` to read a full instance. Do not use `list-cases` or the rules API (`get-rule`, `list-rules`) to retrieve Agile Workbench User Stories.
 
 Key fields used during processing:
 
 | Field | Meaning |
 |-------|---------|
-| `pxResults` | Result array from `D_pxWorkBenchUserStories`; each entry is one UserStory record |
-| `pxResultCount` / `pyRowCount` | Count metadata for the current response window |
+| `data` | Result array from `D_pxWorkBenchUserStories`; each entry is one UserStory record |
+| `resultCount` | Count metadata for the current response window |
 | `pyMaxRecords` / `pyStartIndex` | Pagination window metadata from the data page response |
 | `pyPriority` | Numeric priority — **lower value = higher priority** (e.g., `1` is more urgent than `3`) |
 | `pyStatusWork` | Case status: `New`, `Open`, `Open-Review`, `Resolved-Completed` |
@@ -53,13 +53,27 @@ Follow these steps in order. Do not skip steps or combine them speculatively.
 
 ### Step 1 — Fetch open work items
 
-Call `run-data-page` once with the `D_pxWorkBenchUserStories` data page. Use `dataPageType="list"` (mandatory) and do not pass page parameters. The response includes top-level metadata and a `pxResults` array containing UserStory records.
+Call `run-data-page` once with the `D_pxWorkBenchUserStories` data page. Use `dataPageType="list"` (mandatory) and always pass `pageSize="50"` in `dataViewParameters` so the agent retrieves 50 items per request. Default `pageNumber` to `"1"`, and use higher page numbers only when requesting subsequent pages. The response includes top-level metadata and returns records under `data`.
 
 ```
-run-data-page(dataPage="D_pxWorkBenchUserStories", dataPageType="list")
+run-data-page(
+  dataPage="D_pxWorkBenchUserStories",
+  dataPageType="list",
+  payload='{"dataViewParameters":{"pageSize":"50","pageNumber":"1"}}'
+)
 ```
 
-**Filter the returned list in memory (iterate over `pxResults`):**
+Pagination example (next page):
+
+```
+run-data-page(
+  dataPage="D_pxWorkBenchUserStories",
+  dataPageType="list",
+  payload='{"dataViewParameters":{"pageSize":"50","pageNumber":"2"}}'
+)
+```
+
+**Filter the returned list in memory (iterate over `data`):**
 - Keep only items where `pxObjClass` is `Pega-Agile-Work-UserStory`.
 - Exclude items where `pyStatusWork` is `Resolved-Completed`.
 - Prefer items in `New` or `Open` status over `Open-Review` (already in review).
@@ -72,11 +86,12 @@ run-data-page(dataPage="D_pxWorkBenchUserStories", dataPageType="list")
 
 ### Step 2 — Select the highest-priority item
 
-From the filtered `pxResults` entries, select the **single** work item to act on:
+From the filtered `data` entries, select the **single** work item to act on:
 
-1. **Sort by `pyPriority` ascending** — the item with the lowest numeric value has the highest priority.
-2. **Break ties by `pxCreateDateTime` ascending** — the oldest item at the same priority level is worked first (FIFO).
-3. **If the user specified a particular work item** (e.g., "work on US-7"), use that `pzInsKey` directly — skip the sort.
+1. **Respect returned order first** — `D_pxWorkBenchUserStories` returns items from highest priority to lowest priority.
+2. **Validate by `pyPriority`** — lower numeric value still means higher priority (for example, `1` before `3`).
+3. **Break ties by `pxCreateDateTime` ascending** — for items at the same priority level, pick the oldest one first (FIFO).
+4. **If the user specified a particular work item** (e.g., "work on US-7"), use that `pzInsKey` directly — skip selection logic.
 
 Record the selected item's `pzInsKey`. This is the key used in Step 3.
 
@@ -155,7 +170,7 @@ After performing the action:
 
 | Scenario | Selection rule |
 |----------|----------------|
-| Mixed priorities in list | Pick the item with the lowest `pyPriority` number |
+| Mixed priorities in list | The data page already returns highest-to-lowest priority; select the first remaining filtered item and validate with `pyPriority` |
 | Multiple items at same priority | Pick the one with the earliest `pxCreateDateTime` |
 | User specifies an item directly | Use the specified `pzInsKey` — skip selection logic |
 | Unsupported work item classes also present | Exclude unsupported classes and prioritize only `Pega-Agile-Work-UserStory` |
@@ -168,7 +183,7 @@ After performing the action:
 - **Do not use `list-rules` or `get-rule` to find work items.** Work items are case instances, not rules. The rule API does not index `Pega-Agile-Work-*` instances.
 - **Do not act on descriptions without confirming interpretation.** If `pyDescription` is vague, summarize your interpretation and ask the user to confirm before making changes.
 - **Do not process multiple work items in one turn without user direction.** Select one item, act on it, report completion, and ask whether to proceed to the next.
-- **Do not skip `get-case-details`.** The `D_pxWorkBenchUserStories` list response is a summary — critical fields like `pyDescription` and `pyUserStoryAcceptanceCriteria` require the full instance.
+- **Do not skip `get-case-details`.** Use it to read the complete selected instance and fields omitted from the list response, including `pxCreateDateTime`, `pxInsName`, `pyComplexity`, and `pxUrgencyWork`. The list response may already include `pyDescription` and `pyUserStoryAcceptanceCriteria`, but the full instance remains authoritative.
 - **Do not guess the priority.** Always use the `pyPriority` field value — do not infer priority from the title or description text.
 
 ---

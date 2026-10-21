@@ -89,7 +89,7 @@ When recreating a placeholder shape, preserve these values — do not fabricate 
 
 | Tool | Parameters |
 |------|------------|
-| `search-rules` | `searchText="{FlowName}"` |
+| `search` | `searchText="{FlowName}"` |
 | `get-rule` | `key="{FlowKey}"`, `detail="full"` |
 
 **What to look for:**
@@ -104,7 +104,7 @@ Record the exact shape JSON to preserve existing fields during updates.
 
 | Tool | Parameters |
 |------|------------|
-| `search-rules` | `searchText="{ConnectorName}"` |
+| `search` | `searchText="{ConnectorName}"` |
 
 Filter results to `Rule-Connect-GenerativeAI` on the target class.
 

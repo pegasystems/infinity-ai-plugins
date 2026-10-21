@@ -109,7 +109,7 @@ If the user asks to review a branch, do this **before** any per-rule review call
 **Preferred path:** use `list-rules` when you know the rule type, class, or rule name.
 `list-rules` returns the exact instance key to use.
 
-**Fallback:** use `search-rules` when the user gave only partial identifying information.
+**Fallback:** use `search` when the user gave only partial identifying information.
 
 **If multiple rules match:** present the candidates and ask the user which rule to review.
 Do not run the review on an ambiguous target.

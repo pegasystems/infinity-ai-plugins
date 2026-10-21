@@ -37,7 +37,7 @@ Extract:
 
 ## Step 3: Confirm with Search
 
-**Tool:** `search-rules` with `searchText="{ExpectedRuleName}"`, `allApps="false"`
+**Tool:** `search` with `searchText="{ExpectedRuleName}"`, `allApps="false"`
 
 A stub is confirmed when:
 - No result is returned, **or**

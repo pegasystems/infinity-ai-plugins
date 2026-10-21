@@ -12,7 +12,7 @@ Treat these as application-state requests:
 - application stats, app stats, current state, state of the app
 - workflows present, case types in app, data objects in app, personas in app
 
-When intent matches, do **not** start with `search-rules` or multiple `get-rule` calls.
+When intent matches, do **not** start with `search` or multiple `get-rule` calls.
 
 ## Workflow
 
@@ -69,7 +69,7 @@ Use rule-level exploration only if:
 - `get-application` summary lacks a specific technical detail
 
 Escalation sequence:
-1. `search-rules` to locate artifacts
+1. `search` to locate artifacts
 2. `get-rule detail="summary"` first
 3. `get-rule detail="full"` only when raw fields required
 

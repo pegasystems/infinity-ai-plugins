@@ -16,12 +16,12 @@ the flow to the FlowAction, then using either `pyViewReference` or the same-name
 FlowAction/View convention.
 
 1. **Find the flow** that contains the step.
-   - `search-rules` with `searchText="{CaseTypeName}"`, filter to `Rule-Obj-Flow`.
+   - `search` with `searchText="{CaseTypeName}"`, filter to `Rule-Obj-Flow`.
    - Use `get-rule` (full) on the flow; inspect `pyModelProcess.pyShapes` for the
      `Data-MO-Activity-Assignment` shape whose `pyMOName` matches the step name.
 
 2. **Find the FlowAction** from the shape's `pyMOName`.
-   - `search-rules` with `searchText="{FlowActionName}"`, filter to `Rule-Obj-FlowAction`.
+   - `search` with `searchText="{FlowActionName}"`, filter to `Rule-Obj-FlowAction`.
    - Use `get-rule` (full); read `pyViewReference`. If populated, this is the name of
      the backing view.
    - If `pyViewReference` is blank and `pySectionReference` is also blank, check the

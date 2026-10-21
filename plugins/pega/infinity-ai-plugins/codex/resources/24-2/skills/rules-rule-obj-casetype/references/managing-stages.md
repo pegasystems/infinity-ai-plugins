@@ -30,7 +30,7 @@ Then search for hard-coded stage ID references that may need updating after
 renumbering:
 
 ```
-search-rules searchText="pxChangeToSpecifiedStage"  (filter to the work class)
+search searchText="pxChangeToSpecifiedStage"  (filter to the work class)
 ```
 
 ## Branch authoring
