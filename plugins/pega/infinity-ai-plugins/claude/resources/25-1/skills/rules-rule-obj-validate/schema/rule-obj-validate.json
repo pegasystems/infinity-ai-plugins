@@ -182,8 +182,8 @@
           "description": "Precondition expression for this column."
         },
         "pyColumnExpanded": {
-          "type": "boolean",
-          "description": "Boolean -- UI expansion state."
+          "type": ["boolean", "string"],
+          "description": "Boolean -- UI expansion state. Pega serializes this as the string \"true\"/\"false\", so both forms are accepted."
         },
         "pyColumnLabel": {
           "type": "string",
@@ -350,6 +350,7 @@
             "PropertyExistsAndHasValue",
             "invokeValidate",
             "pzRule-Obj-Whenfalse",
+            "RuleWhenEvaluatesToFalse",
             "Rule-Obj-When",
             "StringEquals",
             "StringEqualsIgnoreCase",

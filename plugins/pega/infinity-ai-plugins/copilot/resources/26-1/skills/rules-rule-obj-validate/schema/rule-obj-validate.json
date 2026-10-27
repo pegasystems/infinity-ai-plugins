@@ -182,7 +182,7 @@
           "description": "Precondition expression for this column."
         },
         "pyColumnExpanded": {
-          "type": "boolean",
+          "type": ["boolean", "string"],
           "description": "Boolean -- UI expansion state."
         },
         "pyColumnLabel": {
@@ -350,6 +350,7 @@
             "PropertyExistsAndHasValue",
             "invokeValidate",
             "pzRule-Obj-Whenfalse",
+            "RuleWhenEvaluatesToFalse",
             "Rule-Obj-When",
             "StringEquals",
             "StringEqualsIgnoreCase",

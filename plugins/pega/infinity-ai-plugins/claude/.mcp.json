@@ -3,6 +3,7 @@
     "Pega Infinity Authoring": {
       "command": "java",
       "args": [
+        "-Dlogging.file.name=${user.home}/.infinity-rules-mcp/logs/infinity-rules-mcp.log",
         "-jar",
         "${CLAUDE_PLUGIN_ROOT}/resources/infinity-rules-mcp.jar",
         "--spring.profiles.active=stdio"

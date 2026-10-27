@@ -179,6 +179,15 @@ value is present, it is the value the runtime uses even when an environment vari
 - **Server won't start**: Check that Java is installed (`java -version`). The bundled server requires Java 17+.
 - **Connection refused**: Verify the base URL is correct, uses the environment root URL without `/prweb` or other path segments, and the Pega environment is accessible from this machine.
 - **Authentication failed**: Confirm the base URL and standard OAuth client ID. If the environment requires a custom client ID, set `pega_oauth_client_id` in the config file or the environment when no conflicting config value exists.
+- **Auth hangs / expired OAuth session**: If the connection stalls on authentication or the server stops responding, the cached OAuth session may be expired. The runtime stores it at `~/.infinity-rules-mcp/oauth-session.json`. Check whether `accessTokenExpiry` is in the past (presence/expiry check only — never print the token values), and if so move the file aside so a fresh login is triggered on the next connect:
+
+  ```bash
+  s="$HOME/.infinity-rules-mcp/oauth-session.json"
+  [ -f "$s" ] && mv "$s" "$s.stale-$(date +%Y%m%d-%H%M%S)"
+  ```
+
+  Then restart the Copilot CLI session / reconnect the plugin and complete the OAuth login. A repeated start failure with `FileNotFoundException: logs/infinity-rules-mcp.log` is a separate issue — see the log-path note below.
+- **`FileNotFoundException: logs/infinity-rules-mcp.log` on startup**: The server writes its log file relative to the launch working directory. The bundled launch config pins an absolute path via `-Dlogging.file.name=${user.home}/.infinity-rules-mcp/logs/infinity-rules-mcp.log`. If you launch the JAR with a custom command, pass that same property (or run from a directory where `logs/` is writable) so the file appender can start.
 - **Tools not appearing after config change**: Fully restart the Copilot CLI session (quit and reopen). If still missing, confirm `PEGA_CLIENT_MODE=copilot-plugin` is set and the installed plugin contains the manifest for the configured version.
 - **Config file not loading**: Ensure `~/.infinity-rules-mcp/config.json` is valid JSON. Check for trailing commas or missing quotes.
 - **Variables not appearing after `source`**: Check the profile file path and confirm the file was saved.

@@ -3,6 +3,7 @@
     "type": "stdio",
     "command": "java",
     "args": [
+      "-Dlogging.file.name=${user.home}/.infinity-rules-mcp/logs/infinity-rules-mcp.log",
       "-jar",
       "./resources/infinity-rules-mcp.jar",
       "--spring.profiles.active=stdio"

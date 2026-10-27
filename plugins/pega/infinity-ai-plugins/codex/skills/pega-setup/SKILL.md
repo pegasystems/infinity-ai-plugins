@@ -85,3 +85,5 @@ values take precedence.
 - confirm `java` is available on the machine running Codex
 - confirm the bundled Codex skills are visible in `/skills` or plugin invocation
 - confirm stale `PEGA_*` environment variables are not being mistaken for the effective values; the config file wins
+- if auth hangs or the server stops responding, check `~/.infinity-rules-mcp/oauth-session.json` for an expired `accessTokenExpiry` (expiry check only, never print tokens); move the file aside (`mv oauth-session.json oauth-session.json.stale-$(date +%Y%m%d-%H%M%S)`) and reconnect to trigger a fresh login
+- on a `FileNotFoundException: logs/infinity-rules-mcp.log` startup failure, pass `-Dlogging.file.name=${user.home}/.infinity-rules-mcp/logs/infinity-rules-mcp.log` (as the bundled launch config does) or launch from a directory where `logs/` is writable
