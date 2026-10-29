@@ -12,13 +12,12 @@ Use this skill when the user needs to configure or troubleshoot the Codex plugin
 
 1. Treat the plugin-bundled MCP server as the source of truth for how the bundled server starts.
 2. Prefer checking Codex MCP configuration first before suggesting manual edits.
-3. Confirm the bundled runtime uses `resources/infinity-rules-mcp.jar` and bundled skills under
-   `resources/<infinity-version>/`.
+3. Confirm the plugin starts the pinned npm launcher, which downloads and verifies the runtime and skills on first use.
 4. Use OAuth for authentication with the standard client ID `34233104330833666523`.
 5. If the runtime exposes setup or auth helper tools, use them before suggesting manual env
    changes.
 6. Treat `pega_base_url` / `PEGA_BASE_URL` as the Pega environment root URL only; do not include `/prweb` or any other path segment.
-7. Let the plugin supply `PEGA_SKILLS_PATH` for the bundled skills parent directory; do not ask users to set `pega_skills_path` for normal bundled use.
+7. Let the plugin supply `PEGA_SKILLS_PATH` for the bundled skills parent directory; do not ask users to set `pega_skills_path` for normal use.
 8. Set `pega_infinity_version` explicitly to `26-1` for a 26.1 environment. Use the version mapping above and the exact bundled directory name.
 9. Separate local plugin validation from remote Pega validation: `list-skills` confirms bundled skills availability, while `list-available-applications` or `get-application` confirms remote connectivity.
 10. Treat non-empty values in `~/.infinity-rules-mcp/config.json` as higher priority than `PEGA_*` environment variables.
@@ -62,7 +61,7 @@ Create or edit `~/.infinity-rules-mcp/config.json`:
 }
 ```
 
-The plugin supplies the bundled skills parent directory. `26-1` selects `resources/26-1/`.
+The plugin supplies the skills directory. `26-1` selects the matching skills version.
 The runtime defaults to `26-1` when the version is omitted, but keep the key explicit for a deterministic
 setup.
 
@@ -81,7 +80,7 @@ values take precedence.
 - confirm bundled skills are discoverable through `list-skills`
 - confirm remote Pega connectivity through `list-available-applications` or `get-application`
 - confirm `pega_base_url` / `PEGA_BASE_URL` uses the environment root URL without `/prweb`
-- confirm the bundled plugin resources contain the manifest for the configured version
+- confirm `pega_infinity_version` is a supported version, and that Node.js 22.14+ and GitHub access are available for the first-start download
 - confirm `java` is available on the machine running Codex
 - confirm the bundled Codex skills are visible in `/skills` or plugin invocation
 - confirm stale `PEGA_*` environment variables are not being mistaken for the effective values; the config file wins

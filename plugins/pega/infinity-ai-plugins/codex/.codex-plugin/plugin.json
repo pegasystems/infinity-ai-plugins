@@ -1,6 +1,6 @@
 {
   "name": "pega-infinity-authoring",
-  "version": "0.1.8",
+  "version": "0.2.1",
   "displayName": "Pega Infinity Authoring",
   "description": "Pega Infinity Authoring with bundled MCP tools and runtime skills. For first-time setup, run the `pega-setup` skill to configure your connection.",
   "author": {

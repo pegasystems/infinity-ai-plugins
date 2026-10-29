@@ -14,8 +14,8 @@ The Claude plugin uses an OAuth-based connection flow. The shared configuration 
 2. `pega_oauth_client_id` - use `34233104330833666523` unless the environment requires a custom override
 3. `pega_infinity_version` - use the exact bundled version, normally `26-1`
 
-The plugin sets `PEGA_SKILLS_PATH` to its bundled `resources` directory. Do not ask users to set
-`pega_skills_path` for normal bundled use.
+The plugin's launcher downloads and verifies the skills and supplies the skills path itself. Do not ask users to set
+`pega_skills_path` for normal use.
 
 The MCP server defaults `pega_oauth_client_id` to `34233104330833666523`, but keep that value in the
 config file so the setup is explicit and portable. Do not ask the user to invent or provide a client
@@ -97,8 +97,7 @@ Instruct the user to create or edit `~/.infinity-rules-mcp/config.json` directly
 }
 ```
 
-The plugin supplies the bundled skills parent directory automatically. `26-1` selects the bundled
-`resources/26-1/` directory. The runtime defaults to `26-1` when the key is omitted, but keep it
+The plugin supplies the skills directory automatically. `26-1` selects the matching skills version. The runtime defaults to `26-1` when the key is omitted, but keep it
 explicit for a deterministic setup.
 
 After creating the file, instruct the user to restrict permissions:
@@ -142,7 +141,7 @@ Expected results:
 
 - `list-skills` returns available bundled Pega runtime skills.
 - `list-available-applications` or `get-application` returns application data from the target Pega environment.
-- The selected version's bundled manifest is available under the plugin's `resources/<version>/manifest.json` directory.
+- The skills for the configured version are listed by `list-skills`.
 
 If verification fails, check:
 
@@ -160,7 +159,7 @@ If verification fails, check:
 - **Server won't start**: Check that Java is installed (`java -version`). The bundled server requires Java 17+.
 - **Connection refused**: Verify the base URL is correct, uses the environment root URL without `/prweb` or other path segments, and the Pega environment is accessible from this machine.
 - **Authentication failed**: Confirm the base URL and standard OAuth client ID. If the environment requires a custom client ID, set `pega_oauth_client_id` in the config file.
-- **Tools not appearing after config change**: Run `/reload-plugins`. If still missing, check that the installed plugin contains `resources/26-1/manifest.json` or the manifest for the configured version.
+- **Tools not appearing after config change**: Run `/reload-plugins`. If still missing, check that the configured `pega_infinity_version` is one of the supported versions. On first start the launcher downloads the server and skills, so allow a minute and confirm Node.js 22.14+ and network access to GitHub.
 - **Config file not loading**: Ensure `~/.infinity-rules-mcp/config.json` is valid JSON. Check for trailing commas or missing quotes.
 - **Both config file and `/plugin` UI set**: Non-empty values in `~/.infinity-rules-mcp/config.json` take priority over the UI values, which are passed as `PEGA_*` environment variables.
 - **Permission denied on config file**: Run `chmod 600 ~/.infinity-rules-mcp/config.json` and ensure the file is owned by your user.

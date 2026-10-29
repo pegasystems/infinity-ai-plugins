@@ -4,16 +4,13 @@
       "tools": [
         "*"
       ],
-      "command": "java",
+      "command": "npx",
       "args": [
-        "-jar",
-        "${PLUGIN_ROOT}/resources/infinity-rules-mcp.jar",
-        "--spring.profiles.active=stdio"
-      ],
-      "env": {
-        "PEGA_SKILLS_PATH": "${PLUGIN_ROOT}/resources",
-        "PEGA_CLIENT_MODE": "copilot-plugin"
-      }
+        "-y",
+        "--package=@pega/infinity-authoring-plugin@0.2.1",
+        "infinity-authoring-plugin",
+        "run-server"
+      ]
     }
   }
 }
