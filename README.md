@@ -20,7 +20,32 @@ The repository contains client-specific plugin payloads, marketplace layouts, an
 
 ## Prerequisites
 
-You need Node.js 22.14 or newer to download the MCP Server and Skills, and Java 17 or newer to run the MCP server. 
+- **Node.js 22.14 or newer** (Claude Code, Copilot CLI and Codex plugins). Check with `node --version`.
+- **Java 17 or newer**.
+
+Since plugin version 0.2.1, the plugins start the MCP server with `npx`. On first use it downloads the
+server and skills (about 40 MB) from this repository's [GitHub release](https://github.com/pegasystems/infinity-ai-plugins/releases),
+verifies their SHA-256 hashes, and caches them in `~/.infinity-rules-mcp/`. Later starts use the cache.
+Access to npm and GitHub is needed on first use only.
+
+If your client times out on the first start, download ahead of time:
+
+    npx -y --package=@pega/infinity-authoring-plugin@0.2.1 infinity-authoring-plugin prefetch
+
+### Without Node.js
+
+Plugin versions before 0.2.1 bundled the server and keep working as installed, but updating moves you
+to the Node.js-based launcher. To keep running with Java only:
+
+1. Download `infinity-rules-mcp-<version>.jar` and `infinity-skills-<version>.zip` from the
+   [releases page](https://github.com/pegasystems/infinity-ai-plugins/releases), check them against
+   the `.sha256` files, and unzip the skills into a folder.
+2. Register the server in your client with `java -jar <path/to/jar> --spring.profiles.active=stdio` and the
+   environment variable `PEGA_SKILLS_PATH` set to the skills folder. For example, in Claude Code:
+
+       claude mcp add pega-infinity-authoring --env PEGA_SKILLS_PATH=/path/to/skills -- java -jar /path/to/infinity-rules-mcp-<version>.jar --spring.profiles.active=stdio
+
+3. Copy the `pega-setup` and `pega-assistant` skills from this repository into your agent's skills directory.
 
 ## Supported Pega Infinity versions
 
