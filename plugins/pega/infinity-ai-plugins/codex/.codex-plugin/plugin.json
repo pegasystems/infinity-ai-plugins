@@ -19,7 +19,7 @@
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Pega Infinity Authoring",
-    "shortDescription": "Pega Infinity Authoring tools for Codex. Start with the `pega-setup` skill for first-time setup.",
+    "shortDescription": "Author Pega rules with AI",
     "longDescription": "Bundle the Pega Infinity Authoring server, runtime skills, and agent skills for Pega Infinity authoring workflows. For first-time setup, run the `pega-setup` skill to configure your connection.",
     "developerName": "Pegasystems",
     "category": "Developer Tools",
@@ -28,10 +28,15 @@
       "Write"
     ],
     "websiteURL": "https://github.com/pegasystems/infinity-ai-plugins",
+    "supportURL": "https://support.pega.com",
+    "privacyPolicyURL": "https://www.pega.com/privacy",
+    "termsOfServiceURL": "https://www.pega.com/terms",
     "defaultPrompt": [
       "Use Pega Infinity Authoring to explore the active Pega application.",
       "Use Pega Infinity Authoring to help author a Pega rule through a ChangeRequest workflow."
     ],
-    "brandColor": "#0A63A8"
+    "brandColor": "#0A63A8",
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/icon.png"
   }
 }
