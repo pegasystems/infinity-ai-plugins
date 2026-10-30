@@ -20,7 +20,32 @@ The repository contains client-specific plugin payloads, marketplace layouts, an
 
 ## Prerequisites
 
-You need Java 17 or newer to run the bundled MCP server.
+- **Node.js 22.14 or newer** (Claude Code, Copilot CLI and Codex plugins). Check with `node --version`.
+- **Java 17 or newer**.
+
+Since plugin version 0.2.1, the plugins start the MCP server with `npx`. On first use it downloads the
+server and skills (about 40 MB) from this repository's [GitHub release](https://github.com/pegasystems/infinity-ai-plugins/releases),
+verifies their SHA-256 hashes, and caches them in `~/.infinity-rules-mcp/`. Later starts use the cache.
+Access to npm and GitHub is needed on first use only.
+
+If your client times out on the first start, download ahead of time:
+
+    npx -y --package=@pega/infinity-authoring-plugin@0.2.1 infinity-authoring-plugin prefetch
+
+### Without Node.js
+
+Plugin versions before 0.2.1 bundled the server and keep working as installed, but updating moves you
+to the Node.js-based launcher. To keep running with Java only:
+
+1. Download `infinity-rules-mcp-<version>.jar` and `infinity-skills-<version>.zip` from the
+   [releases page](https://github.com/pegasystems/infinity-ai-plugins/releases), check them against
+   the `.sha256` files, and unzip the skills into a folder.
+2. Register the server in your client with `java -jar <path/to/jar> --spring.profiles.active=stdio` and the
+   environment variable `PEGA_SKILLS_PATH` set to the skills folder. For example, in Claude Code:
+
+       claude mcp add pega-infinity-authoring --env PEGA_SKILLS_PATH=/path/to/skills -- java -jar /path/to/infinity-rules-mcp-<version>.jar --spring.profiles.active=stdio
+
+3. Copy the `pega-setup` and `pega-assistant` skills from this repository into your agent's skills directory.
 
 ## Supported Pega Infinity versions
 
@@ -46,8 +71,8 @@ Clone the repository, and then configure the MCP server and skills manually. The
 
 | Agent | Setup instructions |
 | --- | --- |
-| Devin | Configure the bundled MCP server in Devin's MCP metadata and copy the shared Pega skills into a Devin skill directory. See [Devin setup instructions](plugins/pega/infinity-ai-plugins/devin/README.md). |
-| opencode | Merge the `mcp` block from `plugins/pega/infinity-ai-plugins/opencode/opencode.json` into `opencode.json`. Set `cwd` to the absolute path of the sibling `claude/` directory. Copy `plugins/pega/infinity-ai-plugins/opencode/skills/` into `.opencode/skills/` in your project. See [opencode setup instructions](plugins/pega/infinity-ai-plugins/opencode/README.md). |
+| Devin | Download the MCP server and skills from the release page, configure the server in Devin's MCP metadata, and copy the shared Pega skills into a Devin skill directory. See [Devin setup instructions](plugins/pega/infinity-ai-plugins/devin/README.md). |
+| opencode | Merge the `mcp` block from `plugins/pega/infinity-ai-plugins/opencode/opencode.json` into `opencode.json`. Download the MCP server JAR and skills from the release page and set their absolute paths in the config. Copy `plugins/pega/infinity-ai-plugins/opencode/skills/` into `.opencode/skills/` in your project. See [opencode setup instructions](plugins/pega/infinity-ai-plugins/opencode/README.md). |
 
 ## Setting up the plugin after installation
 
@@ -83,8 +108,8 @@ To update a manual installation, follow these steps:
 
 | Agent | Update steps |
 | --- | --- |
-| Devin | Run `git pull` in the cloned repository, then start a new Devin session. Recopy the shared Pega skills if they changed. See [Devin setup instructions](plugins/pega/infinity-ai-plugins/devin/README.md). |
-| opencode | Run `git pull` in the cloned repository to get the latest files. Restart opencode afterward. |
+| Devin | Download the newer JAR and skills ZIP from the latest release, update the paths in Devin's MCP config, and start a new Devin session. Recopy the shared Pega skills if they changed. See [Devin setup instructions](plugins/pega/infinity-ai-plugins/devin/README.md). |
+| opencode | Download the newer JAR and skills ZIP from the latest release, update the paths in `opencode.json`, and restart opencode. |
 
 > [!TIP]
 > If adding the marketplace or cloning this repository fails with a "Filename too long" error, enable Git long-path support:
@@ -107,7 +132,7 @@ To test local `infinity-skills` with Claude Code, GitHub Copilot CLI, or Codex, 
 Point `pega_skills_path` at the parent directory that contains the selected version directory, and set
 `pega_infinity_version` to the matching directory name.
 
-If `pega_skills_path` is missing or empty, the plugin uses the bundled or cached skills payload.
+If `pega_skills_path` is missing or empty, the plugin uses the skills it downloaded and cached.
 
 ## Documentation
 

@@ -12,19 +12,15 @@ It includes plugins for the following clients:
 
 ## Claude, Copilot, and Codex
 
-The checked-in source trees are directly installable from this repository.
+The source trees are directly installable from this repository.
 
-Each supported client launches `resources/infinity-rules-mcp.jar` directly with `java -jar` and
-points `PEGA_SKILLS_PATH` at the plugin `resources` directory. The runtime selects the version
-under that directory using `pega_infinity_version` from `~/.infinity-rules-mcp/config.json`.
+Each plugin's `.mcp.json` starts the pinned npm package `@pega/infinity-authoring-plugin` with `npx`. On
+first start the package downloads the MCP server JAR and the skills from a GitHub release, verifies their
+SHA-256 hashes, and caches them in `~/.infinity-rules-mcp/`. The runtime selects the skills version using
+`pega_infinity_version` from `~/.infinity-rules-mcp/config.json`.
 
-Each `resources/` directory contains `24-2/`, `25-1/`, and `26-1/`. Each version directory
-contains its own `manifest.json`, `library/`, and `skills/` payload.
-
-Each plugin directory is self-contained and does not rely on wrapper scripts or runtime extraction.
-
-There is no bootstrap download step, lock file, or separate artifact hosting location.
+Node.js 22.14 or later and Java 17 or later are required.
 
 ## Devin and OpenCode
 
-Devin and OpenCode plugins require manual MCP and skill setup. Both clients reuse the bundled runtime and skills from the `claude/` plugin directory.
+Devin and OpenCode plugins require manual MCP and skill setup. Both download the MCP server JAR and skills from the GitHub releases page; see their READMEs.

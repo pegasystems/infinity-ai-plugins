@@ -6,12 +6,11 @@
       "command": [
         "java",
         "-jar",
-        "./resources/infinity-rules-mcp.jar",
+        "<absolute-path-to>/infinity-rules-mcp-<version>.jar",
         "--spring.profiles.active=stdio"
       ],
-      "cwd": "<absolute-path-to>/plugins/pega/infinity-ai-plugins/claude",
       "environment": {
-        "PEGA_SKILLS_PATH": "./resources",
+        "PEGA_SKILLS_PATH": "<absolute-path-to>/skills",
         "PEGA_CLIENT_MODE": "opencode-plugin",
         "PEGA_BASE_URL": "<your-pega-base-url>"
       },

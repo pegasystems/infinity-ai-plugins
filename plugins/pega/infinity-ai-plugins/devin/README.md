@@ -1,12 +1,34 @@
 # Pega Infinity Authoring for Devin CLI
 
-To set up Pega Infinity Authoring for Devin, configure the MCP server and install the skills manually. Devin uses the bundled MCP run time and skills in the `claude/` directory of this repository.
+To set up Pega Infinity Authoring for Devin, configure the MCP server and install the skills manually. Devin uses the MCP server JAR and skills downloaded from the release page of this repository.
 
 ## Prerequisites
 
 - Install Java 17 or later and make it available as `java` in the environment where Devin runs the MCP server.
-- Clone this repository where Devin can access it.
+- Clone this repository, or just copy the two skill folders from it (step 3).
 - Configure the target Pega Infinity environment URL and version.
+
+## Download the MCP server and skills
+
+The MCP server JAR and the Pega skills are published as assets of the
+[GitHub releases](https://github.com/pegasystems/infinity-ai-plugins/releases) of this repository. Use the
+newest release that lists `infinity-rules-mcp-<version>.jar` and `infinity-skills-<version>.zip`. Each file
+has a `.sha256` file next to it.
+
+For example, on macOS or Linux (replace the tag and versions with the release you chose):
+
+```bash
+TAG=release-0.2.1; MCP=0.7.11; SKILLS=0.1.14
+BASE=https://github.com/pegasystems/infinity-ai-plugins/releases/download/$TAG
+mkdir -p ~/.infinity-rules-mcp/manual/skills && cd ~/.infinity-rules-mcp/manual
+for f in infinity-rules-mcp-$MCP.jar infinity-skills-$SKILLS.zip; do
+  curl -fLO $BASE/$f && curl -fLO $BASE/$f.sha256 && shasum -a 256 -c $f.sha256
+done
+unzip -oq infinity-skills-$SKILLS.zip -d skills
+```
+
+On Windows, download the two files from the release page and extract the ZIP into a `skills` folder next to the JAR.
+After extracting, `skills/` must directly contain the Pega version folders (`24-2`, `25-1`, `26-1`).
 
 ## 1. Add the MCP server
 
@@ -16,7 +38,7 @@ Add the following server to Devin's MCP metadata file. Use a project-level `.dev
 - Windows: `%APPDATA%\devin\mcp_config.json` (open the Run dialog box with Windows + R and enter `%appdata%`)
   - If `devin` directory does not exist already, please create a new directory
 
-Use absolute paths and replace the placeholder values:
+Use absolute paths to the files you downloaded and replace the placeholder values:
 
 ```json
 {
@@ -25,18 +47,18 @@ Use absolute paths and replace the placeholder values:
       "command": "java",
       "args": [
         "-jar",
-        "/absolute/path/to/infinity-ai-plugins/plugins/pega/infinity-ai-plugins/claude/resources/infinity-rules-mcp.jar",
+        "/absolute/path/to/.infinity-rules-mcp/manual/infinity-rules-mcp-<version>.jar",
         "--spring.profiles.active=stdio"
       ],
       "env": {
-        "PEGA_SKILLS_PATH": "/absolute/path/to/infinity-ai-plugins/plugins/pega/infinity-ai-plugins/claude/resources"
+        "PEGA_SKILLS_PATH": "/absolute/path/to/.infinity-rules-mcp/manual/skills"
       }
     }
   }
 }
 ```
 
-`PEGA_SKILLS_PATH` must point to the `resources/` directory, not a version-specific subdirectory. The MCP run time uses the configured Infinity version to select the bundled skills.
+`PEGA_SKILLS_PATH` must point to the extracted `skills` directory that contains `24-2`, `25-1`, and `26-1`, not to a version-specific subdirectory. The MCP run time uses the configured Infinity version to select the skills.
 
 ## 2. Configure the Pega connection
 
@@ -86,13 +108,13 @@ The MCP server exposes version-specific Pega authoring skills through its `list-
 
 Start a new Devin session after changing MCP metadata or skills. Confirm that the `pega-infinity-authoring` MCP server is enabled, then ask Devin to use the `pega-setup` skill. Verify the local run time and remote Pega connection separately:
 
-1. Use `list-skills` to confirm the bundled Pega skills are available.
+1. Use `list-skills` to confirm the Pega skills are available.
 2. Use `list-available-applications` or `get-application` to confirm that Devin can connect to the configured Pega environment.
 
-If the server does not start, run `java -version` to confirm that Java 17 or later is available. Confirm that the JAR path exists and that `PEGA_SKILLS_PATH` points to the repository's `claude/resources/` directory.
+If the server does not start, run `java -version` to confirm that Java 17 or later is available. Confirm that the JAR path exists and that `PEGA_SKILLS_PATH` points to the extracted `skills` directory.
 
 ## Updating
 
-Run `git pull` in your local clone, keep the MCP JAR and skill paths pointed to it, and start a new Devin session. Copy the two shared skill directories again if they changed.
+Download the newer JAR and skills ZIP from the latest release, extract the skills again, point the MCP `args` and `PEGA_SKILLS_PATH` at the new files, and start a new Devin session. Run `git pull` and copy the two shared skill directories again if they changed.
 
 For Devin MCP metadata locations and configuration details, see the [Devin MCP configuration documentation](https://docs.devin.ai/cli/extensibility/mcp/configuration.md). For Devin skill discovery paths, see the [Devin Skills documentation](https://docs.devin.ai/product-guides/skills.md).

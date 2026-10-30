@@ -11,10 +11,10 @@ This skill guides users through configuring the Pega Infinity Authoring plugin f
 
 The Pega MCP server requires a connection to a Pega Infinity environment.
 
-The plugin supplies the bundled skills parent directory through `PEGA_SKILLS_PATH`. The shared
+The plugin's launcher downloads and verifies the skills and supplies the skills path itself. The shared
 config should explicitly set `pega_infinity_version` to `26-1` for a 26.1 environment, even though
 the runtime defaults to that version when the key is omitted.
-Do not ask users to set `pega_skills_path` for normal bundled use.
+Do not ask users to set `pega_skills_path` for normal use.
 
 Supported Infinity versions map to bundled directory names as follows:
 
@@ -98,8 +98,7 @@ Instruct the user to create or edit `~/.infinity-rules-mcp/config.json` directly
 }
 ```
 
-The plugin supplies the bundled skills parent directory automatically. `26-1` selects the bundled
-`resources/26-1/` directory. The runtime defaults to `26-1` when the key is omitted, but keep it
+The plugin supplies the skills directory automatically. `26-1` selects the matching skills version. The runtime defaults to `26-1` when the key is omitted, but keep it
 explicit for a deterministic setup.
 
 After creating the file, instruct the user to restrict permissions:
@@ -179,7 +178,7 @@ value is present, it is the value the runtime uses even when an environment vari
 - **Server won't start**: Check that Java is installed (`java -version`). The bundled server requires Java 17+.
 - **Connection refused**: Verify the base URL is correct, uses the environment root URL without `/prweb` or other path segments, and the Pega environment is accessible from this machine.
 - **Authentication failed**: Confirm the base URL and standard OAuth client ID. If the environment requires a custom client ID, set `pega_oauth_client_id` in the config file or the environment when no conflicting config value exists.
-- **Tools not appearing after config change**: Fully restart the Copilot CLI session (quit and reopen). If still missing, confirm `PEGA_CLIENT_MODE=copilot-plugin` is set and the installed plugin contains the manifest for the configured version.
+- **Tools not appearing after config change**: Fully restart the Copilot CLI session (quit and reopen). If still missing, confirm the configured `pega_infinity_version` is supported. On first start the launcher downloads the server and skills, so allow a minute and confirm Node.js 22.14+ and network access to GitHub.
 - **Config file not loading**: Ensure `~/.infinity-rules-mcp/config.json` is valid JSON. Check for trailing commas or missing quotes.
 - **Variables not appearing after `source`**: Check the profile file path and confirm the file was saved.
 - **Env vars vs config file**: Non-empty config-file values take priority over `PEGA_*` environment variables. Remove stale config values or update the file when changing the effective connection.

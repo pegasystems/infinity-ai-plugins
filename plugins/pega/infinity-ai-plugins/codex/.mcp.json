@@ -1,17 +1,14 @@
 {
   "pega-infinity-authoring": {
     "type": "stdio",
-    "command": "java",
+    "command": "npx",
     "args": [
-      "-jar",
-      "./resources/infinity-rules-mcp.jar",
-      "--spring.profiles.active=stdio"
+      "-y",
+      "--package=@pega/infinity-authoring-plugin@0.2.1",
+      "infinity-authoring-plugin",
+      "run-server"
     ],
     "cwd": "./",
-    "env": {
-      "PEGA_SKILLS_PATH": "./resources",
-      "PEGA_CLIENT_MODE": "codex-plugin"
-    },
     "env_vars": [
       "PEGA_BASE_URL",
       "PEGA_OAUTH_CLIENT_ID",
