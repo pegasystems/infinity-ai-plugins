@@ -20,7 +20,7 @@ The repository contains client-specific plugin payloads, marketplace layouts, an
 
 ## Prerequisites
 
-- **Node.js 22.14 or newer** (Claude Code, Copilot CLI and Codex plugins). Check with `node --version`.
+- **Node.js 22.14 or newer** (Claude Code, Copilot CLI, Codex, and Google Antigravity plugins). Check with `node --version`.
 - **Java 17 or newer**.
 
 Since plugin version 0.2.1, the plugins start the MCP server with `npx`. On first use it downloads the
@@ -71,12 +71,13 @@ Clone the repository, and then configure the MCP server and skills manually. The
 
 | Agent | Setup instructions |
 | --- | --- |
+| Google Antigravity | Run `agy plugin install ./infinity-ai-plugins/plugins/pega/infinity-ai-plugins/antigravity` against a local clone of this repository. See [Google Antigravity setup instructions](plugins/pega/infinity-ai-plugins/antigravity/README.md). |
 | Devin | Download the MCP server and skills from the release page, configure the server in Devin's MCP metadata, and copy the shared Pega skills into a Devin skill directory. See [Devin setup instructions](plugins/pega/infinity-ai-plugins/devin/README.md). |
 | opencode | Merge the `mcp` block from `plugins/pega/infinity-ai-plugins/opencode/opencode.json` into `opencode.json`. Download the MCP server JAR and skills from the release page and set their absolute paths in the config. Copy `plugins/pega/infinity-ai-plugins/opencode/skills/` into `.opencode/skills/` in your project. See [opencode setup instructions](plugins/pega/infinity-ai-plugins/opencode/README.md). |
 
 ## Setting up the plugin after installation
 
-Claude Code, GitHub Copilot CLI, and Codex plugins include a built-in
+Claude Code, GitHub Copilot CLI, Codex, and Google Antigravity plugins include a built-in
 `pega-setup` skill for first-time configuration and troubleshooting.
 
 Devin and opencode users can install the same shared skills by following the [Devin setup instructions](plugins/pega/infinity-ai-plugins/devin/README.md) and [opencode setup instructions](plugins/pega/infinity-ai-plugins/opencode/README.md).
@@ -108,6 +109,7 @@ To update a manual installation, follow these steps:
 
 | Agent | Update steps |
 | --- | --- |
+| Google Antigravity | Close any running Antigravity sessions, pull the latest `main` branch in your local clone (`git pull`), run `agy plugin install ./infinity-ai-plugins/plugins/pega/infinity-ai-plugins/antigravity`, and start a new Antigravity session. |
 | Devin | Download the newer JAR and skills ZIP from the latest release, update the paths in Devin's MCP config, and start a new Devin session. Recopy the shared Pega skills if they changed. See [Devin setup instructions](plugins/pega/infinity-ai-plugins/devin/README.md). |
 | opencode | Download the newer JAR and skills ZIP from the latest release, update the paths in `opencode.json`, and restart opencode. |
 
@@ -120,7 +122,7 @@ git config --system core.longpaths true
 
 ## Overriding local skills
 
-To test local `infinity-skills` with Claude Code, GitHub Copilot CLI, or Codex, set the `pega_skills_path` entry to the parent directory that contains the version directories. Set the entry in `~/.infinity-rules-mcp/config.json` or `%USERPROFILE%\.infinity-rules-mcp\config.json` before you start the client.
+To test local `infinity-skills` with Claude Code, GitHub Copilot CLI, Codex, or Google Antigravity, set the `pega_skills_path` entry to the parent directory that contains the version directories. Set the entry in `~/.infinity-rules-mcp/config.json` or `%USERPROFILE%\.infinity-rules-mcp\config.json` before you start the client.
 
 ```json
 {

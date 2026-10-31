@@ -4,17 +4,18 @@ This folder contains the plugin source trees for the Pega Infinity Authoring sur
 
 It includes plugins for the following clients:
 
+- `antigravity/`
 - `claude/`
 - `copilot/`
 - `codex/`
 - `devin/`
 - `opencode/`
 
-## Claude, Copilot, and Codex
+## Antigravity, Claude, Copilot, and Codex
 
 The source trees are directly installable from this repository.
 
-Each plugin's `.mcp.json` starts the pinned npm package `@pega/infinity-authoring-plugin` with `npx`. On
+Each plugin's MCP configuration (`.mcp.json` or `mcp_config.json`) starts the pinned npm package `@pega/infinity-authoring-plugin` with `npx`. On
 first start the package downloads the MCP server JAR and the skills from a GitHub release, verifies their
 SHA-256 hashes, and caches them in `~/.infinity-rules-mcp/`. The runtime selects the skills version using
 `pega_infinity_version` from `~/.infinity-rules-mcp/config.json`.
