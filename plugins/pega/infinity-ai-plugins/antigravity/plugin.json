@@ -1,0 +1,27 @@
+{
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
+  "name": "pega-infinity-authoring",
+  "displayName": "Pega Infinity Authoring",
+  "version": "0.2.1",
+  "description": "Pega Infinity Authoring with bundled MCP tools and runtime skills. For first-time setup, run the pega-setup skill to configure your connection.",
+  "logo": "assets/icon.png",
+  "author": {
+    "name": "Darwin Batres",
+    "email": "batres.aguilar@gmail.com"
+  },
+  "homepage": "https://docs.pega.com/bundle/platform/page/platform/gen-ai/building-pega-through-mcp.html",
+  "repository": "https://github.com/pegasystems/infinity-ai-plugins",
+  "license": "Pega Infinity AI Plugins License Version 1.0",
+  "keywords": [
+    "pega",
+    "mcp",
+    "authoring",
+    "antigravity",
+    "constellation"
+  ],
+  "suggestedPrompts": [
+    "Run pega-setup to check prerequisites and configure my Pega Infinity connection",
+    "Explore my active Pega application, ruleset stack, case types, and available runtime skills",
+    "Plan and implement a Pega rule update through a governed ChangeRequest workflow"
+  ]
+}
