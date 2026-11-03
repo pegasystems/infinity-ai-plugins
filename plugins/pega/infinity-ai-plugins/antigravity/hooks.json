@@ -1,0 +1,17 @@
+{
+  "pega-governance-guard": {
+    "enabled": true,
+    "PreToolUse": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ./scripts/pega-guard.mjs",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
