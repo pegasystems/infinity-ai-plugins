@@ -1,10 +1,12 @@
-# Pega Infinity Authoring plugins
+# Infinity Authoring plugins
 
 
 
-Pega Infinity Authoring plugins connect development environments to Pega MCP, enabling you to build Pega applications from a development environment of your choice. By making internal assets available to external tools and agents, Pega is evolving its low-code approach to make application development more automated and accessible to users with different tool preferences.
+Infinity Authoring plugins connect development environments to Pega MCP, enabling you to build Pega applications from a development environment of your choice. By making internal assets available to external tools and agents, Pega is evolving its low-code approach to make application development more automated and accessible to users with different tool preferences.
 
 The repository contains client-specific plugin payloads, marketplace layouts, and checked-in run-time artifacts and skills for producing installable packages.
+
+> **Renamed:** the plugin is renamed to `infinity-authoring` from `pega-infinity-authoring`. If you installed it under the old name, please uninstall and reinstall the plugin. 
 
 ## Contents
 
@@ -59,9 +61,9 @@ Use this repository as the source when you install a marketplace from a Git path
 
 | Agent | CLI command |
 | --- | --- |
-| Claude Code | `claude plugin marketplace add https://github.com/pegasystems/infinity-ai-plugins.git`<br> `claude plugin install pega-infinity-authoring@Pega` |
-| GitHub Copilot CLI | `copilot plugin marketplace add https://github.com/pegasystems/infinity-ai-plugins.git`<br> `copilot plugin install pega-infinity-authoring@Pega`  <br> * Restart Copilot CLI for the plugin changes to take effect |
-| Codex | `codex plugin marketplace add https://github.com/pegasystems/infinity-ai-plugins.git`<br> `codex plugin add pega-infinity-authoring@Pega`<br> Alternatively, launch `codex`, type `/plugins`, navigate to `Pega`, and install `Pega Infinity Authoring` |
+| Claude Code | `claude plugin marketplace add https://github.com/pegasystems/infinity-ai-plugins.git`<br> `claude plugin install infinity-authoring@Pega` |
+| GitHub Copilot CLI | `copilot plugin marketplace add https://github.com/pegasystems/infinity-ai-plugins.git`<br> `copilot plugin install infinity-authoring@Pega`  <br> * Restart Copilot CLI for the plugin changes to take effect |
+| Codex | `codex plugin marketplace add https://github.com/pegasystems/infinity-ai-plugins.git`<br> `codex plugin add infinity-authoring@Pega`<br> Alternatively, launch `codex`, type `/plugins`, navigate to `Pega`, and install `Infinity Authoring` |
 
 Alternatively, you can use SSH Git URLs such as `git@github.com:pegasystems/infinity-ai-plugins.git`.
 
@@ -98,9 +100,9 @@ When this repository publishes a new plugin build, refresh the installed plugin 
 
 | Agent | Update steps |
 | --- | --- |
-| Claude Code | Run `claude plugin marketplace update Pega` to refresh the marketplace catalog.<br>Then run `claude plugin update pega-infinity-authoring@Pega` to update the installed plugin.<br>Run `/reload-plugins` or start a new Claude session afterward. |
-| GitHub Copilot CLI | Run `copilot plugin marketplace update Pega` to refresh the marketplace catalog.<br>Then run `copilot plugin update pega-infinity-authoring@Pega` to update the installed plugin.<br>Quit and reopen Copilot CLI afterward. |
-| Codex | Run `codex plugin marketplace upgrade Pega` to refresh the marketplace catalog.<br>Then run `codex plugin add pega-infinity-authoring@Pega` to refresh the installed plugin, or use the `/plugins` browser to reinstall it from `Pega`.<br>Start a new Codex session afterward. |
+| Claude Code | Run `claude plugin marketplace update Pega` to refresh the marketplace catalog.<br>Then run `claude plugin update infinity-authoring@Pega` to update the installed plugin.<br>Run `/reload-plugins` or start a new Claude session afterward. |
+| GitHub Copilot CLI | Run `copilot plugin marketplace update Pega` to refresh the marketplace catalog.<br>Then run `copilot plugin update infinity-authoring@Pega` to update the installed plugin.<br>Quit and reopen Copilot CLI afterward. |
+| Codex | Run `codex plugin marketplace upgrade Pega` to refresh the marketplace catalog.<br>Then run `codex plugin add infinity-authoring@Pega` to refresh the installed plugin, or use the `/plugins` browser to reinstall it from `Pega`.<br>Start a new Codex session afterward. |
 
 ## Updating manual installations
 

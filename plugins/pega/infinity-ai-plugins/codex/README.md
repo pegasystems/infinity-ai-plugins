@@ -1,6 +1,6 @@
-# Pega Infinity Authoring Codex Plugin
+# Infinity Authoring Codex Plugin
 
-This directory contains the source for the Codex variant of the Pega Infinity Authoring plugin.
+This directory contains the source for the Codex variant of the Infinity Authoring plugin.
 
 The plugin contains:
 

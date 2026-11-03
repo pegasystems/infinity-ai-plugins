@@ -1,6 +1,6 @@
-# Pega Infinity Authoring for Devin CLI
+# Infinity Authoring for Devin CLI
 
-To set up Pega Infinity Authoring for Devin, configure the MCP server and install the skills manually. Devin uses the MCP server JAR and skills downloaded from the release page of this repository.
+To set up Infinity Authoring for Devin, configure the MCP server and install the skills manually. Devin uses the MCP server JAR and skills downloaded from the release page of this repository.
 
 ## Prerequisites
 

@@ -1,6 +1,6 @@
 ---
 name: pega-setup
-description: Use when the bundled Pega Infinity Authoring Codex plugin needs setup, authentication help, or troubleshooting. Confirm the plugin MCP server first, then verify the bundled runtime and skills payload.
+description: Use when the bundled Infinity Authoring Codex plugin needs setup, authentication help, or troubleshooting. Confirm the plugin MCP server first, then verify the bundled runtime and skills payload.
 ---
 
 # Pega Setup

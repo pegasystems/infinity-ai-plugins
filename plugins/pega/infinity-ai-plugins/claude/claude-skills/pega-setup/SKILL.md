@@ -1,10 +1,10 @@
 ---
-description: Use when the user needs to configure, reconfigure, or troubleshoot the Pega Infinity Authoring plugin connection. Guides first-time setup, OAuth configuration, and recovery from connection failures.
+description: Use when the user needs to configure, reconfigure, or troubleshoot the Infinity Authoring plugin connection. Guides first-time setup, OAuth configuration, and recovery from connection failures.
 ---
 
 # Pega Setup
 
-This skill guides users through configuring the Pega Infinity Authoring plugin for use with Claude Code.
+This skill guides users through configuring the Infinity Authoring plugin for use with Claude Code.
 
 ## Overview
 
@@ -113,7 +113,7 @@ chmod 600 ~/.infinity-rules-mcp/config.json
 Alternatively, the user can set the connection URL through the Claude `/plugin` management UI:
 
 1. Run `/plugin` in Claude
-2. Select the Pega Infinity Authoring plugin
+2. Select the Infinity Authoring plugin
 3. Fill in `pega_base_url` and leave the OAuth client ID at its standard default
 
 The plugin passes these UI values as `PEGA_BASE_URL` and `PEGA_OAUTH_CLIENT_ID`.

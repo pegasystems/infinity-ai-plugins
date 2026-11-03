@@ -1,13 +1,25 @@
 {
-  "name": "pega-infinity-authoring",
-  "displayName": "Pega Infinity Authoring",
-  "description": "Pega Infinity Authoring with bundled MCP tools and runtime skills. For first-time setup, run the `pega-setup` skill to configure your connection.",
+  "name": "infinity-authoring",
+  "displayName": "Infinity Authoring",
+  "description": "Author Pega rules with AI. Run the pega-setup skill to connect to your Pega environment.",
   "version": "0.2.1",
   "author": {
     "name": "Pegasystems",
     "url": "https://github.com/pegasystems"
   },
   "repository": "https://github.com/pegasystems/infinity-ai-plugins",
+  "homepage": "https://github.com/pegasystems/infinity-ai-plugins",
+  "documentationUrl": "https://github.com/pegasystems/infinity-ai-plugins#readme",
+  "supportUrl": "https://support.pega.com",
+  "privacyPolicyUrl": "https://www.pega.com/privacy",
+  "termsOfServiceUrl": "https://www.pega.com/terms",
+  "keywords": [
+    "pega",
+    "infinity",
+    "authoring",
+    "mcp",
+    "rules"
+  ],
   "license": "Pega Infinity AI Plugins License Version 1.0",
   "skills": "./claude-skills/",
   "mcpServers": "./.mcp.json",
