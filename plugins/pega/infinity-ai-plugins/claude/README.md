@@ -1,6 +1,6 @@
-# Pega Infinity Authoring Claude Code Plugin
+# Infinity Authoring Claude Code Plugin
 
-This directory contains the source for the Claude Code variant of the Pega Infinity Authoring plugin.
+This directory contains the source for the Claude Code variant of the Infinity Authoring plugin.
 
 The plugin contains:
 

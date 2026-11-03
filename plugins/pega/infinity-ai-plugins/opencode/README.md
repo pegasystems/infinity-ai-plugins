@@ -1,6 +1,6 @@
-# Pega Infinity Authoring OpenCode Plugin
+# Infinity Authoring OpenCode Plugin
 
-This directory contains the source template for the Pega Infinity Authoring plugin for OpenCode.
+This directory contains the source template for the Infinity Authoring plugin for OpenCode.
 
 The OpenCode plugin uses the MCP server JAR and the run-time skills downloaded from the
 [GitHub releases](https://github.com/pegasystems/infinity-ai-plugins/releases) of this repository. This directory

@@ -1,5 +1,5 @@
 ---
-description: Use when working with Pega Infinity through the bundled Pega Infinity Authoring plugin. Load Pega runtime skills first, orient to the current application, and follow the ChangeRequest workflow for write operations.
+description: Use when working with Pega Infinity through the bundled Infinity Authoring plugin. Load Pega runtime skills first, orient to the current application, and follow the ChangeRequest workflow for write operations.
 ---
 
 Use this plugin when the task involves Pega Infinity rules, case types, or application context.

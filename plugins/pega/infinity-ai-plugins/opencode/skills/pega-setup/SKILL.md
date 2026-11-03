@@ -1,6 +1,6 @@
 ---
 name: pega-setup
-description: Use when the Pega Infinity Authoring opencode MCP server needs setup, authentication help, or troubleshooting. Confirm the MCP server is running first, then verify the bundled runtime and skills payload.
+description: Use when the Infinity Authoring opencode MCP server needs setup, authentication help, or troubleshooting. Confirm the MCP server is running first, then verify the bundled runtime and skills payload.
 ---
 
 # Pega Setup

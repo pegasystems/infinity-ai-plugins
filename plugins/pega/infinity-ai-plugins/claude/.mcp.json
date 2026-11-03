@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "Pega Infinity Authoring": {
+    "Infinity Authoring": {
       "command": "npx",
       "args": [
         "-y",

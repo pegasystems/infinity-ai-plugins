@@ -5,7 +5,7 @@ description: Use when the GitHub Copilot CLI plugin needs connection setup help,
 
 # Pega Setup
 
-This skill guides users through configuring the Pega Infinity Authoring plugin for use with GitHub Copilot CLI.
+This skill guides users through configuring the Infinity Authoring plugin for use with GitHub Copilot CLI.
 
 ## Overview
 

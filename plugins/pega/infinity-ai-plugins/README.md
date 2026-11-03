@@ -1,6 +1,6 @@
-# Pega Infinity Authoring Plugins
+# Infinity Authoring Plugins
 
-This folder contains the plugin source trees for the Pega Infinity Authoring surfaces built around `infinity-rules-mcp`.
+This folder contains the plugin source trees for the Infinity Authoring surfaces built around `infinity-rules-mcp`.
 
 It includes plugins for the following clients:
 

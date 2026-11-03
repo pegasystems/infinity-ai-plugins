@@ -1,8 +1,8 @@
 {
-  "name": "pega-infinity-authoring",
+  "name": "infinity-authoring",
   "version": "0.2.1",
-  "displayName": "Pega Infinity Authoring",
-  "description": "Pega Infinity Authoring with bundled MCP tools and runtime skills. For first-time setup, run the `pega-setup` skill to configure your connection.",
+  "displayName": "Infinity Authoring",
+  "description": "Author Pega rules with AI. Run the pega-setup skill to connect to your Pega environment.",
   "author": {
     "name": "Pegasystems",
     "url": "https://github.com/pegasystems"
@@ -18,9 +18,9 @@
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",
   "interface": {
-    "displayName": "Pega Infinity Authoring",
+    "displayName": "Infinity Authoring",
     "shortDescription": "Author Pega rules with AI",
-    "longDescription": "Bundle the Pega Infinity Authoring server, runtime skills, and agent skills for Pega Infinity authoring workflows. For first-time setup, run the `pega-setup` skill to configure your connection.",
+    "longDescription": "Connect Codex to Pega Infinity: run the MCP server and agent skills for authoring Pega rules. For first-time setup, run the `pega-setup` skill to configure your connection.",
     "developerName": "Pegasystems",
     "category": "Developer Tools",
     "capabilities": [
@@ -32,8 +32,8 @@
     "privacyPolicyURL": "https://www.pega.com/privacy",
     "termsOfServiceURL": "https://www.pega.com/terms",
     "defaultPrompt": [
-      "Use Pega Infinity Authoring to explore the active Pega application.",
-      "Use Pega Infinity Authoring to help author a Pega rule through a ChangeRequest workflow."
+      "Use Infinity Authoring to explore the active Pega application.",
+      "Use Infinity Authoring to help author a Pega rule through a ChangeRequest workflow."
     ],
     "brandColor": "#0A63A8",
     "composerIcon": "./assets/icon.png",
