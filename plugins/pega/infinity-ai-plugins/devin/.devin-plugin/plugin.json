@@ -1,0 +1,22 @@
+{
+  "name": "infinity-authoring",
+  "version": "0.2.1",
+  "displayName": "Infinity Authoring",
+  "description": "Author Pega rules with AI. Run the pega-setup skill to connect to your Pega environment.",
+  "shortDescription": "Author Pega rules with AI",
+  "author": {
+    "name": "Pegasystems",
+    "url": "https://github.com/pegasystems"
+  },
+  "repository": "https://github.com/pegasystems/infinity-ai-plugins",
+  "homepage": "https://github.com/pegasystems/infinity-ai-plugins",
+  "license": "Pega Infinity AI Plugins License Version 1.0",
+  "keywords": [
+    "pega",
+    "infinity",
+    "authoring",
+    "mcp",
+    "rules"
+  ],
+  "logo": "icon.png"
+}

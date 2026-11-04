@@ -1,21 +1,89 @@
-# Infinity Authoring for Devin CLI
+# Infinity Authoring for Devin
 
-To set up Infinity Authoring for Devin, configure the MCP server and install the skills manually. Devin uses the MCP server JAR and skills downloaded from the release page of this repository.
+The Devin plugin bundles the `pega-infinity-authoring` MCP server and the
+`pega-setup` / `pega-assistant` skills. The plugin starts the MCP server with
+`npx`; on first use the launcher downloads the server JAR and skills from this
+repository's [GitHub releases](https://github.com/pegasystems/infinity-ai-plugins/releases),
+verifies their SHA-256 hashes, and caches them in `~/.infinity-rules-mcp/`.
 
 ## Prerequisites
 
-- Install Java 17 or later and make it available as `java` in the environment where Devin runs the MCP server.
-- Clone this repository, or just copy the two skill folders from it (step 3).
-- Configure the target Pega Infinity environment URL and version.
+- Node.js 22.14 or later and Java 17 or later on the machine running Devin.
+- Access to npm and GitHub on first use, and to your Pega Infinity environment.
 
-## Download the MCP server and skills
+## Install the plugin
 
-The MCP server JAR and the Pega skills are published as assets of the
-[GitHub releases](https://github.com/pegasystems/infinity-ai-plugins/releases) of this repository. Use the
-newest release that lists `infinity-rules-mcp-<version>.jar` and `infinity-skills-<version>.zip`. Each file
-has a `.sha256` file next to it.
+Install the plugin from this repository with the Devin CLI:
 
-For example, on macOS or Linux (replace the tag and versions with the release you chose):
+```bash
+devin plugins install pegasystems/infinity-ai-plugins#plugins/pega/infinity-ai-plugins/devin
+```
+
+The skills are then available as `/infinity-authoring:pega-setup` and
+`/infinity-authoring:pega-assistant`.
+
+For local development against a checkout of this repository, link the plugin
+directory instead:
+
+```bash
+devin plugins install --local ./plugins/pega/infinity-ai-plugins/devin
+```
+
+## Configure the Pega connection
+
+Start a new Devin session and ask Devin to use the `pega-setup` skill, or create
+`~/.infinity-rules-mcp/config.json` (Windows: `%USERPROFILE%\.infinity-rules-mcp\config.json`)
+yourself:
+
+```json
+{
+  "pega_base_url": "https://your-pega-environment.example.com",
+  "pega_oauth_client_id": "34233104330833666523",
+  "pega_infinity_version": "26-1"
+}
+```
+
+Set `pega_base_url` to the Pega environment root URL only; do not include `/prweb` or
+another path segment. Set `pega_infinity_version` to the directory name that matches
+the target environment:
+
+- Pega Infinity 24.2: `24-2`
+- Pega Infinity 25.1: `25-1`
+- Pega Infinity 26.1: `26-1`
+
+Keep the file private because it is stored in plaintext: `chmod 600 ~/.infinity-rules-mcp/config.json`.
+Start a new Devin session after changing it.
+
+## Verify the setup
+
+Start a new Devin session and confirm that the `pega-infinity-authoring` MCP server is
+enabled. Verify the local run time and remote Pega connection separately:
+
+1. Use `list-skills` to confirm the bundled Pega skills are available.
+2. Use `list-available-applications` or `get-application` to confirm that Devin can connect
+   to the configured Pega environment.
+
+The first Pega call opens a browser OAuth sign-in (callback `http://localhost:8888/callback`),
+which requires the browser to run on the same machine as the MCP server.
+
+If the server does not start, run `java -version` and `node --version` to confirm the
+prerequisites. If the client times out on the first start, download ahead of time:
+
+```bash
+npx -y --package=@pega/infinity-authoring-plugin@0.2.1 infinity-authoring-plugin prefetch
+```
+
+## Updating
+
+Run `devin plugins update infinity-authoring` and start a new Devin session.
+
+## Manual setup without the plugin
+
+If you cannot use the plugin, register the MCP server and copy the skills manually.
+
+Download `infinity-rules-mcp-<version>.jar` and `infinity-skills-<version>.zip` from the
+[releases page](https://github.com/pegasystems/infinity-ai-plugins/releases) and verify the
+`.sha256` files. For example, on macOS or Linux:
 
 ```bash
 TAG=release-0.2.1; MCP=0.7.11; SKILLS=0.1.14
@@ -27,18 +95,9 @@ done
 unzip -oq infinity-skills-$SKILLS.zip -d skills
 ```
 
-On Windows, download the two files from the release page and extract the ZIP into a `skills` folder next to the JAR.
-After extracting, `skills/` must directly contain the Pega version folders (`24-2`, `25-1`, `26-1`).
-
-## 1. Add the MCP server
-
-Add the following server to Devin's MCP metadata file. Use a project-level `.devin/mcp_config.json` to share non-sensitive configuration with a project, or a user-level file to make the server available to all projects:
-
-- macOS and Linux: `~/.config/devin/mcp_config.json`
-- Windows: `%APPDATA%\devin\mcp_config.json` (open the Run dialog box with Windows + R and enter `%appdata%`)
-  - If `devin` directory does not exist already, please create a new directory
-
-Use absolute paths to the files you downloaded and replace the placeholder values:
+Add the server to Devin's MCP metadata file — project-level `.devin/mcp_config.json`, or
+user-level `~/.config/devin/mcp_config.json` on macOS and Linux
+(`%APPDATA%\devin\mcp_config.json` on Windows):
 
 ```json
 {
@@ -58,63 +117,20 @@ Use absolute paths to the files you downloaded and replace the placeholder value
 }
 ```
 
-`PEGA_SKILLS_PATH` must point to the extracted `skills` directory that contains `24-2`, `25-1`, and `26-1`, not to a version-specific subdirectory. The MCP run time uses the configured Infinity version to select the skills.
+`PEGA_SKILLS_PATH` must point to the extracted `skills` directory that contains `24-2`,
+`25-1`, and `26-1`, not to a version-specific subdirectory.
 
-## 2. Configure the Pega connection
-
-Create or update the MCP run-time configuration file:
-
-- macOS and Linux: `~/.infinity-rules-mcp/config.json`
-- Windows: `%USERPROFILE%\.infinity-rules-mcp\config.json`
-
-```json
-{
-  "pega_base_url": "https://your-pega-environment.example.com",
-  "pega_oauth_client_id": "34233104330833666523",
-  "pega_infinity_version": "26-1"
-}
-```
-
-Set `pega_infinity_version` to the directory name that matches the target environment:
-
-- Pega Infinity 24.2: `24-2`
-- Pega Infinity 25.1: `25-1`
-- Pega Infinity 26.1: `26-1`
-
-At run time, the MCP reads the Pega connection settings from this file. Set `pega_base_url` to the Pega environment root URL only; do not include `/prweb` or another path segment. Use a different `pega_oauth_client_id` only when the Pega environment requires a custom client ID.
-
-## 3. Install the Devin skills
-
-Copy the shared Pega setup and assistant skills into a Devin skill discovery path. For a project, use `.devin/skills/`. To make the skills available globally, use `~/.config/devin/skills/` on macOS or Linux, or `%APPDATA%\devin\skills\` on Windows. If the `skills` directory does not already exist, create it.
-
-From the repository root, copy the following directories:
-
-```text
-plugins/pega/infinity-ai-plugins/claude/claude-skills/pega-setup
-plugins/pega/infinity-ai-plugins/claude/claude-skills/pega-assistant
-```
-
-For example, for project-level skills on macOS or Linux:
+Copy the skills into a Devin skill discovery path — `.devin/skills/` for a project, or
+`~/.config/devin/skills/` (`%APPDATA%\devin\skills\` on Windows) globally:
 
 ```bash
 mkdir -p .devin/skills
-cp -r plugins/pega/infinity-ai-plugins/claude/claude-skills/pega-setup .devin/skills/
-cp -r plugins/pega/infinity-ai-plugins/claude/claude-skills/pega-assistant .devin/skills/
+cp -r skills/pega-setup skills/pega-assistant .devin/skills/
 ```
 
-The MCP server exposes version-specific Pega authoring skills through its `list-skills` and `get-skill` tools. The copied Devin skills guide initial configuration and general Pega assistance.
+Then create `~/.infinity-rules-mcp/config.json` as described above and start a new session.
 
-## 4. Verify the setup
-
-Start a new Devin session after changing MCP metadata or skills. Confirm that the `pega-infinity-authoring` MCP server is enabled, then ask Devin to use the `pega-setup` skill. Verify the local run time and remote Pega connection separately:
-
-1. Use `list-skills` to confirm the Pega skills are available.
-2. Use `list-available-applications` or `get-application` to confirm that Devin can connect to the configured Pega environment.
-
-If the server does not start, run `java -version` to confirm that Java 17 or later is available. Confirm that the JAR path exists and that `PEGA_SKILLS_PATH` points to the extracted `skills` directory.
-
-## Updating
-
-Download the newer JAR and skills ZIP from the latest release, extract the skills again, point the MCP `args` and `PEGA_SKILLS_PATH` at the new files, and start a new Devin session. Run `git pull` and copy the two shared skill directories again if they changed.
-
-For Devin MCP metadata locations and configuration details, see the [Devin MCP configuration documentation](https://docs.devin.ai/cli/extensibility/mcp/configuration.md). For Devin skill discovery paths, see the [Devin Skills documentation](https://docs.devin.ai/product-guides/skills.md).
+For Devin MCP metadata locations and configuration details, see the
+[Devin MCP configuration documentation](https://docs.devin.ai/cli/extensibility/mcp/configuration.md).
+For Devin skill discovery paths, see the
+[Devin Skills documentation](https://docs.devin.ai/product-guides/skills.md).
