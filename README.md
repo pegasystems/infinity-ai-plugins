@@ -64,6 +64,7 @@ Use this repository as the source when you install a marketplace from a Git path
 | Claude Code | `claude plugin marketplace add https://github.com/pegasystems/infinity-ai-plugins.git`<br> `claude plugin install infinity-authoring@Pega` |
 | GitHub Copilot CLI | `copilot plugin marketplace add https://github.com/pegasystems/infinity-ai-plugins.git`<br> `copilot plugin install infinity-authoring@Pega`  <br> * Restart Copilot CLI for the plugin changes to take effect |
 | Codex | `codex plugin marketplace add https://github.com/pegasystems/infinity-ai-plugins.git`<br> `codex plugin add infinity-authoring@Pega`<br> Alternatively, launch `codex`, type `/plugins`, navigate to `Pega`, and install `Infinity Authoring` |
+| Devin | `devin plugins install pegasystems/infinity-ai-plugins#plugins/pega/infinity-ai-plugins/devin`<br> See [Devin setup instructions](plugins/pega/infinity-ai-plugins/devin/README.md). |
 
 Alternatively, you can use SSH Git URLs such as `git@github.com:pegasystems/infinity-ai-plugins.git`.
 
@@ -73,15 +74,15 @@ Clone the repository, and then configure the MCP server and skills manually. The
 
 | Agent | Setup instructions |
 | --- | --- |
-| Devin | Download the MCP server and skills from the release page, configure the server in Devin's MCP metadata, and copy the shared Pega skills into a Devin skill directory. See [Devin setup instructions](plugins/pega/infinity-ai-plugins/devin/README.md). |
+| Devin | Prefer the plugin install above. To set up manually instead, download the MCP server and skills from the release page, configure the server in Devin's MCP metadata, and copy the shared Pega skills into a Devin skill directory. See [Devin setup instructions](plugins/pega/infinity-ai-plugins/devin/README.md). |
 | opencode | Merge the `mcp` block from `plugins/pega/infinity-ai-plugins/opencode/opencode.json` into `opencode.json`. Download the MCP server JAR and skills from the release page and set their absolute paths in the config. Copy `plugins/pega/infinity-ai-plugins/opencode/skills/` into `.opencode/skills/` in your project. See [opencode setup instructions](plugins/pega/infinity-ai-plugins/opencode/README.md). |
 
 ## Setting up the plugin after installation
 
-Claude Code, GitHub Copilot CLI, and Codex plugins include a built-in
+Claude Code, GitHub Copilot CLI, Codex, and Devin plugins include a built-in
 `pega-setup` skill for first-time configuration and troubleshooting.
 
-Devin and opencode users can install the same shared skills by following the [Devin setup instructions](plugins/pega/infinity-ai-plugins/devin/README.md) and [opencode setup instructions](plugins/pega/infinity-ai-plugins/opencode/README.md).
+opencode users can install the same shared skills by following the [opencode setup instructions](plugins/pega/infinity-ai-plugins/opencode/README.md).
 
 After installing a marketplace plugin or completing manual setup, start a new session and ask the assistant to run
 `pega-setup`.
@@ -103,6 +104,7 @@ When this repository publishes a new plugin build, refresh the installed plugin 
 | Claude Code | Run `claude plugin marketplace update Pega` to refresh the marketplace catalog.<br>Then run `claude plugin update infinity-authoring@Pega` to update the installed plugin.<br>Run `/reload-plugins` or start a new Claude session afterward. |
 | GitHub Copilot CLI | Run `copilot plugin marketplace update Pega` to refresh the marketplace catalog.<br>Then run `copilot plugin update infinity-authoring@Pega` to update the installed plugin.<br>Quit and reopen Copilot CLI afterward. |
 | Codex | Run `codex plugin marketplace upgrade Pega` to refresh the marketplace catalog.<br>Then run `codex plugin add infinity-authoring@Pega` to refresh the installed plugin, or use the `/plugins` browser to reinstall it from `Pega`.<br>Start a new Codex session afterward. |
+| Devin | Run `devin plugins update infinity-authoring` and start a new Devin session. |
 
 ## Updating manual installations
 
@@ -110,7 +112,7 @@ To update a manual installation, follow these steps:
 
 | Agent | Update steps |
 | --- | --- |
-| Devin | Download the newer JAR and skills ZIP from the latest release, update the paths in Devin's MCP config, and start a new Devin session. Recopy the shared Pega skills if they changed. See [Devin setup instructions](plugins/pega/infinity-ai-plugins/devin/README.md). |
+| Devin | Plugin installs update with `devin plugins update`. For manual setups, download the newer JAR and skills ZIP from the latest release, update the paths in Devin's MCP config, and start a new Devin session. Recopy the shared Pega skills if they changed. See [Devin setup instructions](plugins/pega/infinity-ai-plugins/devin/README.md). |
 | opencode | Download the newer JAR and skills ZIP from the latest release, update the paths in `opencode.json`, and restart opencode. |
 
 > [!TIP]

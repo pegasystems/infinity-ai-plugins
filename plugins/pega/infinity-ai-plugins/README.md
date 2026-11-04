@@ -10,7 +10,7 @@ It includes plugins for the following clients:
 - `devin/`
 - `opencode/`
 
-## Claude, Copilot, and Codex
+## Claude, Copilot, Codex, and Devin
 
 The source trees are directly installable from this repository.
 
@@ -21,6 +21,9 @@ SHA-256 hashes, and caches them in `~/.infinity-rules-mcp/`. The runtime selects
 
 Node.js 22.14 or later and Java 17 or later are required.
 
-## Devin and OpenCode
+For Devin, install the `devin/` plugin with `devin plugins install`; see the
+[Devin README](devin/README.md).
 
-Devin and OpenCode plugins require manual MCP and skill setup. Both download the MCP server JAR and skills from the GitHub releases page; see their READMEs.
+## OpenCode
+
+The opencode plugin requires manual MCP and skill setup. It downloads the MCP server JAR and skills from the GitHub releases page; see its README.
