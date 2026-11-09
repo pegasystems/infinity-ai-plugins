@@ -4,7 +4,7 @@
       "command": "npx",
       "args": [
         "-y",
-        "--package=@pega/infinity-authoring-plugin@0.2.1",
+        "--package=@pega/infinity-authoring-plugin@0.2.2",
         "infinity-authoring-plugin",
         "run-server"
       ],
