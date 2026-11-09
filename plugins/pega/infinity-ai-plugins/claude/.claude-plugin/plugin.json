@@ -2,7 +2,7 @@
   "name": "infinity-authoring",
   "displayName": "Infinity Authoring",
   "description": "Author Pega rules with AI. Run the pega-setup skill to connect to your Pega environment.",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "author": {
     "name": "Pegasystems",
     "url": "https://github.com/pegasystems"
