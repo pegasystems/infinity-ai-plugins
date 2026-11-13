@@ -1,0 +1,27 @@
+{
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
+  "name": "infinity-authoring",
+  "displayName": "Infinity Authoring",
+  "version": "0.2.2",
+  "description": "Author Pega rules with AI. Run the pega-setup skill to connect to your Pega environment.",
+  "logo": "assets/icon.png",
+  "suggestedPrompts": [
+    "Use /pega-setup to configure and verify my Pega Infinity connection.",
+    "Use Infinity Authoring to explore the active Pega application.",
+    "Use Infinity Authoring to help author a Pega rule in a development branch."
+  ],
+  "author": {
+    "name": "Pegasystems",
+    "url": "https://github.com/pegasystems"
+  },
+  "homepage": "https://github.com/pegasystems/infinity-ai-plugins",
+  "repository": "https://github.com/pegasystems/infinity-ai-plugins",
+  "license": "Pega Infinity AI Plugins License Version 1.0",
+  "keywords": [
+    "pega",
+    "infinity",
+    "authoring",
+    "mcp",
+    "rules"
+  ]
+}
