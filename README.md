@@ -61,6 +61,7 @@ Use this repository as the source when you install a marketplace from a Git path
 
 | Agent | CLI command |
 | --- | --- |
+| Antigravity | Copy or link `plugins/pega/infinity-ai-plugins/antigravity` to `~/.gemini/config/plugins/infinity-authoring`<br> Alternatively, use `.agents/plugins/infinity-authoring` in your workspace |
 | Claude Code | `claude plugin marketplace add https://github.com/pegasystems/infinity-ai-plugins.git`<br> `claude plugin install infinity-authoring@Pega` |
 | GitHub Copilot CLI | `copilot plugin marketplace add https://github.com/pegasystems/infinity-ai-plugins.git`<br> `copilot plugin install infinity-authoring@Pega`  <br> * Restart Copilot CLI for the plugin changes to take effect |
 | Codex | `codex plugin marketplace add https://github.com/pegasystems/infinity-ai-plugins.git`<br> `codex plugin add infinity-authoring@Pega`<br> Alternatively, launch `codex`, type `/plugins`, navigate to `Pega`, and install `Infinity Authoring` |
@@ -79,7 +80,7 @@ Clone the repository, and then configure the MCP server and skills manually. The
 
 ## Setting up the plugin after installation
 
-Claude Code, GitHub Copilot CLI, Codex, and Devin plugins include a built-in
+Antigravity, Claude Code, GitHub Copilot CLI, Codex, and Devin plugins include a built-in
 `pega-setup` skill for first-time configuration and troubleshooting.
 
 opencode users can install the same shared skills by following the [opencode setup instructions](plugins/pega/infinity-ai-plugins/opencode/README.md).

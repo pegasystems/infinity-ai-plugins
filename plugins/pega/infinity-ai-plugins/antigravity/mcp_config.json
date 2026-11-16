@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "pega-infinity-authoring": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "--package=@pega/infinity-authoring-plugin@0.2.2",
+        "infinity-authoring-plugin",
+        "run-server"
+      ],
+      "env": {
+        "PEGA_BASE_URL": "${PEGA_BASE_URL}",
+        "PEGA_OAUTH_CLIENT_ID": "${PEGA_OAUTH_CLIENT_ID}",
+        "PEGA_INFINITY_VERSION": "${PEGA_INFINITY_VERSION}",
+        "PEGA_OAUTH_REDIRECT_PORT": "${PEGA_OAUTH_REDIRECT_PORT}"
+      }
+    }
+  }
+}

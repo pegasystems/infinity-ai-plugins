@@ -10,6 +10,20 @@
       "displayName": "Infinity Authoring",
       "source": {
         "source": "local",
+        "path": "./plugins/pega/infinity-ai-plugins/antigravity"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "infinity-authoring-codex",
+      "version": "0.2.2",
+      "displayName": "Infinity Authoring (Codex)",
+      "source": {
+        "source": "local",
         "path": "./plugins/pega/infinity-ai-plugins/codex"
       },
       "policy": {

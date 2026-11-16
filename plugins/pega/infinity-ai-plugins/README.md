@@ -4,13 +4,14 @@ This folder contains the plugin source trees for the Infinity Authoring surfaces
 
 It includes plugins for the following clients:
 
+- `antigravity/`
 - `claude/`
 - `copilot/`
 - `codex/`
 - `devin/`
 - `opencode/`
 
-## Claude, Copilot, Codex, and Devin
+## Antigravity, Claude, Copilot, Codex, and Devin
 
 The source trees are directly installable from this repository.
 
